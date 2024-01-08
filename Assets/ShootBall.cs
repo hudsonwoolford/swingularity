@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ShootBall : MonoBehaviour
 {
     [SerializeField] bool stayStillTillShot = false;
+    [SerializeField] PhysicMaterial ballMat;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
@@ -40,7 +41,7 @@ public class ShootBall : MonoBehaviour
         attractors.Clear();
         origin = transform.position;
 
-        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezePosition; } //will stay still, no gravity
+        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezeAll; } //will stay still, no gravity
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
@@ -52,7 +53,6 @@ public class ShootBall : MonoBehaviour
         Camera main = Camera.main;
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
-        print(mousePos);
         if(Input.GetMouseButtonDown(0))
         {
             Ray mouseRay = new Ray(mousePos, main.transform.forward); //the ray from the camera to mouse pos
@@ -63,6 +63,14 @@ public class ShootBall : MonoBehaviour
             }
         }
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset
+        if(rb.velocity.magnitude < 1f)
+        {
+            ballMat.bounciness = 0;
+        }
+        else
+        {
+            ballMat.bounciness = 0.99f;
+        }
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -110,14 +118,14 @@ public class ShootBall : MonoBehaviour
         Vector2 force = dir.normalized * dist; //the force
 
         //unfreeze position (if neeeded)
-        if (stayStillTillShot && rb.constraints == RigidbodyConstraints.FreezePosition) { rb.constraints = RigidbodyConstraints.FreezePositionZ; rb.constraints = RigidbodyConstraints.FreezeRotation; } 
+        if (stayStillTillShot && rb.constraints == RigidbodyConstraints.FreezeAll) { rb.constraints = RigidbodyConstraints.FreezePositionZ; rb.constraints = RigidbodyConstraints.FreezeRotation; } 
         
         rb.AddForce(force, ForceMode.Impulse); //adding force
     }
     void BallReset()
     {
         transform.position = origin; //back to start
-        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezePosition; } //will stay still, no gravity
+        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezeAll; }//will stay still, no gravity
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
@@ -155,6 +163,7 @@ public class ShootBall : MonoBehaviour
         srb.velocity = rb.velocity;
         srb.AddForce(forceVar, ForceMode.Impulse); //force that would happen if mouse release
 
+        slr.positionCount = 0;
         slr.positionCount = maxstep; //setting up lr
         
         Vector3 originSim = transform.position; //for some reason the ball on our side of the simulation moves when simulated so it must be reset  
@@ -162,13 +171,15 @@ public class ShootBall : MonoBehaviour
         for (int i = 0; i < maxstep; i++) //for each step
         {
             if(i>0){physicsScene.Simulate(Time.fixedDeltaTime); length += (simulatedObj.transform.position - slr.GetPosition(i-1)).magnitude;} //actual simulation and length addition
-            // if(length>= maxLength)
-            // {
-            //     Vector3 dir = simulatedObj.transform.position - slr.GetPosition(i-1).normalized;
-            //     Vector3 lastPoint = slr.GetPosition(i-1) + (simulatedObj.transform.position - slr.GetPosition(i-1)).normalized * (maxLength - (length -= (simulatedObj.transform.position - slr.GetPosition(i-1)).magnitude));
-            //     slr.SetPosition(i, lastPoint);
-            //     break;
-            // }
+            if (length >= maxLengthSim)
+            {
+                Vector3 dir = simulatedObj.transform.position - slr.GetPosition(i - 1).normalized; //dir from prev point to current point
+                float distToFinal = maxLengthSim - (length -= (simulatedObj.transform.position - slr.GetPosition(i - 1)).magnitude); //dist from prev point to maxlength
+                Vector3 finalPoint = slr.GetPosition(i - 1) + dir * distToFinal; //final point in the line
+                slr.SetPosition(i, finalPoint); 
+                slr.positionCount = i;
+                break;
+            }
             foreach (Rigidbody r in attractors) //since simulation does not account for gravity, we manually do it
             {
                 Attract(srb, r); //gravity
