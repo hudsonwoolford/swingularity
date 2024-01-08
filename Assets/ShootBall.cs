@@ -52,9 +52,10 @@ public class ShootBall : MonoBehaviour
         Camera main = Camera.main;
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
+        print(mousePos);
         if(Input.GetMouseButtonDown(0))
         {
-            Ray mouseRay = new Ray(main.transform.position, mousePos - main.transform.position); //the ray from the camera to mouse pos
+            Ray mouseRay = new Ray(mousePos, main.transform.forward); //the ray from the camera to mouse pos
             RaycastHit hitData; //can be acessed later if needed
             if(Physics.Raycast(mouseRay, out hitData, 20, playerLayer)) //if raycast hits the ball, eg player clicks the ball
             {
@@ -192,11 +193,14 @@ public class ShootBall : MonoBehaviour
 
         rbToAttract.AddForce(force); //applying force
     }
+    #endregion
     private void OnTriggerEnter(Collider other) {
          if(other.gameObject.tag == "Hole")
         {
             BallReset();
         }
     }
-    #endregion
+    private void OnDrawGizmosSelected() {
+        Gizmos.DrawCube(mousePos, Vector3.one);
+    }
 }
