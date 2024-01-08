@@ -24,6 +24,7 @@ public class ShootBall : MonoBehaviour
     {
         origin = transform.position;
         if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezePosition; } //will stay still, no gravity
+        lr.positionCount = 0; //no line
     }
     // Update is called once per frame
     void Update()
@@ -88,5 +89,7 @@ public class ShootBall : MonoBehaviour
     {
         transform.position = origin; //back to start
         if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezePosition; } //will stay still, no gravity
+        rb.angularVelocity = Vector2.zero; //wont keep spinning
+        lr.positionCount = 0; //no line
     }
 }

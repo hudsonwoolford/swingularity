@@ -6,6 +6,7 @@ using UnityEngine;
 public class Attractor : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
+    const float G = 0.874f;
     GameObject ball;
     private void Awake()
     {
@@ -22,7 +23,7 @@ public class Attractor : MonoBehaviour
         Vector3 direction = rb.position - rbToAttract.position; //direction vector
         float distance  = direction.magnitude; //distance
 
-        float forceMagnitude = (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = G * (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
         rbToAttract.AddForce(force); //applying force
