@@ -110,7 +110,7 @@ public class ShootBall : MonoBehaviour
 
         //unfreeze position (if neeeded)
         if (stayStillTillShot && rb.constraints == RigidbodyConstraints.FreezePosition) { rb.constraints = RigidbodyConstraints.FreezePositionZ; rb.constraints = RigidbodyConstraints.FreezeRotation; } 
-        print("FORCE");
+        
         rb.AddForce(force, ForceMode.Impulse); //adding force
     }
     void BallReset()
@@ -156,7 +156,7 @@ public class ShootBall : MonoBehaviour
 
         slr.positionCount = maxstep; //setting up lr
         
-        origin = transform.position; //for some reason the ball on our side of the simulation moves when simulated so it must be reset  
+        Vector3 originSim = transform.position; //for some reason the ball on our side of the simulation moves when simulated so it must be reset  
         float length = 0; //will keep track of line length to be compared against maxlength
         for (int i = 0; i < maxstep; i++) //for each step
         {
@@ -175,7 +175,7 @@ public class ShootBall : MonoBehaviour
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
         Destroy(simulatedObj); //not performant must be object pooled later
-        transform.position = origin;
+        transform.position = originSim;
         // // srb.velocity = oVelo;
         // // srb.angularVelocity = oAlo;
         // // simulatedObj.transform.position = pos;
@@ -192,7 +192,11 @@ public class ShootBall : MonoBehaviour
 
         rbToAttract.AddForce(force); //applying force
     }
-    private void OnCollisionEnter(Collision other) {
+    private void OnTriggerEnter(Collider other) {
+         if(other.gameObject.tag == "Hole")
+        {
+            BallReset();
+        }
     }
     #endregion
 }
