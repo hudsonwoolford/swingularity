@@ -6,7 +6,8 @@ using UnityEngine;
 public class Attractor : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    const float G = 0.874f;
+    bool simulation;
+    const float G = 1;
     GameObject ball;
     private void Awake()
     {
@@ -14,7 +15,7 @@ public class Attractor : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Attract(ball); //always attracting ball
+        if(!simulation) {Attract(ball);} //always attracting ball
     }
     void Attract(GameObject objToAttract) //brackeys gravity tutorial
     {
