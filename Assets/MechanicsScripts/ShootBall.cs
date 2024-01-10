@@ -146,7 +146,7 @@ public class ShootBall : MonoBehaviour
         Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
         float distance = direction.magnitude; //distance
 
-        float forceMagnitude = 1 * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = 0.75f * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
         rbToAttract.AddForce(force); //applying force
