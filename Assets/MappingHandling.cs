@@ -19,5 +19,9 @@ public class MappingHandling : MonoBehaviour
         {
             //out of view
         }
+        if(!playArea.bounds.Contains(ball.position))
+        {
+            //out of bounds
+        }
     }
 }

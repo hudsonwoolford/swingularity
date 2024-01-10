@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class ShootBall : MonoBehaviour
 {
-    [SerializeField] bool stayStillTillShot = false;
     [SerializeField] PhysicMaterial ballMat;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
@@ -25,6 +24,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
+    Vector3 lastFramePos;
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -32,16 +32,23 @@ public class ShootBall : MonoBehaviour
     Vector3 mousePos;
     Vector3 origin;
     Rigidbody rb;
+    float bounciness;
+    bool still = true;
+    Camera main;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
     private void Start()
     {
+        main = Camera.main;
+        lastFramePos = transform.position;
         attractors.Clear();
-        origin = transform.position;
 
-        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezeAll; } //will stay still, no gravity
+        origin = transform.position;
+        bounciness = ballMat.bounciness;
+
+        rb.constraints = RigidbodyConstraints.FreezeAll; //stops any movement
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
@@ -50,27 +57,18 @@ public class ShootBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Camera main = Camera.main;
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
         if(Input.GetMouseButtonDown(0))
         {
             Ray mouseRay = new Ray(mousePos, main.transform.forward); //the ray from the camera to mouse pos
             RaycastHit hitData; //can be acessed later if needed
-            if(Physics.Raycast(mouseRay, out hitData, 20, playerLayer)) //if raycast hits the ball, eg player clicks the ball
+            if(Physics.Raycast(mouseRay, out hitData, 20, playerLayer) && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
             {
                 StartCoroutine(LineUpShot());
             }
         }
-        if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset
-        if(rb.velocity.magnitude < 1f)
-        {
-            ballMat.bounciness = 0;
-        }
-        else
-        {
-            ballMat.bounciness = 0.99f;
-        }
+        if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -117,18 +115,41 @@ public class ShootBall : MonoBehaviour
         
         Vector2 force = dir.normalized * dist; //the force
 
-        //unfreeze position (if neeeded)
-        if (stayStillTillShot && rb.constraints == RigidbodyConstraints.FreezeAll) { rb.constraints = RigidbodyConstraints.FreezePositionZ; rb.constraints = RigidbodyConstraints.FreezeRotation; } 
+        //unfreeze position
+        still = false; rb.constraints = RigidbodyConstraints.FreezeRotation;
         
         rb.AddForce(force, ForceMode.Impulse); //adding force
+    }
+    void StoppingBall()
+    {
+        if(still) { return; }
+
+        if(Vector3.Distance(lastFramePos, transform.position) < 0.25f)
+        {
+            still = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
+        lastFramePos = transform.position;
     }
     void BallReset()
     {
         transform.position = origin; //back to start
-        if (stayStillTillShot) { rb.constraints = RigidbodyConstraints.FreezeAll; }//will stay still, no gravity
+        rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
+    }
+    public void Attract(Rigidbody rbToAttract, Rigidbody rbAttracting, bool sim) //brackeys gravity tutorial
+    {
+        if (still&&!sim) { return; } //no need for extra forces that cause jitter
+        Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
+        float distance = direction.magnitude; //distance
+
+        float forceMagnitude = 1 * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        Vector3 force = direction.normalized * forceMagnitude; //storing force
+
+        rbToAttract.AddForce(force); //applying force
     }
     #region Simulation
     void PhysicsScene()
@@ -182,7 +203,7 @@ public class ShootBall : MonoBehaviour
             }
             foreach (Rigidbody r in attractors) //since simulation does not account for gravity, we manually do it
             {
-                Attract(srb, r); //gravity
+                Attract(srb, r, true); //gravity
             }
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
@@ -194,17 +215,9 @@ public class ShootBall : MonoBehaviour
         // // simulatedObj.transform.rotation = rot;
         Physics.simulationMode = SimulationMode.FixedUpdate; //going back to normal fixed update
     }
-    void Attract(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
-    {
-        Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
-        float distance  = direction.magnitude; //distance
 
-        float forceMagnitude = 1 * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-        Vector3 force = direction.normalized * forceMagnitude; //storing force
-
-        rbToAttract.AddForce(force); //applying force
-    }
     #endregion
+    #region OnTrueFunc
     private void OnTriggerEnter(Collider other) {
          if(other.gameObject.tag == "Hole")
         {
@@ -214,4 +227,9 @@ public class ShootBall : MonoBehaviour
     private void OnDrawGizmosSelected() {
         Gizmos.DrawCube(mousePos, Vector3.one);
     }
+    private void OnApplicationQuit()
+    {
+        ballMat.bounciness = bounciness;
+    }
+    #endregion
 }
