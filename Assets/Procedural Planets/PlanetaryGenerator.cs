@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using static PlanetVar;
 
 public class PlanetaryGenerator : MonoBehaviour
 {
@@ -12,21 +13,21 @@ public class PlanetaryGenerator : MonoBehaviour
         public float radius;
         public Vector3 centre;
     };
-    public static Mesh ModifyGeometry(Mesh mesh, ComputeShader calculateVertexHeight, int seed, int numCraters, float craterBias)
+    public static Mesh ModifyGeometry(Mesh mesh, PlanetVar planetVar, ComputeShader calculateVertexHeight)
     {
         Vector3[] vertices = mesh.vertices;
-        vertices = AdjustTerrain(vertices, GenerateRandomCraters(vertices, seed, numCraters, craterBias), calculateVertexHeight);
+        vertices = AdjustTerrain(vertices, GenerateRandomCraters(vertices, planetVar), planetVar, calculateVertexHeight);
         mesh.vertices = vertices;
         return mesh;
     }
     #region CraterGeneration
-    private static Crater[] GenerateRandomCraters(Vector3[] vertices, int seed, int numCraters, float craterBias)
+    private static Crater[] GenerateRandomCraters(Vector3[] vertices, PlanetVar planetVar)
     {
-        Crater[] craters = new Crater[numCraters];
-        UnityEngine.Random.InitState(seed);
-        for (int i = 0; i < numCraters; i++)
+        Crater[] craters = new Crater[planetVar.craterSettings.numCraters];
+        UnityEngine.Random.InitState(planetVar.generalSettings.seed);
+        for (int i = 0; i < planetVar.craterSettings.numCraters; i++)
         {
-            float radius = ApplyBias(UnityEngine.Random.value, craterBias);
+            float radius = Mathf.Lerp(planetVar.craterSettings.minCraterSize, planetVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, planetVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
             craters[i].radius = radius;
             craters[i].centre = centre;
@@ -36,12 +37,13 @@ public class PlanetaryGenerator : MonoBehaviour
 
     private static float ApplyBias(float input, float bias)
     {
-        return input + (1 - Mathf.Exp(-bias * input));
+        float k = Mathf.Pow(1 - bias, 3);
+        return (input * k) / (input * k - input + 1);
     }
     #endregion
 
     #region HeightComputation
-    private static Vector3[] AdjustTerrain(Vector3[] vertices, Crater[] craters, ComputeShader calculateVertexHeight)
+    private static Vector3[] AdjustTerrain(Vector3[] vertices, Crater[] craters, PlanetVar planetVar, ComputeShader calculateVertexHeight)
     {
         //Init compute buffers for use with compute shader
         ComputeBuffer vertexBuffer = new ComputeBuffer(vertices.Length, 12);
@@ -50,10 +52,16 @@ public class PlanetaryGenerator : MonoBehaviour
         float[] heights = new float[vertices.Length];
         heightBuffer.SetData(heights);
         ComputeBuffer craterBuffer;
+
         if (craters.Length > 0)
         {
             craterBuffer = new ComputeBuffer(craters.Length, 16);
             craterBuffer.SetData(craters);
+            calculateVertexHeight.SetFloat("rimWidth", planetVar.craterSettings.rimWidth);
+            calculateVertexHeight.SetFloat("rimSteepness", planetVar.craterSettings.rimSteepness);
+            calculateVertexHeight.SetFloat("smoothness", planetVar.craterSettings.smoothness);
+            calculateVertexHeight.SetFloat("floorHeight", planetVar.craterSettings.floorHeight);
+            calculateVertexHeight.SetFloat("numCraters", planetVar.craterSettings.numCraters);
             vertices = ApplyComputeHeights(calculateVertexHeight, vertexBuffer, heightBuffer, craterBuffer);
         }
         else

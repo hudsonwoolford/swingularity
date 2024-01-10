@@ -16,10 +16,10 @@ public class OctahedronSphereCreator : MonoBehaviour {
         Vector3.forward
     };
 
-    public static Mesh Create (int subdivisions, float radius, int seed, int numCraters, float craterBias, ComputeShader calculateVertexHeight)
+    public static Mesh Create (PlanetVar planetVar, ComputeShader calculateVertexHeight)
     {
         //bit shift i.e. 2^n to calculate resolution (i.e. number of rows based on subdivision)
-        int resolution = 1 << subdivisions;
+        int resolution = 1 << planetVar.generalSettings.subdivisions;
 
         /* Calculate in quadrants - one quadrant has 4 verts, then 9, then 25 based on subdivs -> (resolution + 1)^2
          * multiply by 4 for each quadrant of octahedron
@@ -27,16 +27,16 @@ public class OctahedronSphereCreator : MonoBehaviour {
 
         Vector3[] vertices = new Vector3[(resolution + 1) * (resolution + 1) * 4 - (resolution * 2 - 1) * 3];
 
-        int[] triangles = new int[(1 << (subdivisions * 2 + 3)) * 3];
+        int[] triangles = new int[(1 << (planetVar.generalSettings.subdivisions * 2 + 3)) * 3];
         CreateOctahedron(vertices, triangles, resolution);
 
         Spherize(vertices);
 
-        if (radius != 1f)
+        if (planetVar.generalSettings.radius != 1f)
         {
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i] *= radius;
+                vertices[i] *= planetVar.generalSettings.radius;
             }
         }
 
@@ -50,7 +50,7 @@ public class OctahedronSphereCreator : MonoBehaviour {
         mesh.triangles = triangles;
 
         //Send data to computation script
-        mesh = PlanetaryGenerator.ModifyGeometry(mesh, calculateVertexHeight, seed, numCraters, craterBias);
+        mesh = PlanetaryGenerator.ModifyGeometry(mesh, planetVar, calculateVertexHeight);
         mesh.RecalculateNormals();
         return mesh;
     }
