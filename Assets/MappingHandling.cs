@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class MappingHandling : MonoBehaviour
 {
-    [SerializeField] BoxCollider camArea, playArea;
+    [SerializeField] BoxCollider playArea;
+    [SerializeField] EdgeCollider2D camArea;
     [SerializeField] Transform ball;
+    Camera mainCam;
+    Vector3 point;
     // Start is called before the first frame update
     void Start()
     {
-        
+        mainCam = Camera.main;
     }
 
     // Update is called once per frame
@@ -22,6 +25,22 @@ public class MappingHandling : MonoBehaviour
         if(!playArea.bounds.Contains(ball.position))
         {
             //out of bounds
+            print("oob");
+            Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - transform.position;
+            Ray backToCameraRay = new Ray(transform.position, transform.forward);
+            RaycastHit hitData;
+            if(Physics.Raycast(backToCameraRay, out hitData, 1000))
+            {
+                if(hitData.collider == camArea)
+                {
+                    print(hitData.point);
+                    point = hitData.point;
+                }
+            }
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawCube(point, Vector3.one);
     }
 }
