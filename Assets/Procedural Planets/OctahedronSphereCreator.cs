@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Rendering;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class OctahedronSphereCreator : MonoBehaviour {
 

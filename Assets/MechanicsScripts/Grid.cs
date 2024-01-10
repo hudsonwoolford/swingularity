@@ -1,0 +1,72 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
+using UnityEngine;
+
+public class Grid
+{
+    int width;
+    int height;
+    float cellSize;
+    Vector3 origin;
+    Rigidbody[] planets;
+    Rigidbody ball;
+    Vector2[,] gridArray;
+
+    public Grid(int width, int height, float cellSize, float colorDivisor, Vector3 origin, Rigidbody[] planets, Rigidbody ball, GameObject arrow, Transform parent, Gradient colorGrad)
+    {
+        this.width = width;
+        this.height = height;
+        this.cellSize = cellSize;
+        this.origin = origin;
+        this.planets = planets;
+        this.ball = ball;
+
+        gridArray = new Vector2[width, height];
+
+        for (int x = 0; x < gridArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridArray.GetLength(1); y++)
+            {
+                GameObject arrowInsta = Object.Instantiate(arrow, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f, Quaternion.identity);
+                arrowInsta.transform.localScale = Vector3.one * cellSize;
+                arrowInsta.transform.SetParent(parent, true);
+                Vector3 force = GravityForce(GetWorldPosition(x, y));
+                if(force.magnitude != 0)
+                {
+                    arrow.GetComponent<SpriteRenderer>().color = colorGrad.Evaluate(1-(1 / (force.magnitude / colorDivisor)));
+                    
+                }
+                else
+                {
+                    GameObject.Destroy(arrow);
+                }
+                float zRot = Mathf.Atan2(force.normalized.y, force.normalized.x) * Mathf.Rad2Deg;
+                arrowInsta.transform.rotation = Quaternion.Euler(0, 0, zRot);
+            }
+        }
+    }
+    Vector3 GetWorldPosition(int x, int y)
+    {
+        return origin + new Vector3(x, y) * cellSize;
+    }
+    Vector2 GravityForce(Vector3 worldPos)
+    {
+        Vector2 totalForce = Vector2.zero;
+        foreach (Rigidbody rbAttracting in planets)
+        {
+            Vector3 direction = rbAttracting.position - worldPos; //direction vector
+            float distance = direction.magnitude; //distance
+
+            float forceMagnitude = GravityConstant.G * (rbAttracting.mass * ball.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            Vector3 force = direction.normalized * forceMagnitude; //storing force
+            totalForce += new Vector2(force.x, force.y);
+        }
+        return totalForce;
+    }
+}
+public static class GravityConstant
+{
+    public static float G = 0.75f;
+}
