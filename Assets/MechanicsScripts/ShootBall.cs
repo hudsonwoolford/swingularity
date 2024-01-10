@@ -20,6 +20,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] bool simulated;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
     [SerializeField] GameObject simulationBall; //ball prefab with no scripts attached, just for physics
+    [Range(0, 500)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
