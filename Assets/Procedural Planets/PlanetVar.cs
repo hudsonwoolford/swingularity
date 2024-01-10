@@ -40,7 +40,7 @@ public class PlanetVar : ScriptableObject
         [Range(0f, 1f)]
         public float maxCraterSize;
 
-        [Range(0f, 250f)]
+        [Range(0f, 1000f)]
         public int numCraters;
     }
     public GeneralSettings generalSettings;
