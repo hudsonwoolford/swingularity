@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Rendering;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
-public static class OctahedronSphereCreator
-{
+public class OctahedronSphereCreator : MonoBehaviour {
 
     private static Vector3[] directions = {
         Vector3.left,
@@ -15,7 +16,7 @@ public static class OctahedronSphereCreator
         Vector3.forward
     };
 
-    public static Mesh Create (int subdivisions, float radius)
+    public static Mesh Create (int subdivisions, float radius, int seed, int numCraters, float craterBias, ComputeShader calculateVertexHeight)
     {
         //bit shift i.e. 2^n to calculate resolution (i.e. number of rows based on subdivision)
         int resolution = 1 << subdivisions;
@@ -29,8 +30,7 @@ public static class OctahedronSphereCreator
         int[] triangles = new int[(1 << (subdivisions * 2 + 3)) * 3];
         CreateOctahedron(vertices, triangles, resolution);
 
-        Vector3[] normals = new Vector3[vertices.Length];
-        Normalize(vertices, normals);
+        Spherize(vertices);
 
         if (radius != 1f)
         {
@@ -40,19 +40,28 @@ public static class OctahedronSphereCreator
             }
         }
 
+        //Create a mesh to be used
         Mesh mesh = new Mesh();
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.name = "Planet";
+
+        //Set all mesh parameters so unity can visualise them
         mesh.vertices = vertices;
-        mesh.normals = normals;
         mesh.triangles = triangles;
+
+        //Send data to computation script
+        mesh = PlanetaryGenerator.ModifyGeometry(mesh, calculateVertexHeight, seed, numCraters, craterBias);
+        mesh.RecalculateNormals();
         return mesh;
     }
 
-    private static void Normalize(Vector3[] vertices, Vector3[] normals)
+#region SphereGeneration
+    private static void Spherize(Vector3[] vertices)
     {
+        //Normalize all vertices - making them a magnitude of 1 i.e all equidistant and hence a circle
         for (int i = 0; i < vertices.Length;i++)
         {
-            normals[i] = vertices[i] = vertices[i].normalized;
+            vertices[i] = vertices[i].normalized;
         }
     }
 
@@ -115,9 +124,11 @@ public static class OctahedronSphereCreator
         }
     }
 
-    //Create a line between the two triangle face sides
     private static int CreateVertexLine(Vector3 from, Vector3 to, int steps, int v, Vector3[] vertices)
     {
+        //Create a line of vertices between the two points ("from" and "to" ) which sit at some y coordinate on two 90 degree separated edges of a simple octahedron
+
+        //Iterate for however long the row needs to be
         for (int i = 1; i <= steps; i++)
         {
             vertices[v++] = Vector3.Lerp(from, to, (float)i / steps);
@@ -163,4 +174,7 @@ public static class OctahedronSphereCreator
         }
         return t;
     }
+
+    #endregion
 }
+
