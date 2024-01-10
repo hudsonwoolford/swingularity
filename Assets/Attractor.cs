@@ -6,25 +6,30 @@ using UnityEngine;
 public class Attractor : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    GameObject ball;
+    bool simulation;
+    const float G = 1;
+    ShootBall ball;
+    Rigidbody ballrb;
     private void Awake()
     {
-        ball = GameObject.FindGameObjectWithTag("Player"); //stores ball, can be optimised later
+        GameObject ballObj = GameObject.FindGameObjectWithTag("Player");
+        ball = ballObj.GetComponent<ShootBall>(); //stores ball, can be optimised later
+        ballrb = ballObj.GetComponent<Rigidbody>();
     }
     private void FixedUpdate()
     {
-        Attract(ball); //always attracting ball
+        if(!simulation) { ball.Attract(ballrb, rb, false); } //always attracting ball
     }
-    void Attract(GameObject objToAttract) //brackeys gravity tutorial
-    {
-        Rigidbody rbToAttract = objToAttract.GetComponent<Rigidbody>(); //stores rigidbody of ball
+    //void Attract(GameObject objToAttract) //brackeys gravity tutorial
+    //{
+    //    Rigidbody rbToAttract = objToAttract.GetComponent<Rigidbody>(); //stores rigidbody of ball
 
-        Vector3 direction = rb.position - rbToAttract.position; //direction vector
-        float distance  = direction.magnitude; //distance
+    //    Vector3 direction = rb.position - rbToAttract.position; //direction vector
+    //    float distance  = direction.magnitude; //distance
 
-        float forceMagnitude = (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-        Vector3 force = direction.normalized * forceMagnitude; //storing force
+    //    float forceMagnitude = G * (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+    //    Vector3 force = direction.normalized * forceMagnitude; //storing force
 
-        rbToAttract.AddForce(force); //applying force
-    }
+    //    rbToAttract.AddForce(force); //applying force
+    //}
 }
