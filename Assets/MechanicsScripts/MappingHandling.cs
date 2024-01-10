@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MappingHandling : MonoBehaviour
 {
-    [SerializeField] BoxCollider playArea;
-    [SerializeField] EdgeCollider2D camArea;
+    [SerializeField] BoxCollider playArea, camArea;
     [SerializeField] Transform ball;
     Camera mainCam;
     Vector3 point;
@@ -21,22 +20,24 @@ public class MappingHandling : MonoBehaviour
         if(!camArea.bounds.Contains(ball.position))
         {
             //out of view
-        }
-        if(!playArea.bounds.Contains(ball.position))
-        {
-            //out of bounds
-            print("oob");
+            print("oov");
             Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - transform.position;
             Ray backToCameraRay = new Ray(transform.position, transform.forward);
             RaycastHit hitData;
-            if(Physics.Raycast(backToCameraRay, out hitData, 1000))
+            if (Physics.Raycast(backToCameraRay, out hitData, 1000))
             {
-                if(hitData.collider == camArea)
+                if (hitData.collider == camArea)
                 {
                     print(hitData.point);
                     point = hitData.point;
                 }
             }
+        }
+        if(!playArea.bounds.Contains(ball.position))
+        {
+            //out of bounds
+            print("oob");
+
         }
     }
     private void OnDrawGizmosSelected()
