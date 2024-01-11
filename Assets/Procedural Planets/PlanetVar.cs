@@ -28,9 +28,6 @@ public class PlanetVar : ScriptableObject
         [Range(0f, 1f)]
         public float smoothness;
 
-        [Range(-1f, 0.5f)]
-        public float floorHeight;
-
         [Range(0f, 1f)]
         public float craterBias;
 

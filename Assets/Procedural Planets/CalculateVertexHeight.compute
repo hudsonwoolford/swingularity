@@ -44,7 +44,9 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
     float shapeNoiseValue = SimpleNoise(vertexPos, shapeNoiseOctaves, shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseOffset);
     float detailNoiseValue = SimpleNoise(vertexPos, detailNoiseOctaves, detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseOffset);
     float ridgeNoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
-    float noiseSum = shapeNoiseValue * shapeNoiseElevation + detailNoiseValue * detailNoiseElevation + ridgeNoiseValue * ridgeNoiseElevation * 0.05;
+    ridgeNoiseOffset = float3(ridgeNoiseOffset.x + 1000, ridgeNoiseOffset.y + 1000, ridgeNoiseOffset.z + 1000);
+    float ridge2NoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
+    float noiseSum = shapeNoiseValue * shapeNoiseElevation + detailNoiseValue * detailNoiseElevation + ridgeNoiseValue * ridgeNoiseElevation * 0.05 + ridge2NoiseValue * ridgeNoiseElevation * 0.05;
     
     heights[id] += noiseSum;
     
