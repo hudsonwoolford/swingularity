@@ -25,7 +25,7 @@ public class ScoringManager : MonoBehaviour
     {
         holeScoreText.gameObject.SetActive(false);
         parText.text = "Par: " + par.ToString();
-        numShotsText.text = "Shotes: " + numShots.ToString();
+        numShotsText.text = "Shots: " + numShots.ToString();
     }
     void HoleEnd()
     {
