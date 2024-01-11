@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static PlanetVar;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class PlanetaryGenerator : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlanetaryGenerator : MonoBehaviour
     {
         public float radius;
         public Vector3 centre;
+        public float floorHeight;
     };
     public static Mesh ModifyGeometry(Mesh mesh, PlanetVar planetVar, ComputeShader calculateVertexHeight)
     {
@@ -29,8 +31,10 @@ public class PlanetaryGenerator : MonoBehaviour
         {
             float radius = Mathf.Lerp(planetVar.craterSettings.minCraterSize, planetVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, planetVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
+            float floorHeight = UnityEngine.Random.Range(-0.25f, 0f);
             craters[i].radius = radius;
             craters[i].centre = centre;
+            craters[i].floorHeight = floorHeight;
         }
         return craters;
     }
@@ -51,25 +55,72 @@ public class PlanetaryGenerator : MonoBehaviour
         ComputeBuffer heightBuffer = new ComputeBuffer(vertices.Length, 4);
         float[] heights = new float[vertices.Length];
         heightBuffer.SetData(heights);
-        ComputeBuffer craterBuffer;
 
-        if (craters.Length > 0)
+        SetShaderParams(calculateVertexHeight, planetVar);
+
+
+        if (planetVar.craterSettings.numCraters > 0)
         {
-            craterBuffer = new ComputeBuffer(craters.Length, 16);
+            ComputeBuffer craterBuffer;
+            craterBuffer = new ComputeBuffer(craters.Length, 20);
             craterBuffer.SetData(craters);
-            calculateVertexHeight.SetFloat("rimWidth", planetVar.craterSettings.rimWidth);
-            calculateVertexHeight.SetFloat("rimSteepness", planetVar.craterSettings.rimSteepness);
-            calculateVertexHeight.SetFloat("smoothness", planetVar.craterSettings.smoothness);
-            calculateVertexHeight.SetFloat("floorHeight", planetVar.craterSettings.floorHeight);
-            calculateVertexHeight.SetFloat("numCraters", planetVar.craterSettings.numCraters);
+
             vertices = ApplyComputeHeights(calculateVertexHeight, vertexBuffer, heightBuffer, craterBuffer);
         }
         else
         {
-            vertices = ApplyComputeHeights(calculateVertexHeight, vertexBuffer, heightBuffer);
+            Crater[] cratersNull = new Crater[1];
+            cratersNull[0].radius = 0;
+            cratersNull[0].centre = new Vector3 (0, 0, 0);
+            cratersNull[0].floorHeight = 0;
+            ComputeBuffer craterBuffer;
+            craterBuffer = new ComputeBuffer(cratersNull.Length, 20);
+            craterBuffer.SetData(cratersNull);
+            vertices = ApplyComputeHeights(calculateVertexHeight, vertexBuffer, heightBuffer, craterBuffer);
         }
         
         return vertices;
+    }
+
+    private static void SetShaderParams(ComputeShader calculateVertexHeight, PlanetVar planetVar)
+    {
+        //Crater params
+        calculateVertexHeight.SetFloat("rimWidth", planetVar.craterSettings.rimWidth);
+        calculateVertexHeight.SetFloat("rimSteepness", planetVar.craterSettings.rimSteepness);
+        calculateVertexHeight.SetFloat("smoothness", planetVar.craterSettings.smoothness);
+        calculateVertexHeight.SetFloat("numCraters", planetVar.craterSettings.numCraters);
+
+        //ShapeNoise params
+        calculateVertexHeight.SetInt("shapeNoiseOctaves", planetVar.shapeNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("shapeNoiseScale", planetVar.shapeNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("shapeNoisePersistence", planetVar.shapeNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("shapeNoiseLacunarity", planetVar.shapeNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("shapeNoiseMultiplier", planetVar.shapeNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("shapeNoiseGain", planetVar.shapeNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("shapeNoiseOffset", planetVar.shapeNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("shapeNoiseElevation", planetVar.shapeNoiseSettings.elevation);
+
+        //DetailNoise params
+        calculateVertexHeight.SetInt("detailNoiseOctaves", planetVar.detailNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("detailNoiseScale", planetVar.detailNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("detailNoisePersistence", planetVar.detailNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("detailNoiseLacunarity", planetVar.detailNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("detailNoiseMultiplier", planetVar.detailNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("detailNoiseGain", planetVar.detailNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("detailNoiseOffset", planetVar.detailNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("detailNoiseElevation", planetVar.detailNoiseSettings.elevation);
+
+        //RidgeNoise params
+        calculateVertexHeight.SetInt("ridgeNoiseOctaves", planetVar.ridgeNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("ridgeNoiseScale", planetVar.ridgeNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("ridgeNoisePersistence", planetVar.ridgeNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("ridgeNoiseLacunarity", planetVar.ridgeNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("ridgeNoiseMultiplier", planetVar.ridgeNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("ridgeNoiseGain", planetVar.ridgeNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("ridgeNoiseOffset", planetVar.ridgeNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("ridgeNoiseElevation", planetVar.ridgeNoiseSettings.elevation);
+        calculateVertexHeight.SetFloat("ridgeNoiseSmoothing", planetVar.ridgeNoiseSettings.smoothing);
+        calculateVertexHeight.SetFloat("ridgeNoisePower", planetVar.ridgeNoiseSettings.power);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)
@@ -78,9 +129,7 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetInt("numVertices", vertexBuffer.count);
         calculateVertexHeight.SetBuffer(0, "vertices", vertexBuffer);
         calculateVertexHeight.SetBuffer(0, "heights", heightBuffer);
-        if (craterBuffer != null) {
-            calculateVertexHeight.SetBuffer(0, "craters", craterBuffer);
-        }
+        calculateVertexHeight.SetBuffer(0, "craters", craterBuffer);
 
         //Run the shader using a function which calculates the number of dispatch calls required based on the number of iterations required and the threading dimensions of the shader
         RunComputeShader(calculateVertexHeight, vertexBuffer.count);
@@ -94,29 +143,7 @@ public class PlanetaryGenerator : MonoBehaviour
         //Remove buffers from GPU memory to save resources
         vertexBuffer.Release();
         heightBuffer.Release();
-        return vertices;
-    }
-
-    //Overload method without craters
-    private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer)
-    {
-        //Set values for compute shader use
-        calculateVertexHeight.SetInt("numVertices", vertexBuffer.count);
-        calculateVertexHeight.SetBuffer(0, "vertices", vertexBuffer);
-        calculateVertexHeight.SetBuffer(0, "heights", heightBuffer);
-
-        //Run the shader using a function which calculates the number of dispatch calls required based on the number of iterations required and the threading dimensions of the shader
-        RunComputeShader(calculateVertexHeight, vertexBuffer.count);
-
-        //Create a placeholder vertex array
-        var vertices = new Vector3[vertexBuffer.count];
-
-        //Write compute shader output to the vertex array
-        vertexBuffer.GetData(vertices);
-
-        //Remove buffers from GPU memory to save resources
-        vertexBuffer.Release();
-        heightBuffer.Release();
+        craterBuffer.Release();
         return vertices;
     }
 

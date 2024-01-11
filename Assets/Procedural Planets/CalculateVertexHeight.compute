@@ -1,31 +1,25 @@
 #pragma kernel CalculateVertexHeight
-
-struct Crater
-{
-    float radius;
-    float3 centre;
-};
+#include "CraterGen.cginc"
+#include "FractalNoise.cginc"
 
 RWStructuredBuffer<float3> vertices;
 RWStructuredBuffer<float> heights;
-StructuredBuffer<Crater> craters;
 
 uint numVertices;
 float rimWidth, rimSteepness, smoothness, floorHeight, numCraters;
 
+float shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseElevation;
+float3 shapeNoiseOffset;
+int shapeNoiseOctaves;
 
-float SmoothMin(float a, float b, float k)
-{
-    float h = saturate((b - a + k) / (2 * k));
-    return a * h + b * (1 - h) - h * k * (1 - h);
-}
+float detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseElevation;
+float3 detailNoiseOffset;
+int detailNoiseOctaves;
 
-float SmoothMax(float a, float b, float k)
-{
-    k = -k;
-    float h = saturate((b - a + k) / (2 * k));
-    return a * h + b * (1 - h) - h * k * (1 - h);
-}
+float ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoiseGain, ridgeNoiseElevation, ridgeNoisePower, ridgeNoiseSmoothing;
+float3 ridgeNoiseOffset;
+int ridgeNoiseOctaves;
+
 
 [numthreads(512, 1, 1)]
 void CalculateVertexHeight (uint id : SV_DispatchThreadID)
@@ -38,31 +32,22 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
     
     //Reference the position of the current vertex
     float3 vertexPos = vertices[id];
-    
-    //Set a variable to manipulate the height values of the vertices
     float craterHeight = 0;
     
-    //Loop over to check if the current vertex is in a crater
-    for (int i = 0; i < numCraters; i++)
-    {
-        //calculate the distance of the point to the crater between 0 and 1
-        float x = length(vertexPos - craters[i].centre) / craters[i].radius;
-        
-        //Define cavity as a simple parabola
-        float cavity = x * x - 1;
-        
-        //Define the rim as a parabola mirrored around x axis
-        //rimWidth changes 
-        float rimX = min(x - 1 - rimWidth, 0);
-        float rim = rimSteepness * rimX * rimX;
-        
-        float craterShape = SmoothMax(cavity, floorHeight, smoothness);
-        craterShape = SmoothMin(craterShape, rim, smoothness);
-        
-        craterHeight += craterShape * craters[i].radius;
-    }
+    heights[id] = 1;
     
-    heights[id] = 1 + craterHeight;
+    if (numCraters > 0)
+    {
+        craterHeight = CalculateCraterHeight(numCraters, vertexPos, rimWidth, rimSteepness, smoothness);
+        heights[id] += craterHeight;
+    }
+    float shapeNoiseValue = SimpleNoise(vertexPos, shapeNoiseOctaves, shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseOffset);
+    float detailNoiseValue = SimpleNoise(vertexPos, detailNoiseOctaves, detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseOffset);
+    float ridgeNoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
+    float noiseSum = shapeNoiseValue * shapeNoiseElevation + detailNoiseValue * detailNoiseElevation + ridgeNoiseValue * ridgeNoiseElevation * 0.05;
+    
+    heights[id] += noiseSum;
+    
     vertices[id] *= heights[id];
 }
 
