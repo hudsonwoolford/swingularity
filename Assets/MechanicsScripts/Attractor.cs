@@ -18,18 +18,6 @@ public class Attractor : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(!simulation) { ball.Attract(ballrb, rb, false); } //always attracting ball
+        if(!simulation) { ballrb.AddForce(ArtificialGravity.AttractForce(ballrb, rb)); } //always attracting ball
     }
-    //void Attract(GameObject objToAttract) //brackeys gravity tutorial
-    //{
-    //    Rigidbody rbToAttract = objToAttract.GetComponent<Rigidbody>(); //stores rigidbody of ball
-
-    //    Vector3 direction = rb.position - rbToAttract.position; //direction vector
-    //    float distance  = direction.magnitude; //distance
-
-    //    float forceMagnitude = G * (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-    //    Vector3 force = direction.normalized * forceMagnitude; //storing force
-
-    //    rbToAttract.AddForce(force); //applying force
-    //}
 }
