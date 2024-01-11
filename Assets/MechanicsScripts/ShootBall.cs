@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.PlayerSettings;
 
 public class ShootBall : MonoBehaviour
 {
@@ -18,14 +20,14 @@ public class ShootBall : MonoBehaviour
     [SerializeField] int verts; //how detailed is the arrow / how many vertices
     [Header("Simulated arrow")]
     [SerializeField] bool simulated;
+    [SerializeField] bool colIcons = true;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
-    [SerializeField] GameObject simulationBall; //ball prefab with no scripts attached, just for physics
+    [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
     [Range(0, 500)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
-    Vector3 lastFramePos;
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -34,7 +36,6 @@ public class ShootBall : MonoBehaviour
     Vector3 origin;
     Rigidbody rb;
     float bounciness;
-    bool still = true;
     Camera main;
     private void Awake()
     {
@@ -43,7 +44,6 @@ public class ShootBall : MonoBehaviour
     private void Start()
     {
         main = Camera.main;
-        lastFramePos = transform.position;
         attractors.Clear();
 
         origin = transform.position;
@@ -100,7 +100,7 @@ public class ShootBall : MonoBehaviour
             {
                 lr.SetPosition(i, new Vector2(transform.position.x,transform.position.y) + i * vertStep); //setting positions relative to ball
             }
-            yield return null;
+            yield return null; //wait for next frame
         }
         if(simulatedObj!=null)
         {
@@ -117,21 +117,15 @@ public class ShootBall : MonoBehaviour
         Vector2 force = dir.normalized * dist; //the force
 
         //unfreeze position
-        still = false; rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         
         rb.AddForce(force, ForceMode.Impulse); //adding force
-    }
-    void StoppingBall()
-    {
-        if(still) { return; }
 
-        if(Vector3.Distance(lastFramePos, transform.position) < 0.25f)
+        foreach (GameObject c in cols)
         {
-            still = true;
-            rb.constraints = RigidbodyConstraints.FreezeAll;
+            Destroy(c);
         }
-
-        lastFramePos = transform.position;
+        cols.Clear();
     }
     void BallReset()
     {
@@ -141,34 +135,23 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
     }
-    public void Attract(Rigidbody rbToAttract, Rigidbody rbAttracting, bool sim) //brackeys gravity tutorial
-    {
-        if (still&&!sim) { return; } //no need for extra forces that cause jitter
-        Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
-        float distance = direction.magnitude; //distance
-
-        float forceMagnitude = GravityConstant.G * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-        Vector3 force = direction.normalized * forceMagnitude; //storing force
-
-        rbToAttract.AddForce(force); //applying force
-    }
     #region Simulation
     void PhysicsScene()
     {
         simulationScene = SceneManager.CreateScene("Simulation");
         physicsScene = simulationScene.GetPhysicsScene(); //gets the physics scene
-        foreach (Transform tr in simulatedEnv)
+        foreach (Transform tr in simulatedEnv) //children of environment
         {
-            GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation);
-            obj.GetComponent<Renderer>().enabled = false;
-            Attractor attractor;
-            obj.layer = LayerMask.NameToLayer("Simulation");
-            if(obj.TryGetComponent<Attractor>(out attractor))
+            GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
+            obj.GetComponent<Renderer>().enabled = false; //hides it
+            Attractor attractor; //initializes attractor of obj
+            obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
+            if(obj.TryGetComponent<Attractor>(out attractor)) //tries to get the collider object (if it exists)
             {
-                attractor.enabled = false;
-                attractors.Add(obj.GetComponent<Rigidbody>());
+                attractor.enabled = false; //this prevents double gravity
+                attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
             }
-            SceneManager.MoveGameObjectToScene(obj, simulationScene);
+            SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
         }
     }
     void SimulateScene(Vector3 forceVar)
@@ -178,6 +161,7 @@ public class ShootBall : MonoBehaviour
         {
             simulatedObj = Instantiate(simulationBall, transform.position, transform.rotation);
             srb = simulatedObj.GetComponent<Rigidbody>();
+            srb.GetComponent<SimulationBall>().Init(this);
         }
 
         SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
@@ -192,7 +176,7 @@ public class ShootBall : MonoBehaviour
         float length = 0; //will keep track of line length to be compared against maxlength
         for (int i = 0; i < maxstep; i++) //for each step
         {
-            if(i>0){physicsScene.Simulate(Time.fixedDeltaTime); length += (simulatedObj.transform.position - slr.GetPosition(i-1)).magnitude;} //actual simulation and length addition
+            if (i>0){physicsScene.Simulate(Time.fixedDeltaTime); length += (simulatedObj.transform.position - slr.GetPosition(i-1)).magnitude;} //actual simulation and length addition
             if (length >= maxLengthSim)
             {
                 Vector3 dir = simulatedObj.transform.position - slr.GetPosition(i - 1).normalized; //dir from prev point to current point
@@ -204,7 +188,7 @@ public class ShootBall : MonoBehaviour
             }
             foreach (Rigidbody r in attractors) //since simulation does not account for gravity, we manually do it
             {
-                Attract(srb, r, true); //gravity
+                srb.AddForce(ArtificialGravity.AttractForce(srb, r));
             }
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
@@ -215,8 +199,39 @@ public class ShootBall : MonoBehaviour
         // // simulatedObj.transform.position = pos;
         // // simulatedObj.transform.rotation = rot;
         Physics.simulationMode = SimulationMode.FixedUpdate; //going back to normal fixed update
+        if (colIcons) { DrawCollisionIcons(); } //After fully simulated for the frame, draws the icons for collisions
     }
-
+    #endregion
+    #region CollisionIcons
+    List<GameObject> cols = new List<GameObject>();
+    List<Vector3> colPos = new List<Vector3>();
+    public void BallCollides(Vector3 pos) //called by the simulated ball when it collides with something
+    {
+        if(Vector3.Distance(transform.position, pos) < 0.5f) return; //this prevents an object that is on top of the ball
+        colPos.Add(pos + new Vector3(0,0,-5)); //adds the position of the collision
+    }
+    void DrawCollisionIcons()
+    {
+        //if statement used to make collider positions and num of collision objects the same
+        if (cols.Count < colPos.Count) //not enough collider objects
+        {
+            cols.Add(Instantiate(collisionVisual, Vector3.zero, Quaternion.identity));
+        }
+        else if (cols.Count > colPos.Count) //too many collider objects
+        {
+            for (int x = cols.Count; x > colPos.Count; x--) //iterates to destroy extra collider objects
+            {
+                GameObject extraCol = cols[x - 1];
+                cols.Remove(extraCol);
+                Destroy(extraCol);
+            }
+        }
+        for (int s = 0; s < cols.Count; s++) //iterates through colliders
+        {
+            cols[s].transform.position = colPos[s]; //sets the positions of the objects
+        }
+        colPos.Clear(); //clears all collision positions
+    }
     #endregion
     #region OnTrueFunc
     private void OnTriggerEnter(Collider other) {
@@ -226,11 +241,11 @@ public class ShootBall : MonoBehaviour
         }
     }
     private void OnDrawGizmosSelected() {
-        Gizmos.DrawCube(mousePos, Vector3.one);
+        Gizmos.DrawCube(mousePos, Vector3.one); //mousepos cube
     }
     private void OnApplicationQuit()
     {
-        ballMat.bounciness = bounciness;
+        ballMat.bounciness = bounciness; //makes sure the bounciness is retained, THIS MAY CAUSE ISSUES IN THE FUTURE
     }
     #endregion
 }

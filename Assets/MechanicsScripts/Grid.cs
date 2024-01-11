@@ -59,14 +59,25 @@ public class Grid
             Vector3 direction = rbAttracting.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance
 
-            float forceMagnitude = GravityConstant.G * (rbAttracting.mass * ball.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * ball.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
             Vector3 force = direction.normalized * forceMagnitude; //storing force
             totalForce += new Vector2(force.x, force.y);
         }
         return totalForce;
     }
 }
-public static class GravityConstant
+public static class ArtificialGravity
 {
     public static float G = 0.75f;
+
+    public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
+    {
+        Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
+        float distance = direction.magnitude; //distance
+
+        float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        Vector3 force = direction.normalized * forceMagnitude; //storing force
+
+        return force; //returning force
+    }
 }
