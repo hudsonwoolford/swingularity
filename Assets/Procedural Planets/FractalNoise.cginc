@@ -60,3 +60,10 @@ float SmoothedRidgeNoise(float3 position, int octaves, float scale, float persis
     return (sample0 + sample1 + sample2 + sample3 + sample4) / 5;
 }
 
+float3 WarpedNoise(float3 position, int octaves, float scale, float persistence, float lacunarity, float multiplier, float gain, float3 offset)
+{
+    float x = SimpleNoise(position, octaves, scale, persistence, lacunarity, multiplier, gain, offset);
+    float y = SimpleNoise(position + 100, octaves, scale, persistence, lacunarity, multiplier, gain, offset);
+    float z = SimpleNoise(position - 100, octaves, scale, persistence, lacunarity, multiplier, gain, offset);
+    return float3(x, y, z);
+}

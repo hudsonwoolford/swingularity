@@ -25,6 +25,7 @@ MonoBehaviour:
     maxCraterSize: 0.475
     numCraters: 5000
   shapeNoiseSettings:
+    applyNoise: 1
     octaves: 3
     scale: 1.19
     persistence: -0.53
@@ -37,6 +38,7 @@ MonoBehaviour:
     - 1.01
     elevation: 0.14
   detailNoiseSettings:
+    applyNoise: 1
     octaves: 7
     scale: 3.9
     persistence: 0.61
@@ -49,6 +51,7 @@ MonoBehaviour:
     - 5.77
     elevation: 0.05
   ridgeNoiseSettings:
+    applyNoise: 1
     octaves: 6
     scale: -2.67
     persistence: 0.33
@@ -62,3 +65,16 @@ MonoBehaviour:
     - 0
     elevation: -0.25
     smoothing: 1
+  warpedNoiseSettings:
+    applyNoise: 0
+    octaves: 6
+    scale: 0.65
+    persistence: 1.74
+    lacunarity: 0.72
+    multiplier: 0.48
+    gain: 1.21
+    offset:
+    - 0
+    - 0
+    - 0
+    strength: 0.85

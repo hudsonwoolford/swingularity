@@ -44,6 +44,7 @@ public class PlanetVar : ScriptableObject
     [Serializable]
     public class ShapeNoiseSettings
     {
+        public bool applyNoise;
         public int octaves;
         public float scale;
         public float persistence;
@@ -57,6 +58,7 @@ public class PlanetVar : ScriptableObject
     [Serializable]
     public class DetailNoiseSettings
     {
+        public bool applyNoise;
         public int octaves;
         public float scale;
         public float persistence;
@@ -70,6 +72,7 @@ public class PlanetVar : ScriptableObject
     [Serializable]
     public class RidgeNoiseSettings
     {
+        public bool applyNoise;
         public int octaves;
         public float scale;
         public float persistence;
@@ -82,9 +85,39 @@ public class PlanetVar : ScriptableObject
         public float smoothing;
     }
 
+    [Serializable]
+    public class WarpedNoiseSettings
+    {
+        public bool applyNoise;
+        public int octaves;
+        public float scale;
+        public float persistence;
+        public float lacunarity;
+        public float multiplier;
+        public float gain;
+        public float[] offset = new float[3];
+        public float strength;
+    }
+
+    [Serializable]
+    public class ContinentNoiseSettings
+    {
+        public bool applyNoise;
+        public int octaves;
+        public float scale;
+        public float persistence;
+        public float lacunarity;
+        public float multiplier;
+        public float gain;
+        public float[] offset = new float[3];
+        public float depth;
+    }
+
     public GeneralSettings generalSettings;
     public CraterSettings craterSettings;
     public ShapeNoiseSettings shapeNoiseSettings;
     public DetailNoiseSettings detailNoiseSettings;
     public RidgeNoiseSettings ridgeNoiseSettings;
+    public WarpedNoiseSettings warpedNoiseSettings;
+    public ContinentNoiseSettings continentNoiseSettings;
 }
