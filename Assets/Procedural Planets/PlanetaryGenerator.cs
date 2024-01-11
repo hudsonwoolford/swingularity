@@ -99,6 +99,7 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("shapeNoiseGain", planetVar.shapeNoiseSettings.gain);
         calculateVertexHeight.SetFloats("shapeNoiseOffset", planetVar.shapeNoiseSettings.offset);
         calculateVertexHeight.SetFloat("shapeNoiseElevation", planetVar.shapeNoiseSettings.elevation);
+        calculateVertexHeight.SetBool("shapeNoiseApply", planetVar.shapeNoiseSettings.applyNoise);
 
         //DetailNoise params
         calculateVertexHeight.SetInt("detailNoiseOctaves", planetVar.detailNoiseSettings.octaves);
@@ -109,6 +110,7 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("detailNoiseGain", planetVar.detailNoiseSettings.gain);
         calculateVertexHeight.SetFloats("detailNoiseOffset", planetVar.detailNoiseSettings.offset);
         calculateVertexHeight.SetFloat("detailNoiseElevation", planetVar.detailNoiseSettings.elevation);
+        calculateVertexHeight.SetBool("detailNoiseApply", planetVar.detailNoiseSettings.applyNoise);
 
         //RidgeNoise params
         calculateVertexHeight.SetInt("ridgeNoiseOctaves", planetVar.ridgeNoiseSettings.octaves);
@@ -121,6 +123,29 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("ridgeNoiseElevation", planetVar.ridgeNoiseSettings.elevation);
         calculateVertexHeight.SetFloat("ridgeNoiseSmoothing", planetVar.ridgeNoiseSettings.smoothing);
         calculateVertexHeight.SetFloat("ridgeNoisePower", planetVar.ridgeNoiseSettings.power);
+        calculateVertexHeight.SetBool("ridgeNoiseApply", planetVar.ridgeNoiseSettings.applyNoise);
+
+        //WarpedNoise params
+        calculateVertexHeight.SetInt("warpedNoiseOctaves", planetVar.warpedNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("warpedNoiseScale", planetVar.warpedNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("warpedNoisePersistence", planetVar.warpedNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("warpedNoiseLacunarity", planetVar.warpedNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("warpedNoiseMultiplier", planetVar.warpedNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("warpedNoiseGain", planetVar.warpedNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("warpedNoiseOffset", planetVar.warpedNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("warpedNoiseStrength", planetVar.warpedNoiseSettings.strength);
+        calculateVertexHeight.SetBool("warpedNoiseApply", planetVar.warpedNoiseSettings.applyNoise);
+
+        //ContinentNoise params
+        calculateVertexHeight.SetInt("continentNoiseOctaves", planetVar.continentNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("continentNoiseScale", planetVar.continentNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("continentNoisePersistence", planetVar.continentNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("continentNoiseLacunarity", planetVar.continentNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("continentNoiseMultiplier", planetVar.continentNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("continentNoiseGain", planetVar.continentNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("continentNoiseOffset", planetVar.continentNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("continentNoiseStrength", planetVar.continentNoiseSettings.depth);
+        calculateVertexHeight.SetBool("continentNoiseApply", planetVar.continentNoiseSettings.applyNoise);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)

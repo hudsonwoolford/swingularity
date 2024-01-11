@@ -8,18 +8,25 @@ RWStructuredBuffer<float> heights;
 uint numVertices;
 float rimWidth, rimSteepness, smoothness, floorHeight, numCraters;
 
+bool shapeNoiseApply;
 float shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseElevation;
 float3 shapeNoiseOffset;
 int shapeNoiseOctaves;
 
+bool detailNoiseApply;
 float detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseElevation;
 float3 detailNoiseOffset;
 int detailNoiseOctaves;
 
+bool ridgeNoiseApply;
 float ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoiseGain, ridgeNoiseElevation, ridgeNoisePower, ridgeNoiseSmoothing;
 float3 ridgeNoiseOffset;
 int ridgeNoiseOctaves;
 
+bool warpedNoiseApply;
+float warpedNoiseScale, warpedNoisePersistence, warpedNoiseLacunarity, warpedNoiseMultiplier, warpedNoiseGain, warpedNoiseStrength;
+float3 warpedNoiseOffset;
+int warpedNoiseOctaves;
 
 [numthreads(512, 1, 1)]
 void CalculateVertexHeight (uint id : SV_DispatchThreadID)
@@ -41,11 +48,34 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
         craterHeight = CalculateCraterHeight(numCraters, vertexPos, rimWidth, rimSteepness, smoothness);
         heights[id] += craterHeight;
     }
-    float shapeNoiseValue = SimpleNoise(vertexPos, shapeNoiseOctaves, shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseOffset);
-    float detailNoiseValue = SimpleNoise(vertexPos, detailNoiseOctaves, detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseOffset);
-    float ridgeNoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
-    ridgeNoiseOffset = float3(ridgeNoiseOffset.x + 1000, ridgeNoiseOffset.y + 1000, ridgeNoiseOffset.z + 1000);
-    float ridge2NoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
+    
+    float warpedNoiseValue = 0;
+    if (warpedNoiseApply)
+    {
+        warpedNoiseValue = WarpedNoise(vertexPos, warpedNoiseOctaves, warpedNoiseScale, warpedNoisePersistence, warpedNoiseLacunarity, warpedNoiseMultiplier, warpedNoiseGain, warpedNoiseOffset) * warpedNoiseStrength;
+    }
+    
+    float shapeNoiseValue = 0;
+    if (shapeNoiseApply)
+    {
+        shapeNoiseValue = SimpleNoise(vertexPos + warpedNoiseValue, shapeNoiseOctaves, shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseOffset);
+    }
+    
+    float detailNoiseValue = 0;
+    if (detailNoiseApply)
+    {
+        detailNoiseValue = SimpleNoise(vertexPos, detailNoiseOctaves, detailNoiseScale, detailNoisePersistence, detailNoiseLacunarity, detailNoiseMultiplier, detailNoiseGain, detailNoiseOffset);
+    }
+    
+    float ridge2NoiseValue = 0;
+    float ridgeNoiseValue = 0;
+    if (ridgeNoiseApply)
+    {
+        ridgeNoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
+        ridgeNoiseOffset = float3(ridgeNoiseOffset.x + 1000, ridgeNoiseOffset.y + 1000, ridgeNoiseOffset.z + 1000);
+        ridge2NoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
+    }
+        
     float noiseSum = shapeNoiseValue * shapeNoiseElevation + detailNoiseValue * detailNoiseElevation + ridgeNoiseValue * ridgeNoiseElevation * 0.05 + ridge2NoiseValue * ridgeNoiseElevation * 0.05;
     
     heights[id] += noiseSum;
