@@ -32,18 +32,24 @@ public class MappingHandling : MonoBehaviour
             if (hits!=null)
             {
                 print("Hit");
+                int dist = 0;
                 foreach (RaycastHit r in hits)
                 {
+                    
+                    if (r.collider == camArea)
+                    {
+                        dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
+                    }
                     if (r.collider == camAreaSmaller)
                     {
                         point = r.point;
                         float zRot = Mathf.Atan2(dirtoCamera.normalized.y, dirtoCamera.normalized.x) * Mathf.Rad2Deg;
                         arrow.rotation = Quaternion.Euler(0, 0, zRot - 180);
                         arrow.position = point + new Vector3(0,0,-5);
-                        distText.text = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10).ToString();
                     }
-                    
+                                
                 }
+                distText.text = dist.ToString();
             }
         }
         if(!playArea.bounds.Contains(ball.position))
