@@ -9,6 +9,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
+    [SerializeField] Animator canvasAnimator;
     Camera mainCam;
     Vector3 point;
     // Start is called before the first frame update
@@ -55,8 +56,8 @@ public class MappingHandling : MonoBehaviour
         if(!playArea.bounds.Contains(ball.position))
         {
             //out of bounds
-            print("oob");
-
+            ShootBall.triggerReset?.Invoke();
+            canvasAnimator.Play("ShowOOB");
         }
     } 
     private void OnDrawGizmosSelected()
