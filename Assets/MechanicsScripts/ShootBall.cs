@@ -37,6 +37,15 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     float bounciness;
     Camera main;
+    public delegate void OnShoot();
+    public static OnShoot onShoot;
+    public delegate void OnStill();
+    public static OnStill onStill;
+    public delegate void OnHole();
+    public static OnHole onHole;
+    public delegate void TriggerReset();
+    public static TriggerReset triggerReset;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -118,7 +127,8 @@ public class ShootBall : MonoBehaviour
 
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        
+
+        onShoot?.Invoke(); //invoke shoot event
         rb.AddForce(force, ForceMode.Impulse); //adding force
 
         foreach (GameObject c in cols)
@@ -237,7 +247,8 @@ public class ShootBall : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
          if(other.gameObject.tag == "Hole")
         {
-            BallReset();
+            onHole?.Invoke();
+            triggerReset?.Invoke();
         }
     }
     private void OnDrawGizmosSelected() {
@@ -248,4 +259,12 @@ public class ShootBall : MonoBehaviour
         ballMat.bounciness = bounciness; //makes sure the bounciness is retained, THIS MAY CAUSE ISSUES IN THE FUTURE
     }
     #endregion
+    private void OnEnable()
+    {
+        triggerReset += BallReset;
+    }
+    private void OnDisable()
+    {
+        triggerReset -= BallReset;
+    }
 }
