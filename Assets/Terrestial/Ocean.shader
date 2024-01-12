@@ -96,12 +96,15 @@ Shader "Hidden/Ocean"
                 float dstThroughOcean = hitInfo.y;
                 float3 rayOceanIntersectPos = rayPos + rayDir * dstToOcean - oceanCentre;
 
-                
                 float oceanViewDepth = min(dstThroughOcean, sceneDepth - dstToOcean);
 
                 if(oceanViewDepth > 0)
                 {
-                    return 1;
+                    float opticalDepth = 1 - exp(-oceanViewDepth * depthMultiplier);
+                    float alpha = 1 - exp(-oceanViewDepth * alphaMultiplier);
+                    float4 oceanCol = lerp(colA, colB, opticalDepth);
+
+                    return lerp(originalCol, oceanCol, alpha);
                 }
                 return originalCol;
             }
