@@ -28,7 +28,7 @@ MonoBehaviour:
     applyNoise: 1
     octaves: 3
     scale: 1.19
-    persistence: -0.53
+    persistence: 1.12
     lacunarity: 0.17
     multiplier: 0.64
     gain: 0.85
@@ -36,7 +36,7 @@ MonoBehaviour:
     - 0.46
     - 0.92
     - 1.01
-    elevation: 0.14
+    elevation: 0.61
   detailNoiseSettings:
     applyNoise: 1
     octaves: 7
@@ -66,15 +66,31 @@ MonoBehaviour:
     elevation: -0.25
     smoothing: 1
   warpedNoiseSettings:
-    applyNoise: 0
+    applyNoise: 1
     octaves: 6
-    scale: 0.65
+    scale: 0.97
     persistence: 1.74
     lacunarity: 0.72
     multiplier: 0.48
-    gain: 1.21
+    gain: 1.15
     offset:
     - 0
     - 0
     - 0
-    strength: 0.85
+    strength: 0.94
+  continentNoiseSettings:
+    applyNoise: 0
+    octaves: 0
+    scale: 0
+    persistence: 0
+    lacunarity: 0
+    multiplier: 0
+    gain: 0
+    offset:
+    - 0
+    - 0
+    - 0
+    depthMultiplier: 0
+    oceanFloorDepth: 0
+    oceanFloorSmoothing: 0
+    maskBlend: 0
