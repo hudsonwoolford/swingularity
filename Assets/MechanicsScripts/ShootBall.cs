@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,7 +19,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] int verts; //how detailed is the arrow / how many vertices
     [Header("Simulated arrow")]
     [SerializeField] bool simulated;
-    [SerializeField] bool colIcons = true;
+    [SerializeField] bool colIcons = true, showBallPos = false;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
     [Range(0, 500)]
@@ -37,6 +36,7 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     float bounciness;
     Camera main;
+    bool liningUpShot;
     public delegate void OnShoot();
     public static OnShoot onShoot;
     public delegate void OnStill();
@@ -52,6 +52,8 @@ public class ShootBall : MonoBehaviour
     }
     private void Start()
     {
+        
+
         main = Camera.main;
         attractors.Clear();
 
@@ -76,12 +78,15 @@ public class ShootBall : MonoBehaviour
             if(Physics.Raycast(mouseRay, out hitData, 20, playerLayer) && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
             {
                 StartCoroutine(LineUpShot());
+                if(showBallPos)
+                { StartCoroutine(ShowBallSpeed()); }
             }
         }
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
+        liningUpShot = true;
         Vector2 startingMousePos = mousePos; //stores the initial mousepos
         //lr setup
         lr.positionCount = verts;
@@ -136,6 +141,7 @@ public class ShootBall : MonoBehaviour
             Destroy(c);
         }
         cols.Clear();
+        liningUpShot = false;
     }
     void BallReset()
     {
@@ -241,6 +247,39 @@ public class ShootBall : MonoBehaviour
             cols[s].transform.position = colPos[s]; //sets the positions of the objects
         }
         colPos.Clear(); //clears all collision positions
+    }
+    IEnumerator ShowBallSpeed()
+    {
+        float simTime = 0;
+        float endTime = 20 / maxstep;
+        if(endTime == 0)
+        {
+            endTime = 1;
+        }
+        GradientAlphaKey[] alphas = slr.colorGradient.alphaKeys;
+        while(liningUpShot)
+        {
+            GradientColorKey[] color = new GradientColorKey[5];
+            color[0] = new GradientColorKey(Color.red, 0f);
+            color[1] = new GradientColorKey(Color.red, simTime / endTime-0.1f);
+            color[2] = new GradientColorKey(Color.white, simTime / endTime);
+            color[3] = new GradientColorKey(Color.red, simTime / endTime+0.1f);
+            color[4] = new GradientColorKey(Color.red, 1f);
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(color, slr.colorGradient.alphaKeys);
+            slr.colorGradient = gradient;
+            simTime += Time.deltaTime;
+            print(simTime);
+            if(simTime > endTime)
+            {
+                color[4] = new GradientColorKey(Color.white, 1f);
+                gradient.SetKeys(color, slr.colorGradient.alphaKeys);
+                simTime = 0;
+            }
+            yield return null;
+        }
+        
+        yield return new WaitForFixedUpdate();
     }
     #endregion
     #region OnTrueFunc
