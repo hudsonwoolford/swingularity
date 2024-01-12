@@ -144,8 +144,11 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("continentNoiseMultiplier", planetVar.continentNoiseSettings.multiplier);
         calculateVertexHeight.SetFloat("continentNoiseGain", planetVar.continentNoiseSettings.gain);
         calculateVertexHeight.SetFloats("continentNoiseOffset", planetVar.continentNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("continentNoiseStrength", planetVar.continentNoiseSettings.depth);
+        calculateVertexHeight.SetFloat("continentNoiseDepth", planetVar.continentNoiseSettings.depthMultiplier);
         calculateVertexHeight.SetBool("continentNoiseApply", planetVar.continentNoiseSettings.applyNoise);
+        calculateVertexHeight.SetFloat("oceanFloorDepth", planetVar.continentNoiseSettings.oceanFloorDepth);
+        calculateVertexHeight.SetFloat("oceanFloorSmoothing", planetVar.continentNoiseSettings.oceanFloorSmoothing);
+        calculateVertexHeight.SetFloat("maskBlend", planetVar.continentNoiseSettings.maskBlend);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)

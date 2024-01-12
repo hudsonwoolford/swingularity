@@ -110,7 +110,10 @@ public class PlanetVar : ScriptableObject
         public float multiplier;
         public float gain;
         public float[] offset = new float[3];
-        public float depth;
+        public float depthMultiplier;
+        public float oceanFloorDepth;
+        public float oceanFloorSmoothing;
+        public float maskBlend;
     }
 
     public GeneralSettings generalSettings;

@@ -67,3 +67,30 @@ float3 WarpedNoise(float3 position, int octaves, float scale, float persistence,
     float z = SimpleNoise(position - 100, octaves, scale, persistence, lacunarity, multiplier, gain, offset);
     return float3(x, y, z);
 }
+
+float ContinentNoise(float3 position, int octaves, float scale, float persistence, float lacunarity, float multiplier, float gain, float3 offset)
+{
+    float noiseSum = 0;
+    float amplitude = 1;
+    float frequency = scale;
+    float weight = 1;
+    
+    for (int i = 0; i < octaves; i++)
+    {
+        float noiseVal = snoise(position * frequency + offset);
+        noiseVal *= weight;
+        weight = saturate(noiseVal * gain);
+        
+        noiseSum += noiseVal * amplitude;
+        amplitude *= persistence;
+        frequency *= lacunarity;
+    }
+    
+    return noiseSum * multiplier;
+
+}
+
+float Blend(float startHeight, float blendDst, float height)
+{
+    return smoothstep(startHeight - blendDst / 2, startHeight + blendDst / 2, height);
+}

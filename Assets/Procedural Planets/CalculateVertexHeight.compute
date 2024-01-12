@@ -28,6 +28,13 @@ float warpedNoiseScale, warpedNoisePersistence, warpedNoiseLacunarity, warpedNoi
 float3 warpedNoiseOffset;
 int warpedNoiseOctaves;
 
+bool continentNoiseApply;
+float oceanFloorDepth, oceanFloorSmoothing;
+float continentNoiseScale, continentNoisePersistence, continentNoiseLacunarity, continentNoiseMultiplier, continentNoiseGain, continentNoiseDepth;
+float3 continentNoiseOffset;
+int continentNoiseOctaves;
+float maskBlend;
+
 [numthreads(512, 1, 1)]
 void CalculateVertexHeight (uint id : SV_DispatchThreadID)
 {
@@ -60,6 +67,21 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
     {
         shapeNoiseValue = SimpleNoise(vertexPos + warpedNoiseValue, shapeNoiseOctaves, shapeNoiseScale, shapeNoisePersistence, shapeNoiseLacunarity, shapeNoiseMultiplier, shapeNoiseGain, shapeNoiseOffset);
     }
+   
+    float continentShape = 0;
+    float continentMask = 1;
+    if (continentNoiseApply)
+    {
+        continentShape = ContinentNoise(vertexPos, continentNoiseOctaves, continentNoiseScale, continentNoisePersistence, continentNoiseLacunarity, continentNoiseMultiplier, continentNoiseGain, continentNoiseOffset);
+        float oceanFloorShape = -oceanFloorDepth + continentShape * 0.15;
+        continentShape = SmoothMax(continentShape, oceanFloorShape, oceanFloorSmoothing);
+        
+        if (continentShape < 0)
+        {
+            continentShape *= 1 + continentNoiseDepth;
+        }
+        continentMask = Blend(0, maskBlend, ContinentNoise(vertexPos, continentNoiseOctaves, continentNoiseScale, continentNoisePersistence, 1, continentNoiseMultiplier, continentNoiseGain, continentNoiseOffset));
+    }
     
     float detailNoiseValue = 0;
     if (detailNoiseApply)
@@ -76,7 +98,7 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
         ridge2NoiseValue = SmoothedRidgeNoise(vertexPos, ridgeNoiseOctaves, ridgeNoiseScale, ridgeNoisePersistence, ridgeNoiseLacunarity, ridgeNoiseMultiplier, ridgeNoisePower, ridgeNoiseGain, ridgeNoiseOffset, ridgeNoiseSmoothing);
     }
         
-    float noiseSum = shapeNoiseValue * shapeNoiseElevation + detailNoiseValue * detailNoiseElevation + ridgeNoiseValue * ridgeNoiseElevation * 0.05 + ridge2NoiseValue * ridgeNoiseElevation * 0.05;
+    float noiseSum = continentShape * 0.05 + shapeNoiseValue * shapeNoiseElevation * 0.05 + (detailNoiseValue * detailNoiseElevation * 0.05 + ridgeNoiseValue * ridgeNoiseElevation * 0.05 + ridge2NoiseValue * ridgeNoiseElevation * 0.05) * continentMask;
     
     heights[id] += noiseSum;
     
