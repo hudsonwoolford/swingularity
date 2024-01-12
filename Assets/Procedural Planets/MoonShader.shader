@@ -3,6 +3,14 @@ Shader "Unlit/MoonShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _MainTexScale ("Main Tex Scale", float) = 10
+
+        _PrimaryColA ("Primary A", Color) = (1,1,1,1)
+		_SecondaryColA ("Secondary A", Color) = (1,1,1,1)
+		_PrimaryColB ("Primary B", Color) = (1,1,1,1)
+		_SecondaryColB ("Secondary B", Color) = (1,1,1,1)
+        _HeightMin ("Height Minimum", float) = 1
+        _HeightMax ("Height Maximum", float) = 1
     }
     SubShader
     {
@@ -26,8 +34,10 @@ Shader "Unlit/MoonShader"
             };
 
             sampler2D _MainTex;
+            float _MainTexScale;
             float4 _MainTex_ST;
-            float2 heightMinMax;
+            float _HeightMin;
+            float _HeightMax;
 
             void vert (inout appdata_full v, out Input o)
             {
@@ -38,9 +48,18 @@ Shader "Unlit/MoonShader"
                 o.tangent = v.tangent;
             }
 
-            void surf (Input IN, inout SurfaceOutputStandard o){
+            void surf (Input IN, inout SurfaceOutputStandard o)
+            {
                 float4 terrainData = IN.terrainData;
-                float height01 = remap01(length(IN.vertexPos), heightMinMax.x, heightMinMax.y);
+                float height01 = remap01(length(IN.vertexPos), _HeightMin, _HeightMax);
+
+                const float maxSteepnessApprox = 0.3;
+                float steepness = 1 - dot(IN.normal, normalize(IN.vertexPos));
+                steepness = remap01(steepness, 0, maxSteepnessApprox);
+
+                float warpNoise = Blend(0, 3, IN.terrainData.z);
+                float texNoise = triplanar(IN.vertexPos, IN.normal, _MainTexScale, _MainTex);
+
             }
             ENDCG
     }
