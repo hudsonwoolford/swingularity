@@ -46,6 +46,18 @@ public class MappingHandling : MonoBehaviour
                         point = r.point;
                         float zRot = Mathf.Atan2(dirtoCamera.normalized.y, dirtoCamera.normalized.x) * Mathf.Rad2Deg;
                         arrow.rotation = Quaternion.Euler(0, 0, zRot - 180);
+                        Transform dt = distText.gameObject.transform;
+                        if ((-arrow.transform.up).y > 0)
+                        {
+
+                            dt.localRotation = Quaternion.Euler(180, 180, 0);
+                            distText.alignment = TextAlignmentOptions.Left;
+                        }
+                        else
+                        {
+                            dt.localRotation = Quaternion.Euler(0, 0, 0);
+                            distText.alignment = TextAlignmentOptions.Right;
+                        }
                         arrow.position = point + new Vector3(0,0,-5);
                     }
                                 
