@@ -20,8 +20,8 @@ Shader "Custom/TerrestialSurface"
 
         CGPROGRAM
         #pragma surface surf Lambert vertex:vert
-
-        
+        #include "TriplanarMapping.cginc"
+        #include "FractalNoise.cginc"
 
         float _SteepMultiplier;
         fixed4 _FlatColor;
@@ -31,6 +31,14 @@ Shader "Custom/TerrestialSurface"
         float _VegetationLineHarshness;
         fixed4 _HighElevationColor;
         fixed4 _SeabedColor;
+
+        int _Octaves;
+        float3 _Offset;
+        float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
+
+        int _WarpOctaves;
+        float3 _WarpOffset;
+        float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
 
         struct Input
         {
@@ -49,9 +57,14 @@ Shader "Custom/TerrestialSurface"
 
         void surf(Input IN, inout SurfaceOutput o)
         {
+            float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
+            float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
+            
             //Terrain steepness
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
             float steepness = 1- dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal
+
+
             float3 steepColor = lerp(_FlatColor, _SteepColor, steepness * _SteepMultiplier); //lerps the flat and steep color depending on steepness
             //Terrain elevation
             float seaLevelHeight = length(_SeaLevel*sphereNormal);
@@ -62,10 +75,9 @@ Shader "Custom/TerrestialSurface"
             //if(elevation >= _VegetationLine) {elevationColor = _HighElevationColor;} 
             float3 elevationColor = lerp(steepColor, _HighElevationColor, pow(elevation / _VegetationLine, _VegetationLineHarshness));
             
-
+            
             //Compound colors
             float3 compoundColor = lerp(steepColor, elevationColor, 1);
-
             o.Albedo = compoundColor;
             
         }
