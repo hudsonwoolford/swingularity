@@ -80,7 +80,3 @@ float remap01(float v, float minOld, float maxOld) {
 float2 remap01(float2 v, float2 minOld, float2 maxOld) {
     return saturate((v-minOld) / (maxOld-minOld));
 }
-
-float Blend(float startHeight, float blendDst, float height) {
-    return smoothstep(startHeight - blendDst / 2, startHeight + blendDst / 2, height);
-}

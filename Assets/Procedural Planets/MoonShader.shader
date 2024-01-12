@@ -22,6 +22,7 @@ Shader "Unlit/MoonShader"
 
             #include "UnityCG.cginc"
             #include "TriplanarMapping.cginc"
+            #include "FractalNoise.cginc"
 
             struct Input{
                 float3 vertexPos;
@@ -59,7 +60,7 @@ Shader "Unlit/MoonShader"
 
                 float warpNoise = Blend(0, 3, IN.terrainData.z);
                 float texNoise = triplanar(IN.vertexPos, IN.normal, _MainTexScale, _MainTex);
-
+                
             }
             ENDCG
     }

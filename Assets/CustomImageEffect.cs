@@ -28,7 +28,7 @@ public class CustomImageEffect : MonoBehaviour
     void ShaderValues()
     {
         material.SetColor("colA", colA);
-        material.SetColor("colA", colB);
+        material.SetColor("colB", colB);
         material.SetFloat("depthMultiplier", depthMultiplier);
         material.SetFloat("depthMultiplier", alphaMultiplier);
         material.SetVector("oceanCentre", oceanCentre);
