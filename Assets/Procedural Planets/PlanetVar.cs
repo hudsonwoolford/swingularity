@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "planetVar", menuName = "PlanetVar")]
+[Serializable]
 public class PlanetVar : ScriptableObject
 {
     [Serializable]

@@ -30,7 +30,7 @@ public class CustomImageEffect : MonoBehaviour
         material.SetColor("colA", colA);
         material.SetColor("colB", colB);
         material.SetFloat("depthMultiplier", depthMultiplier);
-        material.SetFloat("depthMultiplier", alphaMultiplier);
+        material.SetFloat("alphaMultiplier", alphaMultiplier);
         material.SetVector("oceanCentre", oceanCentre);
         material.SetFloat("oceanRadius", oceanRadius);
         material.SetFloat("planetScale", planetScale);

@@ -42,7 +42,7 @@ float3 ColorBelowWater(float3 viewDir, float4 screenPos, float distFromCam, floa
     float depthDifference = min(throughWaterDepth, vertexSceneDepth - toWaterDist);
 
     float3 backgroundColor = tex2D(_WaterBackground, uv).rgb;
-    float fogFactor = exp2(-_WaterFogDensity * depthDifference);
+    float fogFactor = exp2(_WaterFogDensity * depthDifference);
     return lerp(_WaterFogColor, backgroundColor, fogFactor);
 }
 

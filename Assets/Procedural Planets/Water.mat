@@ -7,19 +7,17 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalWaterMat
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: Water
+  m_Shader: {fileID: 4800000, guid: 1bd7be67d4363b54e986d649be8ef331, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -66,20 +64,26 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.742
+    - _Glossiness: 0.52
     - _GlossyReflections: 1
-    - _Metallic: 0.169
-    - _Mode: 3
+    - _Metallic: 0.648
+    - _Mode: 0
     - _OcclusionStrength: 1
+    - _OceanRadius: 3.62
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _ZWrite: 0
+    - _WaterFogDensity: 0.01
+    - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0.39242268, a: 0.5686275}
+    - _Color: {r: 0.17501742, g: 0.26177597, b: 0.53773564, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OceanCentre: {r: 0, g: 0, b: 0, a: 1}
+    - _WaterDeepColor: {r: 0.03831435, g: 0.15770316, b: 0.38679248, a: 1}
+    - _WaterFogColor: {r: 0.69184846, g: 1, b: 0.4669811, a: 1}
+    - _WaterShallowColor: {r: 0.6367924, g: 0.71421415, b: 1, a: 0.9843137}
   m_BuildTextureStacks: []
