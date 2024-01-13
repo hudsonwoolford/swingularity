@@ -30,14 +30,6 @@ public class OctahedronSphereCreator : MonoBehaviour {
 
         Spherize(vertices);
 
-        if (planetVar.generalSettings.radius != 1f)
-        {
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                vertices[i] *= planetVar.generalSettings.radius;
-            }
-        }
-
         //Create a mesh to be used
         Mesh mesh = new Mesh();
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;

@@ -1,4 +1,4 @@
-Shader "Custom/DistortionFlow"
+Shader "Custom/Water"
 {
     Properties
     {

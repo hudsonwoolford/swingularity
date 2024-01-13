@@ -13,8 +13,6 @@ public class PlanetVar : ScriptableObject
         [Range(3, 9)]
         public int subdivisions = 0;
 
-        [Range(0.05f, 100f)]
-        public float radius = 1f;
         public int seed;
     }
     [Serializable]

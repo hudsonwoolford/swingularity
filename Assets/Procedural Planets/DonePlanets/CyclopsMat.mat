@@ -14,15 +14,13 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _BIOMEA_ON
-  - _BIOMEB_ON
-  - _USEFRESNEL_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _HighElevationSteepColorA
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -70,7 +68,7 @@ Material:
     m_Floats:
     - _BiomeA: 1
     - _BiomeAEnd: 0.903
-    - _BiomeB: 1
+    - _BiomeB: 0
     - _BiomeBStart: 0.995
     - _BiomeBlendEnd: 0.6
     - _BiomeBlendStart: 0.4
@@ -95,7 +93,7 @@ Material:
     - _MaxFlatHeight: 0.5
     - _MaxHeight: 2.52
     - _Metallic: 0
-    - _MetallicA: 0.286
+    - _MetallicA: 0.19
     - _MetallicB: 0
     - _MinHeight: 1.58
     - _Mode: 0
@@ -103,21 +101,21 @@ Material:
     - _NoiseScale: 1
     - _NoiseScale2: 1
     - _OcclusionStrength: 1
-    - _OceanBlendEnd: 0.1
-    - _OceanBlendIntensity: 0.03
+    - _OceanBlendEnd: 0.162
+    - _OceanBlendIntensity: 0.08
     - _Octaves: 1
     - _Parallax: 0.02
     - _Persistence: 1
     - _Scale: 0.46
-    - _SeaLevel: 1.3
+    - _SeaLevel: 1.093
     - _SeaOpacity: 1
     - _ShoreBlend: 0.03
     - _ShoreHeight: 0.05
-    - _ShorelineA: 0.107
-    - _ShorelineB: 0.169
+    - _ShorelineA: 0
+    - _ShorelineB: 0
     - _ShorelineHarshnessA: 0.09
     - _ShorelineHarshnessB: 0.29
-    - _SmoothnessA: 0
+    - _SmoothnessA: 0.065
     - _SmoothnessB: 0.446
     - _SmoothnessTextureChannel: 0
     - _SnowBlend: 0.1
@@ -135,7 +133,7 @@ Material:
     - _SteepnessThreshold: 0.5
     - _SwapBiome: 0
     - _UVSec: 0
-    - _UseFresnel: 1
+    - _UseFresnel: 0
     - _UseSnowyPoles: 0
     - _VegetationLine: 0.062
     - _VegetationLineA: 0.5
@@ -172,11 +170,11 @@ Material:
     - _HighElevationSteepColorA: {r: 0.23529412, g: 0.10980392, b: 0.1882353, a: 1}
     - _HighElevationSteepColorB: {r: 1, g: 1, b: 1, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 1}
-    - _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SeabedColor: {r: 0.14067072, g: 0.1509434, b: 0.10751157, a: 1}
     - _ShallowSea: {r: 0, g: 0.6102462, b: 1, a: 1}
     - _ShoreHigh: {r: 0, g: 0, b: 0, a: 1}
     - _ShoreLow: {r: 0, g: 0, b: 0, a: 1}
-    - _ShorelineColorA: {r: 1, g: 1, b: 1, a: 1}
+    - _ShorelineColorA: {r: 0.6638315, g: 1, b: 0, a: 1}
     - _ShorelineColorB: {r: 0.4745098, g: 0.4745098, b: 0.4745098, a: 1}
     - _SnowCol: {r: 1, g: 1, b: 1, a: 1}
     - _SphereCenter: {r: 0, g: 0, b: 0, a: 0}
