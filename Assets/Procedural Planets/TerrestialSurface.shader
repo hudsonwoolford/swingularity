@@ -1,4 +1,5 @@
-Shader "Custom/TerrestialSurface"
+
+Shader "Unlit/TerrestialSurface"
 {
     Properties
     {
@@ -10,6 +11,10 @@ Shader "Custom/TerrestialSurface"
      _VegetationLineHarshness ("Vegetation Line Harshness", Range(0, 40)) = 2
      _HighElevationColor ("High Elevation Color", Color) = (1,1,1) 
      _SeabedColor ("Sea Bed Color", Color) = (1,1,1)
+     _DeepSea ("Deep Sea", Color) = (1,1,1)
+     _DeepSeaDepth ("Deep Sea Depth", Range(0, 0.5)) = 1
+     _ShallowSea ("ShallowSea", Color) = (1,1,1)
+     _SeaOpacity ("Sea Opacity", Range(0,1)) = 0.25
     }
     SubShader
     {
@@ -20,8 +25,8 @@ Shader "Custom/TerrestialSurface"
 
         CGPROGRAM
         #pragma surface surf Lambert vertex:vert
-        #include "TriplanarMapping.cginc"
-        #include "FractalNoise.cginc"
+
+        
 
         float _SteepMultiplier;
         fixed4 _FlatColor;
@@ -31,14 +36,10 @@ Shader "Custom/TerrestialSurface"
         float _VegetationLineHarshness;
         fixed4 _HighElevationColor;
         fixed4 _SeabedColor;
-
-        int _Octaves;
-        float3 _Offset;
-        float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
-
-        int _WarpOctaves;
-        float3 _WarpOffset;
-        float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
+        fixed4 _ShallowSea;
+        fixed4 _DeepSea;
+        float _DeepSeaDepth;
+        float _SeaOpacity;
 
         struct Input
         {
@@ -54,30 +55,39 @@ Shader "Custom/TerrestialSurface"
             o.normal = v.normal;
         }
 
-
         void surf(Input IN, inout SurfaceOutput o)
         {
-            float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
-            float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
-            
             //Terrain steepness
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
             float steepness = 1- dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal
-
-
             float3 steepColor = lerp(_FlatColor, _SteepColor, steepness * _SteepMultiplier); //lerps the flat and steep color depending on steepness
             //Terrain elevation
             float seaLevelHeight = length(_SeaLevel*sphereNormal);
             float elevation = length(IN.vertPos) - seaLevelHeight; //elevation of vert above sea level
-            if(elevation < 0) { o.Albedo =  _SeabedColor; return;}
+            if(elevation < 0) { 
+            //Ocean
+                //float3 oceanLeveledPos = sphereNormal * seaLevelHeight;
+                //float oceanDepth = length(oceanLeveledPos - IN.vertPos);
+                //IN.vertPos = oceanLeveledPos;
+                //float3 depthColors = lerp(_ShallowSea, _DeepSea, oceanDepth / _DeepSeaDepth);
+                //float tintAmount = _SeaOpacity * oceanDepth;
+                //float3 compoundSeaColor = depthColors;
+                //compoundSeaColor.r = (compoundSeaColor.r * _SeaOpacity + _SeabedColor.r * (1-_SeaOpacity));
+                //compoundSeaColor.g = (compoundSeaColor.g * _SeaOpacity + _SeabedColor.b * (1-_SeaOpacity));
+                //compoundSeaColor.b = (compoundSeaColor.b * _SeaOpacity + _SeabedColor.b * (1-_SeaOpacity));
+                //o.Albedo = compoundSeaColor;
+                o.Albedo = _SeabedColor;
+                return;
+            }
             elevation = clamp(0, _VegetationLine, elevation);
             //float3 elevationColor = steepColor;
             //if(elevation >= _VegetationLine) {elevationColor = _HighElevationColor;} 
             float3 elevationColor = lerp(steepColor, _HighElevationColor, pow(elevation / _VegetationLine, _VegetationLineHarshness));
             
-            
+
             //Compound colors
             float3 compoundColor = lerp(steepColor, elevationColor, 1);
+
             o.Albedo = compoundColor;
             
         }
