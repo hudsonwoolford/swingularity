@@ -59,7 +59,7 @@ Shader "Custom/TerrestialSurface"
         {
             float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
             float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
-
+            
             //Terrain steepness
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
             float steepness = 1- dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal

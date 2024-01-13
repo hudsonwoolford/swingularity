@@ -1,53 +1,55 @@
-Shader "Custom/DirectionalFLow"
-{
-    Properties
-    {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
-    }
-    SubShader
-    {
-        Tags { "RenderType"="Opaque" }
-        LOD 200
+Shader "Custom/DirectionalFlow" {
+	Properties {
+		_Color ("Color", Color) = (1,1,1,1)
+		[NoScaleOffset] _MainTex ("Deriv (AG) Height (B)", 2D) = "black" {}
+		[NoScaleOffset] _FlowMap ("Flow (RG)", 2D) = "black" {}
+		_Tiling ("Tiling", Float) = 1
+		_Speed ("Speed", Float) = 1
+		_FlowStrength ("Flow Strength", Float) = 1
+		_HeightScale ("Height Scale, Constant", Float) = 0.25
+		_HeightScaleModulated ("Height Scale, Modulated", Float) = 0.75
+		_Glossiness ("Smoothness", Range(0,1)) = 0.5
+		_Metallic ("Metallic", Range(0,1)) = 0.0
+	}
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		LOD 200
 
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+		CGPROGRAM
+		#pragma surface surf Standard fullforwardshadows
+		#pragma target 3.0
+		
+		#include "Flow.cginc"
 
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+		sampler2D _MainTex, _FlowMap;
+		float _Tiling, _Speed, _FlowStrength;
+		float _HeightScale, _HeightScaleModulated;
 
-        sampler2D _MainTex;
+		struct Input {
+			float2 uv_MainTex;
+		};
 
-        struct Input
-        {
-            float2 uv_MainTex;
-        };
+		half _Glossiness;
+		half _Metallic;
+		fixed4 _Color;
 
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
+		float3 UnpackDerivativeHeight (float4 textureData) {
+			float3 dh = textureData.agb;
+			dh.xy = dh.xy * 2 - 1;
+			return dh;
+		}
 
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
-
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
-        }
-        ENDCG
-    }
-    FallBack "Diffuse"
+		void surf (Input IN, inout SurfaceOutputStandard o) {
+			float2 uv = IN.uv_MainTex * _Tiling;
+			float3 dh = UnpackDerivativeHeight(tex2D(_MainTex, uv));
+			fixed4 c = dh.z * dh.z * _Color;
+			o.Albedo = c.rgb;
+			o.Normal = normalize(float3(-dh.xy, 1));
+			o.Metallic = _Metallic;
+			o.Smoothness = _Glossiness;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	}
+	FallBack "Diffuse"
 }
