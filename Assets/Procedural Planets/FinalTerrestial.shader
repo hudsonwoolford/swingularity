@@ -14,14 +14,13 @@ Shader "Custom/FinalTerrestial"
 
      _FlatColorA ("Flat Color A", Color) = (1,1,1)
      _SteepColorA ("Steep Color A", Color) = (1,1,1)
-     _ShorelineColorA ("Shoreline Color A", Color) = (1,1,1)
      _HighElevationColorA ("High Elevation Color A", Color) = (1,1,1) 
      _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1) 
+     _ShorelineColorA ("Shoreline Color A", Color) = (1,1,1)
 
      _MetallicA ("Metallic A", Range(0, 1)) = 0
      _SmoothnessA ("Smoothness A", Range(0,1)) = 0
 
-     _ShorelineA("Shoreline Elevation A", Range(0, 0.2)) = 0.01
      _VegetationLineA ("Vegetation Line A", Range(0, 0.5)) = 0.1
      [PowerSlider(3.0)]_VegetationLineHarshnessA ("Vegetation Line Harshness A", Range(0, 10)) = 2
 
@@ -29,14 +28,13 @@ Shader "Custom/FinalTerrestial"
 
      _FlatColorB ("Flat Color B", Color) = (0,0,0)
      _SteepColorB ("Steep Color B", Color) = (0,0,0)
-     _ShorelineColorB ("Shoreline Color B", Color) = (0,0,0)
      _HighElevationColorB ("High Elevation Color B", Color) = (0,0,0)
      _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0,0,0)
+     _ShorelineColorB ("Shoreline Color B", Color) = (0,0,0)
 
      _MetallicB ("Metallic B", Range(0, 1)) = 0
      _SmoothnessB ("Smoothness B", Range(0,1)) = 0
      
-     _ShorelineB("Shoreline Elevation A", Range(0, 0.2)) = 0.01
      _VegetationLineB ("Vegetation Line B", Range(0, 0.5)) = 0.1
      [PowerSlider(3.0)]_VegetationLineHarshnessB ("Vegetation Line Harshness B", Range(0, 10)) = 2
 
@@ -97,7 +95,7 @@ Shader "Custom/FinalTerrestial"
         fixed4 _ShorelineColorA;
         fixed4 _HighElevationColorA;
         fixed4 _HighElevationSteepColorA;
-        float _ShorelineA;
+        float _ShorelineA = 0;
         float _VegetationLineA;
         float _VegetationLineHarshnessA;
         //Biome B
@@ -106,7 +104,7 @@ Shader "Custom/FinalTerrestial"
         fixed4 _ShorelineColorB;
         fixed4 _HighElevationColorB;
         fixed4 _HighElevationSteepColorB;
-        float _ShorelineB;
+        float _ShorelineB = 0;
         float _VegetationLineB;
         float _VegetationLineHarshnessB;
         //Constant through biomes
