@@ -37,7 +37,7 @@ Shader "Custom/NormalShader"
         {
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2 -1;
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
-            float time = _Time.x * noise;
+            float time = _Time.y;
             float3 uvwA = FlowUVW(IN.uv_MainTex, flowVector, time, false);
             float3 uvwB = FlowUVW(IN.uv_MainTex, flowVector, time, true);
 

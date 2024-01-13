@@ -66,16 +66,9 @@ Shader "Unlit/TerrestialSurface"
             float elevation = length(IN.vertPos) - seaLevelHeight; //elevation of vert above sea level
             if(elevation < 0) { 
             //Ocean
-                //float3 oceanLeveledPos = sphereNormal * seaLevelHeight;
-                //float oceanDepth = length(oceanLeveledPos - IN.vertPos);
-                //IN.vertPos = oceanLeveledPos;
-                //float3 depthColors = lerp(_ShallowSea, _DeepSea, oceanDepth / _DeepSeaDepth);
-                //float tintAmount = _SeaOpacity * oceanDepth;
-                //float3 compoundSeaColor = depthColors;
-                //compoundSeaColor.r = (compoundSeaColor.r * _SeaOpacity + _SeabedColor.r * (1-_SeaOpacity));
-                //compoundSeaColor.g = (compoundSeaColor.g * _SeaOpacity + _SeabedColor.b * (1-_SeaOpacity));
-                //compoundSeaColor.b = (compoundSeaColor.b * _SeaOpacity + _SeabedColor.b * (1-_SeaOpacity));
-                //o.Albedo = compoundSeaColor;
+                float3 oceanLeveledPos = sphereNormal * seaLevelHeight;
+                float oceanDepth = length(oceanLeveledPos - IN.vertPos);
+                IN.vertPos = oceanLeveledPos;
                 o.Albedo = _SeabedColor;
                 return;
             }

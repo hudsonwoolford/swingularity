@@ -4,7 +4,7 @@ Shader "Custom/DistortionFlow"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _WaterFogColor ("Water Fog Color", Color) = (1,1,1)
-        _WaterFogDensity ("Water Fog Density", Range(0.01, 100)) = 0.1
+        _WaterFogDensity ("Water Fog Density", Range(0.01, 2)) = 0.1
         _OceanCentre ("Ocean Centre", Vector) = (0,0,0)
         _OceanRadius ("Ocean Radius", Range(0,10)) = 1
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -20,7 +20,7 @@ Shader "Custom/DistortionFlow"
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard alpha finalcolor:ResetAlpha
+        #pragma surface surf Standard alpha fullforwardshadows finalcolor:ResetAlpha
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
@@ -40,6 +40,7 @@ Shader "Custom/DistortionFlow"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        float _WaterFogger;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
