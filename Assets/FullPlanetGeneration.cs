@@ -1,9 +1,12 @@
 using JetBrains.Annotations;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Windows;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -42,7 +45,14 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         if(ocean == null)
         {
-            ocean = Instantiate(baseOcean, transform).transform;
+            if(transform.GetChild(0)!=null)
+            {
+                ocean = Instantiate(baseOcean, transform).transform;
+            }
+            else
+            {
+                ocean = transform.GetChild(0);
+            }
             
         }
         Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial;
@@ -196,11 +206,52 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_SmoothnessB", biomeBSaved._Smoothness);
         }
     }
-    [ContextMenu("BakePlanet")]
-    void BakePlanet()
-    {
-        Mesh mesh = meshFilter.sharedMesh;
-        AssetDatabase.CreateAsset(mesh, "Assets/BakedPlanet.mesh");
-    }
 
+    [MenuItem("ProceduralTools/Create Planet Prefab")]
+    static void CreatePrefab()
+    {
+        GameObject selectedObj = Selection.activeGameObject;
+
+        if (selectedObj == null || selectedObj.GetComponent<FullPlanetGeneration>() == null)
+        {
+            Debug.LogWarning("Please select a valid game object");
+            return;
+        }
+
+        MeshFilter meshFilter = selectedObj.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = selectedObj.GetComponent<MeshRenderer>();
+
+        Mesh mesh = meshFilter.sharedMesh;
+        Material material = meshRenderer.sharedMaterial;
+
+        GameObject newObj = new GameObject("BakedPlanet");
+        newObj.transform.rotation = selectedObj.transform.rotation;
+
+        MeshFilter newMeshFilter = newObj.AddComponent<MeshFilter>();
+        newMeshFilter.sharedMesh = mesh;
+
+        MeshRenderer newMeshRenderer = newObj.AddComponent<MeshRenderer>();
+        newMeshRenderer.sharedMaterial = material;
+
+        GameObject newOceanObj = selectedObj.transform.GetChild(0).gameObject;
+        Instantiate(newOceanObj, newObj.transform);
+
+        string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab");
+
+        if (prefabPath.Length == 0)
+        {
+            DestroyImmediate(newObj);
+            return;
+        }
+
+        prefabPath = prefabPath.Substring(prefabPath.IndexOf("Assets/"));
+        PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath);
+
+        // Add the mesh as a subasset to the prefab
+        AssetDatabase.AddObjectToAsset(mesh, prefabPath);
+        AssetDatabase.SaveAssets();
+
+        DestroyImmediate(newObj);
+    }
 }
+
