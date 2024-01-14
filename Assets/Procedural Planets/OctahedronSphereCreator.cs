@@ -14,10 +14,10 @@ public class OctahedronSphereCreator : MonoBehaviour {
         Vector3.forward
     };
 
-    public static Mesh Create (PlanetVar planetVar, ComputeShader calculateVertexHeight)
+    public static Mesh Create (TerrainVar terrainVar, ComputeShader calculateVertexHeight)
     {
         //bit shift i.e. 2^n to calculate resolution (i.e. number of rows based on subdivision)
-        int resolution = 1 << planetVar.generalSettings.subdivisions;
+        int resolution = 1 << terrainVar.generalSettings.subdivisions;
 
         /* Calculate in quadrants - one quadrant has 4 verts, then 9, then 25 based on subdivs -> (resolution + 1)^2
          * multiply by 4 for each quadrant of octahedron
@@ -25,7 +25,7 @@ public class OctahedronSphereCreator : MonoBehaviour {
 
         Vector3[] vertices = new Vector3[(resolution + 1) * (resolution + 1) * 4 - (resolution * 2 - 1) * 3];
 
-        int[] triangles = new int[(1 << (planetVar.generalSettings.subdivisions * 2 + 3)) * 3];
+        int[] triangles = new int[(1 << (terrainVar.generalSettings.subdivisions * 2 + 3)) * 3];
         CreateOctahedron(vertices, triangles, resolution);
 
         Spherize(vertices);
@@ -40,7 +40,7 @@ public class OctahedronSphereCreator : MonoBehaviour {
         mesh.triangles = triangles;
 
         //Send data to computation script
-        mesh = PlanetaryGenerator.ModifyGeometry(mesh, planetVar, calculateVertexHeight);
+        mesh = PlanetaryGenerator.ModifyGeometry(mesh, terrainVar, calculateVertexHeight);
         mesh.RecalculateNormals();
         return mesh;
     }

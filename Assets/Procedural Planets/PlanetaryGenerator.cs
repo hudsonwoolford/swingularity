@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
-using static PlanetVar;
+using static TerrainVar;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class PlanetaryGenerator : MonoBehaviour
@@ -15,21 +15,21 @@ public class PlanetaryGenerator : MonoBehaviour
         public Vector3 centre;
         public float floorHeight;
     };
-    public static Mesh ModifyGeometry(Mesh mesh, PlanetVar planetVar, ComputeShader calculateVertexHeight)
+    public static Mesh ModifyGeometry(Mesh mesh, TerrainVar terrainVar, ComputeShader calculateVertexHeight)
     {
         Vector3[] vertices = mesh.vertices;
-        vertices = AdjustTerrain(vertices, GenerateRandomCraters(vertices, planetVar), planetVar, calculateVertexHeight);
+        vertices = AdjustTerrain(vertices, GenerateRandomCraters(vertices, terrainVar), terrainVar, calculateVertexHeight);
         mesh.vertices = vertices;
         return mesh;
     }
     #region CraterGeneration
-    private static Crater[] GenerateRandomCraters(Vector3[] vertices, PlanetVar planetVar)
+    private static Crater[] GenerateRandomCraters(Vector3[] vertices, TerrainVar terrainVar)
     {
-        Crater[] craters = new Crater[planetVar.craterSettings.numCraters];
-        UnityEngine.Random.InitState(planetVar.generalSettings.seed);
-        for (int i = 0; i < planetVar.craterSettings.numCraters; i++)
+        Crater[] craters = new Crater[terrainVar.craterSettings.numCraters];
+        UnityEngine.Random.InitState(terrainVar.generalSettings.seed);
+        for (int i = 0; i < terrainVar.craterSettings.numCraters; i++)
         {
-            float radius = Mathf.Lerp(planetVar.craterSettings.minCraterSize, planetVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, planetVar.craterSettings.craterBias));
+            float radius = Mathf.Lerp(terrainVar.craterSettings.minCraterSize, terrainVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, terrainVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
             float floorHeight = UnityEngine.Random.Range(-0.25f, 0f);
             craters[i].radius = radius;
@@ -47,7 +47,7 @@ public class PlanetaryGenerator : MonoBehaviour
     #endregion
 
     #region HeightComputation
-    private static Vector3[] AdjustTerrain(Vector3[] vertices, Crater[] craters, PlanetVar planetVar, ComputeShader calculateVertexHeight)
+    private static Vector3[] AdjustTerrain(Vector3[] vertices, Crater[] craters, TerrainVar terrainVar, ComputeShader calculateVertexHeight)
     {
         //Init compute buffers for use with compute shader
         ComputeBuffer vertexBuffer = new ComputeBuffer(vertices.Length, 12);
@@ -56,10 +56,10 @@ public class PlanetaryGenerator : MonoBehaviour
         float[] heights = new float[vertices.Length];
         heightBuffer.SetData(heights);
 
-        SetShaderParams(calculateVertexHeight, planetVar);
+        SetShaderParams(calculateVertexHeight, terrainVar);
 
 
-        if (planetVar.craterSettings.numCraters > 0)
+        if (terrainVar.craterSettings.numCraters > 0)
         {
             ComputeBuffer craterBuffer;
             craterBuffer = new ComputeBuffer(craters.Length, 20);
@@ -82,73 +82,73 @@ public class PlanetaryGenerator : MonoBehaviour
         return vertices;
     }
 
-    private static void SetShaderParams(ComputeShader calculateVertexHeight, PlanetVar planetVar)
+    private static void SetShaderParams(ComputeShader calculateVertexHeight, TerrainVar terrainVar)
     {
         //Crater params
-        calculateVertexHeight.SetFloat("rimWidth", planetVar.craterSettings.rimWidth);
-        calculateVertexHeight.SetFloat("rimSteepness", planetVar.craterSettings.rimSteepness);
-        calculateVertexHeight.SetFloat("smoothness", planetVar.craterSettings.smoothness);
-        calculateVertexHeight.SetFloat("numCraters", planetVar.craterSettings.numCraters);
+        calculateVertexHeight.SetFloat("rimWidth", terrainVar.craterSettings.rimWidth);
+        calculateVertexHeight.SetFloat("rimSteepness", terrainVar.craterSettings.rimSteepness);
+        calculateVertexHeight.SetFloat("smoothness", terrainVar.craterSettings.smoothness);
+        calculateVertexHeight.SetFloat("numCraters", terrainVar.craterSettings.numCraters);
 
         //ShapeNoise params
-        calculateVertexHeight.SetInt("shapeNoiseOctaves", planetVar.shapeNoiseSettings.octaves);
-        calculateVertexHeight.SetFloat("shapeNoiseScale", planetVar.shapeNoiseSettings.scale);
-        calculateVertexHeight.SetFloat("shapeNoisePersistence", planetVar.shapeNoiseSettings.persistence);
-        calculateVertexHeight.SetFloat("shapeNoiseLacunarity", planetVar.shapeNoiseSettings.lacunarity);
-        calculateVertexHeight.SetFloat("shapeNoiseMultiplier", planetVar.shapeNoiseSettings.multiplier);
-        calculateVertexHeight.SetFloat("shapeNoiseGain", planetVar.shapeNoiseSettings.gain);
-        calculateVertexHeight.SetFloats("shapeNoiseOffset", planetVar.shapeNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("shapeNoiseElevation", planetVar.shapeNoiseSettings.elevation);
-        calculateVertexHeight.SetBool("shapeNoiseApply", planetVar.shapeNoiseSettings.applyNoise);
+        calculateVertexHeight.SetInt("shapeNoiseOctaves", terrainVar.shapeNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("shapeNoiseScale", terrainVar.shapeNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("shapeNoisePersistence", terrainVar.shapeNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("shapeNoiseLacunarity", terrainVar.shapeNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("shapeNoiseMultiplier", terrainVar.shapeNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("shapeNoiseGain", terrainVar.shapeNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("shapeNoiseOffset", terrainVar.shapeNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("shapeNoiseElevation", terrainVar.shapeNoiseSettings.elevation);
+        calculateVertexHeight.SetBool("shapeNoiseApply", terrainVar.shapeNoiseSettings.applyNoise);
 
         //DetailNoise params
-        calculateVertexHeight.SetInt("detailNoiseOctaves", planetVar.detailNoiseSettings.octaves);
-        calculateVertexHeight.SetFloat("detailNoiseScale", planetVar.detailNoiseSettings.scale);
-        calculateVertexHeight.SetFloat("detailNoisePersistence", planetVar.detailNoiseSettings.persistence);
-        calculateVertexHeight.SetFloat("detailNoiseLacunarity", planetVar.detailNoiseSettings.lacunarity);
-        calculateVertexHeight.SetFloat("detailNoiseMultiplier", planetVar.detailNoiseSettings.multiplier);
-        calculateVertexHeight.SetFloat("detailNoiseGain", planetVar.detailNoiseSettings.gain);
-        calculateVertexHeight.SetFloats("detailNoiseOffset", planetVar.detailNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("detailNoiseElevation", planetVar.detailNoiseSettings.elevation);
-        calculateVertexHeight.SetBool("detailNoiseApply", planetVar.detailNoiseSettings.applyNoise);
+        calculateVertexHeight.SetInt("detailNoiseOctaves", terrainVar.detailNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("detailNoiseScale", terrainVar.detailNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("detailNoisePersistence", terrainVar.detailNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("detailNoiseLacunarity", terrainVar.detailNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("detailNoiseMultiplier", terrainVar.detailNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("detailNoiseGain", terrainVar.detailNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("detailNoiseOffset", terrainVar.detailNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("detailNoiseElevation", terrainVar.detailNoiseSettings.elevation);
+        calculateVertexHeight.SetBool("detailNoiseApply", terrainVar.detailNoiseSettings.applyNoise);
 
         //RidgeNoise params
-        calculateVertexHeight.SetInt("ridgeNoiseOctaves", planetVar.ridgeNoiseSettings.octaves);
-        calculateVertexHeight.SetFloat("ridgeNoiseScale", planetVar.ridgeNoiseSettings.scale);
-        calculateVertexHeight.SetFloat("ridgeNoisePersistence", planetVar.ridgeNoiseSettings.persistence);
-        calculateVertexHeight.SetFloat("ridgeNoiseLacunarity", planetVar.ridgeNoiseSettings.lacunarity);
-        calculateVertexHeight.SetFloat("ridgeNoiseMultiplier", planetVar.ridgeNoiseSettings.multiplier);
-        calculateVertexHeight.SetFloat("ridgeNoiseGain", planetVar.ridgeNoiseSettings.gain);
-        calculateVertexHeight.SetFloats("ridgeNoiseOffset", planetVar.ridgeNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("ridgeNoiseElevation", planetVar.ridgeNoiseSettings.elevation);
-        calculateVertexHeight.SetFloat("ridgeNoiseSmoothing", planetVar.ridgeNoiseSettings.smoothing);
-        calculateVertexHeight.SetFloat("ridgeNoisePower", planetVar.ridgeNoiseSettings.power);
-        calculateVertexHeight.SetBool("ridgeNoiseApply", planetVar.ridgeNoiseSettings.applyNoise);
+        calculateVertexHeight.SetInt("ridgeNoiseOctaves", terrainVar.ridgeNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("ridgeNoiseScale", terrainVar.ridgeNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("ridgeNoisePersistence", terrainVar.ridgeNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("ridgeNoiseLacunarity", terrainVar.ridgeNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("ridgeNoiseMultiplier", terrainVar.ridgeNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("ridgeNoiseGain", terrainVar.ridgeNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("ridgeNoiseOffset", terrainVar.ridgeNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("ridgeNoiseElevation", terrainVar.ridgeNoiseSettings.elevation);
+        calculateVertexHeight.SetFloat("ridgeNoiseSmoothing", terrainVar.ridgeNoiseSettings.smoothing);
+        calculateVertexHeight.SetFloat("ridgeNoisePower", terrainVar.ridgeNoiseSettings.power);
+        calculateVertexHeight.SetBool("ridgeNoiseApply", terrainVar.ridgeNoiseSettings.applyNoise);
 
         //WarpedNoise params
-        calculateVertexHeight.SetInt("warpedNoiseOctaves", planetVar.warpedNoiseSettings.octaves);
-        calculateVertexHeight.SetFloat("warpedNoiseScale", planetVar.warpedNoiseSettings.scale);
-        calculateVertexHeight.SetFloat("warpedNoisePersistence", planetVar.warpedNoiseSettings.persistence);
-        calculateVertexHeight.SetFloat("warpedNoiseLacunarity", planetVar.warpedNoiseSettings.lacunarity);
-        calculateVertexHeight.SetFloat("warpedNoiseMultiplier", planetVar.warpedNoiseSettings.multiplier);
-        calculateVertexHeight.SetFloat("warpedNoiseGain", planetVar.warpedNoiseSettings.gain);
-        calculateVertexHeight.SetFloats("warpedNoiseOffset", planetVar.warpedNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("warpedNoiseStrength", planetVar.warpedNoiseSettings.strength);
-        calculateVertexHeight.SetBool("warpedNoiseApply", planetVar.warpedNoiseSettings.applyNoise);
+        calculateVertexHeight.SetInt("warpedNoiseOctaves", terrainVar.warpedNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("warpedNoiseScale", terrainVar.warpedNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("warpedNoisePersistence", terrainVar.warpedNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("warpedNoiseLacunarity", terrainVar.warpedNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("warpedNoiseMultiplier", terrainVar.warpedNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("warpedNoiseGain", terrainVar.warpedNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("warpedNoiseOffset", terrainVar.warpedNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("warpedNoiseStrength", terrainVar.warpedNoiseSettings.strength);
+        calculateVertexHeight.SetBool("warpedNoiseApply", terrainVar.warpedNoiseSettings.applyNoise);
 
         //ContinentNoise params
-        calculateVertexHeight.SetInt("continentNoiseOctaves", planetVar.continentNoiseSettings.octaves);
-        calculateVertexHeight.SetFloat("continentNoiseScale", planetVar.continentNoiseSettings.scale);
-        calculateVertexHeight.SetFloat("continentNoisePersistence", planetVar.continentNoiseSettings.persistence);
-        calculateVertexHeight.SetFloat("continentNoiseLacunarity", planetVar.continentNoiseSettings.lacunarity);
-        calculateVertexHeight.SetFloat("continentNoiseMultiplier", planetVar.continentNoiseSettings.multiplier);
-        calculateVertexHeight.SetFloat("continentNoiseGain", planetVar.continentNoiseSettings.gain);
-        calculateVertexHeight.SetFloats("continentNoiseOffset", planetVar.continentNoiseSettings.offset);
-        calculateVertexHeight.SetFloat("continentNoiseDepth", planetVar.continentNoiseSettings.depthMultiplier);
-        calculateVertexHeight.SetBool("continentNoiseApply", planetVar.continentNoiseSettings.applyNoise);
-        calculateVertexHeight.SetFloat("oceanFloorDepth", planetVar.continentNoiseSettings.oceanFloorDepth);
-        calculateVertexHeight.SetFloat("oceanFloorSmoothing", planetVar.continentNoiseSettings.oceanFloorSmoothing);
-        calculateVertexHeight.SetFloat("maskBlend", planetVar.continentNoiseSettings.maskBlend);
+        calculateVertexHeight.SetInt("continentNoiseOctaves", terrainVar.continentNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("continentNoiseScale", terrainVar.continentNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("continentNoisePersistence", terrainVar.continentNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("continentNoiseLacunarity", terrainVar.continentNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("continentNoiseMultiplier", terrainVar.continentNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("continentNoiseGain", terrainVar.continentNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("continentNoiseOffset", terrainVar.continentNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("continentNoiseDepth", terrainVar.continentNoiseSettings.depthMultiplier);
+        calculateVertexHeight.SetBool("continentNoiseApply", terrainVar.continentNoiseSettings.applyNoise);
+        calculateVertexHeight.SetFloat("oceanFloorDepth", terrainVar.continentNoiseSettings.oceanFloorDepth);
+        calculateVertexHeight.SetFloat("oceanFloorSmoothing", terrainVar.continentNoiseSettings.oceanFloorSmoothing);
+        calculateVertexHeight.SetFloat("maskBlend", terrainVar.continentNoiseSettings.maskBlend);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)

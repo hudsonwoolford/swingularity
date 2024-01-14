@@ -15,8 +15,7 @@ Shader "Custom/FinalTerrestial"
      _FlatColorA ("Flat Color A", Color) = (1,1,1)
      _SteepColorA ("Steep Color A", Color) = (1,1,1)
      _HighElevationColorA ("High Elevation Color A", Color) = (1,1,1) 
-     _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1) 
-     _ShorelineColorA ("Shoreline Color A", Color) = (1,1,1)
+     _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1)
 
      _MetallicA ("Metallic A", Range(0, 1)) = 0
      _SmoothnessA ("Smoothness A", Range(0,1)) = 0
@@ -30,7 +29,6 @@ Shader "Custom/FinalTerrestial"
      _SteepColorB ("Steep Color B", Color) = (0,0,0)
      _HighElevationColorB ("High Elevation Color B", Color) = (0,0,0)
      _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0,0,0)
-     _ShorelineColorB ("Shoreline Color B", Color) = (0,0,0)
 
      _MetallicB ("Metallic B", Range(0, 1)) = 0
      _SmoothnessB ("Smoothness B", Range(0,1)) = 0
@@ -43,7 +41,9 @@ Shader "Custom/FinalTerrestial"
      _SeaLevel ("Sea Level", Range(0, 2)) = 1
      _OceanBlendEnd("Ocean Blend End", Range(0, 2)) = 0.5
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
+     _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
      _SeabedColor ("Sea Bed Color", Color) = (1,1,1)
+     _OceanColor ("Ocean Color", Color) = (1,1,1)
 
      [Header(Fresnel)] //Fresnel
      [Toggle()]_UseFresnel("UseFresnel", float) = 0
@@ -52,23 +52,23 @@ Shader "Custom/FinalTerrestial"
      _FresnelStrengthFar("Fresnel Strength Far", float) = 5
      _FresnelPower("Fresnel Power", float) = 2
 
-     [Header(Noise)] //Noise
+     //[Header(Noise)] //Noise
 
-     [IntRange]_Octaves("Octaves", Range(0,5)) = 1
-     _Offset("Offset", vector) = (0,0,0)
-     _Scale("Scale", Range(0,5)) = 1
-     _Persistence("Persistence", Range(0, 5)) = 1
-     _Lacunarity("Lacunarity", Range(0,5)) = 1
-     _Multiplier("Multiplier", Range(0,5)) = 1
-     _Gain("Gain", Range(0, 5)) = 1
-     [Header(WarpNoise)]
-     [IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
-     _WarpOffset("Warp Offset", vector) = (0,0,0)
-     _WarpScale("Warp Scale", Range(0,5)) = 1
-     _WarpPersistence("Warp Persistence", Range(0, 5)) = 1
-     _WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
-     _WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
-     _WarpGain("Warp Gain", Range(0, 5)) = 1
+     //[IntRange]_Octaves("Octaves", Range(0,5)) = 1
+     //_Offset("Offset", vector) = (0,0,0)
+     //_Scale("Scale", Range(0,5)) = 1
+     //_Persistence("Persistence", Range(0, 5)) = 1
+     //_Lacunarity("Lacunarity", Range(0,5)) = 1
+     //_Multiplier("Multiplier", Range(0,5)) = 1
+     //_Gain("Gain", Range(0, 5)) = 1
+     //[Header(WarpNoise)]
+     //[IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
+     //_WarpOffset("Warp Offset", vector) = (0,0,0)
+     //_WarpScale("Warp Scale", Range(0,5)) = 1
+     //_WarpPersistence("Warp Persistence", Range(0, 5)) = 1
+     //_WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
+     //_WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
+     //_WarpGain("Warp Gain", Range(0, 5)) = 1
     }
     SubShader
     {
@@ -92,26 +92,24 @@ Shader "Custom/FinalTerrestial"
         //Biome A
         fixed4 _FlatColorA;
         fixed4 _SteepColorA;
-        fixed4 _ShorelineColorA;
         fixed4 _HighElevationColorA;
         fixed4 _HighElevationSteepColorA;
-        float _ShorelineA = 0;
         float _VegetationLineA;
         float _VegetationLineHarshnessA;
         //Biome B
         fixed4 _FlatColorB;
         fixed4 _SteepColorB;
-        fixed4 _ShorelineColorB;
         fixed4 _HighElevationColorB;
         fixed4 _HighElevationSteepColorB;
-        float _ShorelineB = 0;
         float _VegetationLineB;
         float _VegetationLineHarshnessB;
         //Constant through biomes
         float _SeaLevel;
         float _OceanBlendEnd;
         float _OceanBlendIntensity;
+        fixed4 _ShorelineColor;
         fixed4 _SeabedColor;
+        fixed4 _OceanColor;
 
         float _MetallicA;
         float _MetallicB;
@@ -186,8 +184,7 @@ Shader "Custom/FinalTerrestial"
             float3 steepColor = lerp(_SteepColorA, _SteepColorB, blendValue);
             float3 highElevationColor = lerp(_HighElevationColorA, _HighElevationColorB, blendValue);
             float3 highElevationSteepColor = lerp(_HighElevationSteepColorA, _HighElevationSteepColorB, blendValue);
-            float3 shorelineColor = lerp(_ShorelineColorA, _ShorelineColorB, blendValue);
-            float shoreline = lerp(_ShorelineA, _ShorelineB, blendValue);
+            float3 shorelineColor = _ShorelineColor;
             float vegetationLine = lerp(_VegetationLineA, _VegetationLineB, blendValue);
             float vegetationLineHarshness = lerp(_VegetationLineHarshnessA, _VegetationLineHarshnessB, blendValue);
             float metallic = lerp(_MetallicA, _MetallicB, blendValue);
@@ -201,7 +198,7 @@ Shader "Custom/FinalTerrestial"
             float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness * _SteepMultiplier); //lerps the flat and steep color depending on steepness
 
             //Terrain elevation
-            if(elevation < shoreline) 
+            if(elevation < 0) 
             { 
                 float groundLerp = clamp(0, 1, pow(abs(elevation) / _OceanBlendEnd, _OceanBlendIntensity));
                 float3 groundColor = lerp(shorelineColor, _SeabedColor, groundLerp);

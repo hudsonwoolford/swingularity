@@ -7,12 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
-  m_Shader: {fileID: 4800000, guid: 075261998c318f34b88408305eda640f, type: 3}
+  m_Name: HudsonMaterial
+  m_Shader: {fileID: 4800000, guid: 213b09913f33a234a9fe78dc620fcd84, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _BIOMEA_ON
+  - _BIOMEB_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -61,30 +63,70 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BiomeA: 1
+    - _BiomeAEnd: 0.466
+    - _BiomeB: 1
+    - _BiomeBStart: 0.517
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _FresnelPower: 9.46
+    - _FresnelStrengthFar: 5
+    - _FresnelStrengthNear: 2
+    - _Gain: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HeightMax: 1
-    - _HeightMin: 1
-    - _MainTexScale: 10
+    - _Lacunarity: 1
     - _Metallic: 0
+    - _MetallicA: 0.333
+    - _MetallicB: 0
     - _Mode: 0
+    - _Multiplier: 1
     - _OcclusionStrength: 1
+    - _OceanBlendEnd: 0.44
+    - _OceanBlendIntensity: 0.06
+    - _Octaves: 1
     - _Parallax: 0.02
+    - _Persistence: 1
+    - _Scale: 0.28
+    - _SeaLevel: 0.97
+    - _SmoothnessA: 0
+    - _SmoothnessB: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _SteepMultiplier: 3.28
+    - _SwapBiome: 0
     - _UVSec: 0
+    - _UseFresnel: 0
+    - _VegetationLineA: 0.071
+    - _VegetationLineB: 0.084
+    - _VegetationLineHarshnessA: 2.57
+    - _VegetationLineHarshnessB: 10
+    - _WarpGain: 1
+    - _WarpLacunarity: 1
+    - _WarpMultiplier: 0.77
+    - _WarpOctaves: 1
+    - _WarpPersistence: 1
+    - _WarpScale: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PrimaryColA: {r: 1, g: 1, b: 1, a: 1}
-    - _PrimaryColB: {r: 1, g: 1, b: 1, a: 1}
-    - _SecondaryColA: {r: 1, g: 1, b: 1, a: 1}
-    - _SecondaryColB: {r: 1, g: 1, b: 1, a: 1}
+    - _FlatColorA: {r: 1, g: 0.5486469, b: 0.1372549, a: 1}
+    - _FlatColorB: {r: 0.17590779, g: 0.38372278, b: 0.5566038, a: 1}
+    - _FresnelColor: {r: 0.632114, g: 0.52224994, b: 0.6792453, a: 1}
+    - _HighElevationColorA: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
+    - _HighElevationColorB: {r: 1, g: 1, b: 1, a: 1}
+    - _HighElevationSteepColorA: {r: 1, g: 0, b: 0, a: 1}
+    - _HighElevationSteepColorB: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+    - _Offset: {r: 0, g: 0, b: 0, a: 1}
+    - _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShorelineColorA: {r: 1, g: 1, b: 1, a: 1}
+    - _ShorelineColorB: {r: 1, g: 1, b: 1, a: 1}
+    - _SteepColorA: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
+    - _SteepColorB: {r: 0.3930669, g: 0.5321418, b: 0.6886792, a: 1}
+    - _WarpOffset: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

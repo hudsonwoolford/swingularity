@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2128562cbd13124698a8ad24adadd60, type: 3}
+  m_Name: MetallicMoonTerrain
+  m_EditorClassIdentifier: 
+  generalSettings:
+    subdivisions: 7
+    seed: 389
+  craterSettings:
+    rimWidth: 0.725
+    rimSteepness: 1
+    smoothness: 0.606
+    craterBias: 0.385
+    minCraterSize: 0.034
+    maxCraterSize: 0.202
+    numCraters: 50
+  shapeNoiseSettings:
+    applyNoise: 1
+    octaves: 1
+    scale: 3.02
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1.38
+    gain: 0
+    offset:
+    - 112.16591
+    - 137.1097
+    - 190.47112
+    elevation: 1.16
+  detailNoiseSettings:
+    applyNoise: 1
+    octaves: 1
+    scale: 293.7
+    persistence: 0
+    lacunarity: 0
+    multiplier: 0.16
+    gain: 0
+    offset:
+    - 112.16591
+    - 137.1097
+    - 190.47112
+    elevation: 1
+  ridgeNoiseSettings:
+    applyNoise: 1
+    octaves: 1
+    scale: 1.28
+    persistence: 0
+    lacunarity: 0
+    multiplier: 0.88
+    gain: 0
+    power: 3.27
+    offset:
+    - 112.16591
+    - 137.1097
+    - 190.47112
+    elevation: 0.7
+    smoothing: 1
+  warpedNoiseSettings:
+    applyNoise: 1
+    octaves: 1
+    scale: 0.72
+    persistence: 1
+    lacunarity: 1
+    multiplier: 1
+    gain: 1
+    offset:
+    - 112.16591
+    - 137.1097
+    - 190.47112
+    strength: 1.45
+  continentNoiseSettings:
+    applyNoise: 0
+    octaves: 0
+    scale: 0
+    persistence: 0
+    lacunarity: 0
+    multiplier: 0
+    gain: 0
+    offset:
+    - 112.16591
+    - 137.1097
+    - 190.47112
+    depthMultiplier: 0
+    oceanFloorDepth: 0
+    oceanFloorSmoothing: 0
+    maskBlend: 0
+  biomeNoiseSettings:
+    _Octaves: 1
+    _Offset: {x: 0, y: 0, z: 0}
+    _Scale: 1.8
+    _Persistence: 0
+    _Lacunarity: 0
+    _Multiplier: 1
+    _Gain: 0
+  biomeWarpNoiseSettings:
+    _WarpOctaves: 1
+    _WarpOffset: {x: 0, y: 0, z: 0}
+    _WarpScale: 1
+    _WarpPersistence: 0
+    _WarpLacunarity: 0
+    _WarpMultiplier: 1
+    _WarpGain: 0

@@ -7,10 +7,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class OctahedronSphereTester : MonoBehaviour
 {
-    public PlanetVar planetVar;
+    public FullPlanetObj fullPlanet;
     public ComputeShader calculateVertexHeight;
     private void Update()
     {
-        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(planetVar, calculateVertexHeight);
+        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(fullPlanet.terrainVar, calculateVertexHeight);
     }
 }
