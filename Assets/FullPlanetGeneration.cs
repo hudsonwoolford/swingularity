@@ -223,6 +223,8 @@ public class FullPlanetGeneration : MonoBehaviour
 
         Mesh mesh = meshFilter.sharedMesh;
         Material material = meshRenderer.sharedMaterial;
+        Material copyMat = new Material(material.shader);
+        copyMat.CopyMatchingPropertiesFromMaterial(material);
 
         GameObject newObj = new GameObject("BakedPlanet");
         newObj.transform.rotation = selectedObj.transform.rotation;
@@ -231,10 +233,15 @@ public class FullPlanetGeneration : MonoBehaviour
         newMeshFilter.sharedMesh = mesh;
 
         MeshRenderer newMeshRenderer = newObj.AddComponent<MeshRenderer>();
-        newMeshRenderer.sharedMaterial = material;
+        newMeshRenderer.sharedMaterial = copyMat;
 
         GameObject newOceanObj = selectedObj.transform.GetChild(0).gameObject;
         Instantiate(newOceanObj, newObj.transform);
+        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();
+        Material oceanMaterial = oceanRenderer.sharedMaterial;
+        Material copyOceanMaterial = new Material(oceanMaterial.shader);
+        copyOceanMaterial.CopyMatchingPropertiesFromMaterial(oceanMaterial);
+        oceanRenderer.material = copyOceanMaterial;
 
         string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab");
 
@@ -247,7 +254,8 @@ public class FullPlanetGeneration : MonoBehaviour
         prefabPath = prefabPath.Substring(prefabPath.IndexOf("Assets/"));
         PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath);
 
-        // Add the mesh as a subasset to the prefab
+        AssetDatabase.AddObjectToAsset(copyMat, prefabPath);
+        AssetDatabase.AddObjectToAsset(copyOceanMaterial, prefabPath);
         AssetDatabase.AddObjectToAsset(mesh, prefabPath);
         AssetDatabase.SaveAssets();
 
