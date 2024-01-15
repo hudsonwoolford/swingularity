@@ -14,14 +14,19 @@ public class FullPlanetGeneration : MonoBehaviour
 {
     public ComputeShader calculateVertexHeight;
     public FullPlanetObj planet;
-    public GameObject baseOcean;
+    public Transform ocean;
+    public Light atmosphere;
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB;
     [HideInInspector]
     PlanetColorScheme biomeASaved, biomeBSaved;
+    [HideInInspector]
+    [SerializeField] OceanVariables oceanVariables;
+    [HideInInspector]
+    [SerializeField] AtmosphereVariables atmosphereVariables;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
-    Transform ocean;
+    FullPlanetObj planetLastFrame;
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -35,35 +40,66 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
         }
+        if(planetLastFrame != planet)
+        {
+            OnPlanetChange();
+        }
         UpdateOcean();
+        UpdateAtmosphere();
         ApplyBiomeNoise();
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight);
+
+
+        planetLastFrame = planet;
     }
 
+    void OnPlanetChange()
+    {
+        print("ChangedPlanet");
+        oceanVariables = planet.oceanVariables;
+        atmosphereVariables = planet.atmosphereVariables;
 
+    }
     void UpdateOcean()
     {
-        if(ocean == null)
+        if (planet == planetLastFrame)
         {
-            if(transform.GetChild(0)!=null)
-            {
-                ocean = Instantiate(baseOcean, transform).transform;
-            }
-            else
-            {
-                ocean = transform.GetChild(0);
-            }
-            
+            planet.oceanVariables = oceanVariables;
         }
+
         Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial;
         Material mat = planet.planetMaterial;
-        ocean.position = Vector3.zero;
-        ocean.localScale = (mat.GetFloat("_SeaLevel") + 0.01f) * Vector3.one * 2;
-        oceanMat.color = mat.GetColor("_OceanColor");
+
+        ocean.localScale = (planet.oceanVariables._SeaLevel + 0.01f) * Vector3.one * 2;
+
+        oceanMat.color = planet.oceanVariables._OceanColor;
+        oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic);
+        oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness);
+
+        mat.SetFloat("_SeaLevel", planet.oceanVariables._SeaLevel);
+        mat.SetFloat("_OceanBlendEnd", planet.oceanVariables._OceanBlendEnd);
+        mat.SetFloat("_OceanBlendIntensity", planet.oceanVariables._OceanBlendIntensity);
+        mat.SetColor("_ShorelineColor", planet.oceanVariables._ShorelineColor);
+        mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor);
+    }
+    void UpdateAtmosphere()
+    {
+        if(planet == planetLastFrame)
+        {
+            planet.atmosphereVariables = atmosphereVariables;
+        }
+
+        atmosphere.color = planet.atmosphereVariables.color;
+        atmosphere.range = planet.atmosphereVariables.range;
+        atmosphere.intensity = planet.atmosphereVariables.intensity;
     }
     public void ToggleOcean()
     {
         ocean.gameObject.SetActive(!ocean.gameObject.activeInHierarchy);
+    }
+    public void ToggleAtmosphere()
+    {
+        atmosphere.gameObject.SetActive(!atmosphere.gameObject.activeInHierarchy);
     }
     void ApplyBiomeNoise()
     { 
@@ -218,30 +254,33 @@ public class FullPlanetGeneration : MonoBehaviour
             return;
         }
 
+        GameObject newObj = Instantiate(selectedObj, selectedObj.transform.position, selectedObj.transform.rotation);
+        GameObject newOceanObj = newObj.transform.GetChild(0).gameObject;
+
+        DestroyImmediate(newObj.GetComponent<FullPlanetGeneration>());
+        newObj.SetActive(true);
+
         MeshFilter meshFilter = selectedObj.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = selectedObj.GetComponent<MeshRenderer>();
+        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();
 
         Mesh mesh = meshFilter.sharedMesh;
         Material material = meshRenderer.sharedMaterial;
-        Material copyMat = new Material(material.shader);
-        copyMat.CopyMatchingPropertiesFromMaterial(material);
-
-        GameObject newObj = new GameObject("BakedPlanet");
-        newObj.transform.rotation = selectedObj.transform.rotation;
-
-        MeshFilter newMeshFilter = newObj.AddComponent<MeshFilter>();
-        newMeshFilter.sharedMesh = mesh;
-
-        MeshRenderer newMeshRenderer = newObj.AddComponent<MeshRenderer>();
-        newMeshRenderer.sharedMaterial = copyMat;
-
-        GameObject newOceanObj = selectedObj.transform.GetChild(0).gameObject;
-        Instantiate(newOceanObj, newObj.transform);
-        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();
         Material oceanMaterial = oceanRenderer.sharedMaterial;
-        Material copyOceanMaterial = new Material(oceanMaterial.shader);
-        copyOceanMaterial.CopyMatchingPropertiesFromMaterial(oceanMaterial);
-        oceanRenderer.material = copyOceanMaterial;
+
+        Material copyMat = new Material(material.shader);
+        Material copyOceanMat = new Material(oceanMaterial.shader);
+        Mesh copyMesh = mesh;
+
+        copyMat.CopyMatchingPropertiesFromMaterial(material);
+        copyOceanMat.CopyMatchingPropertiesFromMaterial(oceanMaterial);
+
+        MeshFilter newMeshFilter = newObj.GetComponent<MeshFilter>();
+        MeshRenderer newMeshRenderer = newObj.GetComponent<MeshRenderer>();
+
+        newMeshFilter.mesh = copyMesh;
+        newMeshRenderer.material = copyOceanMat;
+        oceanRenderer.material = copyOceanMat;
 
         string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab");
 
@@ -255,8 +294,8 @@ public class FullPlanetGeneration : MonoBehaviour
         PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath);
 
         AssetDatabase.AddObjectToAsset(copyMat, prefabPath);
-        AssetDatabase.AddObjectToAsset(copyOceanMaterial, prefabPath);
-        AssetDatabase.AddObjectToAsset(mesh, prefabPath);
+        AssetDatabase.AddObjectToAsset(copyOceanMat, prefabPath);
+        AssetDatabase.AddObjectToAsset(copyMesh, prefabPath);
         AssetDatabase.SaveAssets();
 
         DestroyImmediate(newObj);

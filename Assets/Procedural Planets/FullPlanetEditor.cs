@@ -13,10 +13,23 @@ public class FullPlanetEditor : Editor
     MaterialEditor shadingEditor; //the normal editor for the material
 
     bool oceanFoldout; //if the ocean dropdown is folded out
+    bool atmosphereFoldout; //if the atmosphere dropdown is folded out
     bool terrainFoldout; //if the terrain dropdown is folded out
     bool colorSchemes; //if colorschemes are toggled
 
     SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty oceanVariables, atmosphereVariables; //serialized properties for defining ocean and atmosphere variables
+    SerializedProperty seaLevelProperty;
+    SerializedProperty oceanBlendEndProperty;
+    SerializedProperty oceanBlendIntensityProperty;
+    SerializedProperty shorelineColorProperty;
+    SerializedProperty seabedColorProperty;
+    SerializedProperty oceanColorProperty;
+    SerializedProperty oceanMetallicProperty;
+    SerializedProperty oceanSmoothnessProperty;
+    SerializedProperty atmosphereColorProperty;
+    SerializedProperty atmosphereRangeProperty;
+    SerializedProperty atmosphereIntensityProperty;
     #endregion
 
     public override void OnInspectorGUI()
@@ -87,6 +100,33 @@ public class FullPlanetEditor : Editor
         {
             //Display ocean variables
             if(GUILayout.Button("Toggle Ocean")) { planetGeneration.ToggleOcean();  }
+
+            EditorGUILayout.Separator();
+
+            EditorGUILayout.Slider(seaLevelProperty, 0, 5);
+            EditorGUILayout.Slider(oceanBlendEndProperty, 0, 1);
+            EditorGUILayout.Slider(oceanBlendIntensityProperty, 0, 2);
+
+            EditorGUILayout.Separator();
+
+            EditorGUILayout.PropertyField(shorelineColorProperty);
+            EditorGUILayout.PropertyField(seabedColorProperty);
+            EditorGUILayout.PropertyField(oceanColorProperty);
+
+            EditorGUILayout.Separator();
+
+            EditorGUILayout.Slider(oceanMetallicProperty, 0, 1);
+            EditorGUILayout.Slider(oceanSmoothnessProperty, 0, 1);
+        }
+        atmosphereFoldout = EditorGUILayout.Foldout(atmosphereFoldout, "Atmosphere Variables", true);
+        if (atmosphereFoldout)
+        {
+            //Display ocean variables
+            if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }
+
+            EditorGUILayout.PropertyField(atmosphereColorProperty);
+            EditorGUILayout.Slider(atmosphereRangeProperty, 0, 10);
+            EditorGUILayout.Slider(atmosphereIntensityProperty, 0, 10);
         }
 
         //Display terrain and material
@@ -122,11 +162,25 @@ public class FullPlanetEditor : Editor
         #region SerializedProperties
         biomeA = serializedObject.FindProperty("biomeA");
         biomeB = serializedObject.FindProperty("biomeB");
+        oceanVariables = serializedObject.FindProperty("oceanVariables");
+        atmosphereVariables = serializedObject.FindProperty("atmosphereVariables");
+        seaLevelProperty = oceanVariables.FindPropertyRelative("_SeaLevel");
+        oceanBlendEndProperty = oceanVariables.FindPropertyRelative("_OceanBlendEnd");
+        oceanBlendIntensityProperty = oceanVariables.FindPropertyRelative("_OceanBlendIntensity");
+        shorelineColorProperty = oceanVariables.FindPropertyRelative("_ShorelineColor");
+        seabedColorProperty = oceanVariables.FindPropertyRelative("_SeabedColor");
+        oceanColorProperty = oceanVariables.FindPropertyRelative("_OceanColor");
+        oceanMetallicProperty = oceanVariables.FindPropertyRelative("_OceanMetallic");
+        oceanSmoothnessProperty = oceanVariables.FindPropertyRelative("_OceanSmoothness");
+        atmosphereColorProperty = atmosphereVariables.FindPropertyRelative("color");
+        atmosphereRangeProperty = atmosphereVariables.FindPropertyRelative("range");
+        atmosphereIntensityProperty = atmosphereVariables.FindPropertyRelative("intensity");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);
 
         oceanFoldout = EditorPrefs.GetBool(nameof(oceanFoldout), false);
+        atmosphereFoldout = EditorPrefs.GetBool(nameof(atmosphereFoldout), false);
         terrainFoldout = EditorPrefs.GetBool(nameof(terrainFoldout), false);
         colorSchemes = EditorPrefs.GetBool(nameof(colorSchemes), false);
 
@@ -141,5 +195,6 @@ public class FullPlanetEditor : Editor
         EditorPrefs.SetBool(nameof(oceanFoldout), oceanFoldout);
         EditorPrefs.SetBool(nameof(terrainFoldout), terrainFoldout);
         EditorPrefs.SetBool(nameof(colorSchemes), colorSchemes);
+        EditorPrefs.SetBool(nameof(atmosphereFoldout), atmosphereFoldout);
     }
 }

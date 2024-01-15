@@ -12,5 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a651b384e121e48a12e9d1cec4937a, type: 3}
   m_Name: Cyclops
   m_EditorClassIdentifier: 
-  planetMaterial: {fileID: 2100000, guid: 862d537ad3055094eafafcdb5dd44f66, type: 2}
-  terrainVar: {fileID: 11400000, guid: b22cd637c21e83e4cb8321740f43fba0, type: 2}
+  planetMaterial: {fileID: 2100000, guid: 5f49a5c31f39f5347ac3d73013929495, type: 2}
+  terrainVar: {fileID: 11400000, guid: 17c63d419bb34d6479c5dd5f9c9876b1, type: 2}
+  oceanVariables:
+    _SeaLevel: 1.09
+    _OceanBlendEnd: 0.076
+    _OceanBlendIntensity: 0.01
+    _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0.25882354, g: 0.8980392, b: 0.8323046, a: 0.05490196}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0.565
+  atmosphereVariables:
+    color: {r: 0.15294118, g: 0.10980393, b: 0.12941177, a: 1}
+    range: 2.88
+    intensity: 3.54

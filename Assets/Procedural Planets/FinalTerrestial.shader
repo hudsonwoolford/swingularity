@@ -43,16 +43,18 @@ Shader "Custom/FinalTerrestial"
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
      _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
      _SeabedColor ("Sea Bed Color", Color) = (1,1,1)
-     _OceanColor ("Ocean Color", Color) = (1,1,1)
+     //_OceanColor ("Ocean Color", Color) = (1,1,1)
+     //_OceanMetallic ("Ocean Metallic", Range(0 ,1)) = 0
+     //_OceanSmoothness ("Ocean Smoothness", Range(0, 1)) = 0
 
      [Header(Fresnel)] //Fresnel
-     [Toggle()]_UseFresnel("UseFresnel", float) = 0
+     [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
      _FresnelColor("Fresnel Color", Color) = (1,1,1)
      _FresnelStrengthNear("Fresnel Strength Near", float) = 2
      _FresnelStrengthFar("Fresnel Strength Far", float) = 5
      _FresnelPower("Fresnel Power", float) = 2
 
-     //[Header(Noise)] //Noise
+     //[Header(Noise)] //Nois
 
      //[IntRange]_Octaves("Octaves", Range(0,5)) = 1
      //_Offset("Offset", vector) = (0,0,0)
@@ -109,7 +111,6 @@ Shader "Custom/FinalTerrestial"
         float _OceanBlendIntensity;
         fixed4 _ShorelineColor;
         fixed4 _SeabedColor;
-        fixed4 _OceanColor;
 
         float _MetallicA;
         float _MetallicB;
@@ -168,7 +169,7 @@ Shader "Custom/FinalTerrestial"
             float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
             float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
 
-            //Define blendValue
+            //Define blendValue / biome
             float blendValue = 0;
             if(noiseTex<_BiomeAEnd) { blendValue = 0; }
             else if(noiseTex>_BiomeBStart){ blendValue = 1; }
@@ -179,7 +180,7 @@ Shader "Custom/FinalTerrestial"
             if(_BiomeA == 0 && _BiomeB == 0) {o.Albedo = 0.1; return;}
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
-            //Define new values
+            //Define new values depending on biome
             float3 flatColor = lerp(_FlatColorA, _FlatColorB, blendValue);
             float3 steepColor = lerp(_SteepColorA, _SteepColorB, blendValue);
             float3 highElevationColor = lerp(_HighElevationColorA, _HighElevationColorB, blendValue);
@@ -190,6 +191,11 @@ Shader "Custom/FinalTerrestial"
             float metallic = lerp(_MetallicA, _MetallicB, blendValue);
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
+            //Flat terrain noise
+            //noiseTex = SimpleNoise(IN.vertPos, 1, 15, 1, 1, 1, 1, float3(0,0,0));
+            //float3 finalFlatColor = lerp(flatColor, _FlatColorA1, noiseTex);
+            //finalFlatColor = lerp(finalFlatColor, shorelineColor, pow(_ShorlineReach / elevation, _ShorlineBlendIntensity));
+
             //Terrain steepness
             float steepness = 1 - dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal
             float elevationFloat = clamp(0, 1, pow(abs(elevation) / vegetationLine, vegetationLineHarshness));
@@ -198,6 +204,7 @@ Shader "Custom/FinalTerrestial"
             float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness * _SteepMultiplier); //lerps the flat and steep color depending on steepness
 
             //Terrain elevation
+            
             if(elevation < 0) 
             { 
                 float groundLerp = clamp(0, 1, pow(abs(elevation) / _OceanBlendEnd, _OceanBlendIntensity));
