@@ -197,7 +197,7 @@ Shader "Custom/FinalTerrestial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            noiseTex = SimpleNoise(IN.vertPos, 1, 500, 1, 1, 1, 1, float3(0,0,0));
+            noiseTex = SimpleNoise(IN.vertPos, 1, 50, 1, 1, 1, 1, float3(0,0,0));
             flatColor = lerp(flatColor, _FlatColorA1, noiseTex);
 
             //Terrain steepness
