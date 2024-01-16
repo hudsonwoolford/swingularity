@@ -1,4 +1,4 @@
-Shader "Custom/FinalTerrestial"
+Shader "Custom/FinalTerrestrial"
 {
     Properties
     {
