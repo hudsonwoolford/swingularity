@@ -9,7 +9,6 @@ Shader "Custom/FinalTerrestial"
      _BiomeBStart("Biome B  Start", Range(0,1)) = 0.6
      [Toggle()]_SwapBiome("SwapBiome",float) = 0
      _SteepMultiplier("Steep Multiplier", Range(0,5)) = 1
-     [PowerSlider(10.0)]_ColorTextureScale("Color Texture Scale", Range(0, 100)) = 5
 
      [Header(Biome A)] //Biome A
 
@@ -40,7 +39,13 @@ Shader "Custom/FinalTerrestial"
      [PowerSlider(3.0)]_VegetationLineHarshnessB ("Vegetation Line Harshness B", Range(0, 10)) = 2
 
      [Header(Flat Terrain Noise)]
-      
+     [IntRange]_ColorOctaves("Color Texture Octaves", Range(0,5)) = 1
+     _ColorOffset("Color Texture Offset", vector) = (0,0,0)
+     [PowerSlider(10.0)]_ColorTextureScale("Color Texture Scale", Range(0, 100)) = 5
+     _ColorPersistence("Color Texture Persistence", Range(0, 5)) = 1
+     _ColorLacunarity("Color Texture Lacunarity", Range(0,5)) = 1
+     _ColorMultiplier("Color Texture Multiplier", Range(0,5)) = 1
+     _ColorGain("Color Texture Gain", Range(0, 5)) = 1
 
      [Header(Constants)] //Constants
 
@@ -140,6 +145,10 @@ Shader "Custom/FinalTerrestial"
         float3 _WarpOffset;
         float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
 
+        int _ColorOctaves;
+        float3 _ColorOffset;
+        float _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain;
+
         struct Input
         {
             float3 worldPos;
@@ -202,7 +211,7 @@ Shader "Custom/FinalTerrestial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            noiseTex = SimpleNoise(IN.vertPos, 1, _ColorTextureScale, 1, 1, 1, 1, float3(0,0,0));
+            noiseTex = SimpleNoise(IN.vertPos, _ColorOctaves, _ColorTextureScale, _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain, _ColorOffset);
             flatColor = lerp(flatColor, flatColorVariant, noiseTex);
 
             //Terrain steepness
