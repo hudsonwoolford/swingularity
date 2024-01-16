@@ -187,6 +187,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             // Biome A color scheme
             mat.SetColor("_FlatColorA", biomeAScheme._FlatColor);
+            mat.SetColor("_FlatColorAVariant", biomeAScheme._FlatColor);
             mat.SetColor("_SteepColorA", biomeAScheme._SteepColor);
             mat.SetColor("_HighElevationColorA", biomeAScheme._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorA", biomeAScheme._HighElevationSteepColor);
@@ -197,6 +198,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             // Biome B color scheme
             mat.SetColor("_FlatColorB", biomeBScheme._FlatColor);
+            mat.SetColor("_FlatColorVariant", biomeBScheme._FlatColor);
             mat.SetColor("_SteepColorB", biomeBScheme._SteepColor);
             mat.SetColor("_HighElevationColorB", biomeBScheme._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorB", biomeBScheme._HighElevationSteepColor);
@@ -228,6 +230,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeASaved != null && restoreA)
         {
             mat.SetColor("_FlatColorA", biomeASaved._FlatColor);
+            mat.SetColor("_FlatColorAVariant", biomeASaved._FlatColor);
             mat.SetColor("_SteepColorA", biomeASaved._SteepColor);
             mat.SetColor("_HighElevationColorA", biomeASaved._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorA", biomeASaved._HighElevationSteepColor);
@@ -237,6 +240,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeBSaved!=null && restoreB)
         {
             mat.SetColor("_FlatColorB", biomeBSaved._FlatColor);
+            mat.SetColor("_FlatColorBVariant", biomeBSaved._FlatColor);
             mat.SetColor("_SteepColorB", biomeBSaved._SteepColor);
             mat.SetColor("_HighElevationColorB", biomeBSaved._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorB", biomeBSaved._HighElevationSteepColor);
@@ -301,6 +305,15 @@ public class FullPlanetGeneration : MonoBehaviour
         AssetDatabase.SaveAssets();
 
         DestroyImmediate(newObj);
+    }
+    [MenuItem("ProceduralTools/Create New Planet")]
+    static void CreatePlanetAssets()
+    {
+        FullPlanetObj fullPlanetObj = new FullPlanetObj();
+        TerrainVar terrainVar = new TerrainVar();
+        Material planetMat = new Material(Shader.Find("Custom/FinalTerrestrial"));
+        
+        
     }
 }
 
