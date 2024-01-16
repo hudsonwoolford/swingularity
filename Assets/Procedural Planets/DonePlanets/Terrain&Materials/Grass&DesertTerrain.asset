@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generalSettings:
     subdivisions: 7
-    radius: 1
     seed: 2351
   craterSettings:
     rimWidth: 0
@@ -81,16 +80,32 @@ MonoBehaviour:
   continentNoiseSettings:
     applyNoise: 1
     octaves: 1
-    scale: 1.48
+    scale: 0.98
     persistence: 1
     lacunarity: 2
     multiplier: 1
     gain: 1
     offset:
-    - 2.98
+    - 7.88
     - 1
     - 1
-    depthMultiplier: 7.82
+    depthMultiplier: 3.41
     oceanFloorDepth: 6.13
     oceanFloorSmoothing: 0.24
     maskBlend: 0.65
+  biomeNoiseSettings:
+    _Octaves: 0
+    _Offset: {x: 0, y: 0, z: 0}
+    _Scale: 0
+    _Persistence: 0
+    _Lacunarity: 0
+    _Multiplier: 0
+    _Gain: 0
+  biomeWarpNoiseSettings:
+    _WarpOctaves: 0
+    _WarpOffset: {x: 0, y: 0, z: 0}
+    _WarpScale: 0
+    _WarpPersistence: 0
+    _WarpLacunarity: 0
+    _WarpMultiplier: 0
+    _WarpGain: 0

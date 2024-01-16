@@ -9,11 +9,12 @@ Shader "Custom/FinalTerrestial"
      _BiomeBStart("Biome B  Start", Range(0,1)) = 0.6
      [Toggle()]_SwapBiome("SwapBiome",float) = 0
      _SteepMultiplier("Steep Multiplier", Range(0,5)) = 1
+     [PowerSlider(10.0)]_ColorTextureScale("Color Texture Scale", Range(0, 100)) = 5
 
      [Header(Biome A)] //Biome A
 
      _FlatColorA ("Flat Color A", Color) = (1,1,1)
-     _FlatColorA1 ("Flat Color A1", Color) = (1,1,1)
+     _FlatColorAVariant ("Flat Color A Variant", Color) = (1,1,1)
      _SteepColorA ("Steep Color A", Color) = (1,1,1)
      _HighElevationColorA ("High Elevation Color A", Color) = (1,1,1) 
      _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1)
@@ -28,6 +29,7 @@ Shader "Custom/FinalTerrestial"
 
      _FlatColorB ("Flat Color B", Color) = (0,0,0)
      _SteepColorB ("Steep Color B", Color) = (0,0,0)
+     _FlatColorBVariant ("Flat Color B Variant", Color) = (1,1,1)
      _HighElevationColorB ("High Elevation Color B", Color) = (0,0,0)
      _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0,0,0)
 
@@ -58,23 +60,23 @@ Shader "Custom/FinalTerrestial"
      _FresnelStrengthFar("Fresnel Strength Far", float) = 5
      _FresnelPower("Fresnel Power", float) = 2
 
-     //[Header(Noise)] //Nois
+     [Header(Noise)] //Nois
 
-     //[IntRange]_Octaves("Octaves", Range(0,5)) = 1
-     //_Offset("Offset", vector) = (0,0,0)
-     //_Scale("Scale", Range(0,5)) = 1
-     //_Persistence("Persistence", Range(0, 5)) = 1
-     //_Lacunarity("Lacunarity", Range(0,5)) = 1
-     //_Multiplier("Multiplier", Range(0,5)) = 1
-     //_Gain("Gain", Range(0, 5)) = 1
-     //[Header(WarpNoise)]
-     //[IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
-     //_WarpOffset("Warp Offset", vector) = (0,0,0)
-     //_WarpScale("Warp Scale", Range(0,5)) = 1
-     //_WarpPersistence("Warp Persistence", Range(0, 5)) = 1
-     //_WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
-     //_WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
-     //_WarpGain("Warp Gain", Range(0, 5)) = 1
+     [HideInInspector][IntRange]_Octaves("Octaves", Range(0,5)) = 1
+     [HideInInspector]_Offset("Offset", vector) = (0,0,0)
+     [HideInInspector]_Scale("Scale", Range(0,5)) = 1
+     [HideInInspector]_Persistence("Persistence", Range(0, 5)) = 1
+     [HideInInspector]_Lacunarity("Lacunarity", Range(0,5)) = 1
+     [HideInInspector]_Multiplier("Multiplier", Range(0,5)) = 1
+     [HideInInspector]_Gain("Gain", Range(0, 5)) = 1
+     //[HideInInspector][Header(WarpNoise)]
+     [HideInInspector][IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
+     [HideInInspector]_WarpOffset("Warp Offset", vector) = (0,0,0)
+     [HideInInspector]_WarpScale("Warp Scale", Range(0,5)) = 1
+     [HideInInspector]_WarpPersistence("Warp Persistence", Range(0, 5)) = 1
+     [HideInInspector]_WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
+     [HideInInspector]_WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
+     [HideInInspector]_WarpGain("Warp Gain", Range(0, 5)) = 1
     }
     SubShader
     {
@@ -95,9 +97,10 @@ Shader "Custom/FinalTerrestial"
         float _BiomeAEnd;
         float _SwapBiome;
         float _SteepMultiplier;
+        float _ColorTextureScale;
         //Biome A
         fixed4 _FlatColorA;
-        //fixed4 _FlatColorA1;
+        fixed4 _FlatColorAVariant;
         fixed4 _SteepColorA;
         fixed4 _HighElevationColorA;
         fixed4 _HighElevationSteepColorA;
@@ -105,6 +108,7 @@ Shader "Custom/FinalTerrestial"
         float _VegetationLineHarshnessA;
         //Biome B
         fixed4 _FlatColorB;
+        fixed4 _FlatColorBVariant;
         fixed4 _SteepColorB;
         fixed4 _HighElevationColorB;
         fixed4 _HighElevationSteepColorB;
@@ -187,6 +191,7 @@ Shader "Custom/FinalTerrestial"
 
             //Define new values depending on biome
             float3 flatColor = lerp(_FlatColorA, _FlatColorB, blendValue);
+            float3 flatColorVariant = lerp(_FlatColorAVariant, _FlatColorBVariant, blendValue);
             float3 steepColor = lerp(_SteepColorA, _SteepColorB, blendValue);
             float3 highElevationColor = lerp(_HighElevationColorA, _HighElevationColorB, blendValue);
             float3 highElevationSteepColor = lerp(_HighElevationSteepColorA, _HighElevationSteepColorB, blendValue);
@@ -197,8 +202,8 @@ Shader "Custom/FinalTerrestial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            //noiseTex = SimpleNoise(IN.vertPos, 1, 50, 1, 1, 1, 1, float3(0,0,0));
-            //flatColor = lerp(flatColor, _FlatColorA1, noiseTex);
+            noiseTex = SimpleNoise(IN.vertPos, 1, _ColorTextureScale, 1, 1, 1, 1, float3(0,0,0));
+            flatColor = lerp(flatColor, flatColorVariant, noiseTex);
 
             //Terrain steepness
             float steepness = 1 - dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal

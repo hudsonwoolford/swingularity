@@ -150,10 +150,12 @@ public class FullPlanetGeneration : MonoBehaviour
 
         Material mat = planet.planetMaterial;
         mat.SetColor("_FlatColorA", colors[0]);
+        mat.SetColor("_FlatColorAVariant", colors[0]);
         mat.SetColor("_SteepColorA", colors[1]);
         mat.SetColor("_HighElevationColorA", colors[2]);
         mat.SetColor("_HighElevationSteepColorA", colors[3]);
         mat.SetColor("_FlatColorB", colors[4]);
+        mat.SetColor("_FlatColorBVarient", colors[4]);
         mat.SetColor("_SteepColorB", colors[5]);
         mat.SetColor("_HighElevationColorB", colors[6]);
         mat.SetColor("_HighElevationSteepColorB", colors[7]);
