@@ -28,8 +28,16 @@ public class OceanVariables
 [Serializable]
 public class AtmosphereVariables
 {
-    public Color color = Color.white;
-    public float range = 1;
-    public float intensity = 1;
+    public Color OuterBandColor = Color.white;
+    public float OuterBandRange = 1;
+    public float OuterBandIntensity = 1;
+
+    public Color InnerBandColor = Color.white;
+    public float InnerBandIntensity = 1;
+    public float InnerBandRange = 1;
+
+    public Color FrontColor = Color.white;
+    public float FrontRange = 1;
+    public float FrontIntensity = 1;
 }
 

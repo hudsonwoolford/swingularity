@@ -13,7 +13,7 @@ public class FullPlanetEditor : Editor
     MaterialEditor shadingEditor; //the normal editor for the material
 
     bool oceanFoldout; //if the ocean dropdown is folded out
-    bool atmosphereFoldout; //if the atmosphere dropdown is folded out
+    bool atmosphereFoldout, innerAtmosphereFoldout, outerAtmosphereFoldout, frontAtmosphereFoldout; //if the atmosphere dropdown is folded out
     bool terrainFoldout; //if the terrain dropdown is folded out
     bool colorSchemes; //if colorschemes are toggled
 
@@ -27,9 +27,15 @@ public class FullPlanetEditor : Editor
     SerializedProperty oceanColorProperty;
     SerializedProperty oceanMetallicProperty;
     SerializedProperty oceanSmoothnessProperty;
-    SerializedProperty atmosphereColorProperty;
-    SerializedProperty atmosphereRangeProperty;
-    SerializedProperty atmosphereIntensityProperty;
+    SerializedProperty atmosphereInnerColorProperty;
+    SerializedProperty atmosphereInnerRangeProperty;
+    SerializedProperty atmosphereInnerIntensityProperty;
+    SerializedProperty atmosphereOuterColorProperty;
+    SerializedProperty atmosphereOuterRangeProperty;
+    SerializedProperty atmosphereOuterIntensityProperty;
+    SerializedProperty atmosphereFrontColorProperty;
+    SerializedProperty atmosphereFrontRangeProperty;
+    SerializedProperty atmosphereFrontIntensityProperty;
     #endregion
 
     public override void OnInspectorGUI()
@@ -121,12 +127,32 @@ public class FullPlanetEditor : Editor
         atmosphereFoldout = EditorGUILayout.Foldout(atmosphereFoldout, "Atmosphere Variables", true);
         if (atmosphereFoldout)
         {
-            //Display ocean variables
+            //Display atmosphere variables
             if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }
 
-            EditorGUILayout.PropertyField(atmosphereColorProperty);
-            EditorGUILayout.Slider(atmosphereRangeProperty, 0, 10);
-            EditorGUILayout.Slider(atmosphereIntensityProperty, 0, 10);
+            innerAtmosphereFoldout = EditorGUILayout.Foldout(innerAtmosphereFoldout, "Inner Atmosphere", true);
+
+            if (innerAtmosphereFoldout){
+                EditorGUILayout.PropertyField(atmosphereInnerColorProperty);
+                EditorGUILayout.Slider(atmosphereInnerRangeProperty, 0, 10);
+                EditorGUILayout.Slider(atmosphereInnerIntensityProperty, 0, 10);
+            }
+
+            outerAtmosphereFoldout = EditorGUILayout.Foldout(outerAtmosphereFoldout, "Outer Atmosphere", true);
+
+            if (outerAtmosphereFoldout){
+                EditorGUILayout.PropertyField(atmosphereOuterColorProperty);
+                EditorGUILayout.Slider(atmosphereOuterRangeProperty, 0, 10);
+                EditorGUILayout.Slider(atmosphereOuterIntensityProperty, 0, 10);
+            }
+
+            frontAtmosphereFoldout = EditorGUILayout.Foldout(frontAtmosphereFoldout, "Front Atmosphere", true);
+
+            if (frontAtmosphereFoldout){
+                EditorGUILayout.PropertyField(atmosphereFrontColorProperty);
+                EditorGUILayout.Slider(atmosphereFrontRangeProperty, 0, 10);
+                EditorGUILayout.Slider(atmosphereFrontIntensityProperty, 0, 10);
+            }
         }
 
         //Display terrain and material
@@ -172,15 +198,24 @@ public class FullPlanetEditor : Editor
         oceanColorProperty = oceanVariables.FindPropertyRelative("_OceanColor");
         oceanMetallicProperty = oceanVariables.FindPropertyRelative("_OceanMetallic");
         oceanSmoothnessProperty = oceanVariables.FindPropertyRelative("_OceanSmoothness");
-        atmosphereColorProperty = atmosphereVariables.FindPropertyRelative("color");
-        atmosphereRangeProperty = atmosphereVariables.FindPropertyRelative("range");
-        atmosphereIntensityProperty = atmosphereVariables.FindPropertyRelative("intensity");
+        atmosphereOuterColorProperty = atmosphereVariables.FindPropertyRelative("OuterBandColor");
+        atmosphereOuterRangeProperty = atmosphereVariables.FindPropertyRelative("OuterBandRange");
+        atmosphereOuterIntensityProperty = atmosphereVariables.FindPropertyRelative("OuterBandIntensity");
+        atmosphereInnerColorProperty = atmosphereVariables.FindPropertyRelative("InnerBandColor");
+        atmosphereInnerRangeProperty = atmosphereVariables.FindPropertyRelative("InnerBandRange");
+        atmosphereInnerIntensityProperty = atmosphereVariables.FindPropertyRelative("InnerBandIntensity");
+        atmosphereFrontColorProperty = atmosphereVariables.FindPropertyRelative("FrontColor");
+        atmosphereFrontRangeProperty = atmosphereVariables.FindPropertyRelative("FrontRange");
+        atmosphereFrontIntensityProperty = atmosphereVariables.FindPropertyRelative("FrontIntensity");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);
 
         oceanFoldout = EditorPrefs.GetBool(nameof(oceanFoldout), false);
         atmosphereFoldout = EditorPrefs.GetBool(nameof(atmosphereFoldout), false);
+        innerAtmosphereFoldout = EditorPrefs.GetBool(nameof(innerAtmosphereFoldout), false);
+        outerAtmosphereFoldout = EditorPrefs.GetBool(nameof(outerAtmosphereFoldout), false);
+        frontAtmosphereFoldout = EditorPrefs.GetBool(nameof(frontAtmosphereFoldout), false);
         terrainFoldout = EditorPrefs.GetBool(nameof(terrainFoldout), false);
         colorSchemes = EditorPrefs.GetBool(nameof(colorSchemes), false);
 
@@ -196,5 +231,8 @@ public class FullPlanetEditor : Editor
         EditorPrefs.SetBool(nameof(terrainFoldout), terrainFoldout);
         EditorPrefs.SetBool(nameof(colorSchemes), colorSchemes);
         EditorPrefs.SetBool(nameof(atmosphereFoldout), atmosphereFoldout);
+        EditorPrefs.SetBool(nameof(innerAtmosphereFoldout), innerAtmosphereFoldout);
+        EditorPrefs.SetBool(nameof(outerAtmosphereFoldout), outerAtmosphereFoldout);
+        EditorPrefs.SetBool(nameof(frontAtmosphereFoldout), frontAtmosphereFoldout);
     }
 }

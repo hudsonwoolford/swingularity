@@ -15,7 +15,7 @@ public class FullPlanetGeneration : MonoBehaviour
     public ComputeShader calculateVertexHeight;
     public FullPlanetObj planet;
     public Transform ocean;
-    public Light atmosphere;
+    public Light innerAtmosphere, outerAtmosphere, frontAtmosphere;
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB;
     [HideInInspector]
@@ -89,9 +89,17 @@ public class FullPlanetGeneration : MonoBehaviour
             planet.atmosphereVariables = atmosphereVariables;
         }
 
-        atmosphere.color = planet.atmosphereVariables.color;
-        atmosphere.range = planet.atmosphereVariables.range;
-        atmosphere.intensity = planet.atmosphereVariables.intensity;
+        innerAtmosphere.color = planet.atmosphereVariables.InnerBandColor;
+        innerAtmosphere.range = planet.atmosphereVariables.InnerBandRange;
+        innerAtmosphere.intensity = planet.atmosphereVariables.InnerBandIntensity;
+
+        outerAtmosphere.color = planet.atmosphereVariables.OuterBandColor;
+        outerAtmosphere.range = planet.atmosphereVariables.OuterBandRange;
+        outerAtmosphere.intensity = planet.atmosphereVariables.OuterBandIntensity;
+
+        frontAtmosphere.color = planet.atmosphereVariables.FrontColor;
+        frontAtmosphere.range = planet.atmosphereVariables.FrontRange;
+        frontAtmosphere.intensity = planet.atmosphereVariables.FrontIntensity;
     }
     public void ToggleOcean()
     {
@@ -99,7 +107,9 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void ToggleAtmosphere()
     {
-        atmosphere.gameObject.SetActive(!atmosphere.gameObject.activeInHierarchy);
+        frontAtmosphere.gameObject.SetActive(!frontAtmosphere.gameObject.activeInHierarchy);
+        outerAtmosphere.gameObject.SetActive(!outerAtmosphere.gameObject.activeInHierarchy);
+        innerAtmosphere.gameObject.SetActive(!innerAtmosphere.gameObject.activeInHierarchy);
     }
     void ApplyBiomeNoise()
     { 
