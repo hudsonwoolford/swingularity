@@ -97,7 +97,7 @@ Shader "Custom/FinalTerrestial"
         float _SteepMultiplier;
         //Biome A
         fixed4 _FlatColorA;
-        fixed4 _FlatColorA1;
+        //fixed4 _FlatColorA1;
         fixed4 _SteepColorA;
         fixed4 _HighElevationColorA;
         fixed4 _HighElevationSteepColorA;
@@ -197,8 +197,8 @@ Shader "Custom/FinalTerrestial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            noiseTex = SimpleNoise(IN.vertPos, 1, 50, 1, 1, 1, 1, float3(0,0,0));
-            flatColor = lerp(flatColor, _FlatColorA1, noiseTex);
+            //noiseTex = SimpleNoise(IN.vertPos, 1, 50, 1, 1, 1, 1, float3(0,0,0));
+            //flatColor = lerp(flatColor, _FlatColorA1, noiseTex);
 
             //Terrain steepness
             float steepness = 1 - dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal
