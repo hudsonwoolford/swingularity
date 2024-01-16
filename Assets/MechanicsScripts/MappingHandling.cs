@@ -5,7 +5,7 @@ using TMPro;
 
 public class MappingHandling : MonoBehaviour
 {
-    [SerializeField] BoxCollider playArea, camArea, camAreaSmaller;
+    [SerializeField] BoxCollider camArea, camAreaSmaller;
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
@@ -39,11 +39,19 @@ public class MappingHandling : MonoBehaviour
                     
                     if (r.collider == camArea)
                     {
+                        point = r.point;
                         dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
+                        if(dist > 100)
+                        {
+                            print(dist);
+                            ShootBall.triggerReset?.Invoke();
+                            canvasAnimator.Play("ShowOOB");
+                        }
+
                     }
                     if (r.collider == camAreaSmaller)
                     {
-                        point = r.point;
+                        Vector3 arrowPos = r.point;
                         float zRot = Mathf.Atan2(dirtoCamera.normalized.y, dirtoCamera.normalized.x) * Mathf.Rad2Deg;
                         arrow.rotation = Quaternion.Euler(0, 0, zRot - 180);
                         Transform dt = distText.gameObject.transform;
@@ -58,18 +66,12 @@ public class MappingHandling : MonoBehaviour
                             dt.localRotation = Quaternion.Euler(0, 0, 0);
                             distText.alignment = TextAlignmentOptions.Right;
                         }
-                        arrow.position = point + new Vector3(0,0,-5);
+                        arrow.position = arrowPos + new Vector3(0,0,-5);
                     }
                                 
                 }
                 distText.text = dist.ToString();
             }
-        }
-        if(!playArea.bounds.Contains(ball.position))
-        {
-            //out of bounds
-            ShootBall.triggerReset?.Invoke();
-            canvasAnimator.Play("ShowOOB");
         }
     } 
     private void OnDrawGizmosSelected()

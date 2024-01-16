@@ -13,6 +13,7 @@ Shader "Custom/FinalTerrestial"
      [Header(Biome A)] //Biome A
 
      _FlatColorA ("Flat Color A", Color) = (1,1,1)
+     _FlatColorA1 ("Flat Color A1", Color) = (1,1,1)
      _SteepColorA ("Steep Color A", Color) = (1,1,1)
      _HighElevationColorA ("High Elevation Color A", Color) = (1,1,1) 
      _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1)
@@ -35,6 +36,9 @@ Shader "Custom/FinalTerrestial"
      
      _VegetationLineB ("Vegetation Line B", Range(0, 0.5)) = 0.1
      [PowerSlider(3.0)]_VegetationLineHarshnessB ("Vegetation Line Harshness B", Range(0, 10)) = 2
+
+     [Header(Flat Terrain Noise)]
+      
 
      [Header(Constants)] //Constants
 
@@ -93,6 +97,7 @@ Shader "Custom/FinalTerrestial"
         float _SteepMultiplier;
         //Biome A
         fixed4 _FlatColorA;
+        fixed4 _FlatColorA1;
         fixed4 _SteepColorA;
         fixed4 _HighElevationColorA;
         fixed4 _HighElevationSteepColorA;
@@ -192,9 +197,8 @@ Shader "Custom/FinalTerrestial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            //noiseTex = SimpleNoise(IN.vertPos, 1, 15, 1, 1, 1, 1, float3(0,0,0));
-            //float3 finalFlatColor = lerp(flatColor, _FlatColorA1, noiseTex);
-            //finalFlatColor = lerp(finalFlatColor, shorelineColor, pow(_ShorlineReach / elevation, _ShorlineBlendIntensity));
+            noiseTex = SimpleNoise(IN.vertPos, 1, 500, 1, 1, 1, 1, float3(0,0,0));
+            flatColor = lerp(flatColor, _FlatColorA1, noiseTex);
 
             //Terrain steepness
             float steepness = 1 - dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal

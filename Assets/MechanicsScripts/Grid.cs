@@ -40,7 +40,7 @@ public class Grid
                 }
                 else
                 {
-                    GameObject.Destroy(arrow);
+                    GameObject.Destroy(arrowInsta);
                 }
                 float zRot = Mathf.Atan2(force.normalized.y, force.normalized.x) * Mathf.Rad2Deg;
                 arrowInsta.transform.rotation = Quaternion.Euler(0, 0, zRot);
@@ -60,15 +60,24 @@ public class Grid
             float distance = direction.magnitude; //distance
 
             float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * ball.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-            Vector3 force = direction.normalized * forceMagnitude; //storing force
+            Vector3 force = (direction.normalized * forceMagnitude).magnitude > ArtificialGravity.GravitationalCutoff ? direction.normalized * forceMagnitude : direction.normalized; //storing force
             totalForce += new Vector2(force.x, force.y);
         }
-        return totalForce;
+        if (totalForce.magnitude > ArtificialGravity.GravitationalCutoff)
+        {
+            return totalForce;
+        }
+        else
+        {
+            return totalForce.normalized;
+        }
+        
     }
 }
 public static class ArtificialGravity
 {
     public static float G = 0.75f;
+    public static float GravitationalCutoff = 15;
 
     public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
     {
@@ -78,6 +87,13 @@ public static class ArtificialGravity
         float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
-        return force; //returning force
+        if( force.magnitude > GravitationalCutoff)
+        {
+            return force; //returning force
+        }
+        else
+        {
+            return force.normalized;
+        }
     }
 }
