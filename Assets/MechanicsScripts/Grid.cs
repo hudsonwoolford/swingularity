@@ -32,7 +32,7 @@ public class Grid
                 GameObject arrowInsta = Object.Instantiate(arrow, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f, Quaternion.identity);
                 arrowInsta.transform.localScale = Vector3.one * cellSize;
                 arrowInsta.transform.SetParent(parent, true);
-                Vector3 force = GravityForce(GetWorldPosition(x, y));
+                Vector3 force = ArtificialGravity.GravityForceAtPoint(GetWorldPosition(x, y), planets, ball.mass);
                 if(force.magnitude != 0)
                 {
                     arrow.GetComponent<SpriteRenderer>().color = colorGrad.Evaluate(1-(1 / (force.magnitude / colorDivisor)));
@@ -51,32 +51,10 @@ public class Grid
     {
         return origin + new Vector3(x, y) * cellSize;
     }
-    Vector2 GravityForce(Vector3 worldPos)
-    {
-        Vector2 totalForce = Vector2.zero;
-        foreach (Rigidbody rbAttracting in planets)
-        {
-            Vector3 direction = rbAttracting.position - worldPos; //direction vector
-            float distance = direction.magnitude; //distance
-
-            float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * ball.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-            Vector3 force = (direction.normalized * forceMagnitude).magnitude > ArtificialGravity.GravitationalCutoff ? direction.normalized * forceMagnitude : direction.normalized; //storing force
-            totalForce += new Vector2(force.x, force.y);
-        }
-        if (totalForce.magnitude > ArtificialGravity.GravitationalCutoff)
-        {
-            return totalForce;
-        }
-        else
-        {
-            return totalForce.normalized;
-        }
-        
-    }
 }
 public static class ArtificialGravity
 {
-    public static float G = 0.75f;
+    public static float G = 1f;
     public static float GravitationalCutoff = 15;
 
     public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
@@ -95,5 +73,29 @@ public static class ArtificialGravity
         {
             return force.normalized;
         }
+    }
+    public static Vector2 GravityForceAtPoint(Vector3 worldPos, Rigidbody[] planetRB, float objMass)
+    {
+        Vector2 totalForce = Vector2.zero;
+        Vector2 totalForceNormalized= Vector2.zero;
+        foreach (Rigidbody rbAttracting in planetRB)
+        {
+            Vector3 direction = rbAttracting.position - worldPos; //direction vector
+            float distance = direction.magnitude; //distance
+
+            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            Vector3 force = (direction.normalized * forceMagnitude).magnitude > GravitationalCutoff ? direction.normalized * forceMagnitude : direction.normalized; //storing force
+            totalForce += new Vector2(force.x, force.y);
+            totalForceNormalized += new Vector2(force.x, force.y).normalized;
+        }
+        if (totalForce.magnitude > GravitationalCutoff)
+        {
+            return totalForce;
+        }
+        else
+        {
+            return totalForceNormalized;
+        }
+
     }
 }

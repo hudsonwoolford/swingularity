@@ -8,6 +8,7 @@ using static UnityEditor.PlayerSettings;
 public class ShootBall : MonoBehaviour
 {
     [SerializeField] PhysicMaterial ballMat;
+    [SerializeField] Transform planetTransform;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
@@ -31,6 +32,7 @@ public class ShootBall : MonoBehaviour
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
     Rigidbody srb;
+    List<Rigidbody> planets = new List<Rigidbody>();
     Vector3 mousePos;
     Vector3 origin;
     Rigidbody rb;
@@ -49,11 +51,15 @@ public class ShootBall : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        int i = 0;
+        foreach (Transform t in planetTransform)
+        {
+            planets.Add(t.gameObject.GetComponent<Rigidbody>());
+            i++;
+        }
     }
     private void Start()
     {
-        
-
         main = Camera.main;
         attractors.Clear();
 
@@ -83,6 +89,10 @@ public class ShootBall : MonoBehaviour
             }
         }
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
+    }
+    void FixedUpdate()
+    {
+            
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -160,13 +170,8 @@ public class ShootBall : MonoBehaviour
         {
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
             obj.GetComponent<Renderer>().enabled = false; //hides it
-            Attractor attractor; //initializes attractor of obj
             obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
-            if(obj.TryGetComponent<Attractor>(out attractor)) //tries to get the collider object (if it exists)
-            {
-                attractor.enabled = false; //this prevents double gravity
-                attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
-            }
+             attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
             SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
         }
     }
@@ -202,10 +207,7 @@ public class ShootBall : MonoBehaviour
                 slr.positionCount = i;
                 break;
             }
-            foreach (Rigidbody r in attractors) //since simulation does not account for gravity, we manually do it
-            {
-                srb.AddForce(ArtificialGravity.AttractForce(srb, r));
-            }
+            srb.AddForce(ArtificialGravity.GravityForceAtPoint(srb.position, planets.ToArray(), rb.mass));
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
         Destroy(simulatedObj); //not performant must be object pooled later
