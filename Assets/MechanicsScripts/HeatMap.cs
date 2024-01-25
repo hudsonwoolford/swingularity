@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tester : MonoBehaviour
+public class HeatMap : MonoBehaviour
 {
     [SerializeField] GameObject whiteArrow;
     [SerializeField] int width, height;

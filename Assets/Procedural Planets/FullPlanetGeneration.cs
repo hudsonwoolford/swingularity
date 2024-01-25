@@ -21,12 +21,6 @@ public class FullPlanetGeneration : MonoBehaviour
     [SerializeField] PlanetColorScheme biomeA, biomeB;
     [HideInInspector]
     PlanetColorScheme biomeASaved, biomeBSaved;
-    [HideInInspector]
-    [SerializeField]
-    public OceanVariables oceanVariables;
-    [HideInInspector]
-    [SerializeField]
-    public AtmosphereVariables atmosphereVariables;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
     private void Awake()
@@ -49,24 +43,17 @@ public class FullPlanetGeneration : MonoBehaviour
         ApplyBiomeNoise();
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight);
 
-    }
-    private void OnValidate()
-    {
-        oceanVariables = planet.oceanVariables;
-        atmosphereVariables = planet.atmosphereVariables;
-    }
+    }   
     void UpdateOcean()
     {
-        planet.oceanVariables = oceanVariables;
-
         Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial;
         Material mat = planet.planetMaterial;
 
         ocean.localScale = (planet.oceanVariables._SeaLevel + 0.01f) * Vector3.one * 2;
 
         oceanMat.color = planet.oceanVariables._OceanColor;
-        oceanMat.SetFloat("_Metallic", oceanVariables._OceanMetallic);
-        oceanMat.SetFloat("_Glossiness", oceanVariables._OceanSmoothness);
+        oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic);
+        oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness);
 
         mat.SetFloat("_SeaLevel", planet.oceanVariables._SeaLevel);
         mat.SetFloat("_OceanBlendEnd", planet.oceanVariables._OceanBlendEnd);
@@ -76,8 +63,6 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateAtmosphere()
     {
-        planet.atmosphereVariables = atmosphereVariables;
-
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
         innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange;
         innerAtmosphere.intensity = planet.atmosphereVariables._InnerBandIntensity;
