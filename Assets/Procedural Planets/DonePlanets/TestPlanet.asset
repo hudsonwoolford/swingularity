@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a651b384e121e48a12e9d1cec4937a, type: 3}
+  m_Name: TestPlanet
+  m_EditorClassIdentifier: 
+  planetMaterial: {fileID: 0}
+  terrainVar: {fileID: 0}
+  oceanVariables:
+    _SeaLevel: 0
+    _OceanBlendEnd: 0.01
+    _OceanBlendIntensity: 0.01
+    _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0, g: 0, b: 1, a: 1}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0
+  atmosphereVariables:
+    _OuterBandColor: {r: 1, g: 1, b: 1, a: 1}
+    _OuterBandRange: 2.2
+    _OuterBandIntensity: 0.6
+    _InnerBandColor: {r: 1, g: 1, b: 1, a: 1}
+    _InnerBandRange: 2.1
+    _InnerBandIntensity: 4
+    _FrontColor: {r: 1, g: 1, b: 1, a: 1}
+    _FrontRange: 2
+    _FrontIntensity: 0.15

@@ -92,7 +92,7 @@ public class ShootBall : MonoBehaviour
     }
     void FixedUpdate()
     {
-            
+        rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {

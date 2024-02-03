@@ -22,7 +22,7 @@ public class TerrainVar : ScriptableObject
 public class GeneralSettings
 {
     [Range(3, 9)]
-    public int subdivisions = 0;
+    public int subdivisions = 8;
 
     public int seed;
 }
@@ -83,13 +83,13 @@ public class DetailNoiseSettings
 public class RidgeNoiseSettings
 {
     public bool applyNoise;
-    public int octaves;
-    public float scale;
+    public int octaves = 3;
+    public float scale = 0.3f;
     public float persistence;
     public float lacunarity;
-    public float multiplier;
-    public float gain;
-    public float power;
+    public float multiplier = 1;
+    public float gain = 1;
+    public float power = 1;
     public float[] offset = new float[3];
     public float elevation;
     public float smoothing;
@@ -99,14 +99,14 @@ public class RidgeNoiseSettings
 public class WarpedNoiseSettings
 {
     public bool applyNoise;
-    public int octaves;
-    public float scale;
+    public int octaves = 3;
+    public float scale = 1;
     public float persistence;
     public float lacunarity;
-    public float multiplier;
-    public float gain;
+    public float multiplier = 1;
+    public float gain = 1;
     public float[] offset = new float[3];
-    public float strength;
+    public float strength = 1;
 }
 
 [Serializable]
@@ -129,17 +129,17 @@ public class ContinentNoiseSettings
 [Serializable]
 public class BiomeNoiseSettings
 {
-    public int _Octaves;
+    public int _Octaves = 3;
     public Vector3 _Offset;
-    public float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
+    public float _Scale = 1, _Persistence, _Lacunarity, _Multiplier = 1, _Gain = 1;
 }
 
 [Serializable]
 public class BiomeWarpNoiseSettings
 {
-    public int _WarpOctaves;
+    public int _WarpOctaves = 3;
     public Vector3 _WarpOffset;
-    public float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
+    public float _WarpScale = 1, _WarpPersistence, _WarpLacunarity, _WarpMultiplier = 1, _WarpGain = 1;
 }
 
 

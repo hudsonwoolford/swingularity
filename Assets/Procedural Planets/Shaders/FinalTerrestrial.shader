@@ -12,11 +12,11 @@ Shader "Custom/FinalTerrestrial"
 
      [Header(Biome A)] //Biome A
 
-     _FlatColorA ("Flat Color A", Color) = (1,1,1)
-     _FlatColorAVariant ("Flat Color A Variant", Color) = (1,1,1)
-     _SteepColorA ("Steep Color A", Color) = (1,1,1)
-     _HighElevationColorA ("High Elevation Color A", Color) = (1,1,1) 
-     _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (1,1,1)
+     _FlatColorA ("Flat Color A", Color) = (0.2,0.2,0.2)
+     _FlatColorAVariant ("Flat Color A Variant", Color) = (0.2,0.2,0.2)
+     _SteepColorA ("Steep Color A", Color) = (0.2,0.2,0.2)
+     _HighElevationColorA ("High Elevation Color A", Color) = (0.2,0.2,0.2)
+     _HighElevationSteepColorA ("High Elevation Steep Color A", Color) = (0.2,0.2,0.2)
 
      _MetallicA ("Metallic A", Range(0, 1)) = 0
      _SmoothnessA ("Smoothness A", Range(0,1)) = 0
@@ -26,11 +26,11 @@ Shader "Custom/FinalTerrestrial"
 
      [Header(Biome B)] //Biome B
 
-     _FlatColorB ("Flat Color B", Color) = (0,0,0)
-     _SteepColorB ("Steep Color B", Color) = (0,0,0)
-     _FlatColorBVariant ("Flat Color B Variant", Color) = (1,1,1)
-     _HighElevationColorB ("High Elevation Color B", Color) = (0,0,0)
-     _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0,0,0)
+     _FlatColorB ("Flat Color B", Color) = (0.5,0.5,0.5)
+     _SteepColorB ("Steep Color B", Color) = (0.5,0.5,0.5)
+     _FlatColorBVariant ("Flat Color B Variant", Color) = (0.5,0.5,0.5)
+     _HighElevationColorB ("High Elevation Color B", Color) = (0.5,0.5,0.5)
+     _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0.5,0.5,0.5)
 
      _MetallicB ("Metallic B", Range(0, 1)) = 0
      _SmoothnessB ("Smoothness B", Range(0,1)) = 0
@@ -53,7 +53,7 @@ Shader "Custom/FinalTerrestrial"
      _OceanBlendEnd("Ocean Blend End", Range(0, 2)) = 0.5
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
      _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
-     _SeabedColor ("Sea Bed Color", Color) = (1,1,1)
+     _SeabedColor ("Sea Bed Color", Color) = (0,0,0)
      //_OceanColor ("Ocean Color", Color) = (1,1,1)
      //_OceanMetallic ("Ocean Metallic", Range(0 ,1)) = 0
      //_OceanSmoothness ("Ocean Smoothness", Range(0, 1)) = 0

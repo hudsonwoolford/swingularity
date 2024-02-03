@@ -1,13 +1,5 @@
-using JetBrains.Annotations;
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.Windows;
-using Unity.VisualScripting;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -290,14 +282,91 @@ public class FullPlanetGeneration : MonoBehaviour
 
         DestroyImmediate(newObj);
     }
-    [MenuItem("ProceduralTools/Create New Planet")]
-    static void CreatePlanetAssets()
+    [MenuItem("ProceduralTools/Wipe Planet Asset")]
+    static void WipePlanetAssets()
     {
-        FullPlanetObj fullPlanetObj = new FullPlanetObj();
-        TerrainVar terrainVar = new TerrainVar();
-        Material planetMat = new Material(Shader.Find("Custom/FinalTerrestrial"));
-        
-        
+        GameObject selectedObj = Selection.activeGameObject;
+
+        FullPlanetGeneration fpg;
+        if(!selectedObj.TryGetComponent<FullPlanetGeneration>(out fpg))
+        {
+            Debug.LogWarning("Please choose a valid gameobject");
+            return;
+        }
+
+        string planetObjPath = EditorUtility.OpenFilePanel("Select Planet", "Assets/Procedural Planets/DonePlanets", "asset");
+        if(planetObjPath.Length==0)
+        {
+            print("File Selection Cancelled");
+            return;
+        }
+
+        planetObjPath = planetObjPath.Substring(planetObjPath.IndexOf("Assets/"));
+
+        FullPlanetObj fullPlanetObj = AssetDatabase.LoadAssetAtPath<FullPlanetObj>(planetObjPath);
+
+        if(fullPlanetObj == fpg.planet) 
+        {
+            Debug.LogWarning("Sorry, please unselect the PlanetObj from the planet generation script");
+            return;
+        }
+
+        Material planetMat = fullPlanetObj.planetMaterial;
+        TerrainVar terrainVar = fullPlanetObj.terrainVar;
+
+        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(planetMat));
+        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(terrainVar));
+        AssetDatabase.DeleteAsset(planetObjPath);
+
+
+    }
+
+    public class PlanetNameWindow : EditorWindow
+    {
+        string planetName = "CHANGETHIS";
+        private void OnGUI()
+        {
+            planetName = GUILayout.TextField(planetName);
+            if (GUILayout.Button("CreatePlanet"))
+            {
+                CreatePlanet(planetName);
+                Close();
+            }
+        }
+        [MenuItem("ProceduralTools/Create New Planet")]
+        static void ShowWindow()
+        {
+            PlanetNameWindow window = ScriptableObject.CreateInstance<PlanetNameWindow>();
+            window.name = "Create New Planet";
+            window.maxSize = new Vector2(250, 100);
+            window.ShowUtility();
+        }
+        void CreatePlanet(string planetName)
+        {
+            GameObject selectedObj = Selection.activeGameObject;
+
+            FullPlanetGeneration fpg;
+            if (selectedObj == null || !selectedObj.TryGetComponent<FullPlanetGeneration>(out fpg))
+            {
+                Debug.LogWarning("Please select a valid game object");
+                return;
+            }
+
+            FullPlanetObj fullPlanetObj = ScriptableObject.CreateInstance<FullPlanetObj>();
+            TerrainVar terrainVar = ScriptableObject.CreateInstance<TerrainVar>();
+            Material planetMat = new Material(Shader.Find("Custom/FinalTerrestrial"));
+
+            fullPlanetObj.terrainVar = terrainVar;
+            fullPlanetObj.planetMaterial = planetMat;
+
+            AssetDatabase.CreateAsset(fullPlanetObj, "Assets/Procedural Planets/DonePlanets/" + planetName + ".asset");
+            AssetDatabase.CreateAsset(planetMat, "Assets/Procedural Planets/DonePlanets/Terrain&Materials/" + planetName + "Mat.mat");
+            AssetDatabase.CreateAsset(terrainVar, "Assets/Procedural Planets/DonePlanets/Terrain&Materials/" + planetName + "TerrainVar.asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            fpg.planet = fullPlanetObj;
+        }
     }
 }
 

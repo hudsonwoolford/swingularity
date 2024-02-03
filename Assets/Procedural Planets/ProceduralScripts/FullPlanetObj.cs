@@ -21,8 +21,8 @@ public class OceanVariables
     [Range(0, 10)]
     [SerializeField] public float _OceanBlendIntensity = 0.01f;
     [SerializeField] public Color _ShorelineColor = Color.white;
-    [SerializeField] public Color _SeabedColor = Color.white;
-    [SerializeField] public Color _OceanColor = Color.white;
+    [SerializeField] public Color _SeabedColor = Color.black;
+    [SerializeField] public Color _OceanColor = Color.blue;
     [Range(0, 1)]
     [SerializeField] public float _OceanMetallic;
     [Range(0, 1)]
@@ -33,20 +33,20 @@ public class AtmosphereVariables
 {
     [SerializeField] public Color _OuterBandColor = Color.white;
     [Range(0, 5)]
-    [SerializeField] public float _OuterBandRange = 1;
+    [SerializeField] public float _OuterBandRange = 2.2f;
     [Range(0, 5)]
-    [SerializeField] public float _OuterBandIntensity = 1;
+    [SerializeField] public float _OuterBandIntensity = 0.6f;
 
     [SerializeField] public Color _InnerBandColor = Color.white;
     [Range(0, 5)]
-    [SerializeField] public float _InnerBandIntensity = 1;
+    [SerializeField] public float _InnerBandRange = 2.1f;
     [Range(0, 5)]
-    [SerializeField] public float _InnerBandRange = 1;
+    [SerializeField] public float _InnerBandIntensity = 4f;
 
     [SerializeField] public Color _FrontColor = Color.white;
     [Range(0, 5)]
-    [SerializeField] public float _FrontRange = 1;
+    [SerializeField] public float _FrontRange = 2.0f;
     [Range(0, 5)]
-    [SerializeField] public float _FrontIntensity = 1;
+    [SerializeField] public float _FrontIntensity = 0.15f;
 }
 
