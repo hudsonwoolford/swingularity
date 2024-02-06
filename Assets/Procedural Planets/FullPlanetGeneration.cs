@@ -1,14 +1,25 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
 public class FullPlanetGeneration : MonoBehaviour
 {
+    [Serializable]
+    public struct ColorSchemePool
+    {
+        public string name;
+        [Tooltip("This is optional")]
+        public PlanetColorScheme primaryBiome;
+        public PlanetColorScheme[] planetColorSchemes;
+    }
     public ComputeShader calculateVertexHeight;
     [SerializeField] public FullPlanetObj planet;
     public Transform ocean;
     public Light innerAtmosphere, outerAtmosphere, frontAtmosphere;
+    [SerializeField] TerrainVar[] terrainVarPool;
+    [SerializeField] ColorSchemePool[] colorSchemes;
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB;
     [HideInInspector]
@@ -106,6 +117,7 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
         float[] offset = { UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond };
+        planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[1]);
         planet.terrainVar.warpedNoiseSettings.offset = offset;
         planet.terrainVar.continentNoiseSettings.offset = offset;
         planet.terrainVar.ridgeNoiseSettings.offset = offset;
@@ -152,6 +164,36 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_SmoothnessA", metAndSmooth[2]);
         mat.SetFloat("_SmoothnessB", metAndSmooth[3]);
     }
+    public void RandomizeTerrainScheme()
+    {
+        if(terrainVarPool.Length == 0)
+        {
+            Debug.LogWarning("No terrain schemes in variable pool");
+            return;
+        }
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        int index = UnityEngine.Random.Range(0, terrainVarPool.Length);
+        planet.terrainVar = terrainVarPool[index];
+    }
+    public void RandomizeColorScheme()
+    {
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        int index = UnityEngine.Random.Range(0, colorSchemes.Length);
+        int index2= UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
+        if(colorSchemes[index].primaryBiome!=null)
+        {
+            biomeA = colorSchemes[index].planetColorSchemes[index2];
+            biomeB = colorSchemes[index].primaryBiome;
+            ApplyColorScheme();
+            return;
+        }
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond - 500);
+        int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
+        biomeA = colorSchemes[index].planetColorSchemes[index2];
+        biomeB = colorSchemes[index].planetColorSchemes[index3];
+        ApplyColorScheme();
+    }
+    #region Color Schemes
     public void ApplyColorScheme()
     {
         Material mat = planet.planetMaterial;
@@ -174,7 +216,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             // Biome B color scheme
             mat.SetColor("_FlatColorB", biomeBScheme._FlatColor);
-            mat.SetColor("_FlatColorVariant", biomeBScheme._FlatColor);
+            mat.SetColor("_FlatColorBVariant", biomeBScheme._FlatColor);
             mat.SetColor("_SteepColorB", biomeBScheme._SteepColor);
             mat.SetColor("_HighElevationColorB", biomeBScheme._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorB", biomeBScheme._HighElevationSteepColor);
@@ -224,7 +266,8 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_SmoothnessB", biomeBSaved._Smoothness);
         }
     }
-
+    #endregion
+    #region Editor Tools
     [MenuItem("ProceduralTools/Create Planet Prefab")]
     static void CreatePrefab()
     {
@@ -369,4 +412,5 @@ public class FullPlanetGeneration : MonoBehaviour
         }
     }
 }
+#endregion
 

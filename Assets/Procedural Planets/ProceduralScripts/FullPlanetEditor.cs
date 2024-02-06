@@ -32,7 +32,8 @@ public class FullPlanetEditor : Editor
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 2))) 
-        { 
+        {
+            planetGeneration.RandomizeTerrainScheme();
         }
         if (GUILayout.Button("Random Offset", GUILayout.MaxWidth(Screen.width / 2)))
         {
@@ -60,7 +61,10 @@ public class FullPlanetEditor : Editor
         else //Color schemes are enabled
         {
             if (GUILayout.Button("Toggle Color Scheme")) { colorSchemes = false; planetGeneration.RestoreSavedColorScheme(true, true); } // Disabling color scheme if pressed
-
+            if (GUILayout.Button("Random Color Scheme"))
+            {
+                planetGeneration.RandomizeColorScheme();
+            }
             //CS BiomeA: "Object" | CS BiomeB: "Object"
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("CS BiomeA:");

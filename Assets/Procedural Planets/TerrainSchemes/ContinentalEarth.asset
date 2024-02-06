@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2128562cbd13124698a8ad24adadd60, type: 3}
+  m_Name: ContinentalEarth
+  m_EditorClassIdentifier: 
+  generalSettings:
+    subdivisions: 8
+    seed: 0
+  craterSettings:
+    rimWidth: 0
+    rimSteepness: 0
+    smoothness: 0
+    craterBias: 0
+    minCraterSize: 0
+    maxCraterSize: 0
+    numCraters: 0
+  shapeNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 6.87
+    persistence: 0.38
+    lacunarity: 3.03
+    multiplier: 6.27
+    gain: 1
+    offset:
+    - 111.75846
+    - 52.037388
+    - 139.39803
+    elevation: 0.08
+  detailNoiseSettings:
+    applyNoise: 1
+    octaves: 2
+    scale: 100
+    persistence: 1
+    lacunarity: 0.1
+    multiplier: 0.04
+    gain: 1
+    offset:
+    - 111.75846
+    - 52.037388
+    - 139.39803
+    elevation: 1
+  ridgeNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.32
+    persistence: 0.81
+    lacunarity: -0.58
+    multiplier: 0.91
+    gain: 1
+    power: 6.65
+    offset:
+    - 111.75846
+    - 52.037388
+    - 139.39803
+    elevation: 1
+    smoothing: 0
+  warpedNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: -0.08
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1
+    gain: 1
+    offset:
+    - 111.75846
+    - 52.037388
+    - 139.39803
+    strength: 1
+  continentNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.34
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1
+    gain: 1
+    offset:
+    - 111.75846
+    - 52.037388
+    - 139.39803
+    depthMultiplier: 0.49
+    oceanFloorDepth: 3.41
+    oceanFloorSmoothing: 0.55
+    maskBlend: 2.84
+  biomeNoiseSettings:
+    _Octaves: 3
+    _Offset: {x: 111.75846, y: 52.037388, z: 139.39803}
+    _Scale: 1
+    _Persistence: 0
+    _Lacunarity: 0
+    _Multiplier: 1
+    _Gain: 1
+  biomeWarpNoiseSettings:
+    _WarpOctaves: 3
+    _WarpOffset: {x: 111.75846, y: 52.037388, z: 139.39803}
+    _WarpScale: 1
+    _WarpPersistence: 0
+    _WarpLacunarity: 0
+    _WarpMultiplier: 1
+    _WarpGain: 1

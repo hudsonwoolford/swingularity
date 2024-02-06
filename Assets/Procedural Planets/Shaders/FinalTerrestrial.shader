@@ -27,8 +27,8 @@ Shader "Custom/FinalTerrestrial"
      [Header(Biome B)] //Biome B
 
      _FlatColorB ("Flat Color B", Color) = (0.5,0.5,0.5)
-     _SteepColorB ("Steep Color B", Color) = (0.5,0.5,0.5)
      _FlatColorBVariant ("Flat Color B Variant", Color) = (0.5,0.5,0.5)
+     _SteepColorB ("Steep Color B", Color) = (0.5,0.5,0.5)
      _HighElevationColorB ("High Elevation Color B", Color) = (0.5,0.5,0.5)
      _HighElevationSteepColorB ("High Elevation Steep Color B", Color) = (0.5,0.5,0.5)
 
