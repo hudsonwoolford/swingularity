@@ -177,20 +177,51 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeColorScheme()
     {
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
-        int index = UnityEngine.Random.Range(0, colorSchemes.Length);
-        int index2= UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
-        if(colorSchemes[index].primaryBiome!=null)
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond); //Change the random values returned
+        int index = UnityEngine.Random.Range(0, colorSchemes.Length); //Index of the pool
+        int index2= UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the first biome
+        if(colorSchemes[index].primaryBiome!=null) //If a primary biome is used
         {
-            biomeA = colorSchemes[index].planetColorSchemes[index2];
-            biomeB = colorSchemes[index].primaryBiome;
+            //Randomizes which biome is primary
+            int choiceBiome = UnityEngine.Random.Range(0, 2);
+            switch (choiceBiome)
+            {
+                case 0:
+                    biomeA = colorSchemes[index].planetColorSchemes[index2];
+                    biomeB = colorSchemes[index].primaryBiome;
+                    break;
+                case 1:
+                    biomeB = colorSchemes[index].planetColorSchemes[index2];
+                    biomeA = colorSchemes[index].primaryBiome;
+                    break;
+                default:
+                    break;
+            }
             ApplyColorScheme();
             return;
         }
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond - 500);
-        int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
-        biomeA = colorSchemes[index].planetColorSchemes[index2];
-        biomeB = colorSchemes[index].planetColorSchemes[index3];
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond - 500); //Redo random values returned
+        int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
+        while(index3==index2) //Make sure they are not the same as the first biome
+        {
+            UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * UnityEngine.Random.value));
+            index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
+        }
+        //Randomizes which biome is which
+        int choice = UnityEngine.Random.Range(0, 2);
+        switch (choice)
+        {
+            case 0:
+                biomeA = colorSchemes[index].planetColorSchemes[index2];
+                biomeB = colorSchemes[index].planetColorSchemes[index3];
+                break;
+            case 1:
+                biomeB = colorSchemes[index].planetColorSchemes[index2];
+                biomeA = colorSchemes[index].planetColorSchemes[index3];
+                break;
+            default:
+                break;
+        }
         ApplyColorScheme();
     }
     #region Color Schemes
@@ -205,7 +236,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             // Biome A color scheme
             mat.SetColor("_FlatColorA", biomeAScheme._FlatColor);
-            mat.SetColor("_FlatColorAVariant", biomeAScheme._FlatColor);
+            mat.SetColor("_FlatColorAVariant", biomeAScheme._FlatColorVariant);
             mat.SetColor("_SteepColorA", biomeAScheme._SteepColor);
             mat.SetColor("_HighElevationColorA", biomeAScheme._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorA", biomeAScheme._HighElevationSteepColor);
@@ -216,7 +247,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             // Biome B color scheme
             mat.SetColor("_FlatColorB", biomeBScheme._FlatColor);
-            mat.SetColor("_FlatColorBVariant", biomeBScheme._FlatColor);
+            mat.SetColor("_FlatColorBVariant", biomeBScheme._FlatColorVariant);
             mat.SetColor("_SteepColorB", biomeBScheme._SteepColor);
             mat.SetColor("_HighElevationColorB", biomeBScheme._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorB", biomeBScheme._HighElevationSteepColor);
@@ -228,6 +259,7 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         Material mat = planet.planetMaterial;
         biomeASaved._FlatColor = mat.GetColor("_FlatColorA");
+        biomeASaved._FlatColorVariant = mat.GetColor("_FlatColorAVariant");
         biomeASaved._SteepColor = mat.GetColor("_SteepColorA");
         biomeASaved._HighElevationColor = mat.GetColor("_HighElevationColorA");
         biomeASaved._HighElevationSteepColor = mat.GetColor("_HighElevationSteepColorA");
@@ -235,6 +267,7 @@ public class FullPlanetGeneration : MonoBehaviour
         biomeASaved._Smoothness = mat.GetFloat("_SmoothnessA");
 
         biomeBSaved._FlatColor = mat.GetColor("_FlatColorB");
+        biomeBSaved._FlatColorVariant = mat.GetColor("_FlatColorBVariant");
         biomeBSaved._SteepColor = mat.GetColor("_SteepColorB");
         biomeBSaved._HighElevationColor = mat.GetColor("_HighElevationColorB");
         biomeBSaved._HighElevationSteepColor = mat.GetColor("_HighElevationSteepColorB");
@@ -248,7 +281,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeASaved != null && restoreA)
         {
             mat.SetColor("_FlatColorA", biomeASaved._FlatColor);
-            mat.SetColor("_FlatColorAVariant", biomeASaved._FlatColor);
+            mat.SetColor("_FlatColorAVariant", biomeASaved._FlatColorVariant);
             mat.SetColor("_SteepColorA", biomeASaved._SteepColor);
             mat.SetColor("_HighElevationColorA", biomeASaved._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorA", biomeASaved._HighElevationSteepColor);
@@ -258,7 +291,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeBSaved!=null && restoreB)
         {
             mat.SetColor("_FlatColorB", biomeBSaved._FlatColor);
-            mat.SetColor("_FlatColorBVariant", biomeBSaved._FlatColor);
+            mat.SetColor("_FlatColorBVariant", biomeBSaved._FlatColorVariant);
             mat.SetColor("_SteepColorB", biomeBSaved._SteepColor);
             mat.SetColor("_HighElevationColorB", biomeBSaved._HighElevationColor);
             mat.SetColor("_HighElevationSteepColorB", biomeBSaved._HighElevationSteepColor);

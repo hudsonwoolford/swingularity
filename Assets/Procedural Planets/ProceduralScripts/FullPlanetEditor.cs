@@ -28,7 +28,12 @@ public class FullPlanetEditor : Editor
         DrawDefaultInspector();
         EditorGUI.BeginChangeCheck();
 
-        if (GUILayout.Button("Random")) { }
+        if (GUILayout.Button("Random")) {
+            planetGeneration.RandomizeTerrainScheme();
+            planetGeneration.RandomizeOffset();
+            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
+            
+        }
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 2))) 
