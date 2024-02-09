@@ -15,7 +15,7 @@ public class FullPlanetObj : ScriptableObject
 public class OceanVariables
 {
     [Range(0, 5)]
-    [SerializeField] public float _SeaLevel;
+    [SerializeField] public float _SeaLevel = 1;
     [Range(0, 1)]
     [SerializeField] public float _OceanBlendEnd = 0.01f;
     [Range(0, 10)]
@@ -24,9 +24,9 @@ public class OceanVariables
     [SerializeField] public Color _SeabedColor = Color.black;
     [SerializeField] public Color _OceanColor = Color.blue;
     [Range(0, 1)]
-    [SerializeField] public float _OceanMetallic;
+    [SerializeField] public float _OceanMetallic = 0.2f;
     [Range(0, 1)]
-    [SerializeField] public float _OceanSmoothness;
+    [SerializeField] public float _OceanSmoothness = 0.6f;
 }
 [Serializable]
 public class AtmosphereVariables

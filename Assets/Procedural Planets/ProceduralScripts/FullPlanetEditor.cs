@@ -20,6 +20,7 @@ public class FullPlanetEditor : Editor
     bool colorSchemes; //if colorschemes are toggled
 
     SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty oABiomeA, oABiomeB; //serialized properties for defining biome a and biome b color schemes
     #endregion
 
     public override void OnInspectorGUI()
@@ -61,11 +62,12 @@ public class FullPlanetEditor : Editor
             if (GUILayout.Button("Toggle Color Scheme"))
             {
                 colorSchemes = true; planetGeneration.SaveColorScheme(); planetGeneration.ApplyColorScheme();
+                planetGeneration.colorSchemesOut = true;
             }
         }
         else //Color schemes are enabled
         {
-            if (GUILayout.Button("Toggle Color Scheme")) { colorSchemes = false; planetGeneration.RestoreSavedColorScheme(true, true); } // Disabling color scheme if pressed
+            if (GUILayout.Button("Toggle Color Scheme")) { colorSchemes = false; planetGeneration.RestoreSavedColorScheme(true, true); planetGeneration.colorSchemesOut = false; } // Disabling color scheme if pressed
             if (GUILayout.Button("Random Color Scheme"))
             {
                 planetGeneration.RandomizeColorScheme();
@@ -76,6 +78,11 @@ public class FullPlanetEditor : Editor
             EditorGUILayout.PropertyField(biomeA, GUIContent.none);
             GUILayout.Label("CS BiomeB:");
             EditorGUILayout.PropertyField(biomeB, GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            //Ocean and Atmosphere toggles
+            EditorGUILayout.BeginHorizontal();
+            oABiomeA.boolValue = EditorGUILayout.Toggle("OA BiomeA: ", oABiomeA.boolValue);
+            oABiomeB.boolValue = EditorGUILayout.Toggle("OA BiomeB: ", oABiomeB.boolValue);
             EditorGUILayout.EndHorizontal();
 
             //Apply button
@@ -140,6 +147,8 @@ public class FullPlanetEditor : Editor
         #region SerializedProperties
         biomeA = serializedObject.FindProperty("biomeA");
         biomeB = serializedObject.FindProperty("biomeB");
+        oABiomeA = serializedObject.FindProperty("oABiomeA");
+        oABiomeB = serializedObject.FindProperty("oABiomeB");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);

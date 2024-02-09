@@ -15,4 +15,7 @@ public class PlanetColorScheme : ScriptableObject
     public float _Metallic;
     [Range(0f, 1f)]
     public float _Smoothness;
+    [Header("Optional Variables")]
+    public OceanVariables oceanVariables = new OceanVariables();
+    public AtmosphereVariables atmosphereVariables = new AtmosphereVariables();
 }

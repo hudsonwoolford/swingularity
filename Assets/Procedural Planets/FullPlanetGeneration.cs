@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Collections;
+using System.Reflection;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -10,6 +12,7 @@ public class FullPlanetGeneration : MonoBehaviour
     public struct ColorSchemePool
     {
         public string name;
+        public bool oAPrimary;
         [Tooltip("This is optional")]
         public PlanetColorScheme primaryBiome;
         public PlanetColorScheme[] planetColorSchemes;
@@ -18,10 +21,14 @@ public class FullPlanetGeneration : MonoBehaviour
     [SerializeField] public FullPlanetObj planet;
     public Transform ocean;
     public Light innerAtmosphere, outerAtmosphere, frontAtmosphere;
+    [HideInInspector]
+    public bool colorSchemesOut;
     [SerializeField] TerrainVar[] terrainVarPool;
     [SerializeField] ColorSchemePool[] colorSchemes;
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB;
+    [HideInInspector]
+    [SerializeField] bool oABiomeA, oABiomeB;
     [HideInInspector]
     PlanetColorScheme biomeASaved, biomeBSaved;
     MeshRenderer meshRenderer;
@@ -40,6 +47,10 @@ public class FullPlanetGeneration : MonoBehaviour
         if (meshRenderer.sharedMaterial!=planet.planetMaterial)
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
+        }
+        if(colorSchemesOut)
+        {
+            ApplyColorScheme();
         }
         UpdateAtmosphere();
         UpdateOcean();
@@ -183,19 +194,32 @@ public class FullPlanetGeneration : MonoBehaviour
         if(colorSchemes[index].primaryBiome!=null) //If a primary biome is used
         {
             //Randomizes which biome is primary
+            ref PlanetColorScheme primaryBiomeBiome = ref biomeA;
             int choiceBiome = UnityEngine.Random.Range(0, 2);
             switch (choiceBiome)
             {
                 case 0:
                     biomeA = colorSchemes[index].planetColorSchemes[index2];
                     biomeB = colorSchemes[index].primaryBiome;
+                    primaryBiomeBiome = ref biomeB;
                     break;
                 case 1:
                     biomeB = colorSchemes[index].planetColorSchemes[index2];
                     biomeA = colorSchemes[index].primaryBiome;
+                    primaryBiomeBiome = ref biomeA;
                     break;
                 default:
                     break;
+            }
+            if(colorSchemes[index].oAPrimary)
+            {
+                oABiomeA = primaryBiomeBiome == biomeA ? true : false;
+                oABiomeB = primaryBiomeBiome == biomeB ? true : false;
+            }
+            else
+            {
+                oABiomeA = primaryBiomeBiome != biomeA ? true : false;
+                oABiomeB = primaryBiomeBiome != biomeB ? true : false;
             }
             ApplyColorScheme();
             return;
@@ -254,6 +278,16 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_MetallicB", biomeBScheme._Metallic);
             mat.SetFloat("_SmoothnessB", biomeBScheme._Smoothness);
         }
+        if(oABiomeA)
+        {
+            planet.oceanVariables = biomeA.oceanVariables;
+            planet.atmosphereVariables = biomeA.atmosphereVariables;
+        }
+        else if(oABiomeB)
+        {
+            planet.oceanVariables = biomeB.oceanVariables;
+            planet.atmosphereVariables = biomeB.atmosphereVariables;
+        }
     }
     public void SaveColorScheme()
     {
@@ -273,6 +307,10 @@ public class FullPlanetGeneration : MonoBehaviour
         biomeBSaved._HighElevationSteepColor = mat.GetColor("_HighElevationSteepColorB");
         biomeBSaved._Metallic = mat.GetFloat("_MetallicB");
         biomeBSaved._Smoothness = mat.GetFloat("_SmoothnessB");
+        
+        biomeASaved.oceanVariables = planet.oceanVariables;
+        biomeASaved.atmosphereVariables = planet.atmosphereVariables;
+        biomeBSaved.oceanVariables = planet.oceanVariables;
     }
     public void RestoreSavedColorScheme(bool restoreA, bool restoreB)
     {
@@ -298,6 +336,8 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_MetallicB", biomeBSaved._Metallic);
             mat.SetFloat("_SmoothnessB", biomeBSaved._Smoothness);
         }
+        planet.oceanVariables = biomeASaved.oceanVariables;
+        planet.atmosphereVariables = biomeASaved.atmosphereVariables;
     }
     #endregion
     #region Editor Tools
