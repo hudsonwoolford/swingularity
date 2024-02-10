@@ -3,12 +3,12 @@ Shader "Custom/FinalTerrestrial"
     Properties
     {
      [Header(Parameters)] //Parameters
+     [Toggle()]_Ocean("Ocean", float) = 1
      [Toggle()]_BiomeA("BiomeA", float) = 1
      [Toggle()]_BiomeB("BiomeB", float) = 1
      _BiomeAEnd("Biome A End", Range(0,1)) = 0.4
      _BiomeBStart("Biome B  Start", Range(0,1)) = 0.6
      [Toggle()]_SwapBiome("SwapBiome",float) = 0
-     _SteepMultiplier("Steep Multiplier", Range(0,5)) = 1
 
      [Header(Biome A)] //Biome A
 
@@ -23,6 +23,8 @@ Shader "Custom/FinalTerrestrial"
 
      _VegetationLineA ("Vegetation Line A", Range(0, 0.5)) = 0.1
      [PowerSlider(3.0)]_VegetationLineHarshnessA ("Vegetation Line Harshness A", Range(0, 10)) = 2
+
+     _SteepMultiplierA("Steep Multiplier A", Range(0, 5)) = 1
 
      [Header(Biome B)] //Biome B
 
@@ -46,6 +48,8 @@ Shader "Custom/FinalTerrestrial"
      _ColorLacunarity("Color Texture Lacunarity", Range(0,5)) = 1
      _ColorMultiplier("Color Texture Multiplier", Range(0,5)) = 1
      _ColorGain("Color Texture Gain", Range(0, 5)) = 1
+
+     _SteepMultiplierB("Steep Multiplier B", Range(0, 5)) = 1
 
      [Header(Constants)] //Constants
 
@@ -96,12 +100,12 @@ Shader "Custom/FinalTerrestrial"
 
         float bodyScale;
         //Parameters
+        float _Ocean;
         float _BiomeA;
         float _BiomeB;
         float _BiomeBStart;
         float _BiomeAEnd;
         float _SwapBiome;
-        float _SteepMultiplier;
         float _ColorTextureScale;
         //Biome A
         fixed4 _FlatColorA;
@@ -111,6 +115,7 @@ Shader "Custom/FinalTerrestrial"
         fixed4 _HighElevationSteepColorA;
         float _VegetationLineA;
         float _VegetationLineHarshnessA;
+        float _SteepMultiplierA;
         //Biome B
         fixed4 _FlatColorB;
         fixed4 _FlatColorBVariant;
@@ -119,6 +124,7 @@ Shader "Custom/FinalTerrestrial"
         fixed4 _HighElevationSteepColorB;
         float _VegetationLineB;
         float _VegetationLineHarshnessB;
+        float _SteepMultiplierB;
         //Constant through biomes
         float _SeaLevel;
         float _OceanBlendEnd;
@@ -207,6 +213,7 @@ Shader "Custom/FinalTerrestrial"
             float3 shorelineColor = _ShorelineColor;
             float vegetationLine = lerp(_VegetationLineA, _VegetationLineB, blendValue);
             float vegetationLineHarshness = lerp(_VegetationLineHarshnessA, _VegetationLineHarshnessB, blendValue);
+            float steepnessMultiplier = lerp(_SteepMultiplierA, _SteepMultiplierB, blendValue);
             float metallic = lerp(_MetallicA, _MetallicB, blendValue);
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
@@ -215,22 +222,22 @@ Shader "Custom/FinalTerrestrial"
             flatColor = lerp(flatColor, flatColorVariant, noiseTex);
 
             //Terrain steepness
-            float steepness = 1 - dot(sphereNormal, IN.normal); //dot product / how close is the sphere normal to the vertex normal
+            float steepness = clamp(0,1,(1 - dot(sphereNormal, IN.normal)) * steepnessMultiplier); //dot product / how close is the sphere normal to the vertex normal
+
             float elevationFloat = clamp(0, 1, pow(abs(elevation) / vegetationLine, vegetationLineHarshness));
             float3 correctSteepColor = lerp(steepColor, highElevationSteepColor, elevationFloat);
             float3 correctFlatColor = lerp(flatColor, highElevationColor, elevationFloat);
-            float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness * _SteepMultiplier); //lerps the flat and steep color depending on steepness
+            float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness); //lerps the flat and steep color depending on steepness
 
             //Terrain elevation
-            
-            if(elevation < 0) 
-            { 
+            if(elevation < 0 && _Ocean == 1) 
+            {             
+
                 float groundLerp = clamp(0, 1, pow(abs(elevation) / _OceanBlendEnd, _OceanBlendIntensity));
                 float3 groundColor = lerp(shorelineColor, _SeabedColor, groundLerp);
                 o.Albedo = groundColor;
                 return;
             }
-            
             
             //Compound colors
             float3 compoundColor = lerp(groundColor, _FresnelColor, IN.fresnel * _UseFresnel);

@@ -25,6 +25,11 @@ public class GeneralSettings
     public int subdivisions = 8;
 
     public int seed;
+
+    public bool ocean = true;
+
+    [Range(0, 5)]
+    public float _SeaLevel = 1;
 }
 [Serializable]
 public class CraterSettings

@@ -11,30 +11,31 @@ public class FullPlanetGeneration : MonoBehaviour
     [Serializable]
     public struct ColorSchemePool
     {
-        public string name;
-        public bool oAPrimary;
+        public string name; //name of the pool
+        public bool oPrimary, aPrimary; //ocean variables or atmosphere variables are taken from primary biome
         [Tooltip("This is optional")]
-        public PlanetColorScheme primaryBiome;
-        public PlanetColorScheme[] planetColorSchemes;
+        public PlanetColorScheme primaryBiome; //the primary biome
+        public PlanetColorScheme[] planetColorSchemes; //array of color schemes
     }
-    public ComputeShader calculateVertexHeight;
-    [SerializeField] public FullPlanetObj planet;
-    public Transform ocean;
-    public Light innerAtmosphere, outerAtmosphere, frontAtmosphere;
+    public ComputeShader calculateVertexHeight; //compute shader
+    [SerializeField] public FullPlanetObj planet; //planet scriptable object
+    public Transform ocean; //ocean object transform
+    public Light innerAtmosphere, outerAtmosphere, frontAtmosphere; //atmosphere lights
     [HideInInspector]
-    public bool colorSchemesOut;
-    [SerializeField] TerrainVar[] terrainVarPool;
-    [SerializeField] ColorSchemePool[] colorSchemes;
+    public bool colorSchemesOut; //if colorschemes are folded out/on
+    [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
+    [SerializeField] ColorSchemePool[] colorSchemes; //array for color scheme pool
     [HideInInspector]
-    [SerializeField] PlanetColorScheme biomeA, biomeB;
+    [SerializeField] PlanetColorScheme biomeA, biomeB; //biome A and biome B for color schemes
     [HideInInspector]
-    [SerializeField] bool oABiomeA, oABiomeB;
+    [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean
     [HideInInspector]
-    PlanetColorScheme biomeASaved, biomeBSaved;
-    MeshRenderer meshRenderer;
-    MeshFilter meshFilter;
+    PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
+    MeshRenderer meshRenderer; //the mesh renderer attatched to this object
+    MeshFilter meshFilter; //the mesh filter attached to this object
     private void Awake()
     {
+        //initialisation
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         biomeASaved = ScriptableObject.CreateInstance(typeof(PlanetColorScheme)) as PlanetColorScheme;
@@ -43,57 +44,68 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void Update()
     {
-        
-        if (meshRenderer.sharedMaterial!=planet.planetMaterial)
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        if (meshRenderer.sharedMaterial!=planet.planetMaterial) //updating material depending on planet
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
         }
-        if(colorSchemesOut)
+        if(colorSchemesOut) //if color schemes are on it will always apply them
         {
             ApplyColorScheme();
         }
-        UpdateAtmosphere();
-        UpdateOcean();
-        ApplyBiomeNoise();
-        meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight);
-
+        UpdateAtmosphere(); //updating the atmosphere from the atmosphere variables
+        UpdateOcean(); //updating the ocean from the ocean variables
+        ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
+        meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
     }   
     void UpdateOcean()
     {
-        Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial;
-        Material mat = planet.planetMaterial;
+        if(!planet.terrainVar.generalSettings.ocean)
+        {
+            ocean.gameObject.SetActive(false);
+        }
+        else if(!ocean.gameObject.activeInHierarchy)
+        {
+            ocean.gameObject.SetActive(true);
+        }
+        Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial; //caching ocean material
+        Material mat = planet.planetMaterial; //caching planet material
 
-        ocean.localScale = (planet.oceanVariables._SeaLevel + 0.01f) * Vector3.one * 2;
+        ocean.localScale = (planet.terrainVar.generalSettings._SeaLevel + 0.01f) * Vector3.one * 2; //ocean scale depending on sea level
 
-        oceanMat.color = planet.oceanVariables._OceanColor;
-        oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic);
-        oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness);
+        //Setting variables inside the ocean material and planet material
+        oceanMat.color = planet.oceanVariables._OceanColor; //color
+        oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic); //metallic
+        oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness); //smoothness
 
-        mat.SetFloat("_SeaLevel", planet.oceanVariables._SeaLevel);
-        mat.SetFloat("_OceanBlendEnd", planet.oceanVariables._OceanBlendEnd);
-        mat.SetFloat("_OceanBlendIntensity", planet.oceanVariables._OceanBlendIntensity);
-        mat.SetColor("_ShorelineColor", planet.oceanVariables._ShorelineColor);
-        mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor);
+        int oceanToggle = planet.terrainVar.generalSettings.ocean ? 1 : 0;
+        mat.SetFloat("_Ocean", oceanToggle); //ocean is enabled or not
+        mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level
+        mat.SetFloat("_OceanBlendEnd", planet.oceanVariables._OceanBlendEnd); //ocean blending between shoreline and seabed
+        mat.SetFloat("_OceanBlendIntensity", planet.oceanVariables._OceanBlendIntensity); //ocean blending intensity between shoreline and seabed
+        mat.SetColor("_ShorelineColor", planet.oceanVariables._ShorelineColor); //shoreline color
+        mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
     }
     void UpdateAtmosphere()
     {
+        //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
         innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange;
         innerAtmosphere.intensity = planet.atmosphereVariables._InnerBandIntensity;
-
+        //outer atmosphere variable setting
         outerAtmosphere.color = planet.atmosphereVariables._OuterBandColor;
         outerAtmosphere.range = planet.atmosphereVariables._OuterBandRange;
         outerAtmosphere.intensity = planet.atmosphereVariables._OuterBandIntensity;
-
+        //front atmosphere variable setting
         frontAtmosphere.color = planet.atmosphereVariables._FrontColor;
         frontAtmosphere.range = planet.atmosphereVariables._FrontRange;
         frontAtmosphere.intensity = planet.atmosphereVariables._FrontIntensity;
     }
-    public void ToggleOcean()
+    public void ToggleOcean() //turns ocean on or off
     {
         ocean.gameObject.SetActive(!ocean.gameObject.activeInHierarchy);
     }
-    public void ToggleAtmosphere()
+    public void ToggleAtmosphere() //turns atmosphere on or off
     {
         frontAtmosphere.gameObject.SetActive(!frontAtmosphere.gameObject.activeInHierarchy);
         outerAtmosphere.gameObject.SetActive(!outerAtmosphere.gameObject.activeInHierarchy);
@@ -101,11 +113,13 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void ApplyBiomeNoise()
     { 
+        //caching material and biome noise setting
         Material mat = planet.planetMaterial;
         BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
         BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
-
-        //Normal noise
+        
+        //Transfering from terrain to the material
+        //Normal noise transfer
         mat.SetInt("_Octaves", bns._Octaves);
         mat.SetVector("_Offset", bns._Offset);
         mat.SetFloat("_Scale", bns._Scale);
@@ -114,7 +128,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_Multiplier", bns._Multiplier);
         mat.SetFloat("_Gain", bns._Gain);
 
-        //Warp noise
+        //Warp noise transfer
         mat.SetInt("_WarpOctaves", bwns._WarpOctaves);
         mat.SetVector("_WarpOffset", bwns._WarpOffset);
         mat.SetFloat("_WarpScale", bwns._WarpScale);
@@ -126,8 +140,9 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeOffset()
     {
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        //random offset
         float[] offset = { UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond };
+        //setting the offsets to randomly generated offset
         planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[1]);
         planet.terrainVar.warpedNoiseSettings.offset = offset;
         planet.terrainVar.continentNoiseSettings.offset = offset;
@@ -140,13 +155,13 @@ public class FullPlanetGeneration : MonoBehaviour
     public void RandomizeShading()
     {
         Color[] colors = new Color[8];
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        //random colors for each value
         for (int i = 0; i < 8; i++)
         {
             Color randomColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             colors[i] = randomColor;
         }
-
+        //transferring random colors to material
         Material mat = planet.planetMaterial;
         mat.SetColor("_FlatColorA", colors[0]);
         mat.SetColor("_FlatColorAVariant", colors[0]);
@@ -162,14 +177,14 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeSmoothAndMetallic()
     {
-        Material mat = planet.planetMaterial;
         float[] metAndSmooth = new float[4];
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        //random floats for each value
         for (int i = 0; i < 4; i++)
         {
             metAndSmooth[i] = UnityEngine.Random.value;
-
         }
+        //transferring random floats to material
+        Material mat = planet.planetMaterial;
         mat.SetFloat("_MetallicA", metAndSmooth[0]);
         mat.SetFloat("_MetallicB", metAndSmooth[1]);
         mat.SetFloat("_SmoothnessA", metAndSmooth[2]);
@@ -177,19 +192,24 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeTerrainScheme()
     {
-        if(terrainVarPool.Length == 0)
+        if(terrainVarPool.Length == 0) //making sure that there are terrain schemes
         {
             Debug.LogWarning("No terrain schemes in variable pool");
             return;
         }
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        //randomized number for the terrain
         int index = UnityEngine.Random.Range(0, terrainVarPool.Length);
         planet.terrainVar = terrainVarPool[index];
     }
     public void RandomizeColorScheme()
     {
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond); //Change the random values returned
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
         int index = UnityEngine.Random.Range(0, colorSchemes.Length); //Index of the pool
+        if (colorSchemes[index].planetColorSchemes.Length ==0)
+        {
+            Debug.LogWarning("Color Scheme Pool: [" + colorSchemes[index].name + "] does not contain secondary biomes");
+            return;
+        }
         int index2= UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the first biome
         if(colorSchemes[index].primaryBiome!=null) //If a primary biome is used
         {
@@ -211,24 +231,31 @@ public class FullPlanetGeneration : MonoBehaviour
                 default:
                     break;
             }
-            if(colorSchemes[index].oAPrimary)
+            if(colorSchemes[index].oPrimary) //if ocean variables come from the primary
             {
-                oABiomeA = primaryBiomeBiome == biomeA ? true : false;
-                oABiomeB = primaryBiomeBiome == biomeB ? true : false;
+                oBiomeA = primaryBiomeBiome == biomeA ? true : false; //setting bool for which biome is determined by for ocean
+                oBiomeB = primaryBiomeBiome == biomeB ? true : false; //setting bool for which biome is determined by for ocean
             }
-            else
+            else //if ocean variables doesn't come from the primary
             {
-                oABiomeA = primaryBiomeBiome != biomeA ? true : false;
-                oABiomeB = primaryBiomeBiome != biomeB ? true : false;
+                oBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for ocean
+                oBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for ocean
             }
-            ApplyColorScheme();
+            if(colorSchemes[index].aPrimary) //if atmosphere variables come from the primary
+            {
+                aBiomeA = primaryBiomeBiome == biomeA ? true : false;
+                aBiomeB = primaryBiomeBiome == biomeB ? true : false;
+            }
+            else //if atmosphere variables doesn't come from the primary
+            {
+                aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
+                aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
+            }
             return;
         }
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond - 500); //Redo random values returned
         int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
         while(index3==index2) //Make sure they are not the same as the first biome
         {
-            UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * UnityEngine.Random.value));
             index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
         }
         //Randomizes which biome is which
@@ -246,7 +273,6 @@ public class FullPlanetGeneration : MonoBehaviour
             default:
                 break;
         }
-        ApplyColorScheme();
     }
     #region Color Schemes
     public void ApplyColorScheme()
@@ -266,6 +292,9 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetColor("_HighElevationSteepColorA", biomeAScheme._HighElevationSteepColor);
             mat.SetFloat("_MetallicA", biomeAScheme._Metallic);
             mat.SetFloat("_SmoothnessA", biomeAScheme._Smoothness);
+            mat.SetFloat("_VegetationLineA", biomeAScheme._VegetationLine);
+            mat.SetFloat("_VegetationLineHarshnessA", biomeAScheme._VegetationLineHarshness);
+            mat.SetFloat("_SteepMultiplierA", biomeBScheme._SteepMultiplier);
         }
         if(biomeB != null)
         {
@@ -277,17 +306,19 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetColor("_HighElevationSteepColorB", biomeBScheme._HighElevationSteepColor);
             mat.SetFloat("_MetallicB", biomeBScheme._Metallic);
             mat.SetFloat("_SmoothnessB", biomeBScheme._Smoothness);
+            mat.SetFloat("_VegetationLineB", biomeBScheme._VegetationLine);
+            mat.SetFloat("_VegetationLineHarshnessB", biomeBScheme._VegetationLineHarshness);
+            mat.SetFloat("_SteepMultiplierB", biomeBScheme._SteepMultiplier);
         }
-        if(oABiomeA)
-        {
-            planet.oceanVariables = biomeA.oceanVariables;
-            planet.atmosphereVariables = biomeA.atmosphereVariables;
-        }
-        else if(oABiomeB)
-        {
-            planet.oceanVariables = biomeB.oceanVariables;
-            planet.atmosphereVariables = biomeB.atmosphereVariables;
-        }
+
+        planet.oceanVariables = oBiomeA ? biomeA.oceanVariables : planet.oceanVariables;
+        planet.oceanVariables = oBiomeB ? biomeB.oceanVariables : planet.oceanVariables;
+        planet.atmosphereVariables = aBiomeA ? biomeA.atmosphereVariables : planet.atmosphereVariables;
+        planet.atmosphereVariables = aBiomeB ? biomeB.atmosphereVariables : planet.atmosphereVariables;
+
+        bool restoreA = biomeA == null ? true : false;
+        bool restoreB = biomeB == null ? true : false;
+        RestoreSavedColorScheme(restoreA, restoreB);
     }
     public void SaveColorScheme()
     {
@@ -299,6 +330,9 @@ public class FullPlanetGeneration : MonoBehaviour
         biomeASaved._HighElevationSteepColor = mat.GetColor("_HighElevationSteepColorA");
         biomeASaved._Metallic = mat.GetFloat("_MetallicA");
         biomeASaved._Smoothness = mat.GetFloat("_SmoothnessA");
+        biomeASaved._VegetationLine = mat.GetFloat("_VegetationLineA");
+        biomeASaved._VegetationLineHarshness = mat.GetFloat("_VegetationLineHarshnessA");
+        biomeASaved._SteepMultiplier = mat.GetFloat("_SteepMultiplierA");
 
         biomeBSaved._FlatColor = mat.GetColor("_FlatColorB");
         biomeBSaved._FlatColorVariant = mat.GetColor("_FlatColorBVariant");
@@ -307,10 +341,12 @@ public class FullPlanetGeneration : MonoBehaviour
         biomeBSaved._HighElevationSteepColor = mat.GetColor("_HighElevationSteepColorB");
         biomeBSaved._Metallic = mat.GetFloat("_MetallicB");
         biomeBSaved._Smoothness = mat.GetFloat("_SmoothnessB");
-        
+        biomeBSaved._VegetationLine = mat.GetFloat("_VegetationLineB");
+        biomeBSaved._VegetationLineHarshness = mat.GetFloat("_VegetationLineHarshnessB");
+        biomeBSaved._SteepMultiplier = mat.GetFloat("_SteepMultiplierB");
+
         biomeASaved.oceanVariables = planet.oceanVariables;
         biomeASaved.atmosphereVariables = planet.atmosphereVariables;
-        biomeBSaved.oceanVariables = planet.oceanVariables;
     }
     public void RestoreSavedColorScheme(bool restoreA, bool restoreB)
     {
@@ -325,6 +361,9 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetColor("_HighElevationSteepColorA", biomeASaved._HighElevationSteepColor);
             mat.SetFloat("_MetallicA", biomeASaved._Metallic);
             mat.SetFloat("_SmoothnessA", biomeASaved._Smoothness);
+            mat.SetFloat("_VegetationLineA", biomeASaved._VegetationLine);
+            mat.SetFloat("_VegetationLineHarshnessA", biomeASaved._VegetationLineHarshness);
+            mat.SetFloat("_SteepMultiplierA", biomeASaved._SteepMultiplier);
         }
         if(biomeBSaved!=null && restoreB)
         {
@@ -335,9 +374,16 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetColor("_HighElevationSteepColorB", biomeBSaved._HighElevationSteepColor);
             mat.SetFloat("_MetallicB", biomeBSaved._Metallic);
             mat.SetFloat("_SmoothnessB", biomeBSaved._Smoothness);
+            mat.SetFloat("_VegetationLineB", biomeBSaved._VegetationLine);
+            mat.SetFloat("_VegetationLineHarshnessB", biomeBSaved._VegetationLineHarshness);
+            mat.SetFloat("_SteepMultiplierB", biomeBSaved._SteepMultiplier);
+
         }
-        planet.oceanVariables = biomeASaved.oceanVariables;
-        planet.atmosphereVariables = biomeASaved.atmosphereVariables;
+        if (restoreA && restoreB)
+        {
+            planet.atmosphereVariables = biomeASaved.atmosphereVariables;
+            planet.oceanVariables = biomeASaved.oceanVariables;
+        }
     }
     #endregion
     #region Editor Tools

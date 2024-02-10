@@ -14,8 +14,6 @@ public class FullPlanetObj : ScriptableObject
 [Serializable]
 public class OceanVariables
 {
-    [Range(0, 5)]
-    [SerializeField] public float _SeaLevel = 1;
     [Range(0, 1)]
     [SerializeField] public float _OceanBlendEnd = 0.01f;
     [Range(0, 10)]

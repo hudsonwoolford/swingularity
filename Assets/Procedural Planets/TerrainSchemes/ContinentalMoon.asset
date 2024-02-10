@@ -10,75 +10,77 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2128562cbd13124698a8ad24adadd60, type: 3}
-  m_Name: Undecided
+  m_Name: ContinentalMoon
   m_EditorClassIdentifier: 
   generalSettings:
     subdivisions: 8
-    seed: 517
+    seed: 727
+    ocean: 0
+    _SeaLevel: 1
   craterSettings:
     rimWidth: 0.746
     rimSteepness: 0.692
     smoothness: 0.302
     craterBias: 0.359
-    minCraterSize: 0.051
-    maxCraterSize: 0.192
-    numCraters: 59
+    minCraterSize: 0.009
+    maxCraterSize: 0.159
+    numCraters: 100
   shapeNoiseSettings:
     applyNoise: 1
     octaves: 3
-    scale: 2.98
+    scale: 2.08
     persistence: 1.35
     lacunarity: 0.02
-    multiplier: 0.68
+    multiplier: 2.45
     gain: 0.43
     offset:
-    - 364.42343
-    - 517.35254
-    - 317.695
-    elevation: 0.61
+    - 458.659
+    - 726.65436
+    - 493.947
+    elevation: 0.32
   detailNoiseSettings:
-    applyNoise: 0
-    octaves: 0
-    scale: 0
-    persistence: 0
-    lacunarity: 0
-    multiplier: 0
-    gain: 0
+    applyNoise: 1
+    octaves: 3
+    scale: 100
+    persistence: 1
+    lacunarity: 0.17
+    multiplier: 0.33
+    gain: 1
     offset:
-    - 364.42343
-    - 517.35254
-    - 317.695
-    elevation: 0
+    - 458.659
+    - 726.65436
+    - 493.947
+    elevation: 0.19
   ridgeNoiseSettings:
     applyNoise: 1
     octaves: 3
-    scale: 3.18
+    scale: 1.94
     persistence: 1.79
     lacunarity: 0.97
     multiplier: 0.19
     gain: 1
-    power: 5.45
+    power: 3.56
     offset:
-    - 364.42343
-    - 517.35254
-    - 317.695
-    elevation: 0.38
+    - 458.659
+    - 726.65436
+    - 493.947
+    elevation: 0.47
     smoothing: 0
   warpedNoiseSettings:
     applyNoise: 1
     octaves: 3
-    scale: 1
+    scale: 1.72
     persistence: 0
     lacunarity: 0
     multiplier: 0.16
     gain: 1
     offset:
-    - 364.42343
-    - 517.35254
-    - 317.695
-    strength: 3.61
+    - 458.659
+    - 726.65436
+    - 493.947
+    strength: 6.64
   continentNoiseSettings:
-    applyNoise: 1
+    applyNoise: 0
     octaves: 3
     scale: 1.76
     persistence: 0
@@ -86,16 +88,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 364.42343
-    - 517.35254
-    - 317.695
+    - 458.659
+    - 726.65436
+    - 493.947
     depthMultiplier: 1
     oceanFloorDepth: 1
     oceanFloorSmoothing: 1
     maskBlend: 1
   biomeNoiseSettings:
     _Octaves: 3
-    _Offset: {x: 364.42343, y: 517.35254, z: 317.695}
+    _Offset: {x: 458.659, y: 726.65436, z: 493.947}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0
@@ -103,7 +105,7 @@ MonoBehaviour:
     _Gain: 1
   biomeWarpNoiseSettings:
     _WarpOctaves: 3
-    _WarpOffset: {x: 364.42343, y: 517.35254, z: 317.695}
+    _WarpOffset: {x: 458.659, y: 726.65436, z: 493.947}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0

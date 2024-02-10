@@ -20,7 +20,7 @@ public class FullPlanetEditor : Editor
     bool colorSchemes; //if colorschemes are toggled
 
     SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
-    SerializedProperty oABiomeA, oABiomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB; //serialized properties for defining biome a and biome b color schemes
     #endregion
 
     public override void OnInspectorGUI()
@@ -64,6 +64,7 @@ public class FullPlanetEditor : Editor
                 colorSchemes = true; planetGeneration.SaveColorScheme(); planetGeneration.ApplyColorScheme();
                 planetGeneration.colorSchemesOut = true;
             }
+            if (GUILayout.Button("Toggle Ocean")) { planetGeneration.ToggleOcean(); }
         }
         else //Color schemes are enabled
         {
@@ -81,26 +82,23 @@ public class FullPlanetEditor : Editor
             EditorGUILayout.EndHorizontal();
             //Ocean and Atmosphere toggles
             EditorGUILayout.BeginHorizontal();
-            oABiomeA.boolValue = EditorGUILayout.Toggle("OA BiomeA: ", oABiomeA.boolValue);
-            oABiomeB.boolValue = EditorGUILayout.Toggle("OA BiomeB: ", oABiomeB.boolValue);
+            oBiomeA.boolValue = EditorGUILayout.Toggle("O BiomeA: ", oBiomeA.boolValue);
+            oBiomeB.boolValue = EditorGUILayout.Toggle("O BiomeB: ", oBiomeB.boolValue);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            aBiomeA.boolValue = EditorGUILayout.Toggle("A BiomeA: ", aBiomeA.boolValue);
+            aBiomeB.boolValue = EditorGUILayout.Toggle("A BiomeB: ", aBiomeB.boolValue);
             EditorGUILayout.EndHorizontal();
 
             //Apply button
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Apply", GUILayout.Width(100)))
-            {
-                planetGeneration.ApplyColorScheme();
-
-                bool restoreA = biomeA.objectReferenceValue == null ? true : false;
-                bool restoreB = biomeB.objectReferenceValue == null ? true : false;
-                planetGeneration.RestoreSavedColorScheme(restoreA, restoreB);
-            }
+            
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
             
         }
-        if (GUILayout.Button("Toggle Ocean")) { planetGeneration.ToggleOcean(); }
+        
         if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }
 
         if (planetGeneration.planet!= null)
@@ -147,8 +145,10 @@ public class FullPlanetEditor : Editor
         #region SerializedProperties
         biomeA = serializedObject.FindProperty("biomeA");
         biomeB = serializedObject.FindProperty("biomeB");
-        oABiomeA = serializedObject.FindProperty("oABiomeA");
-        oABiomeB = serializedObject.FindProperty("oABiomeB");
+        oBiomeA = serializedObject.FindProperty("oBiomeA");
+        oBiomeB = serializedObject.FindProperty("oBiomeB");
+        aBiomeA = serializedObject.FindProperty("aBiomeA");
+        aBiomeB = serializedObject.FindProperty("aBiomeB");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);

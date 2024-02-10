@@ -15,7 +15,7 @@ Material:
   m_InvalidKeywords:
   - _BIOMEA_ON
   - _BIOMEB_ON
-  - _UseFresnel
+  - _OCEAN_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -42,46 +42,49 @@ Material:
     - _FresnelStrengthFar: 5
     - _FresnelStrengthNear: 2
     - _Gain: 1
-    - _Lacunarity: 1
+    - _Lacunarity: 0
     - _MetallicA: 0.5
     - _MetallicB: 0.5
     - _Multiplier: 1
-    - _OceanBlendEnd: 0.416
-    - _OceanBlendIntensity: 3.06
-    - _Octaves: 1
-    - _Persistence: 1
-    - _Scale: 1.72
+    - _Ocean: 1
+    - _OceanBlendEnd: 0.012
+    - _OceanBlendIntensity: 1.24
+    - _Octaves: 3
+    - _Persistence: 0
+    - _Scale: 1
     - _SeaLevel: 1
     - _SmoothnessA: 0
     - _SmoothnessB: 0
     - _SteepMultiplier: 1.36
+    - _SteepMultiplierA: 3.68
+    - _SteepMultiplierB: 3.68
     - _SwapBiome: 0
-    - _UseFresnel: 1
-    - _VegetationLineA: 0.102
-    - _VegetationLineB: 0.06
-    - _VegetationLineHarshnessA: 2.11
-    - _VegetationLineHarshnessB: 10
+    - _UseFresnel: 0
+    - _VegetationLineA: 0.065
+    - _VegetationLineB: 0.059
+    - _VegetationLineHarshnessA: 3.47
+    - _VegetationLineHarshnessB: 1.88
     - _WarpGain: 1
-    - _WarpLacunarity: 1
+    - _WarpLacunarity: 0
     - _WarpMultiplier: 1
-    - _WarpOctaves: 1
-    - _WarpPersistence: 1
+    - _WarpOctaves: 3
+    - _WarpPersistence: 0
     - _WarpScale: 1
     m_Colors:
     - _ColorOffset: {r: 0, g: 0, b: 0, a: 1}
-    - _FlatColorA: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
-    - _FlatColorAVariant: {r: 0, g: 0, b: 0, a: 1}
-    - _FlatColorB: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
-    - _FlatColorBVariant: {r: 0, g: 0, b: 0, a: 1}
+    - _FlatColorA: {r: 0.8, g: 0.68757373, b: 0.23921566, a: 1}
+    - _FlatColorAVariant: {r: 0.7372549, g: 0.61715484, b: 0.12941177, a: 1}
+    - _FlatColorB: {r: 0.8, g: 0.46051592, b: 0.23921566, a: 1}
+    - _FlatColorBVariant: {r: 0.7372549, g: 0.36722645, b: 0.12941177, a: 1}
     - _FresnelColor: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
-    - _HighElevationColorA: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    - _HighElevationColorB: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    - _HighElevationSteepColorA: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
-    - _HighElevationSteepColorB: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
-    - _Offset: {r: 172.24316, g: 113.640396, b: 249.29956, a: 0}
+    - _HighElevationColorA: {r: 0.9254902, g: 0.70520264, b: 0.36078432, a: 1}
+    - _HighElevationColorB: {r: 0.9254902, g: 0.7175051, b: 0.36078432, a: 1}
+    - _HighElevationSteepColorA: {r: 0.8117647, g: 0.6241145, b: 0.23529412, a: 1}
+    - _HighElevationSteepColorB: {r: 0.8117647, g: 0.60758555, b: 0.23529412, a: 1}
+    - _Offset: {r: 16.994762, g: 158.86569, b: 201.55951, a: 0}
     - _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SteepColorA: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
-    - _SteepColorB: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
-    - _WarpOffset: {r: 172.24316, g: 113.640396, b: 249.29956, a: 0}
+    - _ShorelineColor: {r: 0.9716981, g: 0.9251615, b: 0.7104397, a: 1}
+    - _SteepColorA: {r: 0.8980392, g: 0.75491595, b: 0.3333334, a: 1}
+    - _SteepColorB: {r: 0.8980392, g: 0.57276195, b: 0.3333334, a: 1}
+    - _WarpOffset: {r: 16.994762, g: 158.86569, b: 201.55951, a: 0}
   m_BuildTextureStacks: []
