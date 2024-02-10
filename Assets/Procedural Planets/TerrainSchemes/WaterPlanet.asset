@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generalSettings:
     subdivisions: 8
-    seed: 17
+    seed: 297
+    ocean: 1
+    _SeaLevel: 1
   craterSettings:
     rimWidth: 0.526
     rimSteepness: 0.77
@@ -32,22 +34,22 @@ MonoBehaviour:
     multiplier: 1.37
     gain: 1
     offset:
-    - 43.448196
-    - 17.425945
-    - 40.298004
+    - 178.01839
+    - 297.1012
+    - 46.641388
     elevation: 0.35
   detailNoiseSettings:
     applyNoise: 1
     octaves: 1
-    scale: 500
+    scale: 100
     persistence: 1
     lacunarity: 1
     multiplier: 0.1
     gain: 1
     offset:
-    - 43.448196
-    - 17.425945
-    - 40.298004
+    - 178.01839
+    - 297.1012
+    - 46.641388
     elevation: 1
   ridgeNoiseSettings:
     applyNoise: 1
@@ -59,9 +61,9 @@ MonoBehaviour:
     gain: 1
     power: 8.71
     offset:
-    - 43.448196
-    - 17.425945
-    - 40.298004
+    - 178.01839
+    - 297.1012
+    - 46.641388
     elevation: 1.7
     smoothing: 1
   warpedNoiseSettings:
@@ -73,9 +75,9 @@ MonoBehaviour:
     multiplier: 0.9
     gain: 1
     offset:
-    - 43.448196
-    - 17.425945
-    - 40.298004
+    - 178.01839
+    - 297.1012
+    - 46.641388
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -86,16 +88,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 43.448196
-    - 17.425945
-    - 40.298004
+    - 178.01839
+    - 297.1012
+    - 46.641388
     depthMultiplier: 13.52
     oceanFloorDepth: 1
     oceanFloorSmoothing: 1.9
     maskBlend: 1
   biomeNoiseSettings:
     _Octaves: 1
-    _Offset: {x: 43.448196, y: 17.425945, z: 40.298004}
+    _Offset: {x: 178.01839, y: 297.1012, z: 46.641388}
     _Scale: 1.72
     _Persistence: 1
     _Lacunarity: 1
@@ -103,7 +105,7 @@ MonoBehaviour:
     _Gain: 1
   biomeWarpNoiseSettings:
     _WarpOctaves: 1
-    _WarpOffset: {x: 43.448196, y: 17.425945, z: 40.298004}
+    _WarpOffset: {x: 178.01839, y: 297.1012, z: 46.641388}
     _WarpScale: 1
     _WarpPersistence: 1
     _WarpLacunarity: 1
