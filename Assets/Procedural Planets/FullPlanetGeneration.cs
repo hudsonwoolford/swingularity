@@ -390,59 +390,59 @@ public class FullPlanetGeneration : MonoBehaviour
     [MenuItem("ProceduralTools/Create Planet Prefab")]
     static void CreatePrefab()
     {
-        GameObject selectedObj = Selection.activeGameObject;
+        GameObject selectedObj = Selection.activeGameObject; //store selection
 
-        if (selectedObj == null || selectedObj.GetComponent<FullPlanetGeneration>() == null)
+        if (selectedObj == null || selectedObj.GetComponent<FullPlanetGeneration>() == null) //selection must have fullplanetgeneration
         {
             Debug.LogWarning("Please select a valid game object");
             return;
         }
 
-        GameObject newObj = Instantiate(selectedObj, selectedObj.transform.position, selectedObj.transform.rotation);
-        GameObject newOceanObj = newObj.transform.GetChild(0).gameObject;
+        GameObject newObj = Instantiate(selectedObj, selectedObj.transform.position, selectedObj.transform.rotation); //create the obj
+        GameObject newOceanObj = newObj.transform.GetChild(0).gameObject; //select the ocean object from the object
 
-        DestroyImmediate(newObj.GetComponent<FullPlanetGeneration>());
-        newObj.SetActive(true);
+        DestroyImmediate(newObj.GetComponent<FullPlanetGeneration>()); //destroy the fullplanetgeneration on the object
+        newObj.SetActive(true); //make sure the object is active
 
-        MeshFilter meshFilter = selectedObj.GetComponent<MeshFilter>();
-        MeshRenderer meshRenderer = selectedObj.GetComponent<MeshRenderer>();
-        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();
+        MeshFilter meshFilter = selectedObj.GetComponent<MeshFilter>();         //store mesh filter
+        MeshRenderer meshRenderer = selectedObj.GetComponent<MeshRenderer>();   //store mesh renderer
+        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();  //store ocean mesh renderer
 
-        Mesh mesh = meshFilter.sharedMesh;
-        Material material = meshRenderer.sharedMaterial;
-        Material oceanMaterial = oceanRenderer.sharedMaterial;
+        Mesh mesh = meshFilter.sharedMesh;                                      //store mesh
+        Material material = meshRenderer.sharedMaterial;                        //store planet material
+        Material oceanMaterial = oceanRenderer.sharedMaterial;                  //store ocean material
 
-        Material copyMat = new Material(material.shader);
-        Material copyOceanMat = new Material(oceanMaterial.shader);
-        Mesh copyMesh = mesh;
+        Material copyMat = new Material(material.shader);                       //create unique planet material
+        Material copyOceanMat = new Material(oceanMaterial.shader);             //create unique ocean material
+        Mesh copyMesh = mesh;                                                   //store copy of the mesh
 
-        copyMat.CopyMatchingPropertiesFromMaterial(material);
-        copyOceanMat.CopyMatchingPropertiesFromMaterial(oceanMaterial);
+        copyMat.CopyMatchingPropertiesFromMaterial(material); //copy planet material properties
+        copyOceanMat.CopyMatchingPropertiesFromMaterial(oceanMaterial); //copy ocean material properties
 
-        MeshFilter newMeshFilter = newObj.GetComponent<MeshFilter>();
-        MeshRenderer newMeshRenderer = newObj.GetComponent<MeshRenderer>();
+        MeshFilter newMeshFilter = newObj.GetComponent<MeshFilter>();           //store the new mesh filter
+        MeshRenderer newMeshRenderer = newObj.GetComponent<MeshRenderer>();     //store the new mesh renderer
 
-        newMeshFilter.mesh = copyMesh;
-        newMeshRenderer.material = copyOceanMat;
-        oceanRenderer.material = copyOceanMat;
+        newMeshFilter.mesh = copyMesh;              //setting the mesh in the new object
+        newMeshRenderer.material = copyOceanMat;    //setting the planet material in the new object
+        oceanRenderer.material = copyOceanMat;      //setting the ocean material in the new object
 
-        string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab");
+        string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
 
-        if (prefabPath.Length == 0)
+        if (prefabPath.Length == 0) //in case the user cancels the file path
         {
             DestroyImmediate(newObj);
             return;
         }
 
-        prefabPath = prefabPath.Substring(prefabPath.IndexOf("Assets/"));
-        PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath);
+        prefabPath = prefabPath.Substring(prefabPath.IndexOf("Assets/")); //editing the path so its compatible with unity
+        PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath); //saves the prefab
 
-        AssetDatabase.AddObjectToAsset(copyMat, prefabPath);
-        AssetDatabase.AddObjectToAsset(copyOceanMat, prefabPath);
-        AssetDatabase.AddObjectToAsset(copyMesh, prefabPath);
+        AssetDatabase.AddObjectToAsset(copyMat, prefabPath);        //saves the planet material
+        AssetDatabase.AddObjectToAsset(copyOceanMat, prefabPath);   //saves the ocean  material
+        AssetDatabase.AddObjectToAsset(copyMesh, prefabPath);       //saves the mesh
         AssetDatabase.SaveAssets();
 
-        DestroyImmediate(newObj);
+        DestroyImmediate(newObj); //destroys the prefab that was instantiated in the scene
     }
     [MenuItem("ProceduralTools/Wipe Planet Asset")]
     static void WipePlanetAssets()
