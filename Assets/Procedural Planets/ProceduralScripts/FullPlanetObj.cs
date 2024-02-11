@@ -8,8 +8,8 @@ public class FullPlanetObj : ScriptableObject
 {
     public Material planetMaterial;
     public TerrainVar terrainVar;
-    [SerializeField] public OceanVariables oceanVariables;
-    [SerializeField] public AtmosphereVariables atmosphereVariables;
+    [HideInInspector] public OceanVariables oceanVariables;
+    [HideInInspector] public AtmosphereVariables atmosphereVariables;
 }
 [Serializable]
 public class OceanVariables

@@ -12,18 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a651b384e121e48a12e9d1cec4937a, type: 3}
   m_Name: Ted
   m_EditorClassIdentifier: 
-  planetMaterial: {fileID: 2100000, guid: f1ede388b1ca972499cc43b335fc5675, type: 2}
-  terrainVar: {fileID: 11400000, guid: ec846a108e92f9148b3cff692a61f1d2, type: 2}
+  planetMaterial: {fileID: 2100000, guid: 3c7c5e5fa3fa2bf4b8d1a7c21797c581, type: 2}
+  terrainVar: {fileID: 11400000, guid: ce426c70b0c70234193ff8b192e649c2, type: 2}
   oceanVariables:
-    _SeaLevel: 0
-    _OceanBlendEnd: 0.01
-    _OceanBlendIntensity: 0.01
-    _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
-    _SeabedColor: {r: 1, g: 1, b: 1, a: 1}
-    _OceanColor: {r: 1, g: 1, b: 1, a: 1}
+    _OceanBlendEnd: 0.012
+    _OceanBlendIntensity: 7.24
+    _ShorelineColor: {r: 0.6269884, g: 0, b: 0.9245283, a: 1}
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0.14925067, g: 0.079432175, b: 0.3301887, a: 0.9137255}
     _OceanMetallic: 0
-    _OceanSmoothness: 0
+    _OceanSmoothness: 0.618
   atmosphereVariables:
-    color: {r: 1, g: 1, b: 1, a: 1}
-    range: 1
-    intensity: 1
+    _OuterBandColor: {r: 0.51148236, g: 0.22745097, b: 0.8117647, a: 1}
+    _OuterBandRange: 2.35
+    _OuterBandIntensity: 0.26
+    _InnerBandColor: {r: 0.3616573, g: 0.17254901, b: 0.5764706, a: 1}
+    _InnerBandRange: 2.15
+    _InnerBandIntensity: 3.09
+    _FrontColor: {r: 0.5057996, g: 0.22745097, b: 0.8117647, a: 1}
+    _FrontRange: 2
+    _FrontIntensity: 0.21

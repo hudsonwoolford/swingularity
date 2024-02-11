@@ -8,15 +8,7 @@ using System.Reflection;
 [ExecuteInEditMode]
 public class FullPlanetGeneration : MonoBehaviour
 {
-    [Serializable]
-    public struct ColorSchemePool
-    {
-        public string name; //name of the pool
-        public bool oPrimary, aPrimary; //ocean variables or atmosphere variables are taken from primary biome
-        [Tooltip("This is optional")]
-        public PlanetColorScheme primaryBiome; //the primary biome
-        public PlanetColorScheme[] planetColorSchemes; //array of color schemes
-    }
+
     public ComputeShader calculateVertexHeight; //compute shader
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
@@ -24,7 +16,6 @@ public class FullPlanetGeneration : MonoBehaviour
     [HideInInspector]
     public bool colorSchemesOut; //if colorschemes are folded out/on
     [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
-    [SerializeField] ColorSchemePool[] colorSchemes; //array for color scheme pool
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB; //biome A and biome B for color schemes
     [HideInInspector]
@@ -203,9 +194,15 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeColorScheme()
     {
+        ColorSchemeStaticReference.ColorSchemePool[] colorSchemes = planet.terrainVar.colorSchemePools.colorSchemePools; //array for color scheme pool
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        if (colorSchemes.Length == 0){
+            Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
+            return; 
+        }
+
         int index = UnityEngine.Random.Range(0, colorSchemes.Length); //Index of the pool
-        if (colorSchemes[index].planetColorSchemes.Length ==0)
+        if (colorSchemes[index].planetColorSchemes.Length == 0)
         {
             Debug.LogWarning("Color Scheme Pool: [" + colorSchemes[index].name + "] does not contain secondary biomes");
             return;
@@ -238,7 +235,7 @@ public class FullPlanetGeneration : MonoBehaviour
             }
             else //if ocean variables doesn't come from the primary
             {
-                oBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for ocean
+                oBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool fo which biome is determined by for ocean
                 oBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for ocean
             }
             if(colorSchemes[index].aPrimary) //if atmosphere variables come from the primary

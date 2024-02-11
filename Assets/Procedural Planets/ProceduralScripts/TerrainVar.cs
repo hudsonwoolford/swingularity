@@ -8,6 +8,7 @@ using UnityEditor;
 [Serializable]
 public class TerrainVar : ScriptableObject
 {
+    public ColorSchemePools colorSchemePools;
     public GeneralSettings generalSettings;
     public CraterSettings craterSettings;
     public ShapeNoiseSettings shapeNoiseSettings;
@@ -145,6 +146,25 @@ public class BiomeWarpNoiseSettings
     public int _WarpOctaves = 3;
     public Vector3 _WarpOffset;
     public float _WarpScale = 1, _WarpPersistence, _WarpLacunarity, _WarpMultiplier = 1, _WarpGain = 1;
+}
+
+[Serializable]
+public static class ColorSchemeStaticReference{
+    [Serializable]
+    public struct ColorSchemePool
+    {
+        public string name; //name of the pool
+        public bool oPrimary, aPrimary; //ocean variables or atmosphere variables are taken from primary biome
+        [Tooltip("This is optional")]
+        public PlanetColorScheme primaryBiome; //the primary biome
+        public PlanetColorScheme[] planetColorSchemes; //array of color schemes
+    }
+}
+
+[Serializable]
+public class ColorSchemePools
+{   
+    public ColorSchemeStaticReference.ColorSchemePool[] colorSchemePools;
 }
 
 
