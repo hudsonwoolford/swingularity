@@ -55,6 +55,7 @@ Shader "Custom/FinalTerrestrial"
 
      _SeaLevel ("Sea Level", Range(0, 2)) = 1
      _OceanBlendEnd("Ocean Blend End", Range(0, 2)) = 0.5
+     _BeachBlendEnd("Beach Blend End", Range(0, 2)) = 0.5
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
      [PowerSlider(3.0)]_BeachBlendIntensity("Beach Blend Intensity", Range(0, 10)) = 1
      _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
@@ -128,8 +129,10 @@ Shader "Custom/FinalTerrestrial"
         float _SteepMultiplierB;
         //Constant through biomes
         float _SeaLevel;
+        float _BeachBlendEnd;
         float _OceanBlendEnd;
         float _OceanBlendIntensity;
+        float _BeachBlendIntensity;
         fixed4 _ShorelineColor;
         fixed4 _SeabedColor;
 
