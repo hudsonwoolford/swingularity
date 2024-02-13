@@ -10,6 +10,7 @@ public class FullPlanetObj : ScriptableObject
     public TerrainVar terrainVar;
     [HideInInspector] public OceanVariables oceanVariables;
     [HideInInspector] public AtmosphereVariables atmosphereVariables;
+    [HideInInspector] public FresnelVariables fresnelVariables;
 }
 [Serializable]
 public class OceanVariables
@@ -46,5 +47,13 @@ public class AtmosphereVariables
     [SerializeField] public float _FrontRange = 2.0f;
     [Range(0, 5)]
     [SerializeField] public float _FrontIntensity = 0.15f;
+}
+[Serializable]
+public class FresnelVariables{
+    [SerializeField] public bool _UseFresnel = true;
+    [SerializeField] public Color _FresnelColor = Color.white;
+    [SerializeField] public float _FresnelStrengthNear = 2f; 
+    [SerializeField] public float _FresnelStrengthFar = 5f; 
+    [SerializeField] public float _FresnelPower = 8f; 
 }
 

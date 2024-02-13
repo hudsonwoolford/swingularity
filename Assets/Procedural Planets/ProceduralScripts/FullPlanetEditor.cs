@@ -4,6 +4,7 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Reflection;
 
 [CustomEditor(typeof(FullPlanetGeneration))]
 public class FullPlanetEditor : Editor
@@ -35,9 +36,9 @@ public class FullPlanetEditor : Editor
             if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
             
         }
-
+        EditorWindow inspectorWindow = EditorWindow.focusedWindow;
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 2))) 
+        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 3f))) 
         {
             planetGeneration.RandomizeTerrainScheme();
         }

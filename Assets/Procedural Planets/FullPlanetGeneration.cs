@@ -46,6 +46,7 @@ public class FullPlanetGeneration : MonoBehaviour
         }
         UpdateAtmosphere(); //updating the atmosphere from the atmosphere variables
         UpdateOcean(); //updating the ocean from the ocean variables
+        UpdateTrees();
         ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
     }   
@@ -79,6 +80,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateAtmosphere()
     {
+        Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
         innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange;
@@ -91,6 +93,16 @@ public class FullPlanetGeneration : MonoBehaviour
         frontAtmosphere.color = planet.atmosphereVariables._FrontColor;
         frontAtmosphere.range = planet.atmosphereVariables._FrontRange;
         frontAtmosphere.intensity = planet.atmosphereVariables._FrontIntensity;
+        int fresnelToggle = planet.terrainVar.generalSettings.ocean ? 1 : 0;
+
+        mat.SetFloat("_UseFresnel", fresnelToggle);
+        mat.SetColor("_FresnelColor", planet.fresnelVariables._FresnelColor);
+        mat.SetFloat("_FresnelStrengthNear", planet.fresnelVariables._FresnelStrengthNear);
+        mat.SetFloat("_FresnelStrengthFar", planet.fresnelVariables._FresnelStrengthFar);
+        mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
+    }
+    void UpdateTrees(){
+        
     }
     public void ToggleOcean() //turns ocean on or off
     {
@@ -312,6 +324,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.oceanVariables = oBiomeB ? biomeB.oceanVariables : planet.oceanVariables;
         planet.atmosphereVariables = aBiomeA ? biomeA.atmosphereVariables : planet.atmosphereVariables;
         planet.atmosphereVariables = aBiomeB ? biomeB.atmosphereVariables : planet.atmosphereVariables;
+        planet.fresnelVariables = aBiomeA ? biomeA.fresnelVariables : planet.fresnelVariables;
+        planet.fresnelVariables = aBiomeB ? biomeB.fresnelVariables : planet.fresnelVariables;
 
         bool restoreA = biomeA == null ? true : false;
         bool restoreB = biomeB == null ? true : false;
