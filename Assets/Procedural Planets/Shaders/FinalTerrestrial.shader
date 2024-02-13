@@ -55,9 +55,11 @@ Shader "Custom/FinalTerrestrial"
 
      _SeaLevel ("Sea Level", Range(0, 2)) = 1
      _OceanBlendEnd("Ocean Blend End", Range(0, 2)) = 0.5
-     _BeachBlendEnd("Beach Blend End", Range(0, 2)) = 0.5
+     _BeachBlendEnd("Beach Blend End", Range(0, 0.05)) = 0.5
+     _GroundBlendEnd("Ground Blend End", Range(0, 2)) = 0.5
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
      [PowerSlider(3.0)]_BeachBlendIntensity("Beach Blend Intensity", Range(0, 10)) = 1
+     [PowerSlider(3.0)]_GroundBlendIntensity("Ground Blend Intensity", Range(0, 10)) = 1
      _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
      _SeabedColor ("Sea Bed Color", Color) = (0,0,0)
      //_OceanColor ("Ocean Color", Color) = (1,1,1)
@@ -133,6 +135,8 @@ Shader "Custom/FinalTerrestrial"
         float _OceanBlendEnd;
         float _OceanBlendIntensity;
         float _BeachBlendIntensity;
+        float _GroundBlendEnd;
+        float _GroundBlendIntensity;
         fixed4 _ShorelineColor;
         fixed4 _SeabedColor;
 
@@ -232,20 +236,28 @@ Shader "Custom/FinalTerrestrial"
             float3 correctSteepColor = lerp(steepColor, highElevationSteepColor, elevationFloat);
             float3 correctFlatColor = lerp(flatColor, highElevationColor, elevationFloat);
             float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness); //lerps the flat and steep color depending on steepness
-
             //Terrain elevation
             if(elevation < 0 && _Ocean == 1) 
             {             
 
-                float groundLerp = clamp(0, 1, pow(abs(elevation) / _OceanBlendEnd, _OceanBlendIntensity));
-                float3 groundColor = lerp(shorelineColor, _SeabedColor, groundLerp);
-                o.Albedo = groundColor;
+                float seabedLerp = clamp(0, 1, pow(abs(elevation) / _OceanBlendEnd, _OceanBlendIntensity));
+                float3 seabedColor = lerp(shorelineColor, _SeabedColor, seabedLerp);
+                o.Albedo = seabedColor;
+                o.Metallic = metallic;
+                o.Smoothness = smoothness;
                 return;
             }
+
+            float beachLerp = clamp(0, 1, pow(abs(elevation) / _BeachBlendEnd, _BeachBlendIntensity));
             
+            // Interpolate between shorelineColor and ground color
+            float3 finalColor = lerp(shorelineColor, groundColor, beachLerp);
+
+
             //Compound colors
-            float3 compoundColor = lerp(groundColor, _FresnelColor, IN.fresnel * _UseFresnel);
+            float3 compoundColor = lerp(finalColor, _FresnelColor, IN.fresnel * _UseFresnel);
             o.Albedo = compoundColor;
+
             o.Metallic = metallic;
             o.Smoothness = smoothness;
             
