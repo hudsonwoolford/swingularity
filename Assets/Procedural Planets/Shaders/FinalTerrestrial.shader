@@ -232,7 +232,7 @@ Shader "Custom/FinalTerrestrial"
             float3 correctSteepColor = lerp(steepColor, highElevationSteepColor, elevationFloat);
             float3 correctFlatColor = lerp(flatColor, highElevationColor, elevationFloat);
             float3 groundColor = lerp(correctFlatColor, correctSteepColor, steepness); //lerps the flat and steep color depending on steepness
-            //Terrain elevation
+            //If lower than ocean
             if(elevation < 0 && _Ocean == 1) 
             {             
 
@@ -243,10 +243,10 @@ Shader "Custom/FinalTerrestrial"
                 o.Smoothness = smoothness;
                 return;
             }
-
+            
             float beachLerp = clamp(0, 1, pow(abs(elevation) / _BeachBlendEnd, _BeachBlendIntensity));
             
-            // Interpolate between shorelineColor and ground color
+            // Interpolate between shoreline and normal terrain color
             float3 finalColor = lerp(shorelineColor, groundColor, beachLerp);
 
 
