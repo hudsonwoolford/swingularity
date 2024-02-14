@@ -24,7 +24,8 @@ Shader "Custom/TreeLeafShader"
         struct Input
         {
             float3 vertPos;
-            float normal;
+            float3 normal;
+            float3 worldPos;
         };
 
         int _Octaves;
@@ -51,12 +52,13 @@ Shader "Custom/TreeLeafShader"
             UNITY_INITIALIZE_OUTPUT(Input, o);
             o.vertPos = v.vertex;
             o.normal = v.normal;
+            o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz; 
         }
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
-            float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
+            float warpNoiseTex = SimpleNoise(IN.worldPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
+            float noiseTex = SimpleNoise(IN.worldPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
 
             float blendValue = 0;
             if(noiseTex<_BiomeAEnd) { blendValue = 0; }
