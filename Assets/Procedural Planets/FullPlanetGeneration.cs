@@ -102,7 +102,43 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        
+        if (planet.treeVariables._TreePrefab != null){
+
+            Material mat = planet.treeVariables._TreePrefab.GetComponent<MeshRenderer>().sharedMaterial;
+            BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
+            BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
+            
+            //Updating tree shader with same noise data as biome terrain
+            //Transfering from terrain to the material
+            //Normal noise transfer
+            mat.SetInt("_Octaves", bns._Octaves);
+            mat.SetVector("_Offset", bns._Offset);
+            mat.SetFloat("_Scale", bns._Scale);
+            mat.SetFloat("_Persistence", bns._Persistence);
+            mat.SetFloat("_Lacunarity", bns._Lacunarity);
+            mat.SetFloat("_Multiplier", bns._Multiplier);
+            mat.SetFloat("_Gain", bns._Gain);
+
+            //Warp noise transfer
+            mat.SetInt("_WarpOctaves", bwns._WarpOctaves);
+            mat.SetVector("_WarpOffset", bwns._WarpOffset);
+            mat.SetFloat("_WarpScale", bwns._WarpScale);
+            mat.SetFloat("_WarpPersistence", bwns._WarpPersistence);
+            mat.SetFloat("_WarpLacunarity", bwns._WarpLacunarity);
+            mat.SetFloat("_WarpMultiplier", bwns._WarpMultiplier);
+            mat.SetFloat("_WarpGain", bwns._WarpGain);
+
+            //Set global variables
+            mat.SetFloat("_BiomeA", planet.planetMaterial.GetFloat("_BiomeA"));
+            mat.SetFloat("_BiomeB", planet.planetMaterial.GetFloat("_BiomeB"));
+            mat.SetFloat("_BiomeAEnd", planet.planetMaterial.GetFloat("_BiomeAEnd"));
+            mat.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
+            mat.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
+
+            mat.SetColor("_TreeColA", biomeA.treeVariables._TreeColor);
+            mat.SetColor("_TreeColB", biomeB.treeVariables._TreeColor);
+        }
+
     }
     public void ToggleOcean() //turns ocean on or off
     {
@@ -326,7 +362,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.atmosphereVariables = aBiomeB ? biomeB.atmosphereVariables : planet.atmosphereVariables;
         planet.fresnelVariables = aBiomeA ? biomeA.fresnelVariables : planet.fresnelVariables;
         planet.fresnelVariables = aBiomeB ? biomeB.fresnelVariables : planet.fresnelVariables;
-
+        planet.treeVariables = aBiomeA ? biomeA.treeVariables : planet.treeVariables;
+        planet.treeVariables = aBiomeB ? biomeB.treeVariables : planet.treeVariables;
         bool restoreA = biomeA == null ? true : false;
         bool restoreB = biomeB == null ? true : false;
         RestoreSavedColorScheme(restoreA, restoreB);

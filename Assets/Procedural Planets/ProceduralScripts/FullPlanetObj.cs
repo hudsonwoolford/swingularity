@@ -11,6 +11,7 @@ public class FullPlanetObj : ScriptableObject
     [HideInInspector] public OceanVariables oceanVariables;
     [HideInInspector] public AtmosphereVariables atmosphereVariables;
     [HideInInspector] public FresnelVariables fresnelVariables;
+    [HideInInspector] public TreeVariables treeVariables;
 }
 [Serializable]
 public class OceanVariables
@@ -55,5 +56,15 @@ public class FresnelVariables{
     [SerializeField] public float _FresnelStrengthNear = 2f; 
     [SerializeField] public float _FresnelStrengthFar = 5f; 
     [SerializeField] public float _FresnelPower = 8f; 
+}
+
+[Serializable]
+public class TreeVariables{
+    [SerializeField] public bool _UseTrees = false;
+    [SerializeField] public GameObject _TreePrefab;
+    [SerializeField] public Color _TreeColor = Color.white;
+    [SerializeField] public Vector2 _TreeSizeRange = new Vector2(0f, 2.5f);
+    [SerializeField] public float _TreeSizeBias = 0.5f; [Range(0,  1)]
+    [SerializeField] public float _TreeSeed = 0f;
 }
 

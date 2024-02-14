@@ -26,4 +26,5 @@ public class PlanetColorScheme : ScriptableObject
     public OceanVariables oceanVariables = new OceanVariables();
     public AtmosphereVariables atmosphereVariables = new AtmosphereVariables();
     public FresnelVariables fresnelVariables = new FresnelVariables();
+    public TreeVariables treeVariables = new TreeVariables();
 }
