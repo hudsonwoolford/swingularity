@@ -39,6 +39,7 @@ public class PlanetaryGenerator : MonoBehaviour
         return craters;
     }
 
+
     private static float ApplyBias(float input, float bias)
     {
         float k = Mathf.Pow(1 - bias, 3);
