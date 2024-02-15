@@ -9,10 +9,12 @@ Shader "Custom/TreeLeafShader"
     {
 
         Tags { "RenderType"="Opaque" }
+        Blend SrcAlpha OneMinusSrcAlpha
         LOD 200
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
+        
         #pragma surface surf Standard fullforwardshadows
 
         // Use shader model 3.0 target, to get nicer looking lighting
@@ -45,6 +47,9 @@ Shader "Custom/TreeLeafShader"
         float3 _TreeColA;
         float3 _TreeColB;
 
+        float _UseTreesA;
+        float _UseTreesB;
+
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
@@ -71,6 +76,7 @@ Shader "Custom/TreeLeafShader"
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
             o.Albedo = lerp(_TreeColA, _TreeColB, blendValue);
+            
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
         }

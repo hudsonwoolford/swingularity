@@ -134,6 +134,10 @@ public class FullPlanetGeneration : MonoBehaviour
 
             mat.SetColor("_TreeColA", biomeA.treeVariables._TreeColor);
             mat.SetColor("_TreeColB", biomeB.treeVariables._TreeColor);
+            float tBiomeA = biomeA.treeVariables._UseTrees ? 1 : 0;
+            float tBiomeB = biomeB.treeVariables._UseTrees ? 1 : 0;
+            mat.SetFloat("_UseTreesA", tBiomeA);
+            mat.SetFloat("_UseTreesB", tBiomeB);
                                                                                         
         if (planet.treeVariables._TreePrefab != null && planet.treeVariables._UseTrees){
             Vector3[] verts = meshFilter.sharedMesh.vertices; //planet vertices
@@ -155,11 +159,16 @@ public class FullPlanetGeneration : MonoBehaviour
                 {
                     GameObject tree = Instantiate(planet.treeVariables._TreePrefab);
 
-                    Random.InitState(planet.treeVariables._NumTrees+ UnityEngine.Random.Range(0, verts.Length));
+                    Random.InitState(planet.treeVariables._NumTrees + UnityEngine.Random.Range(0, verts.Length));
 
                     int chosenVert = UnityEngine.Random.Range(0, verts.Length);
                     tree.transform.position = verts[chosenVert];
+                    Vector3 vertexElevationDir =  verts[chosenVert] - ocean.position;
+                    tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir);
                     tree.SetActive(true);
+                    if (vertexElevationDir.magnitude < planet.terrainVar.generalSettings._SeaLevel){
+                        tree.SetActive(false);
+                    }
 
                     trees.Add(tree);
                 }
