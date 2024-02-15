@@ -101,7 +101,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateTrees(){
 
-            Material mat = planet.treeVariables._TreePrefab.GetComponent<MeshRenderer>().sharedMaterial;
+            Material mat = planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial;
             BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
             BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
             
