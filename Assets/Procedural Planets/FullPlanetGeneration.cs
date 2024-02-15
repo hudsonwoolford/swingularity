@@ -1,19 +1,12 @@
 using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections;
-using System.Reflection;
-using System.Data;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
-using Unity.VisualScripting.FullSerializer;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
 public class FullPlanetGeneration : MonoBehaviour
 {
     public TreeVariables lastTreeVars;
-    public GameObject[] trees;
     public ComputeShader calculateVertexHeight; //compute shader
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
@@ -29,6 +22,7 @@ public class FullPlanetGeneration : MonoBehaviour
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
     MeshFilter meshFilter; //the mesh filter attached to this object
+    List<GameObject> trees = new List<GameObject>();
     private void Awake()
     {
         //initialisation
@@ -40,7 +34,6 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void Update()
     {
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
         if (meshRenderer.sharedMaterial!=planet.planetMaterial) //updating material depending on planet
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
@@ -107,7 +100,6 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        if (planet.treeVariables._TreePrefab != null && planet.treeVariables._UseTrees){
 
             Material mat = planet.treeVariables._TreePrefab.GetComponent<MeshRenderer>().sharedMaterial;
             BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
@@ -142,30 +134,35 @@ public class FullPlanetGeneration : MonoBehaviour
 
             mat.SetColor("_TreeColA", biomeA.treeVariables._TreeColor);
             mat.SetColor("_TreeColB", biomeB.treeVariables._TreeColor);
-            if (planet.treeVariables != lastTreeVars){
-                GameObject[] trees = new GameObject[planet.treeVariables._NumTrees];
-                Vector3[] verts = meshFilter.sharedMesh.vertices;
-                Vector3[] normals = meshFilter.sharedMesh.normals;
-                UnityEngine.Random.InitState(planet.treeVariables._TreeSeed);
-                for (int i = 0; i < trees.Length; i++){
-                    DestroyImmediate(trees[i]);
-                    trees[i] = null;
-                }
-                for (int i = 0; i < planet.treeVariables._NumTrees; i++){
-                    
-                    GameObject tree = Instantiate(planet.treeVariables._TreePrefab);
-                    trees[i] = tree;
-                    int chosenVert = UnityEngine.Random.Range(0, verts.Length);
+                                                                                        
+        if (planet.treeVariables._TreePrefab != null && planet.treeVariables._UseTrees){
+            Vector3[] verts = meshFilter.sharedMesh.vertices; //planet vertices
+            Vector3[] normals = meshFilter.sharedMesh.normals;//planet normals
 
-                    tree.transform.position = verts[chosenVert];
-                    tree.transform.rotation = Quaternion.Euler(normals[chosenVert]);
-                    tree.SetActive(true);
+            if(trees.Count > planet.treeVariables._NumTrees)
+            {
+                while(trees.Count>planet.treeVariables._NumTrees)
+                {
+                    GameObject treeToDestroy = trees[trees.Count - 1];
+                    trees.Remove(treeToDestroy);
+                    DestroyImmediate(treeToDestroy);
+                    //trees.Remove(trees[Random.Range(0, trees.Count)]);
                 }
-                lastTreeVars = planet.treeVariables;
             }
+            else if(trees.Count < planet.treeVariables._NumTrees)
+            {
+                while(trees.Count < planet.treeVariables._NumTrees)
+                {
+                    GameObject tree = Instantiate(planet.treeVariables._TreePrefab);
 
+                    int chosenVert = UnityEngine.Random.Range(0, verts.Length);
+                    tree.transform.position = verts[chosenVert];
+                    tree.SetActive(true);
+
+                    trees.Add(tree);
+                }
+            }
         }
-
     }
     public void ToggleOcean() //turns ocean on or off
     {

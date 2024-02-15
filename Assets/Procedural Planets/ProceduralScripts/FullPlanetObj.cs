@@ -59,12 +59,13 @@ public class FresnelVariables{
 }
 
 [Serializable]
-public class TreeVariables{
+public class TreeVariables {
     [SerializeField] public bool _UseTrees = false;
     [SerializeField] public GameObject _TreePrefab;
     [SerializeField] public Color _TreeColor = Color.white;
     [SerializeField] public Vector2 _TreeSizeRange = new Vector2(0f, 2.5f);
     [SerializeField] public float _TreeSizeBias = 0.5f;
+    [Min(0)]
     [SerializeField] public int _NumTrees = 100;
     [SerializeField] public int _TreeSeed = 0;
 }
