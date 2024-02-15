@@ -155,6 +155,8 @@ public class FullPlanetGeneration : MonoBehaviour
                 {
                     GameObject tree = Instantiate(planet.treeVariables._TreePrefab);
 
+                    Random.InitState(planet.treeVariables._NumTrees+ UnityEngine.Random.Range(0, verts.Length));
+
                     int chosenVert = UnityEngine.Random.Range(0, verts.Length);
                     tree.transform.position = verts[chosenVert];
                     tree.SetActive(true);
