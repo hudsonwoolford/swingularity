@@ -74,18 +74,29 @@ Shader "Custom/TreeLeafShader"
             if(_BiomeA == 0 && _BiomeB == 0) {return;}
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
-            float3 biomeColor;
-            if(blendValue < 0.5)
-            {
-                biomeColor = _TreeColA;
+            if (_UseTreesA == 1 && _UseTreesB == 0){
+                o.Albedo = _TreeColA;
+                return;
             }
-            else if(blendValue >= 0.5)
-            {
-                biomeColor = _TreeColB;
+            if (_UseTreesA == 0 && _UseTreesB == 1){
+                o.Albedo = _TreeColB;
+                return;
+            }
+            else{
+                float3 biomeColor;
+                if(blendValue < 0.5)
+                {
+                    biomeColor = _TreeColA;
+                }
+                else if(blendValue >= 0.5)
+                {
+                    biomeColor = _TreeColB;
+                }
+    
+                
+                o.Albedo = biomeColor;
             }
 
-            
-            o.Albedo = biomeColor;
             o.Metallic = 0.3;
             o.Smoothness = 0.3;
         }

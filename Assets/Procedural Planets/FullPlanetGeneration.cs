@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -104,7 +105,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateTrees(){
         if(!tBiomeA  && !tBiomeB) { ClearTrees(); return; } //if no biomes have trees return fucntion
-        if(planet.treeVariables._TreeObjects.Length == 0) { return; }
+        if(planet.treeVariables._TreeObjects == null) { return; }
         foreach (var obj in planet.treeVariables._TreeObjects)
         {
             if (obj == null) { return; } //if the prefab for trees are null return function
