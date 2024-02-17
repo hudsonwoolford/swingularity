@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -18,7 +19,7 @@ public class FullPlanetGeneration : MonoBehaviour
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB; //biome A and biome B for color schemes
     [HideInInspector]
-    [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean
+    [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB, tBiomeA, tBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean or trees
     [HideInInspector]
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
@@ -101,7 +102,6 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-
         Material mat = planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial;
         BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
         BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
@@ -136,10 +136,10 @@ public class FullPlanetGeneration : MonoBehaviour
 
         mat.SetColor("_TreeColA", biomeA.treeVariables._TreeColor);
         mat.SetColor("_TreeColB", biomeB.treeVariables._TreeColor);
-        float tBiomeA = biomeA.treeVariables._UseTrees ? 1 : 0;
-        float tBiomeB = biomeB.treeVariables._UseTrees ? 1 : 0;
-        mat.SetFloat("_UseTreesA", tBiomeA);
-        mat.SetFloat("_UseTreesB", tBiomeB);
+        float tBiomeAFloat = biomeA.treeVariables._UseTrees ? 1 : 0;
+        float tBiomeBFloat = biomeB.treeVariables._UseTrees ? 1 : 0;
+        mat.SetFloat("_UseTreesA", tBiomeAFloat);
+        mat.SetFloat("_UseTreesB", tBiomeBFloat);
         #endregion
         #region ComputeShader
         ComputeShader com = calculateBiomeVertices;
@@ -212,6 +212,7 @@ public class FullPlanetGeneration : MonoBehaviour
         Vector3[] biomeAVerts = new Vector3[numAVertices];
         Vector3[] biomeBVerts = new Vector3[numBVertices];
 
+
         aBuffer.GetData(biomeAVerts);
         bBuffer.GetData(biomeBVerts);
 
@@ -220,7 +221,7 @@ public class FullPlanetGeneration : MonoBehaviour
         vertBuffer.Release();
         indirectArgumentsBuffer.Release();
 
-        Vector3[] vertPool = aBiomeA ? biomeAVerts : biomeBVerts;
+        Vector3[] vertPool = tBiomeA && tBiomeB ? biomeBVerts.Concat(biomeAVerts).ToArray() : tBiomeA ? biomeAVerts :    biomeBVerts;
 
         if (planet.treeVariables._TreePrefab != null && planet.treeVariables._UseTrees){
             //Vector3[] verts = meshFilter.sharedMesh.vertices; //planet vertices
@@ -233,7 +234,6 @@ public class FullPlanetGeneration : MonoBehaviour
                     GameObject treeToDestroy = trees[trees.Count - 1];
                     trees.Remove(treeToDestroy);
                     DestroyImmediate(treeToDestroy);
-                    //trees.Remove(trees[Random.Range(0, trees.Count)]);
                 }
             }
             else if(trees.Count < planet.treeVariables._NumTrees)
@@ -246,9 +246,9 @@ public class FullPlanetGeneration : MonoBehaviour
                     Random.InitState(planet.treeVariables._NumTrees + UnityEngine.Random.Range(0, vertPool.Length));
 
                     int chosenVert = UnityEngine.Random.Range(0, vertPool.Length);
-                    tree.transform.position = vertPool[chosenVert];
                     Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position;
                     tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir);
+                    tree.transform.position = vertPool[chosenVert];
                     tree.SetActive(true);
 
                     trees.Add(tree);
@@ -478,8 +478,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.atmosphereVariables = aBiomeB ? biomeB.atmosphereVariables : planet.atmosphereVariables;
         planet.fresnelVariables = aBiomeA ? biomeA.fresnelVariables : planet.fresnelVariables;
         planet.fresnelVariables = aBiomeB ? biomeB.fresnelVariables : planet.fresnelVariables;
-        planet.treeVariables = aBiomeA ? biomeA.treeVariables : planet.treeVariables;
-        planet.treeVariables = aBiomeB ? biomeB.treeVariables : planet.treeVariables;
+        planet.treeVariables = tBiomeA ? biomeA.treeVariables : planet.treeVariables;
+        planet.treeVariables = tBiomeB ? biomeB.treeVariables : planet.treeVariables;
         bool restoreA = biomeA == null ? true : false;
         bool restoreB = biomeB == null ? true : false;
         RestoreSavedColorScheme(restoreA, restoreB);
