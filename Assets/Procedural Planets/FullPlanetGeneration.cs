@@ -26,7 +26,8 @@ public class FullPlanetGeneration : MonoBehaviour
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
     MeshFilter meshFilter; //the mesh filter attached to this object
-    List<GameObject> trees = new List<GameObject>(); //list of instantiated trees
+    List<GameObject> treesA = new List<GameObject>(); //list of instantiated trees
+    List<GameObject> treesB = new List<GameObject>();
     private void Awake()
     {
         //initialisation
@@ -104,7 +105,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        if(!tBiomeA  && !tBiomeB) { ClearTrees(); return; } //if no biomes have trees return fucntion
+        if(!tBiomeA  && !tBiomeB) { ClearTrees(treesA); ClearTrees(treesB); return; } //if no biomes have trees return fucntion
         if(planet.treeVariables._TreeObjects == null) { return; }
         foreach (var obj in planet.treeVariables._TreeObjects)
         {
@@ -239,25 +240,29 @@ public class FullPlanetGeneration : MonoBehaviour
         #endregion
 
         Vector3[] vertPool = tBiomeA && tBiomeB ? biomeBVerts.Concat(biomeAVerts).ToArray() : tBiomeA ? biomeAVerts : biomeBVerts; //pool of possible verts based on compute shader
-
-        if(trees.Count > planet.treeVariables._NumTrees) //too many trees
+        if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(treesB, biomeB, biomeBVerts);
+        if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(treesB, biomeB, biomeBVerts);
+      
+    }
+    public void CreateAndDestroyTrees(List<GameObject> trees, PlanetColorScheme biome, Vector3[] vertPool){
+         if(treesA.Count > biomeA.treeVariables._NumTrees) //too many trees
         {
-            while(trees.Count>planet.treeVariables._NumTrees) //loop destroys tree one at a time
+            while(treesA.Count > biomeA.treeVariables._NumTrees) //loop destroys tree one at a time
             {
-                GameObject treeToDestroy = trees[trees.Count - 1];
-                trees.Remove(treeToDestroy);
+                GameObject treeToDestroy = treesA[treesA.Count - 1];
+                treesA.Remove(treeToDestroy);
                 DestroyImmediate(treeToDestroy);
             }
         }
-        else if(trees.Count < planet.treeVariables._NumTrees) //too little trees
+        else if(treesA.Count < biomeA.treeVariables._NumTrees) //too little trees
         {
-            while(trees.Count < planet.treeVariables._NumTrees) //loop add trees one at a time
+            while(treesA.Count < biomeA.treeVariables._NumTrees) //loop add trees one at a time
             {
-                int objIndex = Random.Range(0, planet.treeVariables._TreeObjects.Length); //random prefab from tree
-                TreeObject selectedTreeObj = planet.treeVariables._TreeObjects[objIndex];
+                int objIndex = Random.Range(0, biomeA.treeVariables._TreeObjects.Length); //random prefab from tree
+                TreeObject selectedTreeObj = biomeA.treeVariables._TreeObjects[objIndex];
                 GameObject tree = Instantiate(selectedTreeObj.treePrefab); //instantiation
 
-                Random.InitState(planet.treeVariables._NumTrees + trees.Count); //setting random seed
+                Random.InitState(biomeA.treeVariables._NumTrees + treesA.Count); //setting random seed
 
                 int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
                 Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
@@ -278,11 +283,12 @@ public class FullPlanetGeneration : MonoBehaviour
 
                 tree.SetActive(true); //make sure tree is active
 
-                trees.Add(tree); //add tree to list
+                treesA.Add(tree); //add tree to list
             }
         }
     }
-    public void ClearTrees()
+
+    public void ClearTrees(List<GameObject> trees)
     {
         //destroys every tree object in list
         foreach(GameObject tree in trees)
@@ -342,7 +348,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.biomeNoiseSettings._Offset = new Vector3(offset[0], offset[1], offset[2]);
         planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = new Vector3(offset[0], offset[1], offset[2]);
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
-        ClearTrees();
+        ClearTrees(treesA);
+        ClearTrees(treesB);
     }
     public void RandomizeShading()
     {
