@@ -13,12 +13,16 @@ public class FullPlanetEditor : Editor
     FullPlanetGeneration planetGeneration; //main script
     Editor terrainEditor; //the normal editor for the terrain scriptable object
     Editor planetEditor;
+    Editor biomeAEditor;
+    Editor biomeBEditor;
     MaterialEditor shadingEditor; //the normal editor for the material
 
     bool oceanFoldout; //if the ocean dropdown is folded out
     bool terrainFoldout; //if the terrain dropdown is folded out
     bool planetFoldout; //if the planet dropdown is folded out
     bool colorSchemes; //if colorschemes are toggled
+    bool biomeAFoldout;
+    bool biomeBFoldout;
 
     SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
     SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB, tBiomeA, tBiomeB; //serialized properties for defining biome a and biome b color schemes
@@ -52,8 +56,10 @@ public class FullPlanetEditor : Editor
             planetGeneration.ClearTrees();
         }
 
+        if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }
         if (!colorSchemes) //Color schemes is disabled
         {
+            if (GUILayout.Button("Toggle Ocean")) { planetGeneration.ToggleOcean(); }
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Random Color Shading", GUILayout.Width(Screen.width / 2)))
             {
@@ -69,7 +75,6 @@ public class FullPlanetEditor : Editor
                 colorSchemes = true; planetGeneration.SaveColorScheme(); planetGeneration.ApplyColorScheme();
                 planetGeneration.colorSchemesOut = true;
             }
-            if (GUILayout.Button("Toggle Ocean")) { planetGeneration.ToggleOcean(); }
         }
         else //Color schemes are enabled
         {
@@ -98,6 +103,8 @@ public class FullPlanetEditor : Editor
             tBiomeA.boolValue = EditorGUILayout.Toggle("T BiomeA: ", tBiomeA.boolValue);
             tBiomeB.boolValue = EditorGUILayout.Toggle("T BiomeB: ", tBiomeB.boolValue);
             EditorGUILayout.EndHorizontal();
+            SettingsMenu(biomeA.objectReferenceValue, ref biomeAFoldout, ref biomeAEditor);
+            SettingsMenu(biomeB.objectReferenceValue, ref biomeBFoldout, ref biomeBEditor);
 
             //Apply button
             EditorGUILayout.BeginHorizontal();
@@ -107,19 +114,10 @@ public class FullPlanetEditor : Editor
             EditorGUILayout.EndHorizontal();
             
         }
-        
-        if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }
 
         if (planetGeneration.planet!= null)
         {
-            planetFoldout = EditorGUILayout.InspectorTitlebar(planetFoldout, planetGeneration.planet);
-            if (planetFoldout)
-            {
-                
-                CreateCachedEditor(planetGeneration.planet, null, ref planetEditor);
-                planetEditor.DrawHeader();
-                planetEditor.OnInspectorGUI();
-            }
+            SettingsMenu(planetGeneration.planet,ref planetFoldout, ref planetEditor);
         }
         //Display terrain and material
         if (planetGeneration.planet.terrainVar != null)
@@ -168,6 +166,8 @@ public class FullPlanetEditor : Editor
         terrainFoldout = EditorPrefs.GetBool(nameof(terrainFoldout), false);
         planetFoldout = EditorPrefs.GetBool(nameof(planetFoldout), false);
         colorSchemes = EditorPrefs.GetBool(nameof(colorSchemes), false);
+        biomeAFoldout = EditorPrefs.GetBool(nameof(biomeAFoldout), false);
+        biomeBFoldout = EditorPrefs.GetBool(nameof(biomeBFoldout), false);
 
     }
     private void OnDisable()
@@ -181,5 +181,7 @@ public class FullPlanetEditor : Editor
         EditorPrefs.SetBool(nameof(terrainFoldout), terrainFoldout);
         EditorPrefs.SetBool(nameof(planetFoldout), planetFoldout);
         EditorPrefs.SetBool(nameof(colorSchemes), colorSchemes);
+        EditorPrefs.SetBool(nameof(biomeAFoldout), biomeAFoldout);
+        EditorPrefs.SetBool(nameof(biomeBFoldout), biomeBFoldout);
     }
 }

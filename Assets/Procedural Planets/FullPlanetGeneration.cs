@@ -447,7 +447,6 @@ public class FullPlanetGeneration : MonoBehaviour
             }
             else //if atmosphere variables doesn't come from the primary
             {
-                print("here");
                 aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
