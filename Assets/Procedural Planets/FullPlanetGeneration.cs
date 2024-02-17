@@ -3,6 +3,8 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
+using System.ComponentModel;
+using System.IO.Pipes;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
@@ -216,12 +218,22 @@ public class FullPlanetGeneration : MonoBehaviour
                     treeLeafColors[2] = planet.treeVariables._TreeLeafColor03;
                     treeLeafColors[3] = planet.treeVariables._TreeLeafColor04;
 
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[0].color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[1].color = planet.treeVariables._TreeBarkColor;
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[2].color = planet.treeVariables._TreeBarkColor;
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[3].color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[4].color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    planet.treeVariables._TreePrefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterials[5].color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
+                    Material mat01 = new Material(Shader.Find("Standard"));
+                    Material mat02 = new Material(Shader.Find("Standard"));
+                    Material mat03 = new Material(Shader.Find("Standard"));
+                    Material mat04 = new Material(Shader.Find("Standard"));
+
+                    mat01.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
+                    mat02.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
+                    mat03.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
+                    mat04.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
+
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[0] = mat01;
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[1].color = planet.treeVariables._TreeBarkColor;
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[2].color = planet.treeVariables._TreeBarkColor;
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[3] = mat02;
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[4] = mat03;
+                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[5] = mat04;
 
                     tree.SetActive(true);
 
