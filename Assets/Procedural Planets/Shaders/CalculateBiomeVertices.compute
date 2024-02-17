@@ -63,13 +63,13 @@ void CSMain (uint id : SV_DispatchThreadID)
     }
     else
     {
-        float randomValue = abs(rand(planetVertices[id].xy)) / 2 + 0.3;
+        float randomValue = abs(rand(planetVertices[id].xy)) / 2;
 
         if(blendValue < 0.5)
         {
             //a biome
             randomValue = clamp(0, blendValue, randomValue);
-            if(randomValue == blendValue)
+            if(randomValue >= blendValue - 0.15)
             {
                 biomeAVertices.Append(planetVertices[id]);  
             }
@@ -79,7 +79,7 @@ void CSMain (uint id : SV_DispatchThreadID)
             //b biome
             blendValue = 1 - blendValue;
             randomValue = clamp(0, blendValue, randomValue);
-            if(randomValue == blendValue)
+            if(randomValue >= blendValue - 0.15)
             {
                 biomeBVertices.Append(planetVertices[id]);  
             }
