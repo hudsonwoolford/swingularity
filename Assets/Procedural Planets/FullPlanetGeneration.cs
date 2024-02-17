@@ -104,9 +104,10 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateTrees(){
         if(!tBiomeA  && !tBiomeB) { ClearTrees(); return; } //if no biomes have trees return fucntion
-        foreach (var prefab in planet.treeVariables._TreePrefabs)
+        if(planet.treeVariables._TreeObjects.Length == 0) { return; }
+        foreach (var obj in planet.treeVariables._TreeObjects)
         {
-            if (prefab==null) { return; } //if the prefab for trees are null return function
+            if (obj == null) { return; } //if the prefab for trees are null return function
         }
 
         #region TreeShader
@@ -251,8 +252,9 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             while(trees.Count < planet.treeVariables._NumTrees) //loop add trees one at a time
             {
-                int prefabIndex = Random.Range(0, planet.treeVariables._TreePrefabs.Length); //random prefab from tree
-                GameObject tree = Instantiate(planet.treeVariables._TreePrefabs[prefabIndex]); //instantiation
+                int objIndex = Random.Range(0, planet.treeVariables._TreeObjects.Length); //random prefab from tree
+                TreeObject selectedTreeObj = planet.treeVariables._TreeObjects[objIndex];
+                GameObject tree = Instantiate(selectedTreeObj.treePrefab); //instantiation
 
                 Random.InitState(planet.treeVariables._NumTrees + trees.Count); //setting random seed
 
@@ -265,12 +267,11 @@ public class FullPlanetGeneration : MonoBehaviour
                 MeshRenderer treeMeshRender = tree.GetComponentInChildren<MeshRenderer>(); //renderer on tree object
                 Material[] rendererMats = treeMeshRender.sharedMaterials; //all materials on tree array
 
-                //set random materials for colour variance
-                rendererMats[0] = treeMats[Random.Range(1, 4)];
-                rendererMats[1] = treeMats[0];
-                rendererMats[2] = treeMats[0];
-                rendererMats[3] = treeMats[Random.Range(1, 4)];
-                rendererMats[4] = treeMats[Random.Range(1, 4)];
+                for (int i = 0; i < rendererMats.Length; i++)
+                {
+                    if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; return; };
+                    rendererMats[i] = treeMats[Random.Range(1, 4)];
+                }
 
                 treeMeshRender.sharedMaterials = rendererMats; //set the material array to random array
 

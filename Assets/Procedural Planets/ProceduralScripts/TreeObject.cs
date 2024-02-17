@@ -8,7 +8,7 @@ public class TreeObject : ScriptableObject
 {
     public GameObject treePrefab;
     [HideInInspector]
-    [SerializeField] bool[] dynamicMaterial;
+    [SerializeField] public bool[] dynamicMaterial;
 }
 [CustomEditor(typeof(TreeObject))]
 public class TreeObjectEditor : Editor
@@ -22,11 +22,13 @@ public class TreeObjectEditor : Editor
     }
     public override void OnInspectorGUI()
     {
+        serializedObject.Update();
         DrawDefaultInspector();
         GameObject prefab = treeObject.treePrefab;
         if(prefab==null) { return; }
         int materialListSize = prefab.GetComponentInChildren<MeshRenderer>().sharedMaterials.Length;
         dynamicMaterial.arraySize = materialListSize;
         EditorGUILayout.PropertyField(dynamicMaterial, new GUIContent("Dynamic Elements: " + prefab.name));
+        serializedObject.ApplyModifiedProperties();
     }
 }
