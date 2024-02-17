@@ -23,7 +23,6 @@ MonoBehaviour:
   _VegetationLineHarshness: 6
   _SteepMultiplier: 5
   oceanVariables:
-    _SeaLevel: 1
     _OceanBlendEnd: 0.018
     _OceanBlendIntensity: 0.82
     _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
@@ -33,11 +32,28 @@ MonoBehaviour:
     _OceanSmoothness: 0.618
   atmosphereVariables:
     _OuterBandColor: {r: 0.4339623, g: 0.2946415, b: 0.13714845, a: 1}
-    _OuterBandRange: 2.35
-    _OuterBandIntensity: 0.26
+    _OuterBandRange: 2.47
+    _OuterBandIntensity: 0.74
     _InnerBandColor: {r: 0.2735849, g: 0.18853135, b: 0.0761392, a: 1}
-    _InnerBandRange: 2.15
-    _InnerBandIntensity: 3.09
+    _InnerBandRange: 2.24
+    _InnerBandIntensity: 4.07
     _FrontColor: {r: 0.26415092, g: 0.18458524, b: 0.07849768, a: 1}
     _FrontRange: 2
-    _FrontIntensity: 0.21
+    _FrontIntensity: 1.44
+  fresnelVariables:
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.7169812, g: 0.54461247, b: 0.38892847, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 0
+    _TreePrefabs: []
+    _DynamicMaterialBooleans: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _NumTrees: 100
+    _TreeSeed: 0

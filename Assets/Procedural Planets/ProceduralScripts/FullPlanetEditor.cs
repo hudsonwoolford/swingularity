@@ -31,14 +31,14 @@ public class FullPlanetEditor : Editor
         EditorGUI.BeginChangeCheck();
 
         if (GUILayout.Button("Random")) {
+            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
             planetGeneration.RandomizeTerrainScheme();
             planetGeneration.RandomizeOffset();
-            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
             
         }
         EditorWindow inspectorWindow = EditorWindow.focusedWindow;
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 3f))) 
+        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 2f))) 
         {
             planetGeneration.RandomizeTerrainScheme();
         }
@@ -47,6 +47,10 @@ public class FullPlanetEditor : Editor
             planetGeneration.RandomizeOffset();
         }
         GUILayout.EndHorizontal();
+        if (GUILayout.Button("Regen Trees"))
+        {
+            planetGeneration.ClearTrees();
+        }
 
         if (!colorSchemes) //Color schemes is disabled
         {

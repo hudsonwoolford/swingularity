@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _FlatColor: {r: 0.5112386, g: 0.22745097, b: 0.8117647, a: 1}
   _FlatColorVariant: {r: 0.37432548, g: 0.18039216, b: 0.6039216, a: 1}
-  _SteepColor: {r: 0.36862746, g: 0.09411764, b: 0.3265776, a: 1}
-  _HighElevationColor: {r: 1, g: 1, b: 1, a: 1}
-  _HighElevationSteepColor: {r: 0.6226415, g: 0.16838726, b: 0.5771126, a: 1}
+  _SteepColor: {r: 0.32654965, g: 0.10813459, b: 0.509434, a: 1}
+  _HighElevationColor: {r: 0.764151, g: 0.5586953, b: 0.70659345, a: 1}
+  _HighElevationSteepColor: {r: 0.7830189, g: 0.4986205, b: 0.75359833, a: 1}
   _Metallic: 0.648
-  _Smoothness: 1
-  _VegetationLine: 0.102
+  _Smoothness: 0.064
+  _VegetationLine: 0.077
   _VegetationLineHarshness: 1.91
   _SteepMultiplier: 1.65
   oceanVariables:
@@ -31,15 +31,15 @@ MonoBehaviour:
     _OceanMetallic: 0
     _OceanSmoothness: 0.673
   atmosphereVariables:
-    _OuterBandColor: {r: 0.60082936, g: 0.0039215502, b: 0.8509804, a: 1}
+    _OuterBandColor: {r: 0.35372585, g: 0.0039215502, b: 0.8509804, a: 1}
     _OuterBandRange: 2.43
     _OuterBandIntensity: 0.56
-    _InnerBandColor: {r: 0.5372549, g: 0.035294123, b: 0.52110285, a: 1}
+    _InnerBandColor: {r: 0.22484276, g: 0.035294123, b: 0.5372549, a: 1}
     _InnerBandRange: 2.23
     _InnerBandIntensity: 3.09
-    _FrontColor: {r: 0.70558065, g: 0.027450966, b: 0.81960785, a: 1}
+    _FrontColor: {r: 0.3036659, g: 0.027450966, b: 0.81960785, a: 1}
     _FrontRange: 2.1
-    _FrontIntensity: 0.8
+    _FrontIntensity: 0.13
   fresnelVariables:
     _UseFresnel: 0
     _FresnelColor: {r: 0.81721854, g: 0.55345905, b: 1, a: 1}
@@ -48,12 +48,12 @@ MonoBehaviour:
     _FresnelPower: 8
   treeVariables:
     _UseTrees: 1
-    _TreePrefab: {fileID: 622180097012652008, guid: 3a2c88cf79480f34ba92f67ebe404cfe,
-      type: 3}
-    _TreeLeafColor01: {r: 1, g: 0, b: 0, a: 1}
-    _TreeLeafColor02: {r: 0.38679248, g: 0.0024326092, b: 0.29851067, a: 1}
-    _TreeLeafColor03: {r: 0.7075472, g: 0.6905841, b: 0.111249514, a: 1}
-    _TreeLeafColor04: {r: 0, g: 1, b: 0.3874724, a: 1}
-    _TreeBarkColor: {r: 0, g: 0, b: 0, a: 1}
+    _TreePrefabs: []
+    _DynamicMaterialBooleans: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 0.26415092, g: 0.048593808, b: 0.12857285, a: 1}
     _NumTrees: 0
     _TreeSeed: 64

@@ -2,17 +2,15 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.ComponentModel;
-using System.IO.Pipes;
+using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
 public class FullPlanetGeneration : MonoBehaviour
 {
-    public TreeVariables lastTreeVars;
-    public ComputeShader calculateVertexHeight; //compute shader
-    public ComputeShader calculateBiomeVertices;
+    public ComputeShader calculateVertexHeight; //compute shader for planet generation
+    public ComputeShader calculateBiomeVertices;//compute shader for tree vertices
+    public Material[] treeMats = new Material[4];
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
     public Light innerAtmosphere, outerAtmosphere, frontAtmosphere; //atmosphere lights
@@ -27,7 +25,7 @@ public class FullPlanetGeneration : MonoBehaviour
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
     MeshFilter meshFilter; //the mesh filter attached to this object
-    List<GameObject> trees = new List<GameObject>();
+    List<GameObject> trees = new List<GameObject>(); //list of instantiated trees
     private void Awake()
     {
         //initialisation
@@ -39,11 +37,11 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void Update()
     {
-        if (meshRenderer.sharedMaterial!=planet.planetMaterial) //updating material depending on planet
+        if (meshRenderer.sharedMaterial != planet.planetMaterial) //updating material depending on planet
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
         }
-        if(colorSchemesOut) //if color schemes are on it will always apply them
+        if (colorSchemesOut) //if color schemes are on it will always apply them
         {
             ApplyColorScheme();
         }
@@ -52,7 +50,7 @@ public class FullPlanetGeneration : MonoBehaviour
         UpdateTrees();
         ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
-    }   
+    }
     void UpdateOcean()
     {
         if(!planet.terrainVar.generalSettings.ocean)
@@ -105,12 +103,62 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
-        BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
+        if(!tBiomeA  && !tBiomeB) { ClearTrees(); return; } //if no biomes have trees return fucntion
+        foreach (var prefab in planet.treeVariables._TreePrefabs)
+        {
+            if (prefab==null) { return; } //if the prefab for trees are null return function
+        }
+
+        #region TreeShader
+        BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings; //cache simple biome noise settings
+        BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings; //cache warped biome noise settings
+        for (int i = 1; i < 4; i++) //iterate through all 3 materials and change their values
+        {
+            Material mat = treeMats[i]; //which mat to edit
+            
+            //Updating tree shader with same noise data as biome terrain
+            //Transfering from terrain to the material
+            //Normal noise transfer
+            mat.SetInt("_Octaves", bns._Octaves);
+            mat.SetVector("_Offset", bns._Offset);
+            mat.SetFloat("_Scale", bns._Scale);
+            mat.SetFloat("_Persistence", bns._Persistence);
+            mat.SetFloat("_Lacunarity", bns._Lacunarity);
+            mat.SetFloat("_Multiplier", bns._Multiplier);
+            mat.SetFloat("_Gain", bns._Gain);
+
+            //Warp noise transfer
+            mat.SetInt("_WarpOctaves", bwns._WarpOctaves);
+            mat.SetVector("_WarpOffset", bwns._WarpOffset);
+            mat.SetFloat("_WarpScale", bwns._WarpScale);
+            mat.SetFloat("_WarpPersistence", bwns._WarpPersistence);
+            mat.SetFloat("_WarpLacunarity", bwns._WarpLacunarity);
+            mat.SetFloat("_WarpMultiplier", bwns._WarpMultiplier);
+            mat.SetFloat("_WarpGain", bwns._WarpGain);
+
+            //Set global variables
+            mat.SetFloat("_BiomeA", planet.planetMaterial.GetFloat("_BiomeA"));
+            mat.SetFloat("_BiomeB", planet.planetMaterial.GetFloat("_BiomeB"));
+            mat.SetFloat("_BiomeAEnd", planet.planetMaterial.GetFloat("_BiomeAEnd"));
+            mat.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
+            mat.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
+
+            mat.SetColor("_TreeColA", biomeA.treeVariables._TreeLeafColors[i-1]); //this is the difference
+            mat.SetColor("_TreeColB", biomeB.treeVariables._TreeLeafColors[i-1]); //this is the difference
+            //cache bools as floats
+            float tBiomeAFloat = biomeA.treeVariables._UseTrees ? 1 : 0; 
+            float tBiomeBFloat = biomeB.treeVariables._UseTrees ? 1 : 0;
+            mat.SetFloat("_UseTreesA", tBiomeAFloat);
+            mat.SetFloat("_UseTreesB", tBiomeBFloat);
+
+            mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level variable
+        }
+        treeMats[0].color = planet.treeVariables._TreeBarkColor; //setting the bark colour
+        #endregion
         #region ComputeShader
-        ComputeShader com = calculateBiomeVertices;
+        ComputeShader com = calculateBiomeVertices; //cache shader
         //General var
-        com.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel);
+        com.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); 
         com.SetVector("_PlanetCenter", ocean.transform.position);
 
         //Normal noise transfer
@@ -138,7 +186,8 @@ public class FullPlanetGeneration : MonoBehaviour
         com.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
         com.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
 
-        #endregion
+        com.SetFloat("_BiomeAVegetationLine", planet.planetMaterial.GetFloat("_VegetationLineA"));
+        com.SetFloat("_BiomeBVegetationLine", planet.planetMaterial.GetFloat("_VegetationLineB"));
 
         Vector3[] verts = meshFilter.sharedMesh.vertices; //all vertices on planet
         com.SetFloat("_NumVertices", verts.Length);
@@ -146,8 +195,8 @@ public class FullPlanetGeneration : MonoBehaviour
         ComputeBuffer vertBuffer = new ComputeBuffer(verts.Length, sizeof(float) * 3); //vertex buffer
         ComputeBuffer aBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome a vertex buffer
         ComputeBuffer bBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome b vertex buffer
-        aBuffer.SetCounterValue(0);
-        bBuffer.SetCounterValue(0);
+        aBuffer.SetCounterValue(0); //resetting counter values
+        bBuffer.SetCounterValue(0); //resetting counter values
 
         vertBuffer.SetData(verts); //setting data in vertex buffer
 
@@ -156,17 +205,18 @@ public class FullPlanetGeneration : MonoBehaviour
         calculateBiomeVertices.SetBuffer(0, "biomeAVertices", aBuffer);    
         calculateBiomeVertices.SetBuffer(0, "biomeBVertices", bBuffer);
 
-        PlanetaryGenerator.RunComputeShader(calculateBiomeVertices, vertBuffer.count);
+        PlanetaryGenerator.RunComputeShader(calculateBiomeVertices, vertBuffer.count); //run the shader
 
         // Create an indirect arguments buffer for ComputeBuffer.CopyCount
         ComputeBuffer indirectArgumentsBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments   );
         // Get the count of elements appended to the append buffers
         int[] args = new int[] { 0, 1, 0, 0 };
 
-        ComputeBuffer.CopyCount(aBuffer, indirectArgumentsBuffer, 0);
-        ComputeBuffer.CopyCount(bBuffer, indirectArgumentsBuffer, sizeof(int));
-        ComputeBuffer.CopyCount(vertBuffer, indirectArgumentsBuffer, sizeof(int)*2);
-        indirectArgumentsBuffer.GetData(args);
+        ComputeBuffer.CopyCount(aBuffer, indirectArgumentsBuffer, 0); //length of biome a buffer copied
+        ComputeBuffer.CopyCount(bBuffer, indirectArgumentsBuffer, sizeof(int)); //length of biome b buffer copied
+        ComputeBuffer.CopyCount(vertBuffer, indirectArgumentsBuffer, sizeof(int)*2); //length of vertex buffer copied (for debugging)
+        indirectArgumentsBuffer.GetData(args); //biome a length --> args[0], biome b length --> args[1], vertex length --> args[2]
+        //counts
         int numAVertices = args[0];
         int numBVertices = args[1];
         int numVertices = args[2];
@@ -175,72 +225,69 @@ public class FullPlanetGeneration : MonoBehaviour
         Vector3[] biomeAVerts = new Vector3[numAVertices];
         Vector3[] biomeBVerts = new Vector3[numBVertices];
 
-
-        aBuffer.GetData(biomeAVerts);
+        //write data from buffers to array
+        aBuffer.GetData(biomeAVerts); 
         bBuffer.GetData(biomeBVerts);
 
+        //release buffers
         aBuffer.Release();
         bBuffer.Release();
         vertBuffer.Release();
         indirectArgumentsBuffer.Release();
+        #endregion
 
-        Vector3[] vertPool = tBiomeA && tBiomeB ? biomeBVerts.Concat(biomeAVerts).ToArray() : tBiomeA ? biomeAVerts :    biomeBVerts;
+        Vector3[] vertPool = tBiomeA && tBiomeB ? biomeBVerts.Concat(biomeAVerts).ToArray() : tBiomeA ? biomeAVerts : biomeBVerts; //pool of possible verts based on compute shader
 
-        if (planet.treeVariables._TreePrefab != null && planet.treeVariables._UseTrees){
-            //Vector3[] verts = meshFilter.sharedMesh.vertices; //planet vertices
-            Vector3[] normals = meshFilter.sharedMesh.normals;//planet normals
-
-            if(trees.Count > planet.treeVariables._NumTrees)
+        if(trees.Count > planet.treeVariables._NumTrees) //too many trees
+        {
+            while(trees.Count>planet.treeVariables._NumTrees) //loop destroys tree one at a time
             {
-                while(trees.Count>planet.treeVariables._NumTrees)
-                {
-                    GameObject treeToDestroy = trees[trees.Count - 1];
-                    trees.Remove(treeToDestroy);
-                    DestroyImmediate(treeToDestroy);
-                }
-            }
-            else if(trees.Count < planet.treeVariables._NumTrees)
-            {
-                while(trees.Count < planet.treeVariables._NumTrees)
-                {
-                    
-                    GameObject tree = Instantiate(planet.treeVariables._TreePrefab);
-
-                    Random.InitState(planet.treeVariables._NumTrees + trees.Count);
-
-                    int chosenVert = UnityEngine.Random.Range(0, vertPool.Length);
-                    Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position;
-                    tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir);
-                    tree.transform.position = vertPool[chosenVert];
-                    Color[] treeLeafColors = new Color[4];
-                    treeLeafColors[0] = planet.treeVariables._TreeLeafColor01;
-                    treeLeafColors[1] = planet.treeVariables._TreeLeafColor02;
-                    treeLeafColors[2] = planet.treeVariables._TreeLeafColor03;
-                    treeLeafColors[3] = planet.treeVariables._TreeLeafColor04;
-
-                    Material mat01 = new Material(Shader.Find("Standard"));
-                    Material mat02 = new Material(Shader.Find("Standard"));
-                    Material mat03 = new Material(Shader.Find("Standard"));
-                    Material mat04 = new Material(Shader.Find("Standard"));
-
-                    mat01.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    mat02.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    mat03.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-                    mat04.color = treeLeafColors[UnityEngine.Random.Range(0, 4)];
-
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[0] = mat01;
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[1].color = planet.treeVariables._TreeBarkColor;
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[2].color = planet.treeVariables._TreeBarkColor;
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[3] = mat02;
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[4] = mat03;
-                    tree.GetComponentInChildren<MeshRenderer>().sharedMaterials[5] = mat04;
-
-                    tree.SetActive(true);
-
-                    trees.Add(tree);
-                }
+                GameObject treeToDestroy = trees[trees.Count - 1];
+                trees.Remove(treeToDestroy);
+                DestroyImmediate(treeToDestroy);
             }
         }
+        else if(trees.Count < planet.treeVariables._NumTrees) //too little trees
+        {
+            while(trees.Count < planet.treeVariables._NumTrees) //loop add trees one at a time
+            {
+                int prefabIndex = Random.Range(0, planet.treeVariables._TreePrefabs.Length); //random prefab from tree
+                GameObject tree = Instantiate(planet.treeVariables._TreePrefabs[prefabIndex]); //instantiation
+
+                Random.InitState(planet.treeVariables._NumTrees + trees.Count); //setting random seed
+
+                int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
+                Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
+                tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
+                tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
+                tree.transform.parent = transform; //parent tree to gameObject
+
+                MeshRenderer treeMeshRender = tree.GetComponentInChildren<MeshRenderer>(); //renderer on tree object
+                Material[] rendererMats = treeMeshRender.sharedMaterials; //all materials on tree array
+
+                //set random materials for colour variance
+                rendererMats[0] = treeMats[Random.Range(1, 4)];
+                rendererMats[1] = treeMats[0];
+                rendererMats[2] = treeMats[0];
+                rendererMats[3] = treeMats[Random.Range(1, 4)];
+                rendererMats[4] = treeMats[Random.Range(1, 4)];
+
+                treeMeshRender.sharedMaterials = rendererMats; //set the material array to random array
+
+                tree.SetActive(true); //make sure tree is active
+
+                trees.Add(tree); //add tree to list
+            }
+        }
+    }
+    public void ClearTrees()
+    {
+        //destroys every tree object in list
+        foreach(GameObject tree in trees)
+        {
+            DestroyImmediate(tree);
+        }
+        trees.Clear(); //clears list
     }
     public void ToggleOcean() //turns ocean on or off
     {
@@ -292,6 +339,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.shapeNoiseSettings.offset = offset;
         planet.terrainVar.biomeNoiseSettings._Offset = new Vector3(offset[0], offset[1], offset[2]);
         planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = new Vector3(offset[0], offset[1], offset[2]);
+        meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
+        ClearTrees();
     }
     public void RandomizeShading()
     {
@@ -341,6 +390,7 @@ public class FullPlanetGeneration : MonoBehaviour
         //randomized number for the terrain
         int index = UnityEngine.Random.Range(0, terrainVarPool.Length);
         planet.terrainVar = terrainVarPool[index];
+        RandomizeOffset();
     }
     public void RandomizeColorScheme()
     {
@@ -395,9 +445,12 @@ public class FullPlanetGeneration : MonoBehaviour
             }
             else //if atmosphere variables doesn't come from the primary
             {
+                print("here");
                 aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
+            tBiomeA = biomeA.treeVariables._UseTrees;
+            tBiomeB = biomeB.treeVariables._UseTrees;
             return;
         }
         int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome

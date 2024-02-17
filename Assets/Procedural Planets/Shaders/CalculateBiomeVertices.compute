@@ -12,7 +12,7 @@ StructuredBuffer<float3> planetVertices;
 AppendStructuredBuffer<float3> biomeAVertices;
 AppendStructuredBuffer<float3> biomeBVertices;
 
-int _NumVertices;
+uint _NumVertices;
 float _SeaLevel;
 float3 _PlanetCenter;
 
@@ -30,18 +30,23 @@ float _BiomeAEnd;
 float _BiomeBStart;
 float _SwapBiome;
 
+float _BiomeAVegetationLine;
+float _BiomeBVegetationLine;
+
+
 [numthreads(512,1,1)]
 void CSMain (uint id : SV_DispatchThreadID)
 {
     if(id >= _NumVertices) {return;} //No out of range calculations
-    if((planetVertices[id] + _PlanetCenter).z > 0.3) {return;}
+    if((planetVertices[id] + _PlanetCenter).z > -0.3) {return;}
 
     float3 currentVertex = planetVertices[id]; //Store the current Vertex
 
-    if(length(currentVertex - _PlanetCenter) <= _SeaLevel + 0.01) {return;} //No points in the ocean
+    if(length(currentVertex - _PlanetCenter) <= _SeaLevel + 0.02) {return;} //No points in the ocean
 
-    float warpNoiseTex = SimpleNoise(planetVertices[id], _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
-    float noiseTex = SimpleNoise(planetVertices[id] + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
+    float3 normalizedVertexPos = normalize(planetVertices[id]) * _SeaLevel;
+    float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
+    float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
     //Define blendValue / biome
     float blendValue = 0;
@@ -56,10 +61,12 @@ void CSMain (uint id : SV_DispatchThreadID)
 
     if(blendValue == 0)
     {
+        if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomeAVegetationLine) {return;} //No points above vegetation line
         biomeAVertices.Append(planetVertices[id]);
     }
     else if(blendValue == 1)
     {
+        if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomeBVegetationLine) {return;} //No points above vegetation line
         biomeBVertices.Append(planetVertices[id]);
     }
     else
@@ -72,6 +79,7 @@ void CSMain (uint id : SV_DispatchThreadID)
             randomValue = clamp(0, blendValue, randomValue);
             if(randomValue >= blendValue - 0.15)
             {
+                if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomeAVegetationLine) {return;} //No points above vegetation line
                 biomeAVertices.Append(planetVertices[id]);  
             }
         }
@@ -82,6 +90,7 @@ void CSMain (uint id : SV_DispatchThreadID)
             randomValue = clamp(0, blendValue, randomValue);
             if(randomValue >= blendValue - 0.15)
             {
+                if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomeBVegetationLine) {return;} //No points above vegetation line
                 biomeBVertices.Append(planetVertices[id]);  
             }
         }

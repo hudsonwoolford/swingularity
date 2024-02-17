@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "fullPlanetObj", menuName = "fullPlanetObj")]
@@ -57,19 +59,17 @@ public class FresnelVariables{
     [SerializeField] public float _FresnelStrengthFar = 5f; 
     [SerializeField] public float _FresnelPower = 8f; 
 }
-
 [Serializable]
 public class TreeVariables {
     [SerializeField] public bool _UseTrees = false;
-    [SerializeField] public GameObject _TreePrefab;
-    [SerializeField] public Color _TreeLeafColor01 = Color.white;
-    [SerializeField] public Color _TreeLeafColor02 = Color.white;
-    [SerializeField] public Color _TreeLeafColor03 = Color.white;
-    [SerializeField] public Color _TreeLeafColor04 = Color.white;
+    [SerializeField] public GameObject[] _TreePrefabs;
+    [SerializeField] public Color[] _TreeLeafColors = { Color.white, Color.white, Color.white };
     [SerializeField] public Color _TreeBarkColor = Color.white;
     
     [Min(0)]
     [SerializeField] public int _NumTrees = 100;
     [SerializeField] public int _TreeSeed = 0;
 }
+
+
 

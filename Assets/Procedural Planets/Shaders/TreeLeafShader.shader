@@ -9,17 +9,13 @@ Shader "Custom/TreeLeafShader"
     {
 
         Tags { "RenderType"="Opaque" }
-        Blend SrcAlpha OneMinusSrcAlpha
-        LOD 200
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        
-        #pragma surface surf Standard fullforwardshadows
-
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+        #pragma surface surf Standard vertex:vert
         #include "Includes/FractalNoise.cginc"
+        
+
 
         sampler2D _MainTex;
 
@@ -46,13 +42,14 @@ Shader "Custom/TreeLeafShader"
 
         float3 _TreeColA;
         float3 _TreeColB;
-
         float _UseTreesA;
         float _UseTreesB;
+        float _SeaLevel;
 
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
+        float _Glossiness;
+        float _Metallic;
+
+
         void vert(inout appdata_full v, out Input o){
             UNITY_INITIALIZE_OUTPUT(Input, o);
             o.vertPos = v.vertex;
@@ -62,9 +59,11 @@ Shader "Custom/TreeLeafShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float warpNoiseTex = SimpleNoise(IN.worldPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
-            float noiseTex = SimpleNoise(IN.worldPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
+            float3 normalizedVertexPos = normalize(IN.worldPos-IN.vertPos) * _SeaLevel;
+            float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
+            float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
+            //Define blendValue / biome
             float blendValue = 0;
             if(noiseTex<_BiomeAEnd) { blendValue = 0; }
             else if(noiseTex>_BiomeBStart){ blendValue = 1; }
@@ -72,13 +71,23 @@ Shader "Custom/TreeLeafShader"
                 float difference = _BiomeBStart - _BiomeAEnd; blendValue = (noiseTex - _BiomeAEnd) / difference; 
             }
             blendValue = (_BiomeA == 1 && _BiomeB == 0) ? 0 : (_BiomeA == 0 && _BiomeB == 1) ? 1 : blendValue;
-            if(_BiomeA == 0 && _BiomeB == 0) {o.Albedo = 0.1; return;}
+            if(_BiomeA == 0 && _BiomeB == 0) {return;}
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
-            o.Albedo = lerp(_TreeColA, _TreeColB, blendValue);
+            float3 biomeColor;
+            if(blendValue < 0.5)
+            {
+                biomeColor = _TreeColA;
+            }
+            else if(blendValue >= 0.5)
+            {
+                biomeColor = _TreeColB;
+            }
+
             
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
+            o.Albedo = biomeColor;
+            o.Metallic = 0.3;
+            o.Smoothness = 0.3;
         }
         ENDCG
     }

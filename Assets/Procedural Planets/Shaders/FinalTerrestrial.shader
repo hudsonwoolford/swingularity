@@ -191,11 +191,12 @@ Shader "Custom/FinalTerrestrial"
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
+            float3 normalizedVertexPos = sphereNormal * _SeaLevel;
             float seaLevelHeight = length(_SeaLevel*sphereNormal); //height of sealevel from middle of the sphere
             float elevation = length(IN.vertPos) - seaLevelHeight; //elevation of vert above sea level
 
-            float warpNoiseTex = SimpleNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
-            float noiseTex = SimpleNoise(IN.vertPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
+            float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
+            float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
 
             //Define blendValue / biome
             float blendValue = 0;
