@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  _FlatColor: {r: 0.14448676, g: 0.3490566, b: 0.051041294, a: 1}
+  _FlatColor: {r: 0.14001985, g: 0.4433962, b: 0, a: 1}
   _FlatColorVariant: {r: 0.1086147, g: 0.26415092, b: 0.041117836, a: 1}
   _SteepColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
   _HighElevationColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
@@ -31,15 +31,15 @@ MonoBehaviour:
     _OceanMetallic: 0.129
     _OceanSmoothness: 0.771
   atmosphereVariables:
-    _OuterBandColor: {r: 0.22745097, g: 0.8117647, b: 0.5471235, a: 1}
+    _OuterBandColor: {r: 0.23160745, g: 0.22745097, b: 0.8117647, a: 1}
     _OuterBandRange: 2.47
-    _OuterBandIntensity: 0.26
-    _InnerBandColor: {r: 0.17254901, g: 0.5764706, b: 0.367694, a: 1}
+    _OuterBandIntensity: 0.41
+    _InnerBandColor: {r: 0, g: 0.2526579, b: 0.3584906, a: 1}
     _InnerBandRange: 2.24
     _InnerBandIntensity: 3.09
-    _FrontColor: {r: 0.22745097, g: 0.8117647, b: 0.480404, a: 1}
+    _FrontColor: {r: 0, g: 0.7797036, b: 1, a: 1}
     _FrontRange: 2
-    _FrontIntensity: 0.22
+    _FrontIntensity: 0.29
   fresnelVariables:
     _UseFresnel: 1
     _FresnelColor: {r: 0.3224012, g: 0.5943396, b: 0.4814595, a: 1}
@@ -51,11 +51,10 @@ MonoBehaviour:
     _TreePrefabs:
     - {fileID: 622180097012652008, guid: 3a2c88cf79480f34ba92f67ebe404cfe, type: 3}
     - {fileID: 5399721500918427007, guid: 695b6c2de4a091e49b99d204f301f631, type: 3}
-    _DynamicMaterialBooleans: []
     _TreeLeafColors:
     - {r: 0.031515997, g: 0.11372549, b: 0.027450982, a: 1}
     - {r: 0.019551529, g: 0.03773582, b: 0.014061932, a: 1}
     - {r: 0.18310161, g: 0.1981132, b: 0.057004265, a: 1}
     _TreeBarkColor: {r: 0.4056604, g: 0.28905478, b: 0.09376113, a: 1}
-    _NumTrees: 500
+    _NumTrees: 0
     _TreeSeed: 50
