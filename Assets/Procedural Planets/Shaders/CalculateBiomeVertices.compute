@@ -37,7 +37,7 @@ void CSMain (uint id : SV_DispatchThreadID)
 
     float3 currentVertex = planetVertices[id]; //Store the current Vertex
 
-    if(length(currentVertex - _PlanetCenter) <= _SeaLevel) {return;} //No points in the ocean
+    if(length(currentVertex - _PlanetCenter) <= _SeaLevel + 0.01) {return;} //No points in the ocean
 
     float warpNoiseTex = SimpleNoise(planetVertices[id], _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
     float noiseTex = SimpleNoise(planetVertices[id] + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
