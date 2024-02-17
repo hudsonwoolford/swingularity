@@ -269,7 +269,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
                 for (int i = 0; i < rendererMats.Length; i++)
                 {
-                    if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; return; };
+                    if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; continue; };
                     rendererMats[i] = treeMats[Random.Range(1, 4)];
                 }
 
