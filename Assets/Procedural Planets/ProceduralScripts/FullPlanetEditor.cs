@@ -53,7 +53,7 @@ public class FullPlanetEditor : Editor
         GUILayout.EndHorizontal();
         if (GUILayout.Button("Regen Trees"))
         {
-            planetGeneration.ClearTrees();
+            planetGeneration.ClearAllTrees();
         }
 
         if (GUILayout.Button("Toggle Atmosphere")) { planetGeneration.ToggleAtmosphere(); }

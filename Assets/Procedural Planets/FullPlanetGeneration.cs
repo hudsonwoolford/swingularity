@@ -239,56 +239,59 @@ public class FullPlanetGeneration : MonoBehaviour
         indirectArgumentsBuffer.Release();
         #endregion
 
-        Vector3[] vertPool = tBiomeA && tBiomeB ? biomeBVerts.Concat(biomeAVerts).ToArray() : tBiomeA ? biomeAVerts : biomeBVerts; //pool of possible verts based on compute shader
-        if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(treesB, biomeB, biomeBVerts);
-        if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(treesB, biomeB, biomeBVerts);
+        if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesA, ref biomeA, biomeAVerts);
+        if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesB, ref biomeB, biomeBVerts);
       
     }
-    public void CreateAndDestroyTrees(List<GameObject> trees, PlanetColorScheme biome, Vector3[] vertPool){
-         if(treesA.Count > biomeA.treeVariables._NumTrees) //too many trees
+    void CreateAndDestroyTrees(ref List<GameObject> trees, ref PlanetColorScheme biome, Vector3[] vertPool){
+        if (biome.treeVariables._TreeObjects == null || biome.treeVariables._TreeObjects.Length == 0) { return; }
+        foreach (var obj in biome.treeVariables._TreeObjects)
         {
-            while(treesA.Count > biomeA.treeVariables._NumTrees) //loop destroys tree one at a time
-            {
-                GameObject treeToDestroy = treesA[treesA.Count - 1];
-                treesA.Remove(treeToDestroy);
-                DestroyImmediate(treeToDestroy);
-            }
+            if (obj == null) { return; } //if the prefab for trees are null return function
         }
-        else if(treesA.Count < biomeA.treeVariables._NumTrees) //too little trees
+
+        while (trees.Count > biome.treeVariables._NumTrees) //loop destroys tree one at a time
         {
-            while(treesA.Count < biomeA.treeVariables._NumTrees) //loop add trees one at a time
+            GameObject treeToDestroy = trees[trees.Count - 1];
+            trees.Remove(treeToDestroy);
+            DestroyImmediate(treeToDestroy);
+        }
+        while(trees.Count < biome.treeVariables._NumTrees) //loop add trees one at a time
+        {
+            int objIndex = Random.Range(0, biome.treeVariables._TreeObjects.Length); //random prefab from tree
+            TreeObject selectedTreeObj = biome.treeVariables._TreeObjects[objIndex];
+            GameObject tree = Instantiate(selectedTreeObj.treePrefab); //instantiation
+
+            Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
+
+            int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
+            Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
+            tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
+            tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
+            tree.transform.parent = transform; //parent tree to gameObject
+
+            MeshRenderer treeMeshRender = tree.GetComponentInChildren<MeshRenderer>(); //renderer on tree object
+            Material[] rendererMats = treeMeshRender.sharedMaterials; //all materials on tree array
+
+            for (int i = 0; i < rendererMats.Length; i++)
             {
-                int objIndex = Random.Range(0, biomeA.treeVariables._TreeObjects.Length); //random prefab from tree
-                TreeObject selectedTreeObj = biomeA.treeVariables._TreeObjects[objIndex];
-                GameObject tree = Instantiate(selectedTreeObj.treePrefab); //instantiation
-
-                Random.InitState(biomeA.treeVariables._NumTrees + treesA.Count); //setting random seed
-
-                int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
-                Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
-                tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
-                tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
-                tree.transform.parent = transform; //parent tree to gameObject
-
-                MeshRenderer treeMeshRender = tree.GetComponentInChildren<MeshRenderer>(); //renderer on tree object
-                Material[] rendererMats = treeMeshRender.sharedMaterials; //all materials on tree array
-
-                for (int i = 0; i < rendererMats.Length; i++)
-                {
-                    if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; continue; };
-                    rendererMats[i] = treeMats[Random.Range(1, 4)];
-                }
-
-                treeMeshRender.sharedMaterials = rendererMats; //set the material array to random array
-
-                tree.SetActive(true); //make sure tree is active
-
-                treesA.Add(tree); //add tree to list
+                if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; continue; };
+                rendererMats[i] = treeMats[Random.Range(1, 4)];
             }
+
+            treeMeshRender.sharedMaterials = rendererMats; //set the material array to random array
+
+            tree.SetActive(true); //make sure tree is active
+
+            trees.Add(tree); //add tree to list
         }
     }
-
-    public void ClearTrees(List<GameObject> trees)
+    public void ClearAllTrees()
+    {
+        ClearTrees(treesA);
+        ClearTrees(treesB);
+    }
+    void ClearTrees(List<GameObject> trees)
     {
         //destroys every tree object in list
         foreach(GameObject tree in trees)
@@ -348,8 +351,7 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.biomeNoiseSettings._Offset = new Vector3(offset[0], offset[1], offset[2]);
         planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = new Vector3(offset[0], offset[1], offset[2]);
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
-        ClearTrees(treesA);
-        ClearTrees(treesB);
+        ClearAllTrees();
     }
     public void RandomizeShading()
     {
