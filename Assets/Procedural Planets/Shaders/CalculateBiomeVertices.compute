@@ -34,6 +34,7 @@ float _SwapBiome;
 void CSMain (uint id : SV_DispatchThreadID)
 {
     if(id >= _NumVertices) {return;} //No out of range calculations
+    if((planetVertices[id] + _PlanetCenter).z > 0.3) {return;}
 
     float3 currentVertex = planetVertices[id]; //Store the current Vertex
 
