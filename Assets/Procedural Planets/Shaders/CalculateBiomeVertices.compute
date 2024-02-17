@@ -1,0 +1,89 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#include "Includes/FractalNoise.cginc"
+
+float rand(float2 co)
+{
+    return(frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 1;
+}
+
+StructuredBuffer<float3> planetVertices;
+
+AppendStructuredBuffer<float3> biomeAVertices;
+AppendStructuredBuffer<float3> biomeBVertices;
+
+int _NumVertices;
+float _SeaLevel;
+float3 _PlanetCenter;
+
+int _Octaves;
+float3 _Offset;
+float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
+
+int _WarpOctaves;
+float3 _WarpOffset;
+float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
+
+float _BiomeA;
+float _BiomeB;
+float _BiomeAEnd;
+float _BiomeBStart;
+float _SwapBiome;
+
+[numthreads(512,1,1)]
+void CSMain (uint id : SV_DispatchThreadID)
+{
+    if(id >= _NumVertices) {return;} //No out of range calculations
+
+    float3 currentVertex = planetVertices[id]; //Store the current Vertex
+
+    if(length(currentVertex - _PlanetCenter) <= _SeaLevel) {return;} //No points in the ocean
+
+    float warpNoiseTex = SimpleNoise(planetVertices[id], _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
+    float noiseTex = SimpleNoise(planetVertices[id] + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
+
+    //Define blendValue / biome
+    float blendValue = 0;
+    if(noiseTex<_BiomeAEnd) { blendValue = 0; }
+    else if(noiseTex>_BiomeBStart){ blendValue = 1; }
+    else { 
+        float difference = _BiomeBStart - _BiomeAEnd; blendValue = (noiseTex - _BiomeAEnd) / difference; 
+    }
+    blendValue = (_BiomeA == 1 && _BiomeB == 0) ? 0 : (_BiomeA == 0 && _BiomeB == 1) ? 1 : blendValue;
+    if(_BiomeA == 0 && _BiomeB == 0) {return;}
+    blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
+
+    if(blendValue == 0)
+    {
+        biomeAVertices.Append(planetVertices[id]);
+    }
+    else if(blendValue == 1)
+    {
+        biomeBVertices.Append(planetVertices[id]);
+    }
+    else
+    {
+        float randomValue = abs(rand(planetVertices[id].xy)) / 2 + 0.3;
+
+        if(blendValue < 0.5)
+        {
+            //a biome
+            randomValue = clamp(0, blendValue, randomValue);
+            if(randomValue == blendValue)
+            {
+                biomeAVertices.Append(planetVertices[id]);  
+            }
+        }
+        else if(blendValue >= 0.5)
+        {
+            //b biome
+            blendValue = 1 - blendValue;
+            randomValue = clamp(0, blendValue, randomValue);
+            if(randomValue == blendValue)
+            {
+                biomeBVertices.Append(planetVertices[id]);  
+            }
+        }
+
+    }
+}
