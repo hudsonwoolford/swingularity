@@ -62,7 +62,7 @@ public class FresnelVariables{
 [Serializable]
 public class TreeVariables {
     [SerializeField] public bool _UseTrees = false;
-    [SerializeField] public GameObject[] _TreePrefabs;
+    [SerializeField] public TreeObject[] _TreeObjects;
     [SerializeField] public Color[] _TreeLeafColors = { Color.white, Color.white, Color.white };
     [SerializeField] public Color _TreeBarkColor = Color.white;
     
