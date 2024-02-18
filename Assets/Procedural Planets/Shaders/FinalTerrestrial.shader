@@ -39,6 +39,26 @@ Shader "Custom/FinalTerrestrial"
      
      _VegetationLineB ("Vegetation Line B", Range(0, 0.5)) = 0.1
      [PowerSlider(3.0)]_VegetationLineHarshnessB ("Vegetation Line Harshness B", Range(0, 10)) = 2
+     _SteepMultiplierB("Steep Multiplier B", Range(0, 5)) = 1
+
+     [Header(Polar Biome)] //Biome P
+
+     _FlatColorP ("Flat Color P", Color) = (0.5,0.5,0.5)
+     _FlatColorPVariant ("Flat Color P Variant", Color) = (0.5,0.5,0.5)
+     _SteepColorP ("Steep Color P", Color) = (0.5,0.5,0.5)
+     _HighElevationColorP ("High Elevation Color P", Color) = (0.5,0.5,0.5)
+     _HighElevationSteepColorP ("High Elevation Steep Color P", Color) = (0.5,0.5,0.5)
+
+     _MetallicP ("Metallic P", Range(0, 1)) = 0
+     _SmoothnessP ("Smoothness P", Range(0,1)) = 0
+     
+     _VegetationLineP ("Vegetation Line P", Range(0, 0.5)) = 0.1
+     [PowerSlider(3.0)]_VegetationLineHarshnessP ("Vegetation Line Harshness P", Range(0, 10)) = 2
+     _SteepMultiplierP("Steep Multiplier P", Range(0, 5)) = 1
+
+     [Header(Polar Variables)]
+     _PolarHeight ("Polar Height", Range(0,1)) = 0.8
+     _PolarBlendEnd ("Polar Blend End", Range(0,0.5)) = 0.1
 
      [Header(Flat Terrain Noise)]
      [IntRange]_ColorOctaves("Color Texture Octaves", Range(0,5)) = 1
@@ -49,7 +69,6 @@ Shader "Custom/FinalTerrestrial"
      _ColorMultiplier("Color Texture Multiplier", Range(0,5)) = 1
      _ColorGain("Color Texture Gain", Range(0, 5)) = 1
 
-     _SteepMultiplierB("Steep Multiplier B", Range(0, 5)) = 1
 
      [Header(Constants)] //Constants
 
@@ -71,7 +90,7 @@ Shader "Custom/FinalTerrestrial"
      _FresnelStrengthFar("Fresnel Strength Far", float) = 5
      _FresnelPower("Fresnel Power", float) = 2
 
-     [Header(Noise)] //Nois
+     [Header(Noise)] //Noise
 
      [HideInInspector][IntRange]_Octaves("Octaves", Range(0,5)) = 1
      [HideInInspector]_Offset("Offset", vector) = (0,0,0)
@@ -127,6 +146,15 @@ Shader "Custom/FinalTerrestrial"
         float _VegetationLineB;
         float _VegetationLineHarshnessB;
         float _SteepMultiplierB;
+        //Biome P
+        fixed4 _FlatColorP;
+        fixed4 _FlatColorPVariant;
+        fixed4 _SteepColorP;
+        fixed4 _HighElevationColorP;
+        fixed4 _HighElevationSteepColorP;
+        float _VegetationLineP;
+        float _VegetationLineHarshnessP;
+        float _SteepMultiplierP;
         //Constant through biomes
         float _SeaLevel;
         float _BeachBlendEnd;
@@ -139,8 +167,10 @@ Shader "Custom/FinalTerrestrial"
 
         float _MetallicA;
         float _MetallicB;
+        float _MetallicP;
         float _SmoothnessA;
         float _SmoothnessB;
+        float _SmoothnessP;
 
         float _UseFresnel;
         fixed4 _FresnelColor;
