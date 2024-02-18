@@ -14,32 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _FlatColor: {r: 0.14001985, g: 0.4433962, b: 0, a: 1}
   _FlatColorVariant: {r: 0.1086147, g: 0.26415092, b: 0.041117836, a: 1}
-  _SteepColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-  _HighElevationColor: {r: 0.23584908, g: 0.19691174, b: 0.19691174, a: 1}
-  _HighElevationSteepColor: {r: 0.41509432, g: 0.41313633, b: 0.41313633, a: 1}
+  _SteepColor: {r: 0.3773585, g: 0.2606932, b: 0, a: 1}
+  _HighElevationColor: {r: 0.254717, g: 0.12878948, b: 0, a: 1}
+  _HighElevationSteepColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
   _Metallic: 0
-  _Smoothness: 0
-  _VegetationLine: 0.093
-  _VegetationLineHarshness: 10
-  _SteepMultiplier: 2.01
+  _Smoothness: 0.15
+  _VegetationLine: 0.541
+  _VegetationLineHarshness: 3.75
+  _SteepMultiplier: 5
   oceanVariables:
     _OceanBlendEnd: 0.026
     _OceanBlendIntensity: 0.82
-    _BeachBlendEnd: 0.018
-    _BeachBlendIntensity: 0.77
+    _BeachBlendEnd: 0.022
+    _BeachBlendIntensity: 0.9
     _ShorelineColor: {r: 1, g: 0.88971794, b: 0.61960787, a: 1}
-    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
-    _OceanColor: {r: 0.117647044, g: 0.32156864, b: 0.25671187, a: 0.80784315}
-    _OceanMetallic: 0.129
-    _OceanSmoothness: 0.771
+    _SeabedColor: {r: 0.20203641, g: 0.029488485, b: 0.6698113, a: 1}
+    _OceanColor: {r: 0.25898895, g: 0.4245283, b: 0.4188628, a: 0.80784315}
+    _OceanMetallic: 0.078
+    _OceanSmoothness: 0.659
   atmosphereVariables:
-    _OuterBandColor: {r: 0.22745097, g: 0.76513207, b: 0.8117647, a: 1}
+    _OuterBandColor: {r: 0.29639444, g: 0.22745097, b: 0.8117647, a: 1}
     _OuterBandRange: 2.47
     _OuterBandIntensity: 0.53
-    _InnerBandColor: {r: 0, g: 0.35686275, b: 0.32865986, a: 1}
+    _InnerBandColor: {r: 0, g: 0.2908839, b: 0.31132078, a: 1}
     _InnerBandRange: 2.27
     _InnerBandIntensity: 5
-    _FrontColor: {r: 0, g: 1, b: 0.7799196, a: 1}
+    _FrontColor: {r: 0, g: 0.51438856, b: 1, a: 1}
     _FrontRange: 2
     _FrontIntensity: 0.35
   fresnelVariables:
@@ -57,7 +57,7 @@ MonoBehaviour:
     _TreeLeafColors:
     - {r: 0.031515997, g: 0.11372549, b: 0.027450982, a: 1}
     - {r: 0.019551529, g: 0.03773582, b: 0.014061932, a: 1}
-    - {r: 0.18310161, g: 0.1981132, b: 0.057004265, a: 1}
+    - {r: 0, g: 0.122641504, b: 0.0052614477, a: 1}
     _TreeBarkColor: {r: 0.4056604, g: 0.28905478, b: 0.09376113, a: 1}
-    _NumTrees: 400
+    _NumTrees: 271
     _TreeSeed: 50

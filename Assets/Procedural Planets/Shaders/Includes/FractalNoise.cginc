@@ -22,6 +22,29 @@ float SimpleNoise(float3 position, int octaves, float scale, float persistence, 
 
 }
 
+float SimpleNoise(float3 position, int octaves, float scale, float persistence, float lacunarity, float gain, float3 offset)
+{
+    float noiseSum = 0;
+    float amplitude = 1;
+    float frequency = scale;
+    float weight = 1;
+    
+    for (int i = 0; i < octaves; i++)
+    {
+        float noiseVal = snoise(position * frequency + offset) * .5 + .5;
+        noiseVal *= weight;
+        weight = saturate(noiseVal * gain);
+        
+        noiseSum += noiseVal * amplitude;
+        amplitude *= persistence;
+        frequency *= lacunarity;
+    }
+    
+    return noiseSum;
+
+}
+
+
 float RidgeNoise(float3 position, int octaves, float scale, float persistence, float lacunarity, float multiplier, float power, float gain, float3 offset, float smoothing)
 {
     float noiseSum = 0;

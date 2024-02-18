@@ -505,7 +505,7 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_SmoothnessA", biomeAScheme._Smoothness);
             mat.SetFloat("_VegetationLineA", biomeAScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessA", biomeAScheme._VegetationLineHarshness);
-            mat.SetFloat("_SteepMultiplierA", biomeBScheme._SteepMultiplier);
+            mat.SetFloat("_SteepMultiplierA", biomeAScheme._SteepMultiplier);
         }
         if(biomeB != null)
         {

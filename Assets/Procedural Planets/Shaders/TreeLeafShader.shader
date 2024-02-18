@@ -41,8 +41,8 @@ Shader "Custom/TreeLeafShader"
         float _BiomeBStart;
         float _SwapBiome;
 
-        float3 _TreeColA;
-        float3 _TreeColB;
+        fixed4 _TreeColA;
+        fixed4 _TreeColB;
         float _UseTreesA;
         float _UseTreesB;
         float _SeaLevel;
@@ -75,10 +75,14 @@ Shader "Custom/TreeLeafShader"
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
             if (_UseTreesA == 1 && _UseTreesB == 0){
+                o.Metallic = 0.3;
+                o.Smoothness = 0.3;
                 o.Albedo = _TreeColA;
                 return;
             }
             if (_UseTreesA == 0 && _UseTreesB == 1){
+                o.Metallic = 0.3;
+                o.Smoothness = 0.3;
                 o.Albedo = _TreeColB;
                 return;
             }

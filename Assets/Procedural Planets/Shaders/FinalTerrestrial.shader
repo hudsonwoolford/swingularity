@@ -197,7 +197,6 @@ Shader "Custom/FinalTerrestrial"
 
             float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
             float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
-
             //Define blendValue / biome
             float blendValue = 0;
             if(noiseTex<_BiomeAEnd) { blendValue = 0; }
@@ -223,7 +222,7 @@ Shader "Custom/FinalTerrestrial"
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
 
             //Flat terrain noise
-            noiseTex = SimpleNoise(IN.vertPos, _ColorOctaves, _ColorTextureScale, _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain, _ColorOffset);
+            noiseTex = saturate(SimpleNoise(IN.vertPos, _ColorOctaves, _ColorTextureScale, _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain, _ColorOffset));
             flatColor = lerp(flatColor, flatColorVariant, noiseTex);
 
             //Terrain steepness
