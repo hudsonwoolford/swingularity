@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 Shader "Custom/TreeLeafShader"
@@ -54,12 +56,13 @@ Shader "Custom/TreeLeafShader"
         void vert(inout appdata_full v, out Input o){
             UNITY_INITIALIZE_OUTPUT(Input, o);
             o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz; 
-            o.objectPos = mul(unity_WorldToObject, o.worldPos).xyz;
+            o.objectPos = UnityObjectToClipPos(v.vertex);
         }
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float3 normalizedVertexPos = normalize(IN.objectPos) * _SeaLevel;
+            float3 objectOrigin = mul(unity_ObjectToWorld, float4(0.0,0.0,0.0,1.0) ).xyz;
+            float3 normalizedVertexPos = normalize(objectOrigin) * _SeaLevel;
             float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
             float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
