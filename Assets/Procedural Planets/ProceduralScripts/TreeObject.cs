@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Unity.VisualScripting;
 
 [CreateAssetMenu(fileName ="treeObj", menuName = "treeObject")]
 public class TreeObject : ScriptableObject
 {
     public GameObject treePrefab;
+    public Vector3 objectSize = Vector3.one;
     [HideInInspector]
     [SerializeField] public bool[] dynamicMaterial;
 }
@@ -30,5 +32,7 @@ public class TreeObjectEditor : Editor
         dynamicMaterial.arraySize = materialListSize;
         EditorGUILayout.PropertyField(dynamicMaterial, new GUIContent("Dynamic Elements: " + prefab.name));
         serializedObject.ApplyModifiedProperties();
+
+        treeObject.treePrefab.GetComponentInChildren<Transform>().localScale = treeObject.objectSize;
     }
 }

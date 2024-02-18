@@ -21,7 +21,7 @@ public class FullPlanetGeneration : MonoBehaviour
     [HideInInspector]
     [SerializeField] PlanetColorScheme biomeA, biomeB; //biome A and biome B for color schemes
     [HideInInspector]
-    [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB, tBiomeA, tBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean or trees
+    [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean or trees
     [HideInInspector]
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
@@ -78,6 +78,8 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level
         mat.SetFloat("_OceanBlendEnd", planet.oceanVariables._OceanBlendEnd); //ocean blending between shoreline and seabed
         mat.SetFloat("_OceanBlendIntensity", planet.oceanVariables._OceanBlendIntensity); //ocean blending intensity between shoreline and seabed
+        mat.SetFloat("_BeachBlendEnd", planet.oceanVariables._BeachBlendEnd); //ocean blending between shoreline and seabed
+        mat.SetFloat("_BeachBlendIntensity", planet.oceanVariables._BeachBlendIntensity); //ocean blending intensity between shoreline and seabed
         mat.SetColor("_ShorelineColor", planet.oceanVariables._ShorelineColor); //shoreline color
         mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
     }
@@ -105,9 +107,10 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        if(!tBiomeA  && !tBiomeB) { ClearTrees(treesA); ClearTrees(treesB); return; } //if no biomes have trees return fucntion
-        if(planet.treeVariables._TreeObjects == null) { return; }
-        foreach (var obj in planet.treeVariables._TreeObjects)
+        if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearTrees(treesA); ClearTrees(treesB); return; } //if no biomes have trees return fucntion
+        if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
+        TreeObject[] treeObjects = biomeA.treeVariables._TreeObjects.Concat(biomeB.treeVariables._TreeObjects).ToArray();
+        foreach (var obj in treeObjects)
         {
             if (obj == null) { return; } //if the prefab for trees are null return function
         }
@@ -260,12 +263,12 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             int objIndex = Random.Range(0, biome.treeVariables._TreeObjects.Length); //random prefab from tree
             TreeObject selectedTreeObj = biome.treeVariables._TreeObjects[objIndex];
-            GameObject tree = Instantiate(selectedTreeObj.treePrefab); //instantiation
+            GameObject tree = PrefabUtility.InstantiatePrefab(selectedTreeObj.treePrefab) as GameObject;
 
             Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
 
             int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
-            Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
+            Vector3 vertexElevationDir = vertPool[chosenVert ] - ocean.position; //vertex normal
             tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
             tree.transform.parent = transform; //parent tree to gameObject
@@ -459,8 +462,6 @@ public class FullPlanetGeneration : MonoBehaviour
                 aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
-            tBiomeA = biomeA.treeVariables._UseTrees;
-            tBiomeB = biomeB.treeVariables._UseTrees;
             return;
         }
         int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
@@ -527,8 +528,6 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.atmosphereVariables = aBiomeB ? biomeB.atmosphereVariables : planet.atmosphereVariables;
         planet.fresnelVariables = aBiomeA ? biomeA.fresnelVariables : planet.fresnelVariables;
         planet.fresnelVariables = aBiomeB ? biomeB.fresnelVariables : planet.fresnelVariables;
-        planet.treeVariables = tBiomeA ? biomeA.treeVariables : planet.treeVariables;
-        planet.treeVariables = tBiomeB ? biomeB.treeVariables : planet.treeVariables;
         bool restoreA = biomeA == null ? true : false;
         bool restoreB = biomeB == null ? true : false;
         RestoreSavedColorScheme(restoreA, restoreB);

@@ -25,7 +25,7 @@ public class FullPlanetEditor : Editor
     bool biomeBFoldout;
 
     SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
-    SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB, tBiomeA, tBiomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB; //serialized properties for defining biome a and biome b color schemes
     #endregion
 
     public override void OnInspectorGUI()
@@ -99,10 +99,6 @@ public class FullPlanetEditor : Editor
             aBiomeA.boolValue = EditorGUILayout.Toggle("A BiomeA: ", aBiomeA.boolValue);
             aBiomeB.boolValue = EditorGUILayout.Toggle("A BiomeB: ", aBiomeB.boolValue);
             EditorGUILayout.EndHorizontal(); 
-            EditorGUILayout.BeginHorizontal();
-            tBiomeA.boolValue = EditorGUILayout.Toggle("T BiomeA: ", tBiomeA.boolValue);
-            tBiomeB.boolValue = EditorGUILayout.Toggle("T BiomeB: ", tBiomeB.boolValue);
-            EditorGUILayout.EndHorizontal();
             SettingsMenu(biomeA.objectReferenceValue, ref biomeAFoldout, ref biomeAEditor);
             SettingsMenu(biomeB.objectReferenceValue, ref biomeBFoldout, ref biomeBEditor);
 
@@ -156,8 +152,6 @@ public class FullPlanetEditor : Editor
         oBiomeB = serializedObject.FindProperty("oBiomeB");
         aBiomeA = serializedObject.FindProperty("aBiomeA");
         aBiomeB = serializedObject.FindProperty("aBiomeB");
-        tBiomeA = serializedObject.FindProperty("tBiomeA");
-        tBiomeB = serializedObject.FindProperty("tBiomeB");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);

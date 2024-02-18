@@ -12,19 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
   m_Name: Snow
   m_EditorClassIdentifier: 
-  _FlatColor: {r: 0, g: 0.3207547, b: 0.0722552, a: 1}
-  _FlatColorVariant: {r: 0.14846888, g: 0.5660378, b: 0, a: 1}
+  _FlatColor: {r: 0.06259826, g: 0.1981132, b: 0.014017441, a: 1}
+  _FlatColorVariant: {r: 0, g: 0, b: 0, a: 1}
   _SteepColor: {r: 0, g: 0, b: 0, a: 1}
   _HighElevationColor: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   _HighElevationSteepColor: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
   _Metallic: 0
   _Smoothness: 0
-  _VegetationLine: 0.088
-  _VegetationLineHarshness: 10
-  _SteepMultiplier: 0
+  _VegetationLine: 0.077
+  _VegetationLineHarshness: 4.5
+  _SteepMultiplier: 3.7
   oceanVariables:
     _OceanBlendEnd: 0.006
     _OceanBlendIntensity: 1.53
+    _BeachBlendEnd: 0.01
+    _BeachBlendIntensity: 0.01
     _ShorelineColor: {r: 0.8207547, g: 0.78155595, b: 0.5071645, a: 1}
     _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
     _OceanColor: {r: 0.0734247, g: 0.2603921, b: 0.6226415, a: 0.6313726}
@@ -53,9 +55,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 98590e5ccc16ea74bbb61792e49011b0, type: 2}
     - {fileID: 11400000, guid: e8285834aee17964bbc2a0100bb89dad, type: 2}
     _TreeLeafColors:
-    - {r: 0.24817553, g: 0.31132078, b: 0.2596565, a: 1}
-    - {r: 0.13683698, g: 0.23584908, b: 0.15608932, a: 1}
-    - {r: 0.16420436, g: 0.2830189, b: 0.20001148, a: 1}
+    - {r: 1, g: 0, b: 0.8275919, a: 1}
+    - {r: 0.86243105, g: 0, b: 1, a: 1}
+    - {r: 1, g: 0, b: 0.94516754, a: 1}
     _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
-    _NumTrees: 0
+    _NumTrees: 63
     _TreeSeed: 0

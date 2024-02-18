@@ -25,6 +25,8 @@ MonoBehaviour:
   oceanVariables:
     _OceanBlendEnd: 0.099
     _OceanBlendIntensity: 1.68
+    _BeachBlendEnd: 0.01
+    _BeachBlendIntensity: 0.01
     _ShorelineColor: {r: 0.9716981, g: 0.9251615, b: 0.7104397, a: 1}
     _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
     _OceanColor: {r: 0.4339623, g: 0.18192169, b: 0.09620862, a: 0.7607843}
@@ -47,13 +49,13 @@ MonoBehaviour:
     _FresnelStrengthFar: 5
     _FresnelPower: 8
   treeVariables:
-    _UseTrees: 0
-    _TreePrefabs: []
-    _DynamicMaterialBooleans: []
+    _UseTrees: 1
+    _TreeObjects:
+    - {fileID: 11400000, guid: e8285834aee17964bbc2a0100bb89dad, type: 2}
     _TreeLeafColors:
-    - {r: 1, g: 1, b: 1, a: 1}
-    - {r: 1, g: 1, b: 1, a: 1}
-    - {r: 1, g: 1, b: 1, a: 1}
-    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
-    _NumTrees: 0
+    - {r: 0.33962262, g: 0.27148998, b: 0.10412958, a: 1}
+    - {r: 0.2735849, g: 0.15084144, b: 0.050329305, a: 1}
+    - {r: 0.4245283, g: 0.3096299, b: 0.13016199, a: 1}
+    _TreeBarkColor: {r: 0.38679248, g: 0.27651942, b: 0.11129405, a: 1}
+    _NumTrees: 50
     _TreeSeed: 22

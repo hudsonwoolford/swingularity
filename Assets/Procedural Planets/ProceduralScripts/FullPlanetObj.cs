@@ -22,6 +22,10 @@ public class OceanVariables
     [SerializeField] public float _OceanBlendEnd = 0.01f;
     [Range(0, 10)]
     [SerializeField] public float _OceanBlendIntensity = 0.01f;
+    [Range(0, 1)]
+    [SerializeField] public float _BeachBlendEnd = 0.01f;
+    [Range(0, 10)]
+    [SerializeField] public float _BeachBlendIntensity = 0.01f;
     [SerializeField] public Color _ShorelineColor = Color.white;
     [SerializeField] public Color _SeabedColor = Color.black;
     [SerializeField] public Color _OceanColor = Color.blue;
