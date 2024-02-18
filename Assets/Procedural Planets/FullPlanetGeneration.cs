@@ -80,7 +80,6 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_OceanBlendIntensity", planet.oceanVariables._OceanBlendIntensity); //ocean blending intensity between shoreline and seabed
         mat.SetFloat("_BeachBlendEnd", planet.oceanVariables._BeachBlendEnd); //ocean blending between shoreline and seabed
         mat.SetFloat("_BeachBlendIntensity", planet.oceanVariables._BeachBlendIntensity); //ocean blending intensity between shoreline and seabed
-        mat.SetColor("_ShorelineColor", planet.oceanVariables._ShorelineColor); //shoreline color
         mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
     }
     void UpdateAtmosphere()
@@ -496,6 +495,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if (biomeA != null)
         {
             // Biome A color scheme
+            mat.SetColor("_ShorelineColorA", biomeAScheme.oceanVariables._ShorelineColor); //shoreline color
             mat.SetColor("_FlatColorA", biomeAScheme._FlatColor);
             mat.SetColor("_FlatColorAVariant", biomeAScheme._FlatColorVariant);
             mat.SetColor("_SteepColorA", biomeAScheme._SteepColor);
@@ -510,6 +510,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeB != null)
         {
             // Biome B color scheme
+            mat.SetColor("_ShorelineColorB", biomeBScheme.oceanVariables._ShorelineColor); //shoreline color
             mat.SetColor("_FlatColorB", biomeBScheme._FlatColor);
             mat.SetColor("_FlatColorBVariant", biomeBScheme._FlatColorVariant);
             mat.SetColor("_SteepColorB", biomeBScheme._SteepColor);

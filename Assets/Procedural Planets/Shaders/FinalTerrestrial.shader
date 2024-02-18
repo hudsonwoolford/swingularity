@@ -133,7 +133,8 @@ Shader "Custom/FinalTerrestrial"
         float _OceanBlendEnd;
         float _OceanBlendIntensity;
         float _BeachBlendIntensity;
-        fixed4 _ShorelineColor;
+        fixed4 _ShorelineColorA;
+        fixed4 _ShorelineColorB;
         fixed4 _SeabedColor;
 
         float _MetallicA;
@@ -214,7 +215,7 @@ Shader "Custom/FinalTerrestrial"
             float3 steepColor = lerp(_SteepColorA, _SteepColorB, blendValue);
             float3 highElevationColor = lerp(_HighElevationColorA, _HighElevationColorB, blendValue);
             float3 highElevationSteepColor = lerp(_HighElevationSteepColorA, _HighElevationSteepColorB, blendValue);
-            float3 shorelineColor = _ShorelineColor;
+            float3 shorelineColor = lerp(_ShorelineColorA, _ShorelineColorB, blendValue);
             float vegetationLine = lerp(_VegetationLineA, _VegetationLineB, blendValue);
             float vegetationLineHarshness = lerp(_VegetationLineHarshnessA, _VegetationLineHarshnessB, blendValue);
             float steepnessMultiplier = lerp(_SteepMultiplierA, _SteepMultiplierB, blendValue);
