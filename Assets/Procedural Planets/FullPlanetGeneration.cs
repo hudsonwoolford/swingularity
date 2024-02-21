@@ -108,7 +108,11 @@ public class FullPlanetGeneration : MonoBehaviour
     void UpdateTrees(){
         if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearTrees(treesA); ClearTrees(treesB); return; } //if no biomes have trees return fucntion
         if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
-        TreeObject[] treeObjects = biomeA.treeVariables._TreeObjects.Concat(biomeB.treeVariables._TreeObjects).ToArray();
+        TreeObject[] treeObjects = biomeA.treeVariables._TreeObjects;
+        if(biomeB.treeVariables._UseTrees && biomeB.treeVariables._TreeObjects != null){
+            treeObjects = biomeA.treeVariables._TreeObjects.Concat(biomeB.treeVariables._TreeObjects).ToArray();
+        }
+
         foreach (var obj in treeObjects)
         {
             if (obj == null) { return; } //if the prefab for trees are null return function
