@@ -2,9 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
-using Unity.VisualScripting;
-
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
 public class FullPlanetGeneration : MonoBehaviour
@@ -19,7 +16,7 @@ public class FullPlanetGeneration : MonoBehaviour
     public bool colorSchemesOut; //if colorschemes are folded out/on
     [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
     [HideInInspector]
-    [SerializeField] PlanetColorScheme biomeA, biomeB; //biome A and biome B for color schemes
+    [SerializeField] PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
     [HideInInspector]
     [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean or trees
     [HideInInspector]
@@ -256,6 +253,7 @@ public class FullPlanetGeneration : MonoBehaviour
             if (obj == null) { return; } //if the prefab for trees are null return function
         }
 
+        treeMats[0].color = biome.treeVariables._TreeBarkColor;
         while (trees.Count > biome.treeVariables._NumTrees) //loop destroys tree one at a time
         {
             GameObject treeToDestroy = trees[trees.Count - 1];
@@ -465,6 +463,7 @@ public class FullPlanetGeneration : MonoBehaviour
                 aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
+            RandomPolarBiome(colorSchemes[index]);
             return;
         }
         int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
@@ -487,6 +486,20 @@ public class FullPlanetGeneration : MonoBehaviour
             default:
                 break;
         }
+        RandomPolarBiome(colorSchemes[index]);
+    }
+    void RandomPolarBiome(ColorSchemeStaticReference.ColorSchemePool colorScheme)
+    {
+        //Polar Biome
+        if (colorScheme.polarColorSchemes.Length > 0)
+        {
+            int index4 = UnityEngine.Random.Range(0, colorScheme.polarColorSchemes.Length);
+            biomeP = colorScheme.polarColorSchemes[index4];
+        }
+        else
+        {
+            biomeP = null;
+        }
     }
     #region Color Schemes
     public void ApplyColorScheme()
@@ -495,6 +508,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
         PlanetColorScheme biomeAScheme = biomeA;
         PlanetColorScheme biomeBScheme = biomeB;
+        PlanetColorScheme biomePScheme = biomeP;
 
         if (biomeA != null)
         {
@@ -525,6 +539,26 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineB", biomeBScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessB", biomeBScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierB", biomeBScheme._SteepMultiplier);
+        }
+        if (biomeP != null)
+        {
+            mat.SetFloat("_Polar", 1);
+            // Biome P color scheme
+            mat.SetColor("_ShorelineColorP", biomePScheme.oceanVariables._ShorelineColor); //shoreline color
+            mat.SetColor("_FlatColorP", biomePScheme._FlatColor);
+            mat.SetColor("_FlatColorPVariant", biomePScheme._FlatColorVariant);
+            mat.SetColor("_SteepColorP", biomePScheme._SteepColor);
+            mat.SetColor("_HighElevationColorP", biomePScheme._HighElevationColor);
+            mat.SetColor("_HighElevationSteepColorP", biomePScheme._HighElevationSteepColor);
+            mat.SetFloat("_MetallicP", biomePScheme._Metallic);
+            mat.SetFloat("_SmoothnessP", biomePScheme._Smoothness);
+            mat.SetFloat("_VegetationLineP", biomePScheme._VegetationLine);
+            mat.SetFloat("_VegetationLineHarshnessP", biomePScheme._VegetationLineHarshness);
+            mat.SetFloat("_SteepMultiplierP", biomePScheme._SteepMultiplier);
+        }
+        else
+        {
+            mat.SetFloat("_Polar", 0);
         }
 
         planet.oceanVariables = oBiomeA ? biomeA.oceanVariables : planet.oceanVariables;

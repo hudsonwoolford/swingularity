@@ -158,6 +158,7 @@ public static class ColorSchemeStaticReference{
         [Tooltip("This is optional")]
         public PlanetColorScheme primaryBiome; //the primary biome
         public PlanetColorScheme[] planetColorSchemes; //array of color schemes
+        public PlanetColorScheme[] polarColorSchemes; //array of color schemes
     }
 }
 

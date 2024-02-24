@@ -15,6 +15,7 @@ public class FullPlanetEditor : Editor
     Editor planetEditor;
     Editor biomeAEditor;
     Editor biomeBEditor;
+    Editor biomePEditor;
     MaterialEditor shadingEditor; //the normal editor for the material
 
     bool oceanFoldout; //if the ocean dropdown is folded out
@@ -23,8 +24,9 @@ public class FullPlanetEditor : Editor
     bool colorSchemes; //if colorschemes are toggled
     bool biomeAFoldout;
     bool biomeBFoldout;
+    bool biomePFoldout;
 
-    SerializedProperty biomeA, biomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty biomeA, biomeB, biomeP; //serialized properties for defining biome a and biome b color schemes
     SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB; //serialized properties for defining biome a and biome b color schemes
     #endregion
 
@@ -90,6 +92,14 @@ public class FullPlanetEditor : Editor
             GUILayout.Label("CS BiomeB:");
             EditorGUILayout.PropertyField(biomeB, GUIContent.none);
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("CS BiomeP:");
+            EditorGUILayout.PropertyField(biomeP, GUIContent.none, GUILayout.Width(Screen.width/4));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+
+
             //Ocean and Atmosphere toggles
             EditorGUILayout.BeginHorizontal();
             oBiomeA.boolValue = EditorGUILayout.Toggle("O BiomeA: ", oBiomeA.boolValue);
@@ -101,6 +111,11 @@ public class FullPlanetEditor : Editor
             EditorGUILayout.EndHorizontal(); 
             SettingsMenu(biomeA.objectReferenceValue, ref biomeAFoldout, ref biomeAEditor);
             SettingsMenu(biomeB.objectReferenceValue, ref biomeBFoldout, ref biomeBEditor);
+            if(biomeP.objectReferenceValue!=null)
+            {
+                SettingsMenu(biomeP.objectReferenceValue, ref biomePFoldout, ref biomePEditor);
+            }
+            GUILayout.Space(25);
 
             //Apply button
             EditorGUILayout.BeginHorizontal();
@@ -148,6 +163,7 @@ public class FullPlanetEditor : Editor
         #region SerializedProperties
         biomeA = serializedObject.FindProperty("biomeA");
         biomeB = serializedObject.FindProperty("biomeB");
+        biomeP = serializedObject.FindProperty("biomeP");
         oBiomeA = serializedObject.FindProperty("oBiomeA");
         oBiomeB = serializedObject.FindProperty("oBiomeB");
         aBiomeA = serializedObject.FindProperty("aBiomeA");
@@ -162,6 +178,7 @@ public class FullPlanetEditor : Editor
         colorSchemes = EditorPrefs.GetBool(nameof(colorSchemes), false);
         biomeAFoldout = EditorPrefs.GetBool(nameof(biomeAFoldout), false);
         biomeBFoldout = EditorPrefs.GetBool(nameof(biomeBFoldout), false);
+        biomePFoldout = EditorPrefs.GetBool(nameof(biomePFoldout), false);
 
     }
     private void OnDisable()
@@ -177,5 +194,6 @@ public class FullPlanetEditor : Editor
         EditorPrefs.SetBool(nameof(colorSchemes), colorSchemes);
         EditorPrefs.SetBool(nameof(biomeAFoldout), biomeAFoldout);
         EditorPrefs.SetBool(nameof(biomeBFoldout), biomeBFoldout);
+        EditorPrefs.SetBool(nameof(biomePFoldout), biomePFoldout);
     }
 }

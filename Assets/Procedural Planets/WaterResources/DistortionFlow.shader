@@ -16,11 +16,11 @@
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Transparent" }
 		LOD 200
 
 		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf Standard fullforwardshadows alpha
 		#pragma target 3.0
 
 		#include "Flow.cginc"
@@ -44,6 +44,7 @@
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
+
 			float3 flow = tex2D(_FlowMap, IN.uv_MainTex).rgb;
 			flow.xy = flow.xy * 2 - 1;
 			flow *= _FlowStrength;
@@ -69,16 +70,17 @@
 			float3 dhB =
 				UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwB.xy)) *
 				(uvwB.z * finalHeightScale);
-			o.Normal = normalize(float3(-(dhA.xy + dhB.xy), 1));
 
 			fixed4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
 			fixed4 texB = tex2D(_MainTex, uvwB.xy) * uvwB.z;
 
-			fixed4 c = (texA + texB) * _Color;
-			o.Albedo = c.rgb;
+			fixed4 c = (texA + texB);
+
+			o.Normal = c.rgb;
+			o.Albedo = _Color.rgb;
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
+			o.Alpha = _Color.a;
 		}
 		ENDCG
 	}

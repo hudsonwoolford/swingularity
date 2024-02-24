@@ -57,8 +57,9 @@ Shader "Custom/FinalTerrestrial"
      _SteepMultiplierP("Steep Multiplier P", Range(0, 5)) = 1
 
      [Header(Polar Variables)]
-     _PolarHeight ("Polar Height", Range(0,1)) = 0.8
-     _PolarBlendEnd ("Polar Blend End", Range(0,0.5)) = 0.1
+     [Toggle()]_Polar ("Polar", float) = 1
+     _PolarHeight ("Polar Height", Range(0,1.5)) = 1
+     [PowerSlider(3.0)]_PolarBlendIntensity ("Polar Blend Intensity", Range(0,100)) = 5
 
      [Header(Flat Terrain Noise)]
      [IntRange]_ColorOctaves("Color Texture Octaves", Range(0,5)) = 1
@@ -155,6 +156,10 @@ Shader "Custom/FinalTerrestrial"
         float _VegetationLineP;
         float _VegetationLineHarshnessP;
         float _SteepMultiplierP;
+        //Polar Variables
+        float _Polar;
+        float _PolarHeight;
+        float _PolarBlendIntensity;
         //Constant through biomes
         float _SeaLevel;
         float _BeachBlendEnd;
@@ -163,6 +168,7 @@ Shader "Custom/FinalTerrestrial"
         float _BeachBlendIntensity;
         fixed4 _ShorelineColorA;
         fixed4 _ShorelineColorB;
+        fixed4 _ShorelineColorP;
         fixed4 _SeabedColor;
 
         float _MetallicA;
@@ -251,6 +257,22 @@ Shader "Custom/FinalTerrestrial"
             float steepnessMultiplier = lerp(_SteepMultiplierA, _SteepMultiplierB, blendValue);
             float metallic = lerp(_MetallicA, _MetallicB, blendValue);
             float smoothness = lerp(_SmoothnessA, _SmoothnessB, blendValue);
+            
+            float yDist = abs(IN.vertPos.y); //y value of vertex
+
+            float polarBlendValue = clamp(0,1,pow(yDist/_PolarHeight, _PolarBlendIntensity)) * _Polar; //blend value for lerping to polar biome values
+            //Define new values for polar biome
+            flatColor = lerp(flatColor, _FlatColorP, polarBlendValue);
+            flatColorVariant = lerp(flatColorVariant, _FlatColorPVariant, polarBlendValue);
+            steepColor = lerp(steepColor, _SteepColorP, polarBlendValue);
+            highElevationColor = lerp(highElevationColor, _HighElevationColorP, polarBlendValue);
+            highElevationSteepColor = lerp(highElevationSteepColor, _HighElevationSteepColorP, polarBlendValue);
+            shorelineColor = lerp(shorelineColor, _ShorelineColorP, polarBlendValue);
+            vegetationLine = lerp(vegetationLine, _VegetationLineP, polarBlendValue);
+            vegetationLineHarshness = lerp(vegetationLineHarshness, _VegetationLineHarshnessP, polarBlendValue);
+            steepnessMultiplier = lerp(steepnessMultiplier, _SteepMultiplierP, polarBlendValue);
+            metallic = lerp(metallic, _MetallicP, polarBlendValue);
+            smoothness = lerp(smoothness, _SmoothnessP, polarBlendValue);
 
             //Flat terrain noise
             noiseTex = saturate(SimpleNoise(IN.vertPos, _ColorOctaves, _ColorTextureScale, _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain, _ColorOffset));
