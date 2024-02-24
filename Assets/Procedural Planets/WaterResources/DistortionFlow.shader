@@ -16,11 +16,15 @@
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Transparent" "IgnoreProjector"="True" }
+		Blend DstColor SrcColor
+		ZWrite On
 		LOD 200
 
 		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf Standard alpha
+		
+	
 		#pragma target 3.0
 
 		#include "Flow.cginc"
@@ -74,7 +78,7 @@
 			fixed4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
 			fixed4 texB = tex2D(_MainTex, uvwB.xy) * uvwB.z;
 
-			fixed4 c = (texA + texB) * _Color;
+			fixed4 c = _Color;
 			o.Albedo = c.rgb;
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
