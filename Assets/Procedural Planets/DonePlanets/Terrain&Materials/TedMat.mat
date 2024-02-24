@@ -16,6 +16,7 @@ Material:
   - _BIOMEA_ON
   - _BIOMEB_ON
   - _OCEAN_ON
+  - _POLAR_ON
   - _SWAPBIOME_ON
   - _UseFresnel
   m_LightmapFlags: 4
@@ -59,7 +60,9 @@ Material:
     - _OceanBlendIntensity: 0.82
     - _Octaves: 4
     - _Persistence: 1.41
+    - _Polar: 0
     - _PolarBlendEnd: 0.1
+    - _PolarBlendIntensity: 5
     - _PolarHeight: 0.8
     - _Scale: 0.85
     - _SeaLevel: 1
@@ -71,10 +74,10 @@ Material:
     - _SteepMultiplierP: 1
     - _SwapBiome: 1
     - _UseFresnel: 1
-    - _VegetationLineA: 0.038
-    - _VegetationLineB: 0.541
-    - _VegetationLineHarshnessA: 5.51
-    - _VegetationLineHarshnessB: 3.75
+    - _VegetationLineA: 0.055
+    - _VegetationLineB: 0.089
+    - _VegetationLineHarshnessA: 2.74
+    - _VegetationLineHarshnessB: 5.94
     - _VegetationLineHarshnessP: 2
     - _VegetationLineP: 0.1
     - _WarpGain: 1
@@ -93,16 +96,16 @@ Material:
     - _FlatColorPVariant: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _FresnelColor: {r: 0.3224012, g: 0.5943396, b: 0.4814595, a: 1}
     - _HighElevationColorA: {r: 0.9254902, g: 0.7175051, b: 0.36078432, a: 1}
-    - _HighElevationColorB: {r: 0.254717, g: 0.12878948, b: 0, a: 1}
+    - _HighElevationColorB: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
     - _HighElevationColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _HighElevationSteepColorA: {r: 0.8117647, g: 0.44682994, b: 0.23529412, a: 1}
-    - _HighElevationSteepColorB: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+    - _HighElevationSteepColorB: {r: 0.2735849, g: 0.22581595, b: 0.16905482, a: 1}
     - _HighElevationSteepColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _Offset: {r: 276.41888, g: 132.39558, b: 86.63573, a: 0}
+    - _Offset: {r: 102.88988, g: 24.717615, b: 211.11888, a: 0}
     - _SeabedColor: {r: 0.20203641, g: 0.029488485, b: 0.6698113, a: 1}
     - _ShorelineColor: {r: 1, g: 0.88971794, b: 0.61960787, a: 1}
     - _SteepColorA: {r: 0.38679248, g: 0.20065622, b: 0.06385724, a: 1}
     - _SteepColorB: {r: 0.3773585, g: 0.2606932, b: 0, a: 1}
     - _SteepColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _WarpOffset: {r: 276.41888, g: 132.39558, b: 86.63573, a: 0}
+    - _WarpOffset: {r: 102.88988, g: 24.717615, b: 211.11888, a: 0}
   m_BuildTextureStacks: []

@@ -13,22 +13,40 @@ MonoBehaviour:
   m_Name: TestPlanet
   m_EditorClassIdentifier: 
   planetMaterial: {fileID: 2100000, guid: b3f3545bc608e79468d7c6576815210e, type: 2}
-  terrainVar: {fileID: 11400000, guid: b7b606572ca67e047b111feb49933d30, type: 2}
+  terrainVar: {fileID: 11400000, guid: ce426c70b0c70234193ff8b192e649c2, type: 2}
   oceanVariables:
-    _OceanBlendEnd: 0.018
-    _OceanBlendIntensity: 0.35
-    _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
-    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
-    _OceanColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 0.8862745}
-    _OceanMetallic: 0
-    _OceanSmoothness: 0.618
+    _OceanBlendEnd: 0.026
+    _OceanBlendIntensity: 0.82
+    _BeachBlendEnd: 0.022
+    _BeachBlendIntensity: 0.9
+    _ShorelineColor: {r: 1, g: 0.76217335, b: 0.17610055, a: 1}
+    _SeabedColor: {r: 0.20203641, g: 0.029488485, b: 0.6698113, a: 1}
+    _OceanColor: {r: 0.25898895, g: 0.4245283, b: 0.4188628, a: 0.80784315}
+    _OceanMetallic: 0.078
+    _OceanSmoothness: 0.659
   atmosphereVariables:
-    _OuterBandColor: {r: 0.22745097, g: 0.41694492, b: 0.8117647, a: 1}
-    _OuterBandRange: 2.35
-    _OuterBandIntensity: 0.26
-    _InnerBandColor: {r: 0.17254901, g: 0.34012002, b: 0.5764706, a: 1}
-    _InnerBandRange: 2.15
-    _InnerBandIntensity: 3.09
-    _FrontColor: {r: 0.22745097, g: 0.43610996, b: 0.8117647, a: 1}
-    _FrontRange: 2
-    _FrontIntensity: 0.21
+    _OuterBandColor: {r: 0.22745097, g: 0.67032045, b: 0.8117647, a: 1}
+    _OuterBandRange: 2.43
+    _OuterBandIntensity: 0.53
+    _InnerBandColor: {r: 0, g: 0.2908839, b: 0.31132078, a: 1}
+    _InnerBandRange: 2.29
+    _InnerBandIntensity: 5
+    _FrontColor: {r: 0, g: 0.5137255, b: 1, a: 1}
+    _FrontRange: 2.23
+    _FrontIntensity: 0.24
+  fresnelVariables:
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.3224012, g: 0.5943396, b: 0.4814595, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 0
+    _TreeObjects: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _NumTrees: 100
+    _TreeSeed: 0
