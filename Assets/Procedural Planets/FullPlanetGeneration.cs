@@ -191,9 +191,13 @@ public class FullPlanetGeneration : MonoBehaviour
         com.SetFloat("_BiomeAEnd", planet.planetMaterial.GetFloat("_BiomeAEnd"));
         com.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
         com.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
+        com.SetFloat("_PolarHeight", planet.planetMaterial.GetFloat("_PolarHeight"));
+        com.SetFloat("_PolarBlendIntensity", planet.planetMaterial.GetFloat("_PolarBlendIntensity"));
+        com.SetFloat("_Polar", planet.planetMaterial.GetFloat("_Polar"));
 
         com.SetFloat("_BiomeAVegetationLine", planet.planetMaterial.GetFloat("_VegetationLineA"));
         com.SetFloat("_BiomeBVegetationLine", planet.planetMaterial.GetFloat("_VegetationLineB"));
+        com.SetFloat("_BiomePVegetationLine", planet.planetMaterial.GetFloat("_VegetationLineP"));
 
         Vector3[] verts = meshFilter.sharedMesh.vertices; //all vertices on planet
         com.SetFloat("_NumVertices", verts.Length);
@@ -201,8 +205,10 @@ public class FullPlanetGeneration : MonoBehaviour
         ComputeBuffer vertBuffer = new ComputeBuffer(verts.Length, sizeof(float) * 3); //vertex buffer
         ComputeBuffer aBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome a vertex buffer
         ComputeBuffer bBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome b vertex buffer
+        ComputeBuffer pBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome b vertex buffer
         aBuffer.SetCounterValue(0); //resetting counter values
         bBuffer.SetCounterValue(0); //resetting counter values
+        pBuffer.SetCounterValue(0); //resetting counter values
 
         vertBuffer.SetData(verts); //setting data in vertex buffer
 
@@ -210,6 +216,7 @@ public class FullPlanetGeneration : MonoBehaviour
         calculateBiomeVertices.SetBuffer(0, "planetVertices", vertBuffer);
         calculateBiomeVertices.SetBuffer(0, "biomeAVertices", aBuffer);    
         calculateBiomeVertices.SetBuffer(0, "biomeBVertices", bBuffer);
+        calculateBiomeVertices.SetBuffer(0, "biomePVertices", pBuffer);
 
         PlanetaryGenerator.RunComputeShader(calculateBiomeVertices, vertBuffer.count); //run the shader
 
@@ -220,24 +227,29 @@ public class FullPlanetGeneration : MonoBehaviour
 
         ComputeBuffer.CopyCount(aBuffer, indirectArgumentsBuffer, 0); //length of biome a buffer copied
         ComputeBuffer.CopyCount(bBuffer, indirectArgumentsBuffer, sizeof(int)); //length of biome b buffer copied
-        ComputeBuffer.CopyCount(vertBuffer, indirectArgumentsBuffer, sizeof(int)*2); //length of vertex buffer copied (for debugging)
+        ComputeBuffer.CopyCount(pBuffer, indirectArgumentsBuffer, sizeof(int)*2); //length of biome b buffer copied
+        ComputeBuffer.CopyCount(vertBuffer, indirectArgumentsBuffer, sizeof(int)*3); //length of vertex buffer copied (for debugging)
         indirectArgumentsBuffer.GetData(args); //biome a length --> args[0], biome b length --> args[1], vertex length --> args[2]
         //counts
         int numAVertices = args[0];
         int numBVertices = args[1];
-        int numVertices = args[2];
+        int numPVertices = args[2];
+        int numVertices = args[3];
 
         //biome vertices arrays
         Vector3[] biomeAVerts = new Vector3[numAVertices];
         Vector3[] biomeBVerts = new Vector3[numBVertices];
+        Vector3[] biomePVerts = new Vector3[numPVertices];
 
         //write data from buffers to array
         aBuffer.GetData(biomeAVerts); 
         bBuffer.GetData(biomeBVerts);
+        pBuffer.GetData(biomePVerts);
 
         //release buffers
         aBuffer.Release();
         bBuffer.Release();
+        pBuffer.Release();
         vertBuffer.Release();
         indirectArgumentsBuffer.Release();
         #endregion
@@ -490,6 +502,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void RandomPolarBiome(ColorSchemeStaticReference.ColorSchemePool colorScheme)
     {
+        if (colorScheme.polarColorSchemes == null) return;
         //Polar Biome
         if (colorScheme.polarColorSchemes.Length > 0)
         {

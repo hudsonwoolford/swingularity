@@ -11,6 +11,7 @@ StructuredBuffer<float3> planetVertices;
 
 AppendStructuredBuffer<float3> biomeAVertices;
 AppendStructuredBuffer<float3> biomeBVertices;
+AppendStructuredBuffer<float3> biomePVertices;
 
 uint _NumVertices;
 float _SeaLevel;
@@ -33,6 +34,11 @@ float _SwapBiome;
 float _BiomeAVegetationLine;
 float _BiomeBVegetationLine;
 
+float _PolarHeight;
+float _PolarBlendIntensity;
+float _Polar;
+float _BiomePVegetationLine;
+
 
 [numthreads(512,1,1)]
 void CSMain (uint id : SV_DispatchThreadID)
@@ -48,6 +54,27 @@ void CSMain (uint id : SV_DispatchThreadID)
     float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
     float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
+    float yDist = abs(planetVertices[id].y);
+
+    float polarBlendValue = clamp(0,1,pow(yDist/_PolarHeight, _PolarBlendIntensity)) * _Polar;
+    if(polarBlendValue == 1){
+        if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomePVegetationLine) {return;}
+        biomePVertices.Append(planetVertices[id]);
+        return;
+    }
+    else{
+        float randomValue = abs(rand(planetVertices[id].xy)) / 2;
+
+            randomValue = clamp(0, polarBlendValue, randomValue);
+            if(randomValue >= polarBlendValue - 0.15)
+            {
+                if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomePVegetationLine) {return;} //No points above vegetation line
+                biomePVertices.Append(planetVertices[id]);  
+                return;
+            }
+        }
+    }
+
     //Define blendValue / biome
     float blendValue = 0;
     if(noiseTex<_BiomeAEnd) { blendValue = 0; }
@@ -58,7 +85,6 @@ void CSMain (uint id : SV_DispatchThreadID)
     blendValue = (_BiomeA == 1 && _BiomeB == 0) ? 0 : (_BiomeA == 0 && _BiomeB == 1) ? 1 : blendValue;
     if(_BiomeA == 0 && _BiomeB == 0) {return;}
     blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
-
     if(blendValue == 0)
     {
         if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomeAVegetationLine) {return;} //No points above vegetation line
