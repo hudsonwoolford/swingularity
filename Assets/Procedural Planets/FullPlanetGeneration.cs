@@ -221,7 +221,7 @@ public class FullPlanetGeneration : MonoBehaviour
         PlanetaryGenerator.RunComputeShader(calculateBiomeVertices, vertBuffer.count); //run the shader
 
         // Create an indirect arguments buffer for ComputeBuffer.CopyCount
-        ComputeBuffer indirectArgumentsBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments   );
+        ComputeBuffer indirectArgumentsBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments);
         // Get the count of elements appended to the append buffers
         int[] args = new int[] { 0, 1, 0, 0 };
 

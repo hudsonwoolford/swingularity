@@ -55,23 +55,22 @@ void CSMain (uint id : SV_DispatchThreadID)
     float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
     float yDist = abs(planetVertices[id].y);
-
-    float polarBlendValue = clamp(0,1,pow(yDist/_PolarHeight, _PolarBlendIntensity)) * _Polar;
+    float polarBlendValue = clamp(0,1,pow(abs(yDist/_PolarHeight), _PolarBlendIntensity)) * _Polar;
     if(polarBlendValue == 1){
         if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomePVegetationLine) {return;}
         biomePVertices.Append(planetVertices[id]);
         return;
     }
-    else{
+    else
+    {
         float randomValue = abs(rand(planetVertices[id].xy)) / 2;
 
-            randomValue = clamp(0, polarBlendValue, randomValue);
-            if(randomValue >= polarBlendValue - 0.15)
-            {
-                if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomePVegetationLine) {return;} //No points above vegetation line
-                biomePVertices.Append(planetVertices[id]);  
-                return;
-            }
+        randomValue = clamp(0, 1-polarBlendValue, randomValue);
+        if(randomValue >= 1-polarBlendValue)
+        {
+            if(length(currentVertex - _PlanetCenter) - _SeaLevel >= _BiomePVegetationLine) {return;} //No points above vegetation line
+            biomePVertices.Append(planetVertices[id]);  
+            return;
         }
     }
 
