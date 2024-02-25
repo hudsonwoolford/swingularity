@@ -225,7 +225,6 @@ public class FullPlanetGeneration : MonoBehaviour
             if (obj == null) { return; } //if the prefab for trees are null return function
         }
 
-        treeMats[0].color = biome.treeVariables._TreeBarkColor;
         while (trees.Count > biome.treeVariables._NumTrees) //loop destroys tree one at a time
         {
             GameObject treeToDestroy = trees[trees.Count - 1];
