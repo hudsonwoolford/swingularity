@@ -342,6 +342,7 @@ public class FullPlanetGeneration : MonoBehaviour
         Material mat = planet.planetMaterial;
         BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings;
         BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings;
+        BiomeDetailNoiseSettings bdns = planet.terrainVar.biomeDetailNoiseSettings;
         
         //Transfering from terrain to the material
         //Normal noise transfer
@@ -361,6 +362,15 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_WarpLacunarity", bwns._WarpLacunarity);
         mat.SetFloat("_WarpMultiplier", bwns._WarpMultiplier);
         mat.SetFloat("_WarpGain", bwns._WarpGain);
+
+        //Detail noise transfer
+        mat.SetInt("_ColorOctaves", bdns._Octaves);
+        mat.SetVector("_ColorOffset", bdns._Offset);
+        mat.SetFloat("_ColorScale", bdns._Scale);
+        mat.SetFloat("_ColorPersistence", bdns._Persistence);
+        mat.SetFloat("_ColorLacunarity", bdns._Lacunarity);
+        mat.SetFloat("_ColorMultiplier", bdns._Multiplier);
+        mat.SetFloat("_ColorGain", bdns._Gain);
 
     }
     public void RandomizeOffset()

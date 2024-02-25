@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Unity.VisualScripting;
 
 [CreateAssetMenu(fileName = "terainVar", menuName = "terrainVar")]
 [Serializable]
@@ -18,6 +19,8 @@ public class TerrainVar : ScriptableObject
     public ContinentNoiseSettings continentNoiseSettings;
     public BiomeNoiseSettings biomeNoiseSettings;
     public BiomeWarpNoiseSettings biomeWarpNoiseSettings;
+    public BiomeDetailNoiseSettings biomeDetailNoiseSettings;
+    public PolarBiomeSettings polarBiomeSettings;
 }
 [Serializable]
 public class GeneralSettings
@@ -146,6 +149,22 @@ public class BiomeWarpNoiseSettings
     public int _WarpOctaves = 3;
     public Vector3 _WarpOffset;
     public float _WarpScale = 1, _WarpPersistence, _WarpLacunarity, _WarpMultiplier = 1, _WarpGain = 1;
+}
+
+[Serializable]
+public class BiomeDetailNoiseSettings
+{
+    public int _Octaves = 3;
+    public Vector3 _Offset;
+    public float _Scale = 1, _Persistence, _Lacunarity, _Multiplier = 1, _Gain = 1;
+}
+
+[Serializable]
+public class PolarBiomeSettings
+{
+    public float _PolarHeight, _PolarBlendIntensity;
+    [InspectorToggleLeft]
+    public float _Polar;
 }
 
 [Serializable]
