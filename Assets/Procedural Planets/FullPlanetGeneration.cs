@@ -243,6 +243,8 @@ public class FullPlanetGeneration : MonoBehaviour
             Vector3 vertexElevationDir = vertPool[chosenVert ] - ocean.position; //vertex normal
             tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
+            tree.transform.GetChild(0).Rotate(0,0,Random.Range(0, 359)); //tree normal = vertex normal
+            ; //tree normal = vertex normal
             tree.transform.parent = transform; //parent tree to gameObject
 
             MeshRenderer treeMeshRenderer = tree.GetComponentInChildren<MeshRenderer>(); // Renderer on tree object
