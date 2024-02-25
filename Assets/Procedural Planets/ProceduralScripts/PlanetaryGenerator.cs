@@ -149,8 +149,19 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetBool("continentNoiseApply", terrainVar.continentNoiseSettings.applyNoise);
         calculateVertexHeight.SetFloat("oceanFloorDepth", terrainVar.continentNoiseSettings.oceanFloorDepth);
         calculateVertexHeight.SetFloat("oceanFloorSmoothing", terrainVar.continentNoiseSettings.oceanFloorSmoothing);
-        calculateVertexHeight.SetFloat("maskBlend", terrainVar.continentNoiseSettings.maskBlend);
-        calculateVertexHeight.SetFloat("maskVerticalShift", terrainVar.continentNoiseSettings.maskVerticalShift);
+
+        //MaskNoise 
+        calculateVertexHeight.SetInt("maskNoiseOctaves", terrainVar.maskNoiseSettings.octaves);
+        calculateVertexHeight.SetFloat("maskNoiseScale", terrainVar.maskNoiseSettings.scale);
+        calculateVertexHeight.SetFloat("maskNoisePersistence", terrainVar.maskNoiseSettings.persistence);
+        calculateVertexHeight.SetFloat("maskNoiseLacunarity", terrainVar.maskNoiseSettings.lacunarity);
+        calculateVertexHeight.SetFloat("maskNoiseMultiplier", terrainVar.maskNoiseSettings.multiplier);
+        calculateVertexHeight.SetFloat("maskNoiseGain", terrainVar.maskNoiseSettings.gain);
+        calculateVertexHeight.SetFloats("maskNoiseOffset", terrainVar.maskNoiseSettings.offset);
+        calculateVertexHeight.SetFloat("maskNoiseStrength", terrainVar.maskNoiseSettings.strength);
+        calculateVertexHeight.SetBool("maskNoiseApply", terrainVar.maskNoiseSettings.applyNoise);
+        calculateVertexHeight.SetFloat("maskBlend", terrainVar.maskNoiseSettings.maskBlend);
+        calculateVertexHeight.SetFloat("maskVerticalShift", terrainVar.maskNoiseSettings.maskVerticalShift);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)

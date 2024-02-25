@@ -17,6 +17,7 @@ public class TerrainVar : ScriptableObject
     public RidgeNoiseSettings ridgeNoiseSettings;
     public WarpedNoiseSettings warpedNoiseSettings;
     public ContinentNoiseSettings continentNoiseSettings;
+    public MaskNoiseSettings maskNoiseSettings;
     public BiomeNoiseSettings biomeNoiseSettings;
     public BiomeWarpNoiseSettings biomeWarpNoiseSettings;
     public BiomeDetailNoiseSettings biomeDetailNoiseSettings;
@@ -132,6 +133,20 @@ public class ContinentNoiseSettings
     public float depthMultiplier;
     public float oceanFloorDepth;
     public float oceanFloorSmoothing;
+}
+
+[Serializable]
+public class MaskNoiseSettings
+{
+    public bool applyNoise;
+    public int octaves = 3;
+    public float scale = 1;
+    public float persistence;
+    public float lacunarity;
+    public float multiplier = 1;
+    public float gain = 1;
+    public float[] offset = new float[3];
+    public float strength = 1;
     public float maskBlend;
     public float maskVerticalShift;
 }
