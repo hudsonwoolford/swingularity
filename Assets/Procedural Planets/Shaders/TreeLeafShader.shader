@@ -76,7 +76,7 @@ Shader "Custom/TreeLeafShader"
 
             float yDist = abs(normalizedVertexPos.y);
             float polarBlendValue = clamp(0,1,pow(abs(yDist/_PolarHeight), _PolarBlendIntensity)) * _Polar;
-            if(polarBlendValue >= 0.5 && _UseTreesP == 1){
+            if(polarBlendValue >= 0.6 && _UseTreesP == 1){
                 o.Metallic = 0.3;
                 o.Smoothness = 0.3;
                 o.Albedo = _TreeColP;
