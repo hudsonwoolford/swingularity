@@ -76,7 +76,7 @@
 
 			fixed4 c = (texA + texB);
 
-			o.Normal = c.rgb;
+			o.Normal = UnpackNormal(c);
 			o.Albedo = _Color.rgb;
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
