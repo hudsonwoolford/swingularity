@@ -8,6 +8,7 @@ public class FullPlanetGeneration : MonoBehaviour
 {
     public ComputeShader calculateVertexHeight; //compute shader for planet generation
     public ComputeShader calculateBiomeVertices;//compute shader for tree vertices
+    public Material pBlockMat;
     public Material[] treeMats = new Material[4];
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
@@ -119,61 +120,6 @@ public class FullPlanetGeneration : MonoBehaviour
         #region TreeShader
         BiomeNoiseSettings bns = planet.terrainVar.biomeNoiseSettings; //cache simple biome noise settings
         BiomeWarpNoiseSettings bwns = planet.terrainVar.biomeWarpNoiseSettings; //cache warped biome noise settings
-        for (int i = 1; i < 4; i++) //iterate through all 3 materials and change their values
-        {
-            Material mat = treeMats[i]; //which mat to edit
-            
-            //Updating tree shader with same noise data as biome terrain
-            //Transfering from terrain to the material
-            //Normal noise transfer
-            mat.SetInt("_Octaves", bns._Octaves);
-            mat.SetVector("_Offset", bns._Offset);
-            mat.SetFloat("_Scale", bns._Scale);
-            mat.SetFloat("_Persistence", bns._Persistence);
-            mat.SetFloat("_Lacunarity", bns._Lacunarity);
-            mat.SetFloat("_Multiplier", bns._Multiplier);
-            mat.SetFloat("_Gain", bns._Gain);
-
-            //Warp noise transfer
-            mat.SetInt("_WarpOctaves", bwns._WarpOctaves);
-            mat.SetVector("_WarpOffset", bwns._WarpOffset);
-            mat.SetFloat("_WarpScale", bwns._WarpScale);
-            mat.SetFloat("_WarpPersistence", bwns._WarpPersistence);
-            mat.SetFloat("_WarpLacunarity", bwns._WarpLacunarity);
-            mat.SetFloat("_WarpMultiplier", bwns._WarpMultiplier);
-            mat.SetFloat("_WarpGain", bwns._WarpGain);
-
-            //Set global variables
-            mat.SetFloat("_BiomeA", planet.planetMaterial.GetFloat("_BiomeA"));
-            mat.SetFloat("_BiomeB", planet.planetMaterial.GetFloat("_BiomeB"));
-            mat.SetFloat("_BiomeAEnd", planet.planetMaterial.GetFloat("_BiomeAEnd"));
-            mat.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
-            mat.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
-
-            mat.SetFloat("_PolarHeight", planet.planetMaterial.GetFloat("_PolarHeight"));
-            mat.SetFloat("_PolarBlendIntensity", planet.planetMaterial.GetFloat("_PolarBlendIntensity"));
-            mat.SetFloat("_Polar", planet.planetMaterial.GetFloat("_Polar"));
-
-            mat.SetColor("_TreeColA", biomeA.treeVariables._TreeLeafColors[i-1]); //this is the difference
-            mat.SetColor("_TreeColB", biomeB.treeVariables._TreeLeafColors[i-1]); //this is the difference
-            if (biomeP != null) { mat.SetColor("_TreeColP", biomeP.treeVariables._TreeLeafColors[i - 1]); } 
-            //cache bools as floats
-            float tBiomeAFloat = biomeA.treeVariables._UseTrees ? 1 : 0; 
-            float tBiomeBFloat = biomeB.treeVariables._UseTrees ? 1 : 0;
-            if (biomeP != null)
-            {
-                float tBiomePFloat = biomeP.treeVariables._UseTrees ? 1 : 0;
-                mat.SetFloat("_UseTreesP", tBiomePFloat);
-            }
-            mat.SetFloat("_UseTreesA", tBiomeAFloat);
-            mat.SetFloat("_UseTreesB", tBiomeBFloat);
-            
-
-            mat.SetVector("_PlanetCenter", transform.position);
-
-            mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level variable
-        }
-        treeMats[0].color = planet.treeVariables._TreeBarkColor; //setting the bark colour
         #endregion
         #region ComputeShader
         ComputeShader com = calculateBiomeVertices; //cache shader
@@ -301,16 +247,28 @@ public class FullPlanetGeneration : MonoBehaviour
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
             tree.transform.parent = transform; //parent tree to gameObject
 
-            MeshRenderer treeMeshRender = tree.GetComponentInChildren<MeshRenderer>(); //renderer on tree object
-            Material[] rendererMats = treeMeshRender.sharedMaterials; //all materials on tree array
+            MeshRenderer treeMeshRenderer = tree.GetComponentInChildren<MeshRenderer>(); // Renderer on tree object
+            Material[] rendererMaterials = treeMeshRenderer.sharedMaterials; // All materials on tree array
 
-            for (int i = 0; i < rendererMats.Length; i++)
+            // Apply the MaterialPropertyBlock to each material in the renderer's materials array
+            for (int i = 0; i < rendererMaterials.Length; i++)
             {
-                if (!selectedTreeObj.dynamicMaterial[i]) { rendererMats[i] = treeMats[0]; continue; };
-                rendererMats[i] = treeMats[Random.Range(1, 4)];
+                MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+
+                if (selectedTreeObj.dynamicMaterial[i])
+                {
+                    // Set color property on the MaterialPropertyBlock
+                    propertyBlock.SetColor("_Color", biome.treeVariables._TreeLeafColors[Random.Range(0, 3)]);
+                }
+                else
+                {
+                    propertyBlock.SetColor("_Color", biome.treeVariables._TreeBarkColor);
+                }
+
+                // Assign the MaterialPropertyBlock to the material instance
+                treeMeshRenderer.SetPropertyBlock(propertyBlock, i);
             }
 
-            treeMeshRender.sharedMaterials = rendererMats; //set the material array to random array
 
             tree.SetActive(true); //make sure tree is active
 
