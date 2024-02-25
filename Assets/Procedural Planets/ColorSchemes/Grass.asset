@@ -12,42 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  _FlatColor: {r: 0.14001985, g: 0.4433962, b: 0, a: 1}
-  _FlatColorVariant: {r: 0.1086147, g: 0.26415092, b: 0.041117836, a: 1}
-  _SteepColor: {r: 0.3773585, g: 0.2606932, b: 0, a: 1}
-  _HighElevationColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
-  _HighElevationSteepColor: {r: 0.2735849, g: 0.22581595, b: 0.16905482, a: 1}
+  _FlatColor: {r: 0.2404409, g: 0.754717, b: 0, a: 1}
+  _FlatColorVariant: {r: 0.15193644, g: 0.4811321, b: 0, a: 1}
+  _SteepColor: {r: 0.3584906, g: 0.24818577, b: 0, a: 1}
+  _HighElevationColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
+  _HighElevationSteepColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   _Metallic: 0
-  _Smoothness: 0.15
-  _VegetationLine: 0.089
-  _VegetationLineHarshness: 5.94
-  _SteepMultiplier: 5
+  _Smoothness: 0
+  _VegetationLine: 0.206
+  _VegetationLineHarshness: 10
+  _SteepMultiplier: 1.86
   oceanVariables:
     _OceanBlendEnd: 0.026
     _OceanBlendIntensity: 0.82
     _BeachBlendEnd: 0.022
     _BeachBlendIntensity: 0.9
     _ShorelineColor: {r: 1, g: 0.76217335, b: 0.17610055, a: 1}
-    _SeabedColor: {r: 0.20203641, g: 0.029488485, b: 0.6698113, a: 1}
-    _OceanColor: {r: 0.25898895, g: 0.4245283, b: 0.4188628, a: 0.80784315}
-    _OceanMetallic: 0.078
-    _OceanSmoothness: 0.659
+    _SeabedColor: {r: 0, g: 0.40876806, b: 0.8207547, a: 1}
+    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0.811
   atmosphereVariables:
-    _OuterBandColor: {r: 0.22745097, g: 0.67032045, b: 0.8117647, a: 1}
-    _OuterBandRange: 2.43
-    _OuterBandIntensity: 0.53
-    _InnerBandColor: {r: 0, g: 0.2908839, b: 0.31132078, a: 1}
-    _InnerBandRange: 2.29
-    _InnerBandIntensity: 5
-    _FrontColor: {r: 0, g: 0.5137255, b: 1, a: 1}
-    _FrontRange: 2.23
-    _FrontIntensity: 0.24
+    _OuterBandColor: {r: 0.1928325, g: 0.43419048, b: 0.9433962, a: 1}
+    _OuterBandRange: 2.48
+    _OuterBandIntensity: 0.44
+    _InnerBandColor: {r: 0, g: 0.84723073, b: 0.9056604, a: 1}
+    _InnerBandRange: 2.26
+    _InnerBandIntensity: 0.97
+    _FrontColor: {r: 1, g: 1, b: 1, a: 1}
+    _FrontRange: 5
+    _FrontIntensity: 1
   fresnelVariables:
-    _UseFresnel: 1
-    _FresnelColor: {r: 0.3224012, g: 0.5943396, b: 0.4814595, a: 1}
-    _FresnelStrengthNear: 2
+    _UseFresnel: 0
+    _FresnelColor: {r: 0, g: 0.44887233, b: 0.8207547, a: 1}
+    _FresnelStrengthNear: 1.92
     _FresnelStrengthFar: 5
-    _FresnelPower: 8
+    _FresnelPower: 6.85
   treeVariables:
     _UseTrees: 1
     _TreeObjects:
@@ -59,5 +59,5 @@ MonoBehaviour:
     - {r: 0.02987423, g: 0.1792453, b: 0, a: 1}
     - {r: 0, g: 0.122641504, b: 0.0052614477, a: 1}
     _TreeBarkColor: {r: 0.2264151, g: 0.17976126, b: 0.0993236, a: 1}
-    _NumTrees: 210
+    _NumTrees: 120
     _TreeSeed: 50
