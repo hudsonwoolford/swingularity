@@ -37,6 +37,10 @@ Shader "Custom/TreeLeafShader"
         float3 _WarpOffset;
         float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
 
+        float _PolarHeight;
+        float _PolarBlendIntensity;
+        float _Polar;
+
         float _BiomeA;
         float _BiomeB;
         float _BiomeAEnd;
@@ -45,8 +49,10 @@ Shader "Custom/TreeLeafShader"
 
         fixed4 _TreeColA;
         fixed4 _TreeColB;
+        fixed4 _TreeColP;
         float _UseTreesA;
         float _UseTreesB;
+        float _UseTreesP;
         float _SeaLevel;
 
         float _Glossiness;
@@ -66,6 +72,14 @@ Shader "Custom/TreeLeafShader"
             float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
             float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 
+            float yDist = abs(normalizedVertexPos.y);
+            float polarBlendValue = clamp(0,1,pow(abs(yDist/_PolarHeight), _PolarBlendIntensity)) * _Polar;
+            if(polarBlendValue >= 0.5 && _UseTreesP == 1){
+                o.Metallic = 0.3;
+                o.Smoothness = 0.3;
+                o.Albedo = _TreeColP;
+                return;
+            }
             //Define blendValue / biome
             float blendValue = 0;
             if(noiseTex<_BiomeAEnd) { blendValue = 0; }

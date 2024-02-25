@@ -25,6 +25,7 @@ public class FullPlanetGeneration : MonoBehaviour
     MeshFilter meshFilter; //the mesh filter attached to this object
     List<GameObject> treesA = new List<GameObject>(); //list of instantiated trees
     List<GameObject> treesB = new List<GameObject>();
+    List<GameObject> treesP = new List<GameObject>();
     private void Awake()
     {
         //initialisation
@@ -94,7 +95,7 @@ public class FullPlanetGeneration : MonoBehaviour
         frontAtmosphere.color = planet.atmosphereVariables._FrontColor;
         frontAtmosphere.range = planet.atmosphereVariables._FrontRange;
         frontAtmosphere.intensity = planet.atmosphereVariables._FrontIntensity;
-        int fresnelToggle = planet.terrainVar.generalSettings.ocean ? 1 : 0;
+        float fresnelToggle = planet.fresnelVariables._UseFresnel ? 1 : 0;
 
         mat.SetFloat("_UseFresnel", fresnelToggle);
         mat.SetColor("_FresnelColor", planet.fresnelVariables._FresnelColor);
@@ -149,13 +150,20 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_BiomeBStart", planet.planetMaterial.GetFloat("_BiomeBStart"));
             mat.SetFloat("_SwapBiome", planet.planetMaterial.GetFloat("_SwapBiome"));
 
+            mat.SetFloat("_PolarHeight", planet.planetMaterial.GetFloat("_PolarHeight"));
+            mat.SetFloat("_PolarBlendIntensity", planet.planetMaterial.GetFloat("_PolarBlendIntensity"));
+            mat.SetFloat("_Polar", planet.planetMaterial.GetFloat("_Polar"));
+
             mat.SetColor("_TreeColA", biomeA.treeVariables._TreeLeafColors[i-1]); //this is the difference
             mat.SetColor("_TreeColB", biomeB.treeVariables._TreeLeafColors[i-1]); //this is the difference
+            mat.SetColor("_TreeColP", biomeP.treeVariables._TreeLeafColors[i-1]); 
             //cache bools as floats
             float tBiomeAFloat = biomeA.treeVariables._UseTrees ? 1 : 0; 
             float tBiomeBFloat = biomeB.treeVariables._UseTrees ? 1 : 0;
+            float tBiomePFloat = biomeP.treeVariables._UseTrees ? 1 : 0;
             mat.SetFloat("_UseTreesA", tBiomeAFloat);
             mat.SetFloat("_UseTreesB", tBiomeBFloat);
+            mat.SetFloat("_UseTreesP", tBiomePFloat);
 
             mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level variable
         }
@@ -256,6 +264,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
         if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesA, ref biomeA, biomeAVerts);
         if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesB, ref biomeB, biomeBVerts);
+        if (biomeP.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesP, ref biomeP, biomePVerts);
       
     }
     void CreateAndDestroyTrees(ref List<GameObject> trees, ref PlanetColorScheme biome, Vector3[] vertPool){
@@ -306,6 +315,7 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         ClearTrees(treesA);
         ClearTrees(treesB);
+        ClearTrees(treesP);
     }
     void ClearTrees(List<GameObject> trees)
     {
