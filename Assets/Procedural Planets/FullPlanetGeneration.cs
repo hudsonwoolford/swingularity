@@ -9,7 +9,6 @@ public class FullPlanetGeneration : MonoBehaviour
     public ComputeShader calculateVertexHeight; //compute shader for planet generation
     public ComputeShader calculateBiomeVertices;//compute shader for tree vertices
     public Material pBlockMat;
-    public Material[] treeMats = new Material[4];
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
     public Light innerAtmosphere, outerAtmosphere, frontAtmosphere; //atmosphere lights
