@@ -150,6 +150,7 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("oceanFloorDepth", terrainVar.continentNoiseSettings.oceanFloorDepth);
         calculateVertexHeight.SetFloat("oceanFloorSmoothing", terrainVar.continentNoiseSettings.oceanFloorSmoothing);
         calculateVertexHeight.SetFloat("maskBlend", terrainVar.continentNoiseSettings.maskBlend);
+        calculateVertexHeight.SetFloat("maskVerticalShift", terrainVar.continentNoiseSettings.maskVerticalShift);
     }
 
     private static Vector3[] ApplyComputeHeights(ComputeShader calculateVertexHeight, ComputeBuffer vertexBuffer, ComputeBuffer heightBuffer, ComputeBuffer craterBuffer)

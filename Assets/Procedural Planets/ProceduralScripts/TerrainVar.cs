@@ -133,6 +133,7 @@ public class ContinentNoiseSettings
     public float oceanFloorDepth;
     public float oceanFloorSmoothing;
     public float maskBlend;
+    public float maskVerticalShift;
 }
 
 [Serializable]

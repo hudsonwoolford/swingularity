@@ -165,6 +165,8 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_UseTreesB", tBiomeBFloat);
             mat.SetFloat("_UseTreesP", tBiomePFloat);
 
+            mat.SetVector("_PlanetCenter", transform.position);
+
             mat.SetFloat("_SeaLevel", planet.terrainVar.generalSettings._SeaLevel); //sea level variable
         }
         treeMats[0].color = planet.treeVariables._TreeBarkColor; //setting the bark colour

@@ -58,6 +58,8 @@ Shader "Custom/TreeLeafShader"
         float _Glossiness;
         float _Metallic;
 
+        float3 _PlanetCenter;
+
 
         void vert(inout appdata_full v, out Input o){
             UNITY_INITIALIZE_OUTPUT(Input, o);
@@ -68,7 +70,7 @@ Shader "Custom/TreeLeafShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float3 objectOrigin = mul(unity_ObjectToWorld, float4(0.0,0.0,0.0,1.0) ).xyz;
-            float3 normalizedVertexPos = normalize(objectOrigin) * _SeaLevel;
+            float3 normalizedVertexPos = (normalize(objectOrigin) * _SeaLevel) - _PlanetCenter;
             float warpNoiseTex = SimpleNoise(normalizedVertexPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset); //Sample warp noise
             float noiseTex = SimpleNoise(normalizedVertexPos + warpNoiseTex, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset); //Sample simple noise
 

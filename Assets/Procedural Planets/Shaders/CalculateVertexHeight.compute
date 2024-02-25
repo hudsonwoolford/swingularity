@@ -34,6 +34,7 @@ float continentNoiseScale, continentNoisePersistence, continentNoiseLacunarity, 
 float3 continentNoiseOffset;
 int continentNoiseOctaves;
 float maskBlend;
+float maskVerticalShift;
 
 [numthreads(512, 1, 1)]
 void CalculateVertexHeight (uint id : SV_DispatchThreadID)
@@ -80,7 +81,7 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
         {
             continentShape *= 1 + continentNoiseDepth;
         }
-        continentMask = Blend(0, maskBlend, ContinentNoise(vertexPos, continentNoiseOctaves, continentNoiseScale, continentNoisePersistence, 1, continentNoiseMultiplier, continentNoiseGain, continentNoiseOffset));
+        continentMask = Blend(0, maskBlend, MaskNoise(vertexPos, continentNoiseOctaves, continentNoiseScale, continentNoisePersistence, 1, continentNoiseMultiplier, continentNoiseGain, continentNoiseOffset, maskVerticalShift));
     }
     
     float detailNoiseValue = 0;
