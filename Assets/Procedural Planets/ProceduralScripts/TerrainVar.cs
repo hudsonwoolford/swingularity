@@ -163,7 +163,6 @@ public class BiomeDetailNoiseSettings
 public class PolarBiomeSettings
 {
     public float _PolarHeight, _PolarBlendIntensity;
-    public bool _Polar;
 }
 
 [Serializable]
