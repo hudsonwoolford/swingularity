@@ -156,14 +156,18 @@ public class FullPlanetGeneration : MonoBehaviour
 
             mat.SetColor("_TreeColA", biomeA.treeVariables._TreeLeafColors[i-1]); //this is the difference
             mat.SetColor("_TreeColB", biomeB.treeVariables._TreeLeafColors[i-1]); //this is the difference
-            mat.SetColor("_TreeColP", biomeP.treeVariables._TreeLeafColors[i-1]); 
+            if (biomeP != null) { mat.SetColor("_TreeColP", biomeP.treeVariables._TreeLeafColors[i - 1]); } 
             //cache bools as floats
             float tBiomeAFloat = biomeA.treeVariables._UseTrees ? 1 : 0; 
             float tBiomeBFloat = biomeB.treeVariables._UseTrees ? 1 : 0;
-            float tBiomePFloat = biomeP.treeVariables._UseTrees ? 1 : 0;
+            if (biomeP != null)
+            {
+                float tBiomePFloat = biomeP.treeVariables._UseTrees ? 1 : 0;
+                mat.SetFloat("_UseTreesP", tBiomePFloat);
+            }
             mat.SetFloat("_UseTreesA", tBiomeAFloat);
             mat.SetFloat("_UseTreesB", tBiomeBFloat);
-            mat.SetFloat("_UseTreesP", tBiomePFloat);
+            
 
             mat.SetVector("_PlanetCenter", transform.position);
 
@@ -266,7 +270,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
         if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesA, ref biomeA, biomeAVerts);
         if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesB, ref biomeB, biomeBVerts);
-        if (biomeP.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesP, ref biomeP, biomePVerts);
+        if (biomeP != null && biomeP.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesP, ref biomeP, biomePVerts);
       
     }
     void CreateAndDestroyTrees(ref List<GameObject> trees, ref PlanetColorScheme biome, Vector3[] vertPool){
@@ -376,8 +380,6 @@ public class FullPlanetGeneration : MonoBehaviour
 
         mat.SetFloat("_PolarHeight", planet.terrainVar.polarBiomeSettings._PolarHeight);
         mat.SetFloat("_PolarBlendIntensity", planet.terrainVar.polarBiomeSettings._PolarBlendIntensity);
-        float PolarFloat = planet.terrainVar.polarBiomeSettings._Polar ? 1 : 0;
-        mat.SetFloat("_Polar", PolarFloat);
 
 
     }
