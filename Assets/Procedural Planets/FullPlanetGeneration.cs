@@ -372,6 +372,12 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_ColorMultiplier", bdns._Multiplier);
         mat.SetFloat("_ColorGain", bdns._Gain);
 
+        mat.SetFloat("_PolarHeight", planet.terrainVar.polarBiomeSettings._PolarHeight);
+        mat.SetFloat("_PolarBlendIntensity", planet.terrainVar.polarBiomeSettings._PolarBlendIntensity);
+        float PolarFloat = planet.terrainVar.polarBiomeSettings._Polar ? 1 : 0;
+        mat.SetFloat("_Polar", PolarFloat);
+
+
     }
     public void RandomizeOffset()
     {
