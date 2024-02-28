@@ -356,6 +356,7 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.ridgeNoiseSettings.offset = offset;
         planet.terrainVar.detailNoiseSettings.offset = offset;
         planet.terrainVar.shapeNoiseSettings.offset = offset;
+        planet.terrainVar.maskNoiseSettings.offset = offset;
         planet.terrainVar.biomeNoiseSettings._Offset = new Vector3(offset[0], offset[1], offset[2]);
         planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = new Vector3(offset[0], offset[1], offset[2]);
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
@@ -518,7 +519,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if (biomeA != null)
         {
             // Biome A color scheme
-            mat.SetColor("_ShorelineColorA", biomeAScheme.oceanVariables._ShorelineColor); //shoreline color
+            mat.SetColor("_ShorelineColorA", biomeAScheme._ShorelineColor); //shoreline color
             mat.SetColor("_FlatColorA", biomeAScheme._FlatColor);
             mat.SetColor("_FlatColorAVariant", biomeAScheme._FlatColorVariant);
             mat.SetColor("_SteepColorA", biomeAScheme._SteepColor);
@@ -533,7 +534,7 @@ public class FullPlanetGeneration : MonoBehaviour
         if(biomeB != null)
         {
             // Biome B color scheme
-            mat.SetColor("_ShorelineColorB", biomeBScheme.oceanVariables._ShorelineColor); //shoreline color
+            mat.SetColor("_ShorelineColorB", biomeBScheme._ShorelineColor); //shoreline color
             mat.SetColor("_FlatColorB", biomeBScheme._FlatColor);
             mat.SetColor("_FlatColorBVariant", biomeBScheme._FlatColorVariant);
             mat.SetColor("_SteepColorB", biomeBScheme._SteepColor);
@@ -549,7 +550,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             mat.SetFloat("_Polar", 1);
             // Biome P color scheme
-            mat.SetColor("_ShorelineColorP", biomePScheme.oceanVariables._ShorelineColor); //shoreline color
+            mat.SetColor("_ShorelineColorP", biomePScheme._ShorelineColor); //shoreline color
             mat.SetColor("_FlatColorP", biomePScheme._FlatColor);
             mat.SetColor("_FlatColorPVariant", biomePScheme._FlatColorVariant);
             mat.SetColor("_SteepColorP", biomePScheme._SteepColor);

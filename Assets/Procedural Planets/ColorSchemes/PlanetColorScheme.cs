@@ -11,6 +11,8 @@ public class PlanetColorScheme : ScriptableObject
     public Color _HighElevationColor = Color.white;
     public Color _HighElevationSteepColor = Color.white;
 
+    public Color _ShorelineColor = Color.white;
+
     [Range(0f, 1f)]
     public float _Metallic;
     [Range(0f, 1f)]
