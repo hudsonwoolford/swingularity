@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
+  m_Name: Forest
+  m_EditorClassIdentifier: 
+  _FlatColor: {r: 0.2404409, g: 0.754717, b: 0, a: 1}
+  _FlatColorVariant: {r: 0.15193644, g: 0.4811321, b: 0, a: 1}
+  _SteepColor: {r: 0.31132078, g: 0.197728, b: 0, a: 1}
+  _HighElevationColor: {r: 0.14789777, g: 0.24528301, b: 0, a: 1}
+  _HighElevationSteepColor: {r: 0.10598043, g: 0.2735849, b: 0.011614448, a: 1}
+  _Metallic: 0
+  _Smoothness: 0
+  _VegetationLine: 0.096
+  _VegetationLineHarshness: 3.8
+  _SteepMultiplier: 4.03
+  oceanVariables:
+    _OceanBlendEnd: 0.026
+    _OceanBlendIntensity: 0.82
+    _BeachBlendEnd: 0.022
+    _BeachBlendIntensity: 0.9
+    _ShorelineColor: {r: 1, g: 0.76217335, b: 0.17610055, a: 1}
+    _SeabedColor: {r: 0, g: 0.40876806, b: 0.8207547, a: 1}
+    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0.811
+  atmosphereVariables:
+    _OuterBandColor: {r: 0.1928325, g: 0.43419048, b: 0.9433962, a: 1}
+    _OuterBandRange: 2.48
+    _OuterBandIntensity: 0.44
+    _InnerBandColor: {r: 0, g: 0.84723073, b: 0.9056604, a: 1}
+    _InnerBandRange: 2.26
+    _InnerBandIntensity: 0.97
+    _FrontColor: {r: 1, g: 1, b: 1, a: 1}
+    _FrontRange: 5
+    _FrontIntensity: 1
+  fresnelVariables:
+    _UseFresnel: 0
+    _FresnelColor: {r: 0, g: 0.44887233, b: 0.8207547, a: 1}
+    _FresnelStrengthNear: 1.92
+    _FresnelStrengthFar: 5
+    _FresnelPower: 6.85
+  treeVariables:
+    _UseTrees: 1
+    _TreeObjects:
+    - {fileID: 11400000, guid: 6f1e286cf65e8ca45b6dcc76a4facfc6, type: 2}
+    - {fileID: 11400000, guid: 98590e5ccc16ea74bbb61792e49011b0, type: 2}
+    _TreeLeafColors:
+    - {r: 0.0223226, g: 0.5283019, b: 0, a: 1}
+    - {r: 0.12669098, g: 0.3679245, b: 0.25440285, a: 1}
+    - {r: 0.11974902, g: 0.3679245, b: 0.13008969, a: 1}
+    _TreeBarkColor: {r: 0.3679245, g: 0.28845268, b: 0.1509879, a: 1}
+    _NumTrees: 259
+    _TreeSeed: 50

@@ -259,10 +259,14 @@ public class FullPlanetGeneration : MonoBehaviour
                 {
                     // Set color property on the MaterialPropertyBlock
                     propertyBlock.SetColor("_Color", biome.treeVariables._TreeLeafColors[Random.Range(0, 3)]);
+                    propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
+                    propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
                 else
                 {
                     propertyBlock.SetColor("_Color", biome.treeVariables._TreeBarkColor);
+                    propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
+                    propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
 
                 // Assign the MaterialPropertyBlock to the material instance

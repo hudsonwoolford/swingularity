@@ -44,11 +44,11 @@ public class FullPlanetEditor : Editor
         }
         EditorWindow inspectorWindow = EditorWindow.focusedWindow;
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 2f))) 
+        if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 3f))) 
         {
             planetGeneration.RandomizeTerrainScheme();
         }
-        if (GUILayout.Button("Random Offset", GUILayout.MaxWidth(Screen.width / 2)))
+        if (GUILayout.Button("Random Offset", GUILayout.MaxWidth(Screen.width / 3f)))
         {
             planetGeneration.RandomizeOffset();
         }

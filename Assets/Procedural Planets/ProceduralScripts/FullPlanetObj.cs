@@ -69,10 +69,10 @@ public class TreeVariables {
     [SerializeField] public TreeObject[] _TreeObjects;
     [SerializeField] public Color[] _TreeLeafColors = { Color.white, Color.white, Color.white };
     [SerializeField] public Color _TreeBarkColor = Color.white;
-    
+    [SerializeField] public float _TreeMetallic;
+    [SerializeField] public float _TreeSmoothness;
     [Min(0)]
     [SerializeField] public int _NumTrees = 100;
-    [SerializeField] public int _TreeSeed = 0;
 }
 
 

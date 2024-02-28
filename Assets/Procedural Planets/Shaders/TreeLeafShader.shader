@@ -50,6 +50,12 @@ Shader "Custom/TreeLeafShader"
         fixed4 _TreeColA;
         fixed4 _TreeColB;
         fixed4 _TreeColP;
+        float _MetallicA;
+        float _MetallicB;
+        float _MetallicP;
+        float _SmoothnessA;
+        float _SmoothnessB;
+        float _SmoothnessP;
         float _UseTreesA;
         float _UseTreesB;
         float _UseTreesP;
@@ -77,8 +83,8 @@ Shader "Custom/TreeLeafShader"
             float yDist = abs(normalizedVertexPos.y);
             float polarBlendValue = clamp(0,1,pow(abs(yDist/_PolarHeight), _PolarBlendIntensity)) * _Polar;
             if(polarBlendValue >= 0.6 && _UseTreesP == 1){
-                o.Metallic = 0.3;
-                o.Smoothness = 0.3;
+                o.Metallic = _MetallicP;
+                o.Smoothness = _SmoothnessP;
                 o.Albedo = _TreeColP;
                 return;
             }
@@ -94,34 +100,41 @@ Shader "Custom/TreeLeafShader"
             blendValue = (_SwapBiome == 1) ? 1 - blendValue : blendValue;
 
             if (_UseTreesA == 1 && _UseTreesB == 0){
-                o.Metallic = 0.3;
-                o.Smoothness = 0.3;
+                o.Metallic = _MetallicA;
+                o.Smoothness = _SmoothnessA;
                 o.Albedo = _TreeColA;
                 return;
             }
             if (_UseTreesA == 0 && _UseTreesB == 1){
-                o.Metallic = 0.3;
-                o.Smoothness = 0.3;
+                o.Metallic = _MetallicB;
+                o.Smoothness = _SmoothnessB;
                 o.Albedo = _TreeColB;
                 return;
             }
             else{
                 float3 biomeColor;
+                float metallic;
+                float smoothness;
                 if(blendValue < 0.5)
                 {
                     biomeColor = _TreeColA;
+                    metallic = _MetallicA;
+                    smoothness = _SmoothnessA;
+
                 }
                 else if(blendValue >= 0.5)
                 {
                     biomeColor = _TreeColB;
+                    metallic = _MetallicB;
+                    smoothness = _SmoothnessB;
                 }
     
                 
                 o.Albedo = biomeColor;
+                o.Metallic = metallic;
+                o.Smoothness = smoothness;
             }
 
-            o.Metallic = 0.3;
-            o.Smoothness = 0.3;
         }
         ENDCG
     }
