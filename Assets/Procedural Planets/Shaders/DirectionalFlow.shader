@@ -20,6 +20,7 @@ Shader "Custom/DirectionalFlow" {
 		#pragma target 3.0
 		
 		#include "Includes/Flow.cginc"
+		#include "Includes/TriplanarNormals.cginc"
 
 		sampler2D _MainTex, _FlowMap;
 		float _Tiling, _Speed, _FlowStrength;

@@ -339,7 +339,7 @@ Shader "Custom/FinalTerrestrial"
             float3 BNormals = GetMappedTriplanarNormal(_NormalTextureB, triUVB, _NormalPowerB, IN.normal);
             float3 PNormals = GetMappedTriplanarNormal(_NormalTextureP, triUVP, _NormalPowerP, IN.normal);
             float planetNormal = lerp(ANormals, BNormals, blendValue);
-            o.Normal = lerp(planetNormal, PNormals, polarBlendValue);
+            o.Normal += lerp(planetNormal, PNormals, polarBlendValue);
         }
 
         ENDCG
