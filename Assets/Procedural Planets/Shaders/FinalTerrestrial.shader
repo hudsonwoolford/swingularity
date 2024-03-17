@@ -127,10 +127,18 @@ Shader "Custom/FinalTerrestrial"
         #include "Includes/Flow.cginc"
         #include "Includes/TriplanarNormals.cginc"
 
-        sampler2D _NormalTexture;
-        float3 _NormalOffset;
-        float _NormalScale;
-        float _NormalPower;
+        sampler2D _NormalTextureA;
+        sampler2D _NormalTextureB;
+        sampler2D _NormalTextureP;
+        float3 _NormalOffsetA;
+        float3 _NormalOffsetB;
+        float3 _NormalOffsetP;
+        float _NormalScaleA;
+        float _NormalScaleB;
+        float _NormalScaleP;
+        float _NormalPowerA;
+        float _NormalPowerB;
+        float _NormalPowerP;
         float bodyScale;
         //Parameters
         float _Ocean;
@@ -324,9 +332,14 @@ Shader "Custom/FinalTerrestrial"
             o.Metallic = metallic;
             o.Smoothness = smoothness;
 
-            TriplanarUV triUV = GetTriplanarUV(IN.vertPos, _NormalOffset, _NormalScale);
-            float3 planetNormals = GetMappedTriplanarNormal(_NormalTexture, triUV, _NormalPower, IN.normal);
-            o.Normal = planetNormals;
+            TriplanarUV triUVA = GetTriplanarUV(IN.vertPos, _NormalOffsetA, _NormalScaleA);
+            TriplanarUV triUVB = GetTriplanarUV(IN.vertPos, _NormalOffsetB, _NormalScaleB);
+            TriplanarUV triUVP = GetTriplanarUV(IN.vertPos, _NormalOffsetP, _NormalScaleP);
+            float3 ANormals = GetMappedTriplanarNormal(_NormalTextureA, triUVA, _NormalPowerA, IN.normal);
+            float3 BNormals = GetMappedTriplanarNormal(_NormalTextureB, triUVB, _NormalPowerB, IN.normal);
+            float3 PNormals = GetMappedTriplanarNormal(_NormalTextureP, triUVP, _NormalPowerP, IN.normal);
+            float planetNormal = lerp(ANormals, BNormals, blendValue);
+            o.Normal = lerp(planetNormal, PNormals, polarBlendValue);
         }
 
         ENDCG

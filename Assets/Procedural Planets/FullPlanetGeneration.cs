@@ -530,6 +530,10 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineA", biomeAScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessA", biomeAScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierA", biomeAScheme._SteepMultiplier);
+            mat.SetTexture("_NormalTextureA", biomeAScheme._Normal);
+            mat.SetVector("_NormalOffsetA", biomeAScheme._NormalOffset);
+            mat.SetFloat("_NormalScaleA", biomeAScheme._NormalScale);
+            mat.SetFloat("_NormalPowerA", biomeAScheme._NormalPower);
         }
         if(biomeB != null)
         {
@@ -545,6 +549,10 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineB", biomeBScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessB", biomeBScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierB", biomeBScheme._SteepMultiplier);
+            mat.SetTexture("_NormalTextureB", biomeBScheme._Normal);
+            mat.SetVector("_NormalOffsetB", biomeBScheme._NormalOffset);
+            mat.SetFloat("_NormalScaleB", biomeBScheme._NormalScale);
+            mat.SetFloat("_NormalPowerB", biomeBScheme._NormalPower);
         }
         if (biomeP != null)
         {
@@ -561,6 +569,11 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineP", biomePScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessP", biomePScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierP", biomePScheme._SteepMultiplier);
+            mat.SetFloat("_SteepMultiplierP", biomePScheme._SteepMultiplier);
+            mat.SetTexture("_NormalTextureP", biomePScheme._Normal);
+            mat.SetVector("_NormalOffsetP", biomePScheme._NormalOffset);
+            mat.SetFloat("_NormalScaleP", biomePScheme._NormalScale);
+            mat.SetFloat("_NormalPowerP", biomePScheme._NormalPower);
         }
         else
         {

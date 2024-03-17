@@ -24,6 +24,12 @@ public class PlanetColorScheme : ScriptableObject
     [Range(0f, 5f)]
     public float _SteepMultiplier = 7f;
 
+    public Texture2D _Normal;
+    public float _NormalScale;
+    public Vector3 _NormalOffset;
+    public float _NormalPower;
+
+
     [Header("Optional Variables")]
     public OceanVariables oceanVariables = new OceanVariables();
     public AtmosphereVariables atmosphereVariables = new AtmosphereVariables();

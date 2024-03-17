@@ -24,7 +24,7 @@ float3 GetMappedTriplanarNormal(sampler2D tex, TriplanarUV triUV, float power, f
 
     float3 normalX = UnpackScaleNormal(texX, power).zyx;
     float3 normalY = UnpackScaleNormal(texY, power).xzy;
-    float3 normalZ = UnpackScaleNormal(texZ, power);
+    float3 normalZ = UnpackScaleNormal(texZ, power).yxz;
 
     float3 triW = GetTriplanarWeights(normal);
 
