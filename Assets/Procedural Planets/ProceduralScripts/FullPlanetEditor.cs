@@ -83,6 +83,7 @@ public class FullPlanetEditor : Editor
             if (GUILayout.Button("Toggle Color Scheme")) { colorSchemes = false; planetGeneration.RestoreSavedColorScheme(true, true); planetGeneration.colorSchemesOut = false; } // Disabling color scheme if pressed
             if (GUILayout.Button("Random Color Scheme"))
             {
+                planetGeneration.ClearAllTrees();
                 planetGeneration.RandomizeColorScheme();
             }
             //CS BiomeA: "Object" | CS BiomeB: "Object"

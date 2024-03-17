@@ -17,7 +17,7 @@ MonoBehaviour:
   _SteepColor: {r: 0.12975672, g: 0.3301887, b: 0.004672473, a: 1}
   _HighElevationColor: {r: 0.4509804, g: 0.33285367, b: 0.12941177, a: 1}
   _HighElevationSteepColor: {r: 0.26415092, g: 0.13095236, b: 0, a: 1}
-  _ShorelineColor: {r: 0.8901961, g: 0.7490196, b: 0.24705882, a: 1}
+  _ShorelineColor: {r: 1, g: 0.86021626, b: 0.36320752, a: 1}
   _Metallic: 0
   _Smoothness: 0
   _VegetationLine: 0.096
@@ -26,10 +26,10 @@ MonoBehaviour:
   oceanVariables:
     _OceanBlendEnd: 0.026
     _OceanBlendIntensity: 0.82
-    _BeachBlendEnd: 0.022
-    _BeachBlendIntensity: 0.9
+    _BeachBlendEnd: 0.014
+    _BeachBlendIntensity: 2.2
     _SeabedColor: {r: 0, g: 0.40876806, b: 0.8207547, a: 1}
-    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _OceanColor: {r: 0, g: 1, b: 0.2608924, a: 0.30980393}
     _OceanMetallic: 0
     _OceanSmoothness: 0.811
   atmosphereVariables:
@@ -39,9 +39,9 @@ MonoBehaviour:
     _InnerBandColor: {r: 0, g: 0.84723073, b: 0.9056604, a: 1}
     _InnerBandRange: 2.26
     _InnerBandIntensity: 0.97
-    _FrontColor: {r: 1, g: 1, b: 1, a: 1}
-    _FrontRange: 5
-    _FrontIntensity: 1
+    _FrontColor: {r: 0.42239228, g: 0.67689556, b: 0.7924528, a: 1}
+    _FrontRange: 2.16
+    _FrontIntensity: 0.45
   fresnelVariables:
     _UseFresnel: 0
     _FresnelColor: {r: 0, g: 0.44887233, b: 0.8207547, a: 1}
@@ -49,7 +49,7 @@ MonoBehaviour:
     _FresnelStrengthFar: 5
     _FresnelPower: 6.85
   treeVariables:
-    _UseTrees: 0
+    _UseTrees: 1
     _TreeObjects:
     - {fileID: 11400000, guid: 6f1e286cf65e8ca45b6dcc76a4facfc6, type: 2}
     - {fileID: 11400000, guid: 98590e5ccc16ea74bbb61792e49011b0, type: 2}

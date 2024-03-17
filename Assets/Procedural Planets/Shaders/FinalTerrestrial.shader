@@ -2,6 +2,10 @@ Shader "Custom/FinalTerrestrial"
 {
     Properties
     {
+     [NoScaleOffset]_NormalTexture ("Normal", 2D) = "white" {}
+     _NormalScale ("Normal Scale", Range(0,5)) = 1
+     _NormalPower ("Normal Power", Range(0, 20)) = 1
+     _NormalOffset ("Normal Offset", vector) = (0,0,0)
      [Header(Parameters)] //Parameters
      [Toggle()]_Ocean("Ocean", float) = 1
      [Toggle()]_BiomeA("BiomeA", float) = 1
@@ -115,11 +119,18 @@ Shader "Custom/FinalTerrestrial"
         {
             "RenderType" = "Opaque"
         }
-
+        LOD 200
         CGPROGRAM
-        #pragma surface surf Standard vertex:vert
+        #pragma target 3.5
+        #pragma surface surf Standard vertex:vert 
         #include "Includes/FractalNoise.cginc"
+        #include "Includes/Flow.cginc"
+        #include "Includes/TriplanarNormals.cginc"
 
+        sampler2D _NormalTexture;
+        float3 _NormalOffset;
+        float _NormalScale;
+        float _NormalPower;
         float bodyScale;
         //Parameters
         float _Ocean;
@@ -195,9 +206,10 @@ Shader "Custom/FinalTerrestrial"
         int _ColorOctaves;
         float3 _ColorOffset;
         float _ColorPersistence, _ColorLacunarity, _ColorMultiplier, _ColorGain;
-
+        
         struct Input
         {
+            float2 uv_MainTex;
             float3 worldPos;
             float3 vertPos;
             float3 normal;
@@ -227,6 +239,7 @@ Shader "Custom/FinalTerrestrial"
 
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
+
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
             float3 normalizedVertexPos = sphereNormal * _SeaLevel;
             float seaLevelHeight = length(_SeaLevel*sphereNormal); //height of sealevel from middle of the sphere
@@ -294,6 +307,7 @@ Shader "Custom/FinalTerrestrial"
                 o.Albedo = seabedColor;
                 o.Metallic = metallic;
                 o.Smoothness = smoothness;
+
                 return;
             }
             
@@ -309,7 +323,10 @@ Shader "Custom/FinalTerrestrial"
 
             o.Metallic = metallic;
             o.Smoothness = smoothness;
-            
+
+            TriplanarUV triUV = GetTriplanarUV(IN.vertPos, _NormalOffset, _NormalScale);
+            float3 planetNormals = GetMappedTriplanarNormal(_NormalTexture, triUV, _NormalPower, IN.normal);
+            o.Normal = planetNormals;
         }
 
         ENDCG
