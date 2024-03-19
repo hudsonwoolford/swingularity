@@ -1,0 +1,70 @@
+Shader "Custom/ForceField"
+{
+    Properties
+    {
+        [HDR]_FrontColor ("Front Color", Color) = (1,1,1,1)
+        [HDR]_BackColor ("Back Color", Color) = (1,1,1,1)
+        _PanelSpread ("Panel Spread", Range(0, 0.003)) = 1
+        _Frequency ("Frequency", Range(0, 50)) = 1
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _Glossiness ("Smoothness", Range(0,1)) = 0.5
+        _Metallic ("Metallic", Range(0,1)) = 0.0
+    }
+    SubShader
+    {
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+        LOD 200
+        Cull Off
+        CGPROGRAM
+
+        #pragma surface surf Standard fullforwardshadows vertex:vert alpha:blend
+
+
+        #pragma target 3.0
+
+        sampler2D _MainTex;
+
+        struct Input
+        {
+            float2 uv_MainTex;
+            float3 viewDir;
+            float3 worldNormal;
+            float3 vertPos;
+        };
+
+        half _Glossiness;
+        half _Metallic;
+        fixed4 _FrontColor; //front surface color
+        fixed4 _BackColor; //back surface color
+        float _PanelSpread;
+        float _Frequency;
+
+        void vert (inout appdata_full v, out Input o)
+        {
+            
+            UNITY_INITIALIZE_OUTPUT(Input, o);
+            float angle = _Time * _Frequency; // You can adjust _Frequency to control the speed of oscillation
+            float sinValue = sin(angle);
+            float4 modifiedVertex = float4(v.vertex.xyz + v.normal * _PanelSpread * ((sinValue + 1) / 2), 1);
+
+            v.vertex = modifiedVertex;
+            o.vertPos = v.vertex;
+        }
+        void surf (Input IN, inout SurfaceOutputStandard o)
+        {
+            float d = dot(IN.viewDir, IN.worldNormal);
+            bool front = d > 0 ? true : false;
+
+            fixed4 mc = front ? _FrontColor : _BackColor; //determine which color to multiply
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * mc;
+
+            o.Albedo = c.rgb;
+
+            o.Metallic = _Metallic;
+            o.Smoothness = _Glossiness;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    FallBack "Diffuse"
+}
