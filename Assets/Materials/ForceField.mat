@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _UseFresnel
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -65,23 +66,28 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Frequency: 27.1
+    - _Frequency: 36.5
+    - _FresnelPower: 4.27
+    - _FresnelStrengthFar: 5
+    - _FresnelStrengthNear: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _PanelSpread: 0.00175
+    - _PanelSpread: 0.25
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
+    - _UseFresnel: 1
     - _ZWrite: 1
     m_Colors:
-    - _BackColor: {r: 1.4980392, g: 0.29288596, b: 0, a: 0.7607843}
+    - _BackColor: {r: 0.094932914, g: 0.35480002, b: 0.6037736, a: 0.25490198}
     - _Color: {r: 0.3349056, g: 1, b: 0.91121954, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FrontColor: {r: 0, g: 2.1673753, b: 2.9960783, a: 1}
+    - _FresnelColor: {r: 5.582719, g: 1.1786098, b: 0, a: 1}
+    - _FrontColor: {r: 0.7682129, g: 0.75294125, b: 4.0156865, a: 0.72156864}
   m_BuildTextureStacks: []
