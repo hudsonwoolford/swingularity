@@ -22,10 +22,11 @@ Shader "Custom/ForceField"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 200
-        Cull Off
+        Cull Back
         CGPROGRAM
         #pragma surface surf Standard fullforwardshadows vertex:vert alpha
         #pragma target 4.0
+        #include "Includes/SimplexNoise.cginc"
 
         sampler2D _MainTex;
 
@@ -37,6 +38,7 @@ Shader "Custom/ForceField"
             float3 normal;
             float3 vertPos;
             float fresnelValue;
+            float displacementRatio;
         };
 
         half _Glossiness;
@@ -54,16 +56,18 @@ Shader "Custom/ForceField"
         {
             
             UNITY_INITIALIZE_OUTPUT(Input, o);
-            float angle = _Time * _Frequency; // You can adjust _Frequency to control the speed of oscillation
+            float angle = snoise(_Time * _Frequency * v.normal * 1/250); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
-            float4 modifiedVertex = float4(v.vertex.xyz + v.normal * _PanelSpread * ((sinValue + 1) / 2), 1);
+            float3 displacement = v.normal * _PanelSpread * ((sinValue + 1) / 2);
+            float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
 
+            o.displacementRatio = length(displacement) / _PanelSpread;
 
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;
 
-            float3 viewDir = ObjSpaceViewDir ( v.vertex );
-            o.fresnelValue = saturate(0.05 * pow(abs(dot(v.normal, viewDir)), _FresnelPower));
+            float3 viewDir = float3(0,0,1);
+            o.fresnelValue = 1-saturate(0.05 * pow(abs(dot(v.normal, viewDir)), _FresnelPower));
         }
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
@@ -73,13 +77,13 @@ Shader "Custom/ForceField"
             fixed4 mc = front ? _FrontColor : _BackColor; //determine which color to multiply
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * mc;
             
-            float3 compoundColor = lerp(_FresnelColor, c.rgb, IN.fresnelValue * _UseFresnel);
+            float4 compoundColor = lerp(_FresnelColor, c, IN.fresnelValue * _UseFresnel);
 
             o.Albedo = compoundColor;
 
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
+            o.Alpha = compoundColor.a * pow(IN.displacementRatio,2);
         }
         ENDCG
     }
