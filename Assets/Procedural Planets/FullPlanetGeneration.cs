@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 [RequireComponent(typeof(MeshFilter))]
-[ExecuteInEditMode]
+[ExecuteAlways]
 public class FullPlanetGeneration : MonoBehaviour
 {
     public ComputeShader calculateVertexHeight; //compute shader for planet generation
@@ -11,6 +11,7 @@ public class FullPlanetGeneration : MonoBehaviour
     public Material pBlockMat;
     [SerializeField] public FullPlanetObj planet; //planet scriptable object
     public Transform ocean; //ocean object transform
+    public Transform treeParent; //ocean object transform
     public Light innerAtmosphere, outerAtmosphere, frontAtmosphere; //atmosphere lights
     [HideInInspector]
     public bool colorSchemesOut; //if colorschemes are folded out/on
@@ -23,9 +24,9 @@ public class FullPlanetGeneration : MonoBehaviour
     PlanetColorScheme biomeASaved, biomeBSaved; //cache for biome schemes
     MeshRenderer meshRenderer; //the mesh renderer attatched to this object
     MeshFilter meshFilter; //the mesh filter attached to this object
-    List<GameObject> treesA = new List<GameObject>(); //list of instantiated trees
-    List<GameObject> treesB = new List<GameObject>();
-    List<GameObject> treesP = new List<GameObject>();
+    List<GameObject> treesA; //list of instantiated trees
+    List<GameObject> treesB;
+    List<GameObject> treesP;
     private void Awake()
     {
         //initialisation
@@ -33,7 +34,10 @@ public class FullPlanetGeneration : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         biomeASaved = ScriptableObject.CreateInstance(typeof(PlanetColorScheme)) as PlanetColorScheme;
         biomeBSaved = ScriptableObject.CreateInstance(typeof(PlanetColorScheme)) as PlanetColorScheme;
-        
+
+        treesA = new List<GameObject>(); //list of instantiated trees
+        treesB = new List<GameObject>();
+        treesP = new List<GameObject>();
     }
     void Update()
     {
@@ -82,6 +86,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateAtmosphere()
     {
+        
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
@@ -245,7 +250,7 @@ public class FullPlanetGeneration : MonoBehaviour
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
             tree.transform.GetChild(0).Rotate(0,0,Random.Range(0, 359)); //tree normal = vertex normal
             ; //tree normal = vertex normal
-            tree.transform.parent = transform; //parent tree to gameObject
+            tree.transform.parent = treeParent; //parent tree to gameObject
 
             MeshRenderer treeMeshRenderer = tree.GetComponentInChildren<MeshRenderer>(); // Renderer on tree object
             Material[] rendererMaterials = treeMeshRenderer.sharedMaterials; // All materials on tree array
@@ -281,16 +286,21 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void ClearAllTrees()
     {
-        ClearTrees(treesA);
-        ClearTrees(treesB);
-        ClearTrees(treesP);
+        //destroys every tree object by child
+        foreach (Transform tree in treeParent)
+        {
+            if (tree.gameObject != null) { DestroyImmediate(tree.gameObject); }
+        }
+        treesA.Clear(); //clears list
+        treesB.Clear(); //clears list
+        treesP.Clear(); //clears list
     }
     void ClearTrees(List<GameObject> trees)
     {
         //destroys every tree object in list
         foreach(GameObject tree in trees)
         {
-            DestroyImmediate(tree);
+            if (tree != null) { DestroyImmediate(tree); }
         }
         trees.Clear(); //clears list
     }

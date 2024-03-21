@@ -13,7 +13,7 @@ Shader "Custom/ForceField"
 
         [Header(Fresnel)] //Fresnel
         [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
-        [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1)
+        [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1,1)
         _FresnelStrengthNear("Fresnel Strength Near", float) = 2
         _FresnelStrengthFar("Fresnel Strength Far", float) = 5
         _FresnelPower("Fresnel Power", float) = 2
@@ -56,12 +56,12 @@ Shader "Custom/ForceField"
         {
             
             UNITY_INITIALIZE_OUTPUT(Input, o);
-            float angle = snoise(_Time * _Frequency * v.normal * 1/250); // You can adjust _Frequency to control the speed of oscillation
+            float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))* 1/250); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
             float3 displacement = v.normal * _PanelSpread * ((sinValue + 1) / 2);
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
 
-            o.displacementRatio = length(displacement) / _PanelSpread;
+            o.displacementRatio = length(displacement) / _PanelSpread; //how displaced is the tile
 
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;
@@ -75,15 +75,16 @@ Shader "Custom/ForceField"
             bool front = d > 0 ? true : false;
 
             fixed4 mc = front ? _FrontColor : _BackColor; //determine which color to multiply
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * mc;
+            float4 compoundColor = lerp(_FresnelColor, mc, IN.fresnelValue * _UseFresnel);
+
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * compoundColor;
             
-            float4 compoundColor = lerp(_FresnelColor, c, IN.fresnelValue * _UseFresnel);
 
             o.Albedo = compoundColor;
 
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = compoundColor.a * pow(IN.displacementRatio,2);
+            o.Alpha = c.a * pow(IN.displacementRatio,5);
         }
         ENDCG
     }
