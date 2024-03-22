@@ -22,9 +22,10 @@ Shader "Custom/ForceField"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 200
+        Blend One One
         Cull Back
         CGPROGRAM
-        #pragma surface surf Standard fullforwardshadows vertex:vert alpha
+        #pragma surface surf Standard fullforwardshadows vertex:vert alpha:blend
         #pragma target 4.0
         #include "Includes/SimplexNoise.cginc"
 
@@ -61,7 +62,7 @@ Shader "Custom/ForceField"
             float3 displacement = v.normal * _PanelSpread * ((sinValue + 1) / 2);
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
 
-            o.displacementRatio = length(displacement) / _PanelSpread; //how displaced is the tile
+            o.displacementRatio = saturate((length(displacement)) / _PanelSpread); //how displaced is the tile
 
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;
@@ -84,7 +85,8 @@ Shader "Custom/ForceField"
 
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = c.a * pow(IN.displacementRatio,5);
+            o.Alpha = 0;
+            o.Alpha = saturate(c.a * pow(IN.displacementRatio,5) + 0.001);
         }
         ENDCG
     }
