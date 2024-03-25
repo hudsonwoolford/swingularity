@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
 [CreateAssetMenu(fileName ="treeObj", menuName = "treeObject")]
 public class TreeObject : ScriptableObject
@@ -12,6 +10,7 @@ public class TreeObject : ScriptableObject
     [HideInInspector]
     [SerializeField] public bool[] dynamicMaterial;
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(TreeObject))]
 public class TreeObjectEditor : Editor
 {
@@ -36,3 +35,4 @@ public class TreeObjectEditor : Editor
         treeObject.treePrefab.GetComponentInChildren<Transform>().localScale = treeObject.objectSize;
     }
 }
+#endif

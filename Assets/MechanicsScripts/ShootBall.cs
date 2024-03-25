@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.PlayerSettings;
 
 public class ShootBall : MonoBehaviour
 {
@@ -141,7 +140,7 @@ public class ShootBall : MonoBehaviour
         Vector2 force = dir.normalized * dist; //the force
 
         //unfreeze position
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
         onShoot?.Invoke(); //invoke shoot event
         rb.AddForce(force, ForceMode.Impulse); //adding force

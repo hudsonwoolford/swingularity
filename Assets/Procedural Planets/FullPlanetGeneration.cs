@@ -1,7 +1,12 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEngine.XR;
+using Unity.VisualScripting;
+
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteAlways]
 public class FullPlanetGeneration : MonoBehaviour
@@ -90,15 +95,15 @@ public class FullPlanetGeneration : MonoBehaviour
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
-        innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange;
+        innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange * transform.localScale.x;
         innerAtmosphere.intensity = planet.atmosphereVariables._InnerBandIntensity;
         //outer atmosphere variable setting
         outerAtmosphere.color = planet.atmosphereVariables._OuterBandColor;
-        outerAtmosphere.range = planet.atmosphereVariables._OuterBandRange;
+        outerAtmosphere.range = planet.atmosphereVariables._OuterBandRange * transform.localScale.x;
         outerAtmosphere.intensity = planet.atmosphereVariables._OuterBandIntensity;
         //front atmosphere variable setting
         frontAtmosphere.color = planet.atmosphereVariables._FrontColor;
-        frontAtmosphere.range = planet.atmosphereVariables._FrontRange;
+        frontAtmosphere.range = planet.atmosphereVariables._FrontRange * transform.localScale.x;
         frontAtmosphere.intensity = planet.atmosphereVariables._FrontIntensity;
         float fresnelToggle = planet.fresnelVariables._UseFresnel ? 1 : 0;
 
@@ -241,12 +246,14 @@ public class FullPlanetGeneration : MonoBehaviour
             int objIndex = Random.Range(0, biome.treeVariables._TreeObjects.Length); //random prefab from tree
             TreeObject selectedTreeObj = biome.treeVariables._TreeObjects[objIndex];
             GameObject tree = PrefabUtility.InstantiatePrefab(selectedTreeObj.treePrefab) as GameObject;
+            PrefabUtility.UnpackPrefabInstance(tree, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
 
             Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
 
             int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
             Vector3 vertexElevationDir = vertPool[chosenVert ] - ocean.position; //vertex normal
-            tree.transform.position = vertPool[chosenVert]; //set tree position to vertex
+            tree.transform.position = vertPool[chosenVert] * transform.localScale.x; //set tree position to vertex
+            tree.transform.localScale *= transform.localScale.x;
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
             tree.transform.GetChild(0).Rotate(0,0,Random.Range(0, 359)); //tree normal = vertex normal
             ; //tree normal = vertex normal
@@ -255,27 +262,35 @@ public class FullPlanetGeneration : MonoBehaviour
             MeshRenderer treeMeshRenderer = tree.GetComponentInChildren<MeshRenderer>(); // Renderer on tree object
             Material[] rendererMaterials = treeMeshRenderer.sharedMaterials; // All materials on tree array
 
+            TreeColourManager trm = tree.transform.GetChild(0).AddComponent<TreeColourManager>();
+            trm.Initialize();
             // Apply the MaterialPropertyBlock to each material in the renderer's materials array
             for (int i = 0; i < rendererMaterials.Length; i++)
             {
-                MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+                //MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
                 if (selectedTreeObj.dynamicMaterial[i])
                 {
                     // Set color property on the MaterialPropertyBlock
-                    propertyBlock.SetColor("_Color", biome.treeVariables._TreeLeafColors[Random.Range(0, 3)]);
-                    propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
-                    propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
+                    trm.pBlocks[i]._Color = biome.treeVariables._TreeLeafColors[Random.Range(0, 3)];
+                    trm.pBlocks[i]._Metallic = biome.treeVariables._TreeMetallic;
+                    trm.pBlocks[i]._Smoothness = biome.treeVariables._TreeSmoothness;
+                    //propertyBlock.SetColor("_Color", );
+                    //propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
+                    //propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
                 else
                 {
-                    propertyBlock.SetColor("_Color", biome.treeVariables._TreeBarkColor);
-                    propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
-                    propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
+                    trm.pBlocks[i]._Color = biome.treeVariables._TreeBarkColor;
+                    trm.pBlocks[i]._Metallic = biome.treeVariables._TreeMetallic;
+                    trm.pBlocks[i]._Smoothness = biome.treeVariables._TreeSmoothness;
+                    //propertyBlock.SetColor("_Color", biome.treeVariables._TreeBarkColor);
+                    //propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
+                    //propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
 
                 // Assign the MaterialPropertyBlock to the material instance
-                treeMeshRenderer.SetPropertyBlock(propertyBlock, i);
+                //treeMeshRenderer.SetPropertyBlock(propertyBlock, i);
             }
 
 
@@ -424,6 +439,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeColorScheme()
     {
+        ClearAllTrees();
         ColorSchemeStaticReference.ColorSchemePool[] colorSchemes = planet.terrainVar.colorSchemePools.colorSchemePools; //array for color scheme pool
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
         if (colorSchemes.Length == 0){
@@ -667,7 +683,7 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     #endregion
     #region Editor Tools
-    [MenuItem("ProceduralTools/Create Planet Prefab")]
+    [MenuItem("ProceduralTools/Save As Planet Prefab")]
     static void CreatePrefab()
     {
         GameObject selectedObj = Selection.activeGameObject; //store selection
@@ -680,6 +696,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
         GameObject newObj = Instantiate(selectedObj, selectedObj.transform.position, selectedObj.transform.rotation); //create the obj
         GameObject newOceanObj = newObj.transform.GetChild(0).gameObject; //select the ocean object from the object
+
 
         DestroyImmediate(newObj.GetComponent<FullPlanetGeneration>()); //destroy the fullplanetgeneration on the object
         newObj.SetActive(true); //make sure the object is active
@@ -722,7 +739,7 @@ public class FullPlanetGeneration : MonoBehaviour
         AssetDatabase.AddObjectToAsset(copyMesh, prefabPath);       //saves the mesh
         AssetDatabase.SaveAssets();
 
-        DestroyImmediate(newObj); //destroys the prefab that was instantiated in the scene
+        DestroyImmediate(newObj);
     }
     [MenuItem("ProceduralTools/Wipe Planet Asset")]
     static void WipePlanetAssets()
@@ -812,4 +829,5 @@ public class FullPlanetGeneration : MonoBehaviour
     }
 }
 #endregion
+#endif
 

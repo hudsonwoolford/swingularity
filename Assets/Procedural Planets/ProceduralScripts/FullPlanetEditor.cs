@@ -1,4 +1,4 @@
-using System.Numerics;
+#if UNITY_EDITOR
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
@@ -198,3 +198,4 @@ public class FullPlanetEditor : Editor
         EditorPrefs.SetBool(nameof(biomePFoldout), biomePFoldout);
     }
 }
+#endif

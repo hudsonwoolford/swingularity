@@ -2,10 +2,7 @@ Shader "Custom/FinalTerrestrial"
 {
     Properties
     {
-     [NoScaleOffset]_NormalTexture ("Normal", 2D) = "white" {}
-     _NormalScale ("Normal Scale", Range(0,5)) = 1
-     _NormalPower ("Normal Power", Range(0, 20)) = 1
-     _NormalOffset ("Normal Offset", vector) = (0,0,0)
+
      [Header(Parameters)] //Parameters
      [Toggle()]_Ocean("Ocean", float) = 1
      [Toggle()]_BiomeA("BiomeA", float) = 1
@@ -82,7 +79,9 @@ Shader "Custom/FinalTerrestrial"
      _BeachBlendEnd("Beach Blend End", Range(0, 0.05)) = 0.5
      [PowerSlider(3.0)]_OceanBlendIntensity("Ocean Blend Intensity", Range(0, 10)) = 1
      [PowerSlider(3.0)]_BeachBlendIntensity("Beach Blend Intensity", Range(0, 10)) = 1
-     _ShorelineColor ("Shoreline Color", Color) = (1,1,1)
+     _ShorelineColorA ("Shoreline Color A", Color) = (1,1,1)
+     _ShorelineColorB ("Shoreline Color B", Color) = (1,1,1)
+     _ShorelineColorP ("Shoreline Color P", Color) = (1,1,1)
      _SeabedColor ("Sea Bed Color", Color) = (0,0,0)
      //_OceanColor ("Ocean Color", Color) = (1,1,1)
      //_OceanMetallic ("Ocean Metallic", Range(0 ,1)) = 0
@@ -180,7 +179,7 @@ Shader "Custom/FinalTerrestrial"
         float _PolarHeight;
         float _PolarBlendIntensity;
         //Constant through biomes
-        float _SeaLevel;
+        float _SeaLevel = 1;
         float _BeachBlendEnd;
         float _OceanBlendEnd;
         float _OceanBlendIntensity;
