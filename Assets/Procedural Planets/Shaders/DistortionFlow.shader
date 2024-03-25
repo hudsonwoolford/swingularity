@@ -16,7 +16,7 @@
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Transparent"  "RenderQueue"="Transparent"}
+		Tags { "RenderType"="Transparent"  "RenderQueue"="Transparent"  "ForceNoShadowCasting" = "True"}
 		LOD 200
 
 		CGPROGRAM
