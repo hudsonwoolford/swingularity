@@ -28,6 +28,13 @@ Shader "Custom/ForceField"
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
+        [Header(Collision Ripple)]
+        _RippleInterval ("Ripple Interval", Float) = 0.1
+        _RippleHeight ("Ripple Height", Float) = 0.1
+        _RippleWidth ("Ripple Width", Float) = 0.1
+        _RippleFalloff ("Ripple Falloff", Float) = 0.1
+        _RipplePow ("Ripple Power", Float) = 1.0
+        _RippleOffset ("Ripple Offset", Float) = 0.0
     }
     SubShader
     {
@@ -75,6 +82,25 @@ Shader "Custom/ForceField"
         float _Scale;
         float3 _TransformWorldPos;
 
+        float3 _HitPos;
+        float _TimeSinceHit;
+
+        float _RippleInterval; //b
+        float _RippleHeight; //z
+        float _RippleWidth; //k
+        float _RippleFalloff; //i
+        float _RipplePow; //a
+        float _RippleOffset; //h
+
+        float CalculatePulse(float b, float z, float k, float i, float a, float t, float x, float h, bool positive){
+            float scaleFactor = z/(i * t);
+            if (positive){
+                return scaleFactor * pow(k, pow(-((a * x) + (b * t)), 2)) + h;
+            }
+            else{
+                return scaleFactor * pow(k, pow(-((a * x) - (b * t)), 2)) + h;
+            }
+        }
 
         void vert (inout appdata_full v, out Input o)
         {
@@ -89,23 +115,30 @@ Shader "Custom/ForceField"
 
             //interactivity
             float3 faceCentre = _TransformWorldPos + (v.normal * _Scale);
-            if(length(_ObjPos.xyz - faceCentre) <= _InteractiveDistance)
-            {
-                o.objNear = true;
-                o.objDistRatio = length(_ObjPos.xyz - faceCentre) / _FalloffThreshold;
-                return;
-            }
-            else
-            {
-                o.objNear = false;
-            }
+            // if(length(_ObjPos.xyz - faceCentre) <= _InteractiveDistance)
+            // {
+            //     o.objNear = true;
+            //     o.objDistRatio = length(_ObjPos.xyz - faceCentre) / _FalloffThreshold;
+            //     return;
+            // }
+            // else
+            // {
+            //     o.objNear = false;
+            // }
+
+            float distFromHit = length(_HitPos - faceCentre);
+            float pulse1 = CalculatePulse(_RippleInterval, _RippleHeight, _RippleWidth, _RippleFalloff, _RipplePow, _TimeSinceHit, _RippleOffset, distFromHit, true);
+            float pulse2 = CalculatePulse(_RippleInterval, _RippleHeight, _RippleWidth, _RippleFalloff, _RipplePow, _TimeSinceHit, _RippleOffset, distFromHit, false);
+            float heightVal = pulse1 + pulse2;
 
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
-            float3 displacement = v.normal * _PanelSpread * ((sinValue + 1) / 2);
+            float3 displacement = v.normal * heightVal * _PanelSpread * ((sinValue + 1) / 2);
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
             o.displacementRatio = saturate(length(displacement) * 1.1 / _PanelSpread); //how displaced is the tile
+
+        
 
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;
@@ -120,12 +153,12 @@ Shader "Custom/ForceField"
 
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * compoundColor;
             
-            if(IN.objNear)
-            {
-                o.Albedo = lerp(c*_InteractiveMultiplier, c, pow(saturate(IN.objDistRatio), _FalloffIntensity));
-                o.Alpha = c.a;
-                return;
-            }
+            // if(IN.objNear)
+            // {
+            //     o.Albedo = lerp(c*_InteractiveMultiplier, c, pow(saturate(IN.objDistRatio), _FalloffIntensity));
+            //     o.Alpha = c.a;
+            //     return;
+            // }
 
             o.Albedo = c;
 

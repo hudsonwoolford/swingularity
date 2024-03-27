@@ -37,5 +37,6 @@ public class ForceField : MonoBehaviour
             return;
         }
         src.PlayOneShot(bump);
+        forceMat.SetVector("_HitPos", interactableObject.position);
     }
 }
