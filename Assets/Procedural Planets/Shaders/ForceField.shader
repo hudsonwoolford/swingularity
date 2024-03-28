@@ -92,16 +92,14 @@ Shader "Custom/ForceField"
         float _RipplePow; //a
         float _RippleOffset; //h
 
-        float CalculatePulse(float b, float z, float k, float i, float a, float t, float x, float h, bool positive){
-            float scaleFactor = z/(i * t);
-            if (positive){
-                return scaleFactor * pow(k, pow(-((a * x) + (b * t)), 2)) + h;
-            }
-            else{
-                return scaleFactor * pow(k, pow(-((a * x) - (b * t)), 2)) + h;
-            }
+        float CalculateRippleHeight(float3 hitPosition, float3 vertexPosition, float timeSinceHit, float rippleInterval, float rippleHeight, float rippleWidth, float rippleFalloff, float ripplePower, float rippleOffset)
+        {
+            float distance = length(hitPosition - vertexPosition);
+            float timeFactor = timeSinceHit / rippleInterval;
+            float wave = rippleHeight * sin((distance / rippleWidth) * 2 * 3.14159 * timeFactor);
+            float falloff = pow(1.0 - saturate(distance / rippleFalloff), ripplePower);
+            return wave; 
         }
-
         void vert (inout appdata_full v, out Input o)
         {
             
@@ -126,18 +124,16 @@ Shader "Custom/ForceField"
             //     o.objNear = false;
             // }
 
-            float distFromHit = length(_HitPos - faceCentre);
-            float pulse1 = CalculatePulse(_RippleInterval, _RippleHeight, _RippleWidth, _RippleFalloff, _RipplePow, _TimeSinceHit, _RippleOffset, distFromHit, true);
-            float pulse2 = CalculatePulse(_RippleInterval, _RippleHeight, _RippleWidth, _RippleFalloff, _RipplePow, _TimeSinceHit, _RippleOffset, distFromHit, false);
-            float heightVal = pulse1 + pulse2;
+               float heightVal = CalculateRippleHeight(_HitPos, faceCentre, 3, _RippleInterval, _RippleHeight, _RippleWidth, _RippleFalloff, _RipplePow, _RippleOffset);
 
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
-            float sinValue = sin(angle);
-            float3 displacement = v.normal * heightVal * _PanelSpread * ((sinValue + 1) / 2);
+            float sinValue = sin(angle) * heightVal;
+
+            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2));
+
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
             o.displacementRatio = saturate(length(displacement) * 1.1 / _PanelSpread); //how displaced is the tile
-
         
 
             v.vertex = modifiedVertex;

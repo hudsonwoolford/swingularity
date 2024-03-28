@@ -9,6 +9,7 @@ public class ForceField : MonoBehaviour
     [SerializeField] Transform interactableObject;
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
+    float timeSinceHit, timeOffset;
     private void Awake()
     {
         forceMat = GetComponent<MeshRenderer>().sharedMaterial;
@@ -29,6 +30,9 @@ public class ForceField : MonoBehaviour
         forceMat.SetVector("_ObjPos", interactableObject.position);
         forceMat.SetFloat("_Scale", transform.localScale.x);
         forceMat.SetVector("_TransformWorldPos", transform.position);
+        timeSinceHit = Time.time - timeOffset;
+        print(timeSinceHit);
+        forceMat.SetFloat("_TimeSinceHit", timeSinceHit);
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -38,5 +42,8 @@ public class ForceField : MonoBehaviour
         }
         src.PlayOneShot(bump);
         forceMat.SetVector("_HitPos", interactableObject.position);
+        timeSinceHit = 0;
+        timeOffset = Time.time;
+        forceMat.SetFloat("_TimeSinceHit", timeSinceHit);
     }
 }
