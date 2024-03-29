@@ -14,13 +14,9 @@ Shader "Custom/ForceField"
 
         [Header(Interactivity Variables)]
         _InteractiveDistance ("Interactive Distance", float) = 1
-        _SmallInteractiveDistance ("Small Interactive Distance", float) = 1
-        _InteractiveMultiplier ("Interactive Multiplier", float) = 50
+        _InteractiveMultiplier ("Interactive Multiplier", Range(0, 100)) = 50
         _FalloffThreshold ("Falloff Threshold", float) = 1
         _FalloffIntensity ("Falloff Intensity", float) = 2
-        _RippleSpeed ("Ripple Speed", Float) = 1.0
-        _RippleBandLength("Ripple Band Length", Float) = 0.0
-        _RippleFalloff("Falloff", Float) = 0.0
 
         [Header(Fresnel)] //Fresnel
         [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
@@ -32,6 +28,15 @@ Shader "Custom/ForceField"
         [Header(Metal Smooth)]
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
+
+        [Header(Collision Ripple)]
+        _RippleInterval ("Ripple Interval", Float) = 0.1
+        _RippleHeight ("Ripple Height", Float) = 0.1
+        _RippleWidth ("Ripple Width", Float) = 0.1
+        _RippleFalloff ("Ripple Falloff", Float) = 0.1
+        _RippleSpeed ("Ripple Speed", Float) = 1.0
+        _Ripple ("Ripple", Float) = 0
+        _RippleBandLength("Ripple Band Length", Float) = 0.0
     }
     SubShader
     {
@@ -74,7 +79,6 @@ Shader "Custom/ForceField"
 
         float3 _ObjPos;
         float _InteractiveDistance;
-        float _SmallInteractiveDistance;
         float _InteractiveMultiplier;
         float _FalloffThreshold;
         float _FalloffIntensity;
@@ -84,9 +88,12 @@ Shader "Custom/ForceField"
         float3 _HitPos[10];
         float _HitTime[10];
 
+        float _RippleInterval; //b
+        float _RippleHeight; //z
+        float _RippleWidth; //k
+        float _RippleFalloff; //i
         float _RippleSpeed; //a
         float _RippleBandLength; //h
-        float _RippleFalloff;
 
 
         float2 CalculateRipple(int i, float3 normal)
@@ -98,7 +105,7 @@ Shader "Custom/ForceField"
             float interactiveMin = interactiveMax - _RippleBandLength;
             float objNear = 0;
             float objDistRatio = 0;
-            if((length(_HitPos[i] - faceCentre) <= interactiveMax && length(_HitPos[i] - faceCentre) >= interactiveMin && length(_HitPos[i] - faceCentre) <= _RippleFalloff) || length(_ObjPos - faceCentre) <= _InteractiveDistance)
+            if((length(_HitPos[i] - faceCentre) <= interactiveMax && length(_HitPos[i] - faceCentre) >= interactiveMin) || length(_ObjPos - faceCentre) <= _InteractiveDistance)
             {
                 objNear = 1;
                 objDistRatio = length(_HitPos[i] - faceCentre) / _FalloffThreshold;
@@ -129,14 +136,14 @@ Shader "Custom/ForceField"
                 } 
             }
             float3 faceCentre = _TransformWorldPos + (v.normal * _Scale);
-            if (length(_ObjPos - faceCentre) <= _SmallInteractiveDistance){
+            if (length(_ObjPos - faceCentre) <= _InteractiveDistance){
                 return;
             }
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
 
-            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2)) * saturate(length(_ObjPos - faceCentre) / _InteractiveDistance - _SmallInteractiveDistance);
+            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2));
 
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
             o.displacementRatio = saturate(length(displacement)/ _PanelSpread); //how displaced is the tile
