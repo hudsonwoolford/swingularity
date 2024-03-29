@@ -23,6 +23,8 @@ Shader "Custom/ForceField"
         _RippleSpeed ("Ripple Speed", Float) = 1.0
         _RippleBlendFallofff ("Ripple Blend Falloff", Float) = 0
         _RippleBandLength("Ripple Band Length", Float) = 0.0
+        _RipplePowerScaling("Ripple Power Scaling", Float) = 0.0
+        _RippleExponent("Ripple Exponent", Float) = 0.0
 
         [Header(Fresnel)] //Fresnel
         [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
@@ -90,13 +92,15 @@ Shader "Custom/ForceField"
         float _RippleBlendFallofff; //i
         float _RippleSpeed; //a
         float _RippleBandLength; //h
+        float _RipplePowerScaling;
+        float _RippleExponent;
 
 
         float2 CalculateRipple(int i, float3 faceCentre)
         {
             float timeSinceHit = _Time.y - _HitInfo[i].x; //time since hit
 
-            float theLine = timeSinceHit * _RippleSpeed * _HitInfo[i].y; //ripple line distance
+            float theLine = timeSinceHit * _RippleSpeed; //ripple line distance
             float distToHit = length(_HitPos[i] - faceCentre); //distance to hit
             float distToLine = abs(theLine-distToHit); //distance to ripple line
             
@@ -105,7 +109,7 @@ Shader "Custom/ForceField"
             if(distToLine <= _RippleBandLength/2) //if within ripple band
             {
                 float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2); //returns 1 rad if middle of ripple band, 0 if on edges
-	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * _HitInfo[i].y; //calculating total offset by SIN, scaled by height and power
+	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * pow(_HitInfo[i].y * _RipplePowerScaling, _RippleExponent); //calculating total offset by SIN, scaled by height and power
                 ripDistRatio = saturate(distToLine / (_RippleBandLength / 2)); //how close is the tile to the middle of the ripple
             }
             

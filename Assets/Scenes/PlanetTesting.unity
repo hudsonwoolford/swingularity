@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0014821443, g: 0.001356025, b: 0.0012915672, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014785795, g: 0.0013591028, b: 0.0012890887, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1150,7 +1150,8 @@ PrefabInstance:
       propertyPath: m_Range
       value: 5.55
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4666970382969136624, guid: e27f000242269b0449e7850bccd4c385, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1937,7 +1938,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609494402}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b1b246ab222f8914ab5ef5e72a201f4b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2269,7 +2270,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.01
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1870987252
 MeshRenderer:
@@ -2320,7 +2321,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870987248}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2858155536907836559, guid: 0ace8e274d63c1547bc989c1810026b2, type: 3}
 --- !u!4 &1870987254
 Transform:
   m_ObjectHideFlags: 0
@@ -2330,7 +2331,7 @@ Transform:
   m_GameObject: {fileID: 1870987248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 6.15, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 22.01, y: 22.01, z: 22.01}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

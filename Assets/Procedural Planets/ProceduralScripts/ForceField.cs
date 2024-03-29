@@ -39,8 +39,10 @@ public class ForceField : MonoBehaviour
 
         hitPos[hitIterator] = interactableObject.position;
         hitTime[hitIterator].x = Time.time;
-        float hitPower = Mathf.Clamp(Vector3.Dot(col.contacts[0].normal,col.relativeVelocity)/10-1, 0, Mathf.Infinity)*3;
-        print(hitPower);
+        float hitPower = 0;
+        foreach (ContactPoint contact in col.contacts){
+            hitPower += contact.impulse.magnitude;
+        }
         hitTime[hitIterator].y = hitPower;
 
         forceMat.SetVectorArray("_HitPos", hitPos);
