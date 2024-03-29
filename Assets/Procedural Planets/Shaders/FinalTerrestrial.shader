@@ -93,7 +93,23 @@ Shader "Custom/FinalTerrestrial"
      _FresnelStrengthNear("Fresnel Strength Near", float) = 2
      _FresnelStrengthFar("Fresnel Strength Far", float) = 5
      _FresnelPower("Fresnel Power", float) = 2
+    
+     [Header(Normals)]
 
+     _NormalTextureA("Normal Texture A", 2D) = "white" {}
+     _NormalOffsetA("Normal Offset A", vector) = (1,1,1)
+     _NormalPowerA("Normal Power A", float) = 1
+     _NormalScaleA("Normal Scale A", float) = 1
+
+     _NormalTextureB("Normal Texture B", 2D) = "white" {}
+     _NormalOffsetB("Normal Offset B", vector) = (1,1,1)
+     _NormalPowerB("Normal Power B", float) = 1
+     _NormalScaleB("Normal Scale B", float) = 1
+
+     _NormalTextureP("Normal Texture P", 2D) = "white" {}
+     _NormalOffsetP("Normal Offset P", vector) = (1,1,1)
+     _NormalPowerP("Normal Power P", float) = 1
+     _NormalScaleP("Normal Scale P", float) = 1
      [Header(Noise)] //Noise
 
      [HideInInspector][IntRange]_Octaves("Octaves", Range(0,5)) = 1

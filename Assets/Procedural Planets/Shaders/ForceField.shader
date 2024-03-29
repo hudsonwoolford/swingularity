@@ -14,8 +14,7 @@ Shader "Custom/ForceField"
 
         [Header(Interactivity Variables)]
         _InteractiveDistance ("Interactive Distance", float) = 1
-        _InteractiveMultiplier ("Interactive Multiplier", Range(0, 100)) = 50
-        _FalloffThreshold ("Falloff Threshold", float) = 1
+        _InteractiveMultiplier ("Interactive Multiplier", Range(0, 5)) = 1
         _FalloffIntensity ("Falloff Intensity", float) = 2
 
         [Header(Fresnel)] //Fresnel
@@ -48,7 +47,7 @@ Shader "Custom/ForceField"
         #pragma surface surf Standard fullforwardshadows vertex:vert alpha:blend
         #pragma target 4.0
         #include "Includes/SimplexNoise.cginc"
-
+        #define PI 3.14159265359
         sampler2D _MainTex;
 
         struct Input
@@ -60,7 +59,7 @@ Shader "Custom/ForceField"
             float3 vertPos;
             float fresnelValue;
             float displacementRatio;
-            bool objNear;
+            bool objNear, inRipple;
             float objDistRatio;
         };
 
@@ -80,7 +79,6 @@ Shader "Custom/ForceField"
         float3 _ObjPos;
         float _InteractiveDistance;
         float _InteractiveMultiplier;
-        float _FalloffThreshold;
         float _FalloffIntensity;
         float _Scale;
         float3 _TransformWorldPos;
@@ -96,25 +94,25 @@ Shader "Custom/ForceField"
         float _RippleBandLength; //h
 
 
-        float2 CalculateRipple(int i, float3 normal)
+        float2 CalculateRipple(int i, float3 faceCentre)
         {
             float timeSinceHit = _Time.y - _HitTime[i];
-            //interactivity
-            float3 faceCentre = _TransformWorldPos + (normal * _Scale);
-            float interactiveMax = timeSinceHit * _RippleSpeed;
-            float interactiveMin = interactiveMax - _RippleBandLength;
-            float objNear = 0;
-            float objDistRatio = 0;
-            if((length(_HitPos[i] - faceCentre) <= interactiveMax && length(_HitPos[i] - faceCentre) >= interactiveMin) || length(_ObjPos - faceCentre) <= _InteractiveDistance)
+
+            float theLine = timeSinceHit * _RippleSpeed;
+            float interactiveMin = theLine - _RippleBandLength;
+            float distToHit = length(_HitPos[i] - faceCentre);
+            float distToLine = abs(theLine-distToHit);
+            
+            float yUp = 0;
+            float ripDistRatio = 0; //how close to middle of ripple
+            if(distToLine <= _RippleBandLength/2)
             {
-                objNear = 1;
-                objDistRatio = length(_HitPos[i] - faceCentre) / _FalloffThreshold;
+                float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2);   
+	            yUp = (sin(progress-(PI/2))+1)/2;
+                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2));
             }
-            else
-            {
-                objNear = 0;
-            }
-            return float2(objNear, objDistRatio);
+            
+            return float2(yUp, ripDistRatio);
         }
         void vert (inout appdata_full v, out Input o)
         {
@@ -126,29 +124,35 @@ Shader "Custom/ForceField"
             o.fresnelValue = 1-saturate(0.05 * pow(abs(dot(sphereNormal, viewDir)), _FresnelPower));
 
             o.vertPos = v.vertex;
-
-            for (int i = 0; i < 10; i++){
-                float2 ripple = CalculateRipple(i, v.normal);
-                if (ripple.x == 1){
-                    o.objNear = true;
-                    o.objDistRatio = ripple.y;
-                    break;
-                } 
-            }
             float3 faceCentre = _TransformWorldPos + (v.normal * _Scale);
-            if (length(_ObjPos - faceCentre) <= _InteractiveDistance){
-                return;
+
+            float totalY = 0;
+            float ripDistRatio = 0;
+            for (int i = 0; i < 10; i++){
+                float2 rippleInfo = CalculateRipple(i, faceCentre);
+                ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
+                totalY += rippleInfo.x;
             }
+            
+            float distToBall = length(_ObjPos - faceCentre);
+            int noiseMult = 1;
+            float ballDistRatio = 0;
+            if ((distToBall <= _InteractiveDistance))
+            {
+                o.objNear = true;
+                noiseMult = 1;
+            }
+            ballDistRatio = pow(saturate(distToBall / _InteractiveDistance), _FalloffIntensity);
+            o.objDistRatio = ripDistRatio != 0 ? ripDistRatio : ballDistRatio;
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
 
-            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2));
+            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2 * noiseMult + totalY)) * ballDistRatio;
 
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
-            o.displacementRatio = saturate(length(displacement)/ _PanelSpread); //how displaced is the tile
+            o.displacementRatio = saturate((length(displacement) )/ _PanelSpread); //how displaced is the tile
         
-
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;
         }
@@ -162,10 +166,13 @@ Shader "Custom/ForceField"
 
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * compoundColor;
             
-            if(IN.objNear == 1)
+            float normalAlpha = clamp(saturate(c.a * pow(IN.displacementRatio, 1) + (c.a * _BaseOpacity)), 0, _TopOpacity);
+
+            bool affected = IN.inRipple || IN.objNear;
+            if(affected)
             {
-                o.Emission = lerp(c*_InteractiveMultiplier, c, pow(saturate(IN.objDistRatio), _FalloffIntensity)) * 0.5;
-                o.Alpha = c.a;
+                o.Emission = c * 0.5;
+                o.Alpha = lerp(c.a * _InteractiveMultiplier, normalAlpha, pow(IN.objDistRatio, _FalloffIntensity)) * 0.5;
                 return;
             }
 
@@ -173,7 +180,7 @@ Shader "Custom/ForceField"
 
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = clamp(saturate(c.a * pow(IN.displacementRatio, -1.7) + (c.a * _BaseOpacity)), 0, _TopOpacity) * c.a;
+            o.Alpha = normalAlpha;
 
         }
         ENDCG
