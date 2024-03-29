@@ -9,6 +9,9 @@ public class ForceField : MonoBehaviour
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
     [SerializeField] float timeOffset = 0, timeSinceHit;
+    [SerializeField] Vector4[] hitPos = new Vector4[10];
+    [SerializeField] float[] hitTime = new float[10]; 
+    [SerializeField] int hitIterator;
 
     private void Awake()
     {
@@ -37,9 +40,16 @@ public class ForceField : MonoBehaviour
             return;
         }
         src.PlayOneShot(bump);
-        forceMat.SetVector("_HitPos", interactableObject.position);
-        timeOffset = Time.time;
-        forceMat.SetFloat("_HitTime", Time.time);
+
+        hitPos[hitIterator] = interactableObject.position;
+        hitTime[hitIterator] = Time.time;
+        forceMat.SetVectorArray("_HitPos", hitPos);
+        forceMat.SetFloatArray("_HitTime", hitTime);
+
+        hitIterator++;
+        if (hitIterator >= 10){
+            hitIterator = 0;
+        }
     }
 
     private void FixedUpdate()

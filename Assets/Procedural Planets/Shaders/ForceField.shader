@@ -114,7 +114,7 @@ Shader "Custom/ForceField"
             {
                 objNear = 0;
             }
-            return (objNear, objDistRatio);
+            return float2(objNear, objDistRatio);
         }
         void vert (inout appdata_full v, out Input o)
         {
@@ -127,12 +127,17 @@ Shader "Custom/ForceField"
 
             o.vertPos = v.vertex;
 
-            for (int i = 0; i < _HitPos.Length; i++){
+            for (int i = 0; i < 10; i++){
                 float2 ripple = CalculateRipple(i, v.normal);
                 if (ripple.x == 1){
+                    o.objNear = true;
                     o.objDistRatio = ripple.y;
-                    return;
+                    break;
                 } 
+            }
+            float3 faceCentre = _TransformWorldPos + (v.normal * _Scale);
+            if (length(_ObjPos - faceCentre) <= _InteractiveDistance){
+                return;
             }
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
