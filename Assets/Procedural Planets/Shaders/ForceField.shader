@@ -16,6 +16,13 @@ Shader "Custom/ForceField"
         _InteractiveDistance ("Interactive Distance", float) = 1
         _InteractiveMultiplier ("Interactive Multiplier", Range(0, 5)) = 1
         _FalloffIntensity ("Falloff Intensity", float) = 2
+        
+        [Header(Collision Ripple)]
+        _RippleFalloff ("Ripple Falloff", Float) = 0.1
+        _RippleHeight("Ripple Height", Float) = 0.1
+        _RippleSpeed ("Ripple Speed", Float) = 1.0
+        _RippleBlendFallofff ("Ripple Blend Falloff", Float) = 0
+        _RippleBandLength("Ripple Band Length", Float) = 0.0
 
         [Header(Fresnel)] //Fresnel
         [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
@@ -28,14 +35,6 @@ Shader "Custom/ForceField"
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
-        [Header(Collision Ripple)]
-        _RippleInterval ("Ripple Interval", Float) = 0.1
-        _RippleHeight ("Ripple Height", Float) = 0.1
-        _RippleWidth ("Ripple Width", Float) = 0.1
-        _RippleFalloff ("Ripple Falloff", Float) = 0.1
-        _RippleSpeed ("Ripple Speed", Float) = 1.0
-        _Ripple ("Ripple", Float) = 0
-        _RippleBandLength("Ripple Band Length", Float) = 0.0
     }
     SubShader
     {
@@ -84,32 +83,30 @@ Shader "Custom/ForceField"
         float3 _TransformWorldPos;
 
         float3 _HitPos[10];
-        float _HitTime[10];
+        float2 _HitInfo[10];
 
-        float _RippleInterval; //b
         float _RippleHeight; //z
-        float _RippleWidth; //k
         float _RippleFalloff; //i
+        float _RippleBlendFallofff; //i
         float _RippleSpeed; //a
         float _RippleBandLength; //h
 
 
         float2 CalculateRipple(int i, float3 faceCentre)
         {
-            float timeSinceHit = _Time.y - _HitTime[i];
+            float timeSinceHit = _Time.y - _HitInfo[i].x; //time since hit
 
-            float theLine = timeSinceHit * _RippleSpeed;
-            float interactiveMin = theLine - _RippleBandLength;
-            float distToHit = length(_HitPos[i] - faceCentre);
-            float distToLine = abs(theLine-distToHit);
+            float theLine = timeSinceHit * _RippleSpeed * _HitInfo[i].y; //ripple line distance
+            float distToHit = length(_HitPos[i] - faceCentre); //distance to hit
+            float distToLine = abs(theLine-distToHit); //distance to ripple line
             
-            float yUp = 0;
-            float ripDistRatio = 0; //how close to middle of ripple
-            if(distToLine <= _RippleBandLength/2)
+            float yUp = 0; //declaration of total offset
+            float ripDistRatio = 0; //declaration of blending value
+            if(distToLine <= _RippleBandLength/2) //if within ripple band
             {
-                float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2);   
-	            yUp = (sin(progress-(PI/2))+1)/2;
-                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2));
+                float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2); //returns 1 rad if middle of ripple band, 0 if on edges
+	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * _HitInfo[i].y; //calculating total offset by SIN, scaled by height and power
+                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2)); //how close is the tile to the middle of the ripple
             }
             
             return float2(yUp, ripDistRatio);
@@ -128,27 +125,26 @@ Shader "Custom/ForceField"
 
             float totalY = 0;
             float ripDistRatio = 0;
-            for (int i = 0; i < 10; i++){
-                float2 rippleInfo = CalculateRipple(i, faceCentre);
-                ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
-                totalY += rippleInfo.x;
-            }
-            
-            float distToBall = length(_ObjPos - faceCentre);
-            int noiseMult = 1;
-            float ballDistRatio = 0;
-            if ((distToBall <= _InteractiveDistance))
+            if(_HitInfo[0].x > 0)
             {
-                o.objNear = true;
-                noiseMult = 1;
+                for (int i = 0; i < 10; i++){
+                    float2 rippleInfo = CalculateRipple(i, faceCentre);
+                    ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
+                    totalY += rippleInfo.x;
+                }
             }
-            ballDistRatio = pow(saturate(distToBall / _InteractiveDistance), _FalloffIntensity);
+            float distToBall = length(_ObjPos - faceCentre);
+            if (distToBall <= _InteractiveDistance){ o.objNear = true; }
+            else if (totalY > 0) { o.inRipple = true; }
+
+            float ballDistRatio = pow(saturate(distToBall / _InteractiveDistance), _FalloffIntensity);
             o.objDistRatio = ripDistRatio != 0 ? ripDistRatio : ballDistRatio;
+            
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
 
-            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2 * noiseMult + totalY)) * ballDistRatio;
+            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2 + totalY)) * ballDistRatio;
 
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
             o.displacementRatio = saturate((length(displacement) )/ _PanelSpread); //how displaced is the tile
@@ -168,11 +164,12 @@ Shader "Custom/ForceField"
             
             float normalAlpha = clamp(saturate(c.a * pow(IN.displacementRatio, 1) + (c.a * _BaseOpacity)), 0, _TopOpacity);
 
+            float falloff = IN.inRipple ? _RippleBlendFallofff : _FalloffIntensity;
             bool affected = IN.inRipple || IN.objNear;
             if(affected)
             {
                 o.Emission = c * 0.5;
-                o.Alpha = lerp(c.a * _InteractiveMultiplier, normalAlpha, pow(IN.objDistRatio, _FalloffIntensity)) * 0.5;
+                o.Alpha = lerp(c.a * _InteractiveMultiplier, normalAlpha, pow(IN.objDistRatio, falloff)) * 0.5;
                 return;
             }
 

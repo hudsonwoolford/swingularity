@@ -8,9 +8,8 @@ public class ForceField : MonoBehaviour
     [SerializeField] Transform interactableObject;
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
-    [SerializeField] float timeOffset = 0, timeSinceHit;
     [SerializeField] Vector4[] hitPos = new Vector4[10];
-    [SerializeField] float[] hitTime = new float[10]; 
+    [SerializeField] Vector4[] hitTime = new Vector4[10]; 
     [SerializeField] int hitIterator;
 
     private void Awake()
@@ -25,40 +24,31 @@ public class ForceField : MonoBehaviour
             forceMat = GetComponent<MeshRenderer>().sharedMaterial;
         }
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0;
-
         forceMat.SetVector("_ObjPos", interactableObject.position);
         forceMat.SetFloat("_Scale", transform.localScale.x);
         forceMat.SetVector("_TransformWorldPos", transform.position);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision col)
     {
-        if (collision.gameObject.layer == 7)
+        if (col.gameObject.layer == 7)
         {
             return;
         }
         src.PlayOneShot(bump);
 
         hitPos[hitIterator] = interactableObject.position;
-        hitTime[hitIterator] = Time.time;
+        hitTime[hitIterator].x = Time.time;
+        float hitPower = Mathf.Clamp(Vector3.Dot(col.contacts[0].normal,col.relativeVelocity)/10-1, 0, Mathf.Infinity)*3;
+        print(hitPower);
+        hitTime[hitIterator].y = hitPower;
+
         forceMat.SetVectorArray("_HitPos", hitPos);
-        forceMat.SetFloatArray("_HitTime", hitTime);
+        forceMat.SetVectorArray("_HitInfo", hitTime);
 
         hitIterator++;
         if (hitIterator >= 10){
             hitIterator = 0;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (forceMat != null)
-        {
-            timeSinceHit = Time.time - timeOffset;
-
-            
         }
     }
 }
