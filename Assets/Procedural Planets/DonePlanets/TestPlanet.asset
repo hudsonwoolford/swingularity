@@ -13,32 +13,32 @@ MonoBehaviour:
   m_Name: TestPlanet
   m_EditorClassIdentifier: 
   planetMaterial: {fileID: 2100000, guid: b3f3545bc608e79468d7c6576815210e, type: 2}
-  terrainVar: {fileID: 11400000, guid: c1468606175d1294ab38103476835961, type: 2}
+  terrainVar: {fileID: 11400000, guid: e30bf95a338977c4fa3e6bc4084f52e0, type: 2}
   oceanVariables:
-    _OceanBlendEnd: 0.01
-    _OceanBlendIntensity: 0.01
-    _BeachBlendEnd: 0.02
-    _BeachBlendIntensity: 1.4
-    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
-    _OceanColor: {r: 0, g: 0, b: 1, a: 1}
-    _OceanMetallic: 0.2
-    _OceanSmoothness: 0.6
+    _OceanBlendEnd: 0.038
+    _OceanBlendIntensity: 0.82
+    _BeachBlendEnd: 0.022
+    _BeachBlendIntensity: 0.9
+    _SeabedColor: {r: 0, g: 0.40876806, b: 0.8207547, a: 1}
+    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0.811
   atmosphereVariables:
-    _OuterBandColor: {r: 1, g: 1, b: 1, a: 1}
-    _OuterBandRange: 2.2
-    _OuterBandIntensity: 0.6
-    _InnerBandColor: {r: 1, g: 1, b: 1, a: 1}
-    _InnerBandRange: 2.1
-    _InnerBandIntensity: 4
-    _FrontColor: {r: 1, g: 1, b: 1, a: 1}
-    _FrontRange: 2
-    _FrontIntensity: 0.15
+    _OuterBandColor: {r: 0.19215685, g: 0.68827164, b: 0.94509804, a: 1}
+    _OuterBandRange: 2.72
+    _OuterBandIntensity: 0.44
+    _InnerBandColor: {r: 0, g: 0.84723073, b: 0.9056604, a: 1}
+    _InnerBandRange: 2.5
+    _InnerBandIntensity: 0.97
+    _FrontColor: {r: 0.40744036, g: 0.7725985, b: 0.7924528, a: 1}
+    _FrontRange: 2.23
+    _FrontIntensity: 0.21
   fresnelVariables:
-    _UseFresnel: 1
-    _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    _FresnelStrengthNear: 2
+    _UseFresnel: 0
+    _FresnelColor: {r: 0, g: 0.44887233, b: 0.8207547, a: 1}
+    _FresnelStrengthNear: 1.92
     _FresnelStrengthFar: 5
-    _FresnelPower: 8
+    _FresnelPower: 6.85
   treeVariables:
     _UseTrees: 0
     _TreeObjects: []

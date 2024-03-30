@@ -19,7 +19,7 @@ Shader "Custom/ForceField"
         
         [Header(Collision Ripple)]
         _RippleFalloff ("Ripple Falloff", Float) = 0.1
-        _RippleHeight("Ripple Height", Float) = 0.1
+        _RippleHeight("Ripple Height", Range(0, 0.1)) = 0.1
         _RippleSpeed ("Ripple Speed", Float) = 1.0
         _RippleBlendFallofff ("Ripple Blend Falloff", Float) = 0
         _RippleBandLength("Ripple Band Length", Float) = 0.0
@@ -99,6 +99,7 @@ Shader "Custom/ForceField"
         float2 CalculateRipple(int i, float3 faceCentre)
         {
             float timeSinceHit = _Time.y - _HitInfo[i].x; //time since hit
+            float hitPower = pow(_HitInfo[i].y * _RipplePowerScaling, _RippleExponent);
 
             float theLine = timeSinceHit * _RippleSpeed; //ripple line distance
             float distToHit = length(_HitPos[i] - faceCentre); //distance to hit
@@ -109,8 +110,9 @@ Shader "Custom/ForceField"
             if(distToLine <= _RippleBandLength/2) //if within ripple band
             {
                 float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2); //returns 1 rad if middle of ripple band, 0 if on edges
-	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * pow(_HitInfo[i].y * _RipplePowerScaling, _RippleExponent); //calculating total offset by SIN, scaled by height and power
-                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2)); //how close is the tile to the middle of the ripple
+	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * hitPower; //calculating total offset by SIN, scaled by height and power
+                float ripOpacity = hitPower * pow(timeSinceHit, _RippleFalloff);
+                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2) + pow(ripOpacity, -_RippleBlendFallofff)); //how close is the tile to the middle of the ripple
             }
             
             return float2(yUp, ripDistRatio);
@@ -148,10 +150,11 @@ Shader "Custom/ForceField"
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
 
-            float3 displacement = v.normal * (_PanelSpread * ((sinValue + 1) / 2 + totalY)) * ballDistRatio;
+            float3 rippleDisplacement = v.normal * totalY;
+            float3 displacement = rippleDisplacement + v.normal * (_PanelSpread * (sinValue + 1) / 2) * ballDistRatio;
 
             float4 modifiedVertex = float4(v.vertex.xyz + displacement, 1);
-            o.displacementRatio = saturate((length(displacement) )/ _PanelSpread); //how displaced is the tile
+            o.displacementRatio = saturate((length(displacement)-length(rippleDisplacement))/ _PanelSpread); //how displaced is the tile
         
             v.vertex = modifiedVertex;
             o.vertPos = v.vertex;

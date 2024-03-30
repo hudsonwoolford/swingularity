@@ -67,7 +67,7 @@ public class FullPlanetGeneration : MonoBehaviour
             ocean.gameObject.SetActive(false);
         }
         else if(!ocean.gameObject.activeInHierarchy)
-        {
+        {   
             ocean.gameObject.SetActive(true);
         }
         Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial; //caching ocean material
