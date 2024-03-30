@@ -13,6 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _BIOMEA_ON
+  - _BIOMEB_ON
   - _POLAR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -44,9 +46,9 @@ Material:
     m_Floats:
     - _BeachBlendEnd: 0.022
     - _BeachBlendIntensity: 0.9
-    - _BiomeA: 0
+    - _BiomeA: 1
     - _BiomeAEnd: 0.3
-    - _BiomeB: 0
+    - _BiomeB: 1
     - _BiomeBStart: 0.7
     - _ColorGain: 1
     - _ColorLacunarity: 0
@@ -58,7 +60,7 @@ Material:
     - _FresnelStrengthFar: 5
     - _FresnelStrengthNear: 1.92
     - _Gain: 1
-    - _Lacunarity: 0
+    - _Lacunarity: 1.16
     - _MetallicA: 0
     - _MetallicB: 0.19
     - _MetallicP: 0
@@ -75,12 +77,12 @@ Material:
     - _OceanBlendEnd: 0.038
     - _OceanBlendIntensity: 0.82
     - _Octaves: 3
-    - _Persistence: 0
+    - _Persistence: -0.26
     - _Polar: 1
     - _PolarBlendEnd: 0.01
-    - _PolarBlendIntensity: 0
-    - _PolarHeight: 0
-    - _Scale: 1
+    - _PolarBlendIntensity: 9.25
+    - _PolarHeight: 2.59
+    - _Scale: 1.03
     - _SeaLevel: 1
     - _SmoothnessA: 0
     - _SmoothnessB: 0
@@ -102,7 +104,7 @@ Material:
     - _WarpMultiplier: 1
     - _WarpOctaves: 3
     - _WarpPersistence: 0
-    - _WarpScale: 1
+    - _WarpScale: 0.02
     m_Colors:
     - _ColorOffset: {r: 0, g: 0, b: 0, a: 0}
     - _FlatColorA: {r: 0.2404409, g: 0.754717, b: 0, a: 1}

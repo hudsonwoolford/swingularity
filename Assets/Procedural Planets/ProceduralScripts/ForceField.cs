@@ -16,7 +16,14 @@ public class ForceField : MonoBehaviour
     {
         forceMat = GetComponent<MeshRenderer>().sharedMaterial;
     }
-
+    void Start()
+    {
+        hitIterator = 0;
+        hitPos = new Vector4[10];
+        hitTime = new Vector4[10];
+        forceMat.SetVectorArray("_HitPos", hitPos);
+        forceMat.SetVectorArray("_HitInfo", hitTime);
+    }
     void Update()
     {
         if (forceMat != null)
