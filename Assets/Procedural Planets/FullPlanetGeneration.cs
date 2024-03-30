@@ -2,9 +2,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine.XR;
+using System.Linq;
 using Unity.VisualScripting;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -43,6 +42,10 @@ public class FullPlanetGeneration : MonoBehaviour
         treesA = new List<GameObject>(); //list of instantiated trees
         treesB = new List<GameObject>();
         treesP = new List<GameObject>();
+    }
+    void Start()
+    {
+        ClearAllTrees();
     }
     void Update()
     {
@@ -114,8 +117,9 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearTrees(treesA); ClearTrees(treesB); return; } //if no biomes have trees return fucntion
+        if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees && !biomeP.treeVariables._UseTrees) { ClearAllTrees(); return; } //if no biomes have trees return fucntion
         if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
+        //combine tree obj array
         TreeObject[] treeObjects = biomeA.treeVariables._TreeObjects;
         if(biomeB.treeVariables._UseTrees && biomeB.treeVariables._TreeObjects != null){
             treeObjects = biomeA.treeVariables._TreeObjects.Concat(biomeB.treeVariables._TreeObjects).ToArray();
@@ -174,7 +178,8 @@ public class FullPlanetGeneration : MonoBehaviour
         ComputeBuffer vertBuffer = new ComputeBuffer(verts.Length, sizeof(float) * 3); //vertex buffer
         ComputeBuffer aBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome a vertex buffer
         ComputeBuffer bBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome b vertex buffer
-        ComputeBuffer pBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome b vertex buffer
+        ComputeBuffer pBuffer    = new ComputeBuffer(verts.Length, sizeof(float) * 3, ComputeBufferType.Append); //biome p vertex buffer
+        vertBuffer.SetCounterValue(0); //resetting counter values
         aBuffer.SetCounterValue(0); //resetting counter values
         bBuffer.SetCounterValue(0); //resetting counter values
         pBuffer.SetCounterValue(0); //resetting counter values
@@ -223,9 +228,12 @@ public class FullPlanetGeneration : MonoBehaviour
         indirectArgumentsBuffer.Release();
         #endregion
 
-        if (biomeA.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesA, ref biomeA, biomeAVerts);
-        if (biomeB.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesB, ref biomeB, biomeBVerts);
-        if (biomeP != null && biomeP.treeVariables._UseTrees) CreateAndDestroyTrees(ref treesP, ref biomeP, biomePVerts);
+        bool aEnabled = planet.planetMaterial.GetFloat("_BiomeA") == 1 ? true : false;
+        bool bEnabled = planet.planetMaterial.GetFloat("_BiomeB") == 1 ? true : false;
+
+        if (biomeA.treeVariables._UseTrees && aEnabled && numAVertices > 0) CreateAndDestroyTrees(ref treesA, ref biomeA, biomeAVerts);
+        if (biomeB.treeVariables._UseTrees && bEnabled && numBVertices > 0) CreateAndDestroyTrees(ref treesB, ref biomeB, biomeBVerts);
+        if (biomeP != null && biomeP.treeVariables._UseTrees && numPVertices > 0) CreateAndDestroyTrees(ref treesP, ref biomeP, biomePVerts);
       
     }
     void CreateAndDestroyTrees(ref List<GameObject> trees, ref PlanetColorScheme biome, Vector3[] vertPool){
@@ -250,8 +258,8 @@ public class FullPlanetGeneration : MonoBehaviour
 
             Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
 
-            int chosenVert = UnityEngine.Random.Range(0, vertPool.Length); //random vertex from pool
-            Vector3 vertexElevationDir = vertPool[chosenVert ] - ocean.position; //vertex normal
+            int chosenVert = UnityEngine.Random.Range(0, vertPool.Length-1); //random vertex from pool
+            Vector3 vertexElevationDir = vertPool[chosenVert] - ocean.position; //vertex normal
             tree.transform.position = vertPool[chosenVert] * transform.localScale.x; //set tree position to vertex
             tree.transform.localScale *= transform.localScale.x;
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
@@ -275,24 +283,14 @@ public class FullPlanetGeneration : MonoBehaviour
                     trm.pBlocks[i]._Color = biome.treeVariables._TreeLeafColors[Random.Range(0, 3)];
                     trm.pBlocks[i]._Metallic = biome.treeVariables._TreeMetallic;
                     trm.pBlocks[i]._Smoothness = biome.treeVariables._TreeSmoothness;
-                    //propertyBlock.SetColor("_Color", );
-                    //propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
-                    //propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
                 else
                 {
                     trm.pBlocks[i]._Color = biome.treeVariables._TreeBarkColor;
                     trm.pBlocks[i]._Metallic = biome.treeVariables._TreeMetallic;
                     trm.pBlocks[i]._Smoothness = biome.treeVariables._TreeSmoothness;
-                    //propertyBlock.SetColor("_Color", biome.treeVariables._TreeBarkColor);
-                    //propertyBlock.SetFloat("_Metallic", biome.treeVariables._TreeMetallic);
-                    //propertyBlock.SetFloat("_Smoothness", biome.treeVariables._TreeSmoothness);
                 }
-
-                // Assign the MaterialPropertyBlock to the material instance
-                //treeMeshRenderer.SetPropertyBlock(propertyBlock, i);
             }
-
 
             tree.SetActive(true); //make sure tree is active
 
@@ -302,9 +300,10 @@ public class FullPlanetGeneration : MonoBehaviour
     public void ClearAllTrees()
     {
         //destroys every tree object by child
-        foreach (Transform tree in treeParent)
+        List<GameObject> children = treeParent.Cast<Transform>().ToList().ConvertAll<GameObject>(t => t.gameObject);
+        for (int i = 0; i < children.Count; i++)
         {
-            if (tree.gameObject != null) { DestroyImmediate(tree.gameObject); }
+            DestroyImmediate(children[i]);
         }
         treesA.Clear(); //clears list
         treesB.Clear(); //clears list

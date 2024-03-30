@@ -18,7 +18,7 @@ Shader "Custom/ForceField"
         _FalloffIntensity ("Falloff Intensity", float) = 2
         
         [Header(Collision Ripple)]
-        _RippleFalloff ("Ripple Falloff", Float) = 0.1
+        _RippleFalloff ("Ripple Falloff", Range(0, 0.2)) = 0.1
         _RippleHeight("Ripple Height", Range(0, 0.1)) = 0.1
         _RippleSpeed ("Ripple Speed", Float) = 1.0
         _RippleBlendFallofff ("Ripple Blend Falloff", Float) = 0
@@ -111,8 +111,8 @@ Shader "Custom/ForceField"
             {
                 float progress = (1-(distToLine / (_RippleBandLength/2))) * (PI/2); //returns 1 rad if middle of ripple band, 0 if on edges
 	            yUp = (sin(progress-(PI/2))+1)/2 * _RippleHeight * hitPower; //calculating total offset by SIN, scaled by height and power
-                float ripOpacity = hitPower * pow(timeSinceHit, _RippleFalloff);
-                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2) + pow(ripOpacity, -_RippleBlendFallofff)); //how close is the tile to the middle of the ripple
+                float ripOpacity = pow(timeSinceHit/(_RippleFalloff*hitPower), 2);
+                ripDistRatio = saturate(distToLine / (_RippleBandLength / 2) + ripOpacity); //how close is the tile to the middle of the ripple
             }
             
             return float2(yUp, ripDistRatio);
@@ -138,13 +138,14 @@ Shader "Custom/ForceField"
                     ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
                     totalY += rippleInfo.x;
                 }
+                totalY*=1-ripDistRatio; 
             }
             float distToBall = length(_ObjPos - faceCentre);
             if (distToBall <= _InteractiveDistance){ o.objNear = true; }
-            else if (totalY > 0) { o.inRipple = true; }
+            if (totalY > 0) { o.inRipple = true; }
 
             float ballDistRatio = pow(saturate(distToBall / _InteractiveDistance), _FalloffIntensity);
-            o.objDistRatio = ripDistRatio != 0 ? ripDistRatio : ballDistRatio;
+            o.objDistRatio = ripDistRatio != 0 && !o.objNear ? ripDistRatio : ballDistRatio;
             
             //displacement
             float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
@@ -171,7 +172,7 @@ Shader "Custom/ForceField"
             
             float normalAlpha = clamp(saturate(c.a * pow(IN.displacementRatio, 1) + (c.a * _BaseOpacity)), 0, _TopOpacity);
 
-            float falloff = IN.inRipple ? _RippleBlendFallofff : _FalloffIntensity;
+            float falloff = IN.objNear ? _FalloffIntensity : IN.inRipple ? _RippleBlendFallofff : _FalloffIntensity;
             bool affected = IN.inRipple || IN.objNear;
             if(affected)
             {
