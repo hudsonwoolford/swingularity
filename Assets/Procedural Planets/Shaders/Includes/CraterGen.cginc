@@ -28,22 +28,25 @@ float CalculateCraterHeight(int numCraters, float3 vertexPos, float floorHeight,
     //Loop over to check if the current vertex is in a crater
     for (int i = 0; i < numCraters; i++)
     {
-        //calculate the distance of the point to the crater between 0 and 1
-        float x = length(vertexPos - craters[i].centre) / craters[i].radius;
-        
-        //Define cavity as a simple parabola
-        float cavity = x * x - 1;
-        
-        //Define the rim as a parabola mirrored around x axis
-        //rimWidth changes 
-        float rimX = min(x - 1 - rimWidth, 0);
-        float rim = rimSteepness * rimX * rimX;
-        
-        float craterShape = SmoothMax(cavity, floorHeight, smoothness);
-        craterShape = SmoothMin(craterShape, rim, smoothness);
-        
-        craterHeight += craterShape * craters[i].radius;
+            //calculate the distance of the point to the crater between 0 and 1
+            float x = length(vertexPos - craters[i].centre) / craters[i].radius;
 
+            //Define cavity as a simple parabola
+            float cavity = x * x - 1;
+            
+            //Define the rim as a parabola mirrored around x axis
+            //rimWidth changes 
+            float rimX = min(x - 1 - rimWidth, 0);
+            float rim = rimSteepness * rimX * rimX;
+            
+            float craterShape = SmoothMax(cavity, floorHeight, smoothness);
+            craterShape = SmoothMin(craterShape, rim, smoothness);
+            if(craterShape < 0){
+                craterHeight = craterShape * craters[i].radius;
+            }
+            else{
+                craterHeight += craterShape * craters[i].radius;
+            }
     }
     return craterHeight;
 }

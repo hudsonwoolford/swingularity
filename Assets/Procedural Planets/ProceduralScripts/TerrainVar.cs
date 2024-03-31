@@ -32,6 +32,7 @@ public class GeneralSettings
     public int seed;
 
     public bool ocean = true;
+    public bool atmosphere = true;
 
     [Range(0, 5)]
     public float _SeaLevel = 1;

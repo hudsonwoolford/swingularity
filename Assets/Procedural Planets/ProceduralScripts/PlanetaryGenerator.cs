@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static TerrainVar;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class PlanetaryGenerator : MonoBehaviour
 {
@@ -32,9 +29,17 @@ public class PlanetaryGenerator : MonoBehaviour
             float radius = Mathf.Lerp(terrainVar.craterSettings.minCraterSize, terrainVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, terrainVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
             float floorHeight = UnityEngine.Random.Range(-0.25f, 0f);
-            craters[i].radius = radius;
-            craters[i].centre = centre;
-            craters[i].floorHeight = floorHeight;
+            bool intersecting = true;
+            for(int u = 0; u < craters.Length; u++){
+                if ((centre - craters[u].centre).magnitude <= craters[u].radius + terrainVar.craterSettings.rimWidth){
+                    intersecting = true;
+                }
+            }
+            if (!intersecting){
+                craters[i].radius = radius;
+                craters[i].centre = centre;
+                craters[i].floorHeight = floorHeight;
+            }
         }
         return craters;
     }

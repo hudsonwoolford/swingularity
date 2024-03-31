@@ -13,10 +13,28 @@ MonoBehaviour:
   m_Name: Cartoon Moon
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Pastel
+      oPrimary: 0
+      aPrimary: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 4249ee8147814d34092f5aaa6793dcf3, type: 2}
+      - {fileID: 11400000, guid: 93e4be72a7f478447bc71e062cc8a941, type: 2}
+      - {fileID: 11400000, guid: c6075693f22dacd4db00522faa768e46, type: 2}
+      - {fileID: 11400000, guid: 757c6a2a30310254d88495a822dc6b9e, type: 2}
+      - {fileID: 11400000, guid: c140b963f3111ae4aac158f9ff7a8767, type: 2}
+      - {fileID: 11400000, guid: 0dfb6dae34a5d734f95126133a0eb25d, type: 2}
+      - {fileID: 11400000, guid: 4249ee8147814d34092f5aaa6793dcf3, type: 2}
+      - {fileID: 11400000, guid: 93e4be72a7f478447bc71e062cc8a941, type: 2}
+      - {fileID: 11400000, guid: c6075693f22dacd4db00522faa768e46, type: 2}
+      - {fileID: 11400000, guid: 757c6a2a30310254d88495a822dc6b9e, type: 2}
+      - {fileID: 11400000, guid: c140b963f3111ae4aac158f9ff7a8767, type: 2}
+      - {fileID: 11400000, guid: 0dfb6dae34a5d734f95126133a0eb25d, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 243
+    seed: 8
     ocean: 0
     _SeaLevel: 0
   craterSettings:
@@ -37,9 +55,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 168.40845
-    - 34.703495
-    - 463.24286
+    - 4.527657
+    - 0.9904605
+    - 3.5252242
     elevation: 1
   detailNoiseSettings:
     applyNoise: 0
@@ -50,9 +68,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 336.2229
-    - 368.3411
-    - 84.82274
+    - 7.140753
+    - 1.7803633
+    - 1.1896421
     elevation: 0
   ridgeNoiseSettings:
     applyNoise: 0
@@ -64,9 +82,9 @@ MonoBehaviour:
     gain: 1
     power: 3.62
     offset:
-    - 14.544689
-    - 103.357925
-    - 41.357624
+    - 2.2618134
+    - 0.7529918
+    - 6.178088
     elevation: 1
     smoothing: 8.58
   warpedNoiseSettings:
@@ -78,9 +96,9 @@ MonoBehaviour:
     multiplier: 0.35
     gain: 1
     offset:
-    - 116.199036
-    - 109.665184
-    - 151.34872
+    - 5.555304
+    - 5.331695
+    - 1.1259671
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -91,9 +109,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 397.9748
-    - 259.25555
-    - 533.8482
+    - 3.086143
+    - 6.070401
+    - 5.572578
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -106,25 +124,25 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 16.690046
-    - 3.6547875
-    - 111.81865
+    - 3.6527438
+    - 2.1667836
+    - 4.1802297
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 593.27997, y: 645.439, z: 625.84845}
-    _Scale: 0.66
-    _Persistence: 1.29
-    _Lacunarity: 0.77
-    _Multiplier: 0.5
+    _Offset: {x: 1.5742362, y: 3.2033734, z: 0.7024575}
+    _Scale: 0.5
+    _Persistence: 1.05
+    _Lacunarity: 2.61
+    _Multiplier: 0.47
     _Gain: 1
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 378.631, y: 109.372154, z: 184.01732}
+    _WarpOffset: {x: 3.9183736, y: 4.776668, z: 5.507666}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
