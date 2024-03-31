@@ -499,7 +499,7 @@ public class FullPlanetGeneration : MonoBehaviour
             return;
         }
         int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
-        while(index3==index2) //Make sure they are not the same as the first biome
+        while(index3==index2 && colorSchemes[index].planetColorSchemes.Length > 1) //Make sure they are not the same as the first biome
         {
             index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
         }
