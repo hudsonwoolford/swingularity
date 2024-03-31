@@ -194,6 +194,7 @@ public static class ColorSchemeStaticReference{
     {
         public string name; //name of the pool
         public bool oPrimary, aPrimary; //ocean variables or atmosphere variables are taken from primary biome
+        public bool singleBiome;
         [Tooltip("This is optional")]
         public PlanetColorScheme primaryBiome; //the primary biome
         public PlanetColorScheme[] planetColorSchemes; //array of color schemes

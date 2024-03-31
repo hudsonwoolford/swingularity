@@ -97,7 +97,18 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     void UpdateAtmosphere()
     {
-        
+        if (!planet.terrainVar.generalSettings.atmosphere)
+        {
+            frontAtmosphere.gameObject.SetActive(false);
+            innerAtmosphere.gameObject.SetActive(false);
+            outerAtmosphere.gameObject.SetActive(false);
+        }
+        else if (!outerAtmosphere.gameObject.activeInHierarchy! || innerAtmosphere.gameObject.activeInHierarchy! || frontAtmosphere.gameObject.activeInHierarchy)
+        {
+            frontAtmosphere.gameObject.SetActive(true);
+            innerAtmosphere.gameObject.SetActive(true);
+            outerAtmosphere.gameObject.SetActive(true);
+        }
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
@@ -504,7 +515,7 @@ public class FullPlanetGeneration : MonoBehaviour
             index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
         }
         //Randomizes which biome is which
-        int choice = UnityEngine.Random.Range(0, 2);
+        int choice = (!colorSchemes[index].singleBiome) ? UnityEngine.Random.Range(0, 2) : 3;
         switch (choice)
         {
             case 0:
@@ -514,6 +525,10 @@ public class FullPlanetGeneration : MonoBehaviour
             case 1:
                 biomeB = colorSchemes[index].planetColorSchemes[index2];
                 biomeA = colorSchemes[index].planetColorSchemes[index3];
+                break;
+            case 3: //singular biome
+                biomeA = colorSchemes[index].planetColorSchemes[index2];
+                biomeB = colorSchemes[index].planetColorSchemes[index2];
                 break;
             default:
                 break;
