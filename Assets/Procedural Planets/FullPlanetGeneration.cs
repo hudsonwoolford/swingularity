@@ -311,15 +311,6 @@ public class FullPlanetGeneration : MonoBehaviour
         treesB.Clear(); //clears list
         treesP.Clear(); //clears list
     }
-    void ClearTrees(List<GameObject> trees)
-    {
-        //destroys every tree object in list
-        foreach(GameObject tree in trees)
-        {
-            if (tree != null) { DestroyImmediate(tree); }
-        }
-        trees.Clear(); //clears list
-    }
     public void ToggleOcean() //turns ocean on or off
     {
         ocean.gameObject.SetActive(!ocean.gameObject.activeInHierarchy);
@@ -389,8 +380,8 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.detailNoiseSettings.offset =          new float[] { offset[4].x, offset[4].y, offset[4].z };
         planet.terrainVar.shapeNoiseSettings.offset =           new float[] { offset[5].x, offset[5].y, offset[5].z };
         planet.terrainVar.maskNoiseSettings.offset =            new float[] { offset[6].x, offset[6].y, offset[6].z };
-        planet.terrainVar.biomeNoiseSettings._Offset =          offset[7];
-        planet.terrainVar.biomeWarpNoiseSettings._WarpOffset =  offset[8];
+        if(planet.terrainVar.biomeNoiseSettings.randomizeNoise) { planet.terrainVar.biomeNoiseSettings._Offset = offset[7]; }
+        if(planet.terrainVar.biomeWarpNoiseSettings.randomizeNoise) { planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = offset[8]; }
         
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
 

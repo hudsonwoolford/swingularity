@@ -157,6 +157,7 @@ public class MaskNoiseSettings
 [Serializable]
 public class BiomeNoiseSettings
 {
+    public bool randomizeNoise = true;
     public int _Octaves = 3;
     public Vector3 _Offset;
     public float _Scale = 1, _Persistence, _Lacunarity, _Multiplier = 1, _Gain = 1;
@@ -165,6 +166,7 @@ public class BiomeNoiseSettings
 [Serializable]
 public class BiomeWarpNoiseSettings
 {
+    public bool randomizeNoise = true;
     public int _WarpOctaves = 3;
     public Vector3 _WarpOffset;
     public float _WarpScale = 1, _WarpPersistence, _WarpLacunarity, _WarpMultiplier = 1, _WarpGain = 1;
