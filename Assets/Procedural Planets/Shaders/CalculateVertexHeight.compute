@@ -56,7 +56,7 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
     
     if (numCraters > 0)
     {
-        craterHeight = CalculateCraterHeight(numCraters, vertexPos, rimWidth, rimSteepness, smoothness);
+        craterHeight = CalculateCraterHeight(numCraters, vertexPos, floorHeight, rimWidth, rimSteepness, smoothness);
         heights[id] += craterHeight;
     }
     

@@ -39,16 +39,19 @@ public class GeneralSettings
 [Serializable]
 public class CraterSettings
 {
-    [Range(0f, 1f)]
+    [Range(-1f, 5f)]
     public float rimWidth;
 
-    [Range(0f, 1f)]
+    [Range(-1f, 1f)]
+    public float floorHeight;
+
+    [Range(-1f, 1f)]
     public float rimSteepness;
 
-    [Range(0f, 1f)]
+    [Range(-1f, 1f)]
     public float smoothness;
 
-    [Range(0f, 1f)]
+    [Range(-1f, 1f)]
     public float craterBias;
 
     [Range(0f, 0.75f)]

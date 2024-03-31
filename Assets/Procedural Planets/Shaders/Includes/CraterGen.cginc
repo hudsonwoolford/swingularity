@@ -20,7 +20,7 @@ float SmoothMax(float a, float b, float k)
     return a * h + b * (1 - h) - h * k * (1 - h);
 }
 
-float CalculateCraterHeight(int numCraters, float3 vertexPos, float rimWidth, float rimSteepness, float smoothness)
+float CalculateCraterHeight(int numCraters, float3 vertexPos, float floorHeight, float rimWidth, float rimSteepness, float smoothness)
 {
     //Set a variable to manipulate the height values of the vertices
     float craterHeight = 0;
@@ -39,7 +39,7 @@ float CalculateCraterHeight(int numCraters, float3 vertexPos, float rimWidth, fl
         float rimX = min(x - 1 - rimWidth, 0);
         float rim = rimSteepness * rimX * rimX;
         
-        float craterShape = SmoothMax(cavity, craters[i].floorHeight, smoothness);
+        float craterShape = SmoothMax(cavity, floorHeight, smoothness);
         craterShape = SmoothMin(craterShape, rim, smoothness);
         
         craterHeight += craterShape * craters[i].radius;

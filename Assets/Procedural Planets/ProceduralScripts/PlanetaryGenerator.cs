@@ -90,6 +90,7 @@ public class PlanetaryGenerator : MonoBehaviour
         calculateVertexHeight.SetFloat("rimSteepness", terrainVar.craterSettings.rimSteepness);
         calculateVertexHeight.SetFloat("smoothness", terrainVar.craterSettings.smoothness);
         calculateVertexHeight.SetFloat("numCraters", terrainVar.craterSettings.numCraters);
+        calculateVertexHeight.SetFloat("floorHeight", terrainVar.craterSettings.floorHeight);
 
         //ShapeNoise params
         calculateVertexHeight.SetInt("shapeNoiseOctaves", terrainVar.shapeNoiseSettings.octaves);
