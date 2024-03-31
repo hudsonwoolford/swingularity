@@ -2,19 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ForceField : MonoBehaviour
 {
+    [Header("Property Variables")]
+    [ColorUsage(true, true)]
+    [SerializeField] Color frontColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color fresnelColor;
+    [Header("Script Variables")]
     [SerializeField] Material forceMat;
     [SerializeField] Transform interactableObject;
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
-    [SerializeField] Vector4[] hitPos = new Vector4[10];
-    [SerializeField] Vector4[] hitTime = new Vector4[10]; 
+    [HideInInspector]
+    [SerializeField] Vector4[] hitPos = new Vector4[3];
+    [HideInInspector]
+    [SerializeField] Vector4[] hitTime = new Vector4[3];
+    [HideInInspector]
     [SerializeField] int hitIterator;
 
+    private MaterialPropertyBlock pBlock;
+    private MeshRenderer meshRenderer;
     private void Awake()
     {
-        forceMat = GetComponent<MeshRenderer>().sharedMaterial;
+        meshRenderer = GetComponent<MeshRenderer>();
+        forceMat = meshRenderer.sharedMaterial;
+        pBlock = new MaterialPropertyBlock();
     }
     void Start()
     {
@@ -26,14 +40,18 @@ public class ForceField : MonoBehaviour
     }
     void Update()
     {
-        if (forceMat != null)
-        {
-            forceMat = GetComponent<MeshRenderer>().sharedMaterial;
-        }
+        if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
+        if (forceMat == null){ forceMat = meshRenderer.sharedMaterial;}
+        if(pBlock == null) { pBlock = new MaterialPropertyBlock(); }
 
+        //p Block
+        pBlock.SetColor("_FrontColor", frontColor);
+        pBlock.SetColor("_FresnelColor", fresnelColor);
+        //Obj info
+        pBlock.SetFloat("_Scale", transform.localScale.x);
+        pBlock.SetVector("_TransformWorldPos", transform.position);
         forceMat.SetVector("_ObjPos", interactableObject.position);
-        forceMat.SetFloat("_Scale", transform.localScale.x);
-        forceMat.SetVector("_TransformWorldPos", transform.position);
+        meshRenderer.SetPropertyBlock(pBlock);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -52,11 +70,11 @@ public class ForceField : MonoBehaviour
         }
         hitTime[hitIterator].y = hitPower;
 
-        forceMat.SetVectorArray("_HitPos", hitPos);
-        forceMat.SetVectorArray("_HitInfo", hitTime);
+        pBlock.SetVectorArray("_HitPos", hitPos);
+        pBlock.SetVectorArray("_HitInfo", hitTime);
 
         hitIterator++;
-        if (hitIterator >= 10){
+        if (hitIterator >= 3){
             hitIterator = 0;
         }
     }

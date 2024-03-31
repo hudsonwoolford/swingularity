@@ -4,17 +4,15 @@ Shader "Custom/ForceField"
     {
         _MainTex("UV Map", 2D) = "white" {}
         [HDR]_FrontColor ("Front Color", Color) = (1,1,1,1)
-        [HDR]_BackColor ("Back Color", Color) = (1,1,1,1)
+        [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1,1)
 
         [Header(Shield Variables)]
         _PanelSpread ("Panel Spread", Range(0, 0.25)) = 1
         _Frequency ("Frequency", Range(0, 0.3)) = 0.25
-        _BaseOpacity ("Base Opacity", Range(-50, 50)) = 0.25
-        _TopOpacity ("Top Opacity", Range(0, 1)) = 0.25
 
         [Header(Interactivity Variables)]
         _InteractiveDistance ("Interactive Distance", float) = 1
-        _InteractiveMultiplier ("Interactive Multiplier", Range(0, 5)) = 1
+        _InteractiveMultiplier ("Interactive Multiplier", Range(0, 50)) = 1
         _FalloffIntensity ("Falloff Intensity", float) = 2
         
         [Header(Collision Ripple)]
@@ -29,7 +27,6 @@ Shader "Custom/ForceField"
 
         [Header(Fresnel)] //Fresnel
         [Toggle(_UseFresnel)]_UseFresnel("UseFresnel", float) = 0
-        [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1,1)
         _FresnelStrengthNear("Fresnel Strength Near", float) = 2
         _FresnelStrengthFar("Fresnel Strength Far", float) = 5
         _FresnelPower("Fresnel Power", float) = 2
@@ -71,12 +68,12 @@ Shader "Custom/ForceField"
         fixed4 _BackColor; //back surface color
         float _PanelSpread;
         float _Frequency;
-        float _BaseOpacity;
-        float _TopOpacity;
 
         float _UseFresnel;
         fixed4 _FresnelColor;
         float _FresnelPower;
+        float _FresnelStrengthNear;
+        float _FresnelStrengthFar;
 
         float3 _ObjPos;
         float _InteractiveDistance;
@@ -85,8 +82,8 @@ Shader "Custom/ForceField"
         float _Scale;
         float3 _TransformWorldPos;
 
-        float3 _HitPos[10];
-        float2 _HitInfo[10];
+        float3 _HitPos[3];
+        float2 _HitInfo[3];
 
         float _RippleHeight; //z
         float _RippleCutoff;
@@ -125,24 +122,29 @@ Shader "Custom/ForceField"
             
             UNITY_INITIALIZE_OUTPUT(Input, o);
             //fresnel
-            float3 viewDir = float3(0,0,1);
-            float3 sphereNormal = normalize(v.vertex);
-            o.fresnelValue = 1-saturate(0.05 * pow(abs(dot(sphereNormal, viewDir)), _FresnelPower));
+            float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+            float3 relCameraPos = float3(worldPos.xy, _WorldSpaceCameraPos.z);
+            float3 bodyWorldCenter = mul(unity_ObjectToWorld, float4(0,0,0,1)).xyz;
+            float camRadiiFromSurface = (length(bodyWorldCenter - relCameraPos) - _Scale) / _Scale;
+            float fresnelT = smoothstep(0,1,camRadiiFromSurface);
+            float3 viewDir = normalize(worldPos - relCameraPos);
+            float3 normWorld = normalize(mul(unity_ObjectToWorld, float4(v.normal,0)));
+            float fresStrength = lerp(_FresnelStrengthNear, _FresnelStrengthFar, fresnelT);
+            o.fresnelValue = 1-saturate(fresStrength * pow(1 + dot(viewDir, normWorld), _FresnelPower));
 
-            o.vertPos = v.vertex;
+
             float3 faceCentre = _TransformWorldPos + (v.normal * _Scale);
-
             float totalY = 0;
             float ripDistRatio = 0;
-            if(_HitInfo[0].x > 0)
-            {
-                for (int i = 0; i < 10; i++){
-                    float2 rippleInfo = CalculateRipple(i, faceCentre);
-                    ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
-                    totalY += rippleInfo.x;
-                }
-                totalY*=1-ripDistRatio; 
+
+            for (int i = 0; i < 10; i++){
+                if(_HitInfo[i].x == 0) {break;}
+                float2 rippleInfo = CalculateRipple(i, faceCentre);
+                ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
+                totalY += rippleInfo.x;
             }
+            totalY*=1-ripDistRatio; 
+
             float distToBall = length(_ObjPos - faceCentre);
             if (distToBall <= _InteractiveDistance){ o.objNear = true; }
             if (totalY > 0) { o.inRipple = true; }
@@ -151,7 +153,7 @@ Shader "Custom/ForceField"
             o.objDistRatio = ripDistRatio != 0 && !o.objNear ? ripDistRatio : ballDistRatio;
             
             //displacement
-            float angle = snoise((500+_Time) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
+            float angle = snoise((500+_Time+_TransformWorldPos) * _Frequency * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
             float sinValue = sin(angle);
 
             float3 rippleDisplacement = v.normal * totalY;
@@ -165,18 +167,18 @@ Shader "Custom/ForceField"
         }
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float d = dot(IN.viewDir, IN.worldNormal);
-            bool front = d > 0 ? true : false;
 
-            fixed4 mc = front ? _FrontColor : _BackColor; //determine which color to multiply
+            fixed4 mc = _FrontColor;
             float4 compoundColor = lerp(_FresnelColor, mc, IN.fresnelValue * _UseFresnel);
 
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * compoundColor;
-            
-            float normalAlpha = clamp(saturate(c.a * pow(IN.displacementRatio, 1) + (c.a * _BaseOpacity)), 0, _TopOpacity);
 
             float falloff = IN.objNear ? _FalloffIntensity : IN.inRipple ? _RippleBlendFallofff : _FalloffIntensity;
             bool affected = IN.inRipple || IN.objNear;
+            
+            if(!affected) {c.a *= compoundColor.a;}
+            float normalAlpha = saturate(c.a * pow(IN.displacementRatio, 4));
+
             if(affected)
             {
                 o.Emission = c * 0.5;
