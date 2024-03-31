@@ -25,9 +25,9 @@ public class PlanetColorScheme : ScriptableObject
     public float _SteepMultiplier = 7f;
 
     public Texture2D _Normal;
-    public float _NormalScale;
+    public float _NormalScale = 1;
     public Vector3 _NormalOffset;
-    public float _NormalPower;
+    public float _NormalPower = 1;
 
 
     [Header("Optional Variables")]

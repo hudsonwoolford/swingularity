@@ -13,10 +13,18 @@ MonoBehaviour:
   m_Name: Oasis Dunes
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Desert
+      oPrimary: 0
+      aPrimary: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 32
+    seed: 794
     ocean: 1
     _SeaLevel: 1
   craterSettings:
@@ -34,12 +42,12 @@ MonoBehaviour:
     scale: 2.45
     persistence: 0.5
     lacunarity: 2
-    multiplier: 1.15
+    multiplier: 0.55
     gain: 0
     offset:
-    - 68.26676
-    - 86.30762
-    - 69.49962
+    - 872.2618
+    - 85.70461
+    - 11.332572
     elevation: 1
   detailNoiseSettings:
     applyNoise: 0
@@ -50,9 +58,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 36.286663
-    - 10.955698
-    - 73.18551
+    - 523.05133
+    - 412.7943
+    - 651.3933
     elevation: 0
   ridgeNoiseSettings:
     applyNoise: 0
@@ -64,9 +72,9 @@ MonoBehaviour:
     gain: 1
     power: 1
     offset:
-    - 27.28621
-    - 45.69738
-    - 13.551111
+    - 322.80588
+    - 595.20825
+    - 163.4724
     elevation: 0
     smoothing: 0
   warpedNoiseSettings:
@@ -78,10 +86,10 @@ MonoBehaviour:
     multiplier: 1.16
     gain: 1.48
     offset:
-    - 71.492096
-    - 50.278908
-    - 7.254139
-    strength: 1
+    - 466.90503
+    - 730.5386
+    - 235.36906
+    strength: 0.83
   continentNoiseSettings:
     applyNoise: 1
     octaves: 3
@@ -91,9 +99,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 89.5315
-    - 30.663845
-    - 57.566284
+    - 711.1893
+    - 166.87163
+    - 517.68726
     depthMultiplier: -0.36
     oceanFloorDepth: 1
     oceanFloorSmoothing: 1
@@ -106,16 +114,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 21.465075
-    - 26.417915
-    - 23.766384
+    - 808.22736
+    - 185.8679
+    - 535.89575
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 81.09601, y: 39.629204, z: 56.440247}
+    _Offset: {x: 894.4244, y: 511.9945, z: 581.81244}
     _Scale: 0.64
     _Persistence: 0.5
     _Lacunarity: 2
@@ -124,7 +132,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 91.967514, y: 90.774925, z: 18.557796}
+    _WarpOffset: {x: 881.6365, y: 155.7609, z: 891.61017}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0

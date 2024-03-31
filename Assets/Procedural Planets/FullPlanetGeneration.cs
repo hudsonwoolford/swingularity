@@ -119,7 +119,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
     void UpdateTrees(){
-        if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees && !biomeP.treeVariables._UseTrees) { ClearAllTrees(); return; } //if no biomes have trees return fucntion
+        if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearAllTrees(); return; } //if no biomes have trees return fucntion
         if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
         //combine tree obj array
         TreeObject[] treeObjects = biomeA.treeVariables._TreeObjects;

@@ -13,19 +13,10 @@ MonoBehaviour:
   m_Name: Cyclopian
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools:
-    - name: Earth+Polar
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
-      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
-      polarColorSchemes:
-      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+    colorSchemePools: []
   generalSettings:
     subdivisions: 6
-    seed: 508
+    seed: 219
     ocean: 1
     _SeaLevel: 1.04
   craterSettings:
@@ -46,9 +37,9 @@ MonoBehaviour:
     multiplier: 0.86
     gain: 0.82
     offset:
-    - 433.67603
-    - 720.36847
-    - 121.06709
+    - 2.1157017
+    - 141.47136
+    - 294.41846
     elevation: 1.07
   detailNoiseSettings:
     applyNoise: 1
@@ -59,9 +50,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 435.08267
-    - 467.30267
-    - 65.87344
+    - 97.72123
+    - 303.76288
+    - 261.07776
     elevation: 0.03
   ridgeNoiseSettings:
     applyNoise: 1
@@ -73,9 +64,9 @@ MonoBehaviour:
     gain: 2.58
     power: 5.6
     offset:
-    - 91.331406
-    - 546.4546
-    - 403.7005
+    - 354.46985
+    - 48.908493
+    - 56.21908
     elevation: 2.65
     smoothing: 1.57
   warpedNoiseSettings:
@@ -87,9 +78,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 186.02544
-    - 143.80002
-    - 116.79577
+    - 5.2249236
+    - 93.60821
+    - 135.33221
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -100,9 +91,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 15.973015
-    - 499.65253
-    - 457.79083
+    - 106.961426
+    - 320.1638
+    - 205.63754
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -115,16 +106,16 @@ MonoBehaviour:
     multiplier: 0
     gain: 6.79
     offset:
-    - 326.5865
-    - 519.61957
-    - 423.99936
+    - 206.75099
+    - 236.64572
+    - 271.3406
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 159.53703, y: 442.89938, z: 366.8779}
+    _Offset: {x: 110.751755, y: 180.83112, z: 364.72202}
     _Scale: 0.9
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -133,7 +124,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 741.74194, y: 388.22787, z: 45.945663}
+    _WarpOffset: {x: 271.0957, y: 219.83705, z: 281.1095}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
