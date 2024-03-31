@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a651b384e121e48a12e9d1cec4937a, type: 3}
+  m_Name: HudsonTestPlanet
+  m_EditorClassIdentifier: 
+  planetMaterial: {fileID: 2100000, guid: 6aadf21203696154fa740b79660b330b, type: 2}
+  terrainVar: {fileID: 11400000, guid: 0c20b847c995f304ba63060e09659098, type: 2}
+  oceanVariables:
+    _OceanBlendEnd: 0.06
+    _OceanBlendIntensity: 0.55
+    _BeachBlendEnd: 0.042
+    _BeachBlendIntensity: 0.58
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0, g: 1.4061346, b: 59.017693, a: 0.14901961}
+    _OceanNormal: {fileID: 2800000, guid: ca2018cce4b3041ca94fe509b701bce5, type: 3}
+    _OceanMetallic: 0.188
+    _OceanSmoothness: 0.552
+  atmosphereVariables:
+    _OuterBandColor: {r: 0.3058824, g: 0.3577727, b: 0.8392157, a: 1}
+    _OuterBandRange: 2.41
+    _OuterBandIntensity: 1.24
+    _InnerBandColor: {r: 0, g: 0.038576603, b: 1, a: 1}
+    _InnerBandRange: 2.2
+    _InnerBandIntensity: 4
+    _FrontColor: {r: 0.5294118, g: 0.6810161, b: 0.9254902, a: 1}
+    _FrontRange: 2
+    _FrontIntensity: 0.15
+  fresnelVariables:
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 0
+    _TreeObjects: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
+    _NumTrees: 100

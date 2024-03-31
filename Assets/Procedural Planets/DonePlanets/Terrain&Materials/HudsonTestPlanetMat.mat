@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HudsonTestPlanetMat
+  m_Shader: {fileID: 4800000, guid: 213b09913f33a234a9fe78dc620fcd84, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _BIOMEA_ON
+  - _BIOMEB_ON
+  - _OCEAN_ON
+  - _UseFresnel
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NormalTextureA:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTextureB:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTextureP:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BeachBlendEnd: 0.042
+    - _BeachBlendIntensity: 0.58
+    - _BiomeA: 1
+    - _BiomeAEnd: 0.4
+    - _BiomeB: 1
+    - _BiomeBStart: 0.6
+    - _ColorGain: 1
+    - _ColorLacunarity: 0
+    - _ColorMultiplier: 1
+    - _ColorOctaves: 3
+    - _ColorPersistence: 0
+    - _ColorTextureScale: 5
+    - _FresnelPower: 8
+    - _FresnelStrengthFar: 5
+    - _FresnelStrengthNear: 2
+    - _Gain: 1
+    - _Lacunarity: 0
+    - _MetallicA: 0.825
+    - _MetallicB: 0.825
+    - _MetallicP: 0
+    - _Multiplier: 1
+    - _NormalPowerA: 1
+    - _NormalPowerB: 1
+    - _NormalPowerP: 1
+    - _NormalScaleA: 1
+    - _NormalScaleB: 1
+    - _NormalScaleP: 1
+    - _Ocean: 1
+    - _OceanBlendEnd: 0.06
+    - _OceanBlendIntensity: 0.55
+    - _Octaves: 3
+    - _Persistence: 0
+    - _Polar: 0
+    - _PolarBlendIntensity: 62.01
+    - _PolarHeight: 21.18
+    - _Scale: 1
+    - _SeaLevel: 1
+    - _SmoothnessA: 0.435
+    - _SmoothnessB: 0.435
+    - _SmoothnessP: 0
+    - _SteepMultiplierA: 2.63
+    - _SteepMultiplierB: 2.63
+    - _SteepMultiplierP: 1
+    - _SwapBiome: 0
+    - _UseFresnel: 1
+    - _VegetationLineA: 0.117
+    - _VegetationLineB: 0.117
+    - _VegetationLineHarshnessA: 4.94
+    - _VegetationLineHarshnessB: 4.94
+    - _VegetationLineHarshnessP: 2
+    - _VegetationLineP: 0.1
+    - _WarpGain: 1
+    - _WarpLacunarity: 0
+    - _WarpMultiplier: 1
+    - _WarpOctaves: 3
+    - _WarpPersistence: 0
+    - _WarpScale: 1
+    - bodyScale: 1
+    m_Colors:
+    - _ColorOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _FlatColorA: {r: 0, g: 0, b: 0, a: 1}
+    - _FlatColorAVariant: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+    - _FlatColorB: {r: 0, g: 0, b: 0, a: 1}
+    - _FlatColorBVariant: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+    - _FlatColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _FlatColorPVariant: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _FresnelColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
+    - _HighElevationColorA: {r: 0, g: 0.3944354, b: 1, a: 1}
+    - _HighElevationColorB: {r: 0, g: 0.3944354, b: 1, a: 1}
+    - _HighElevationColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _HighElevationSteepColorA: {r: 0.16862746, g: 0.20822711, b: 0.28235295, a: 1}
+    - _HighElevationSteepColorB: {r: 0.16862746, g: 0.20822711, b: 0.28235295, a: 1}
+    - _HighElevationSteepColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _NormalOffsetA: {r: 0, g: 0, b: 0, a: 0}
+    - _NormalOffsetB: {r: 0, g: 0, b: 0, a: 0}
+    - _NormalOffsetP: {r: 1, g: 1, b: 1, a: 1}
+    - _Offset: {r: 3.249708, g: 0.53192204, b: 8.558713, a: 0}
+    - _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShorelineColorA: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+    - _ShorelineColorB: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+    - _ShorelineColorP: {r: 1, g: 1, b: 1, a: 1}
+    - _SteepColorA: {r: 0, g: 0, b: 0, a: 1}
+    - _SteepColorB: {r: 0, g: 0, b: 0, a: 1}
+    - _SteepColorP: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _WarpOffset: {r: 5.4581637, g: 13.366722, b: 16.041527, a: 0}
+  m_BuildTextureStacks: []

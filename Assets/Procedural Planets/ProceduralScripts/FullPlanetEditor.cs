@@ -37,9 +37,9 @@ public class FullPlanetEditor : Editor
         EditorGUI.BeginChangeCheck();
 
         if (GUILayout.Button("Random")) {
-            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
             planetGeneration.RandomizeTerrainScheme();
             planetGeneration.RandomizeOffset();
+            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
             
         }
         EditorWindow inspectorWindow = EditorWindow.focusedWindow;
