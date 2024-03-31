@@ -13,33 +13,24 @@ MonoBehaviour:
   m_Name: CrateredTerrestrial
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools:
-    - name: Earth+Polar
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
-      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
-      polarColorSchemes:
-      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+    colorSchemePools: []
   generalSettings:
     subdivisions: 6
     seed: 28
     ocean: 1
-    _SeaLevel: 1.04
+    _SeaLevel: 0.97
   craterSettings:
-    rimWidth: 0.156
-    floorHeight: 0
-    rimSteepness: 0.141
-    smoothness: 0.234
-    craterBias: 0
-    minCraterSize: 0.156
-    maxCraterSize: 0.068
-    numCraters: 0
+    rimWidth: 0.76
+    floorHeight: -0.72
+    rimSteepness: 1
+    smoothness: 1
+    craterBias: 0.76
+    minCraterSize: 0.088
+    maxCraterSize: 0.34
+    numCraters: 313
   shapeNoiseSettings:
     applyNoise: 1
-    octaves: 6
+    octaves: 4
     scale: 1.09
     persistence: 2.12
     lacunarity: 1.54
@@ -49,7 +40,7 @@ MonoBehaviour:
     - 18.263779
     - 27.556099
     - 5.6752195
-    elevation: 0.48
+    elevation: 0.24
   detailNoiseSettings:
     applyNoise: 1
     octaves: 6
@@ -76,7 +67,7 @@ MonoBehaviour:
     - 18.263779
     - 27.556099
     - 5.6752195
-    elevation: 2.65
+    elevation: -2.45
     smoothing: 1.57
   warpedNoiseSettings:
     applyNoise: 1
@@ -103,8 +94,8 @@ MonoBehaviour:
     - 18.263779
     - 27.556099
     - 5.6752195
-    depthMultiplier: 0.9
-    oceanFloorDepth: 13.89
+    depthMultiplier: 1.66
+    oceanFloorDepth: 30.7
     oceanFloorSmoothing: 15.31
   maskNoiseSettings:
     applyNoise: 1
@@ -120,7 +111,7 @@ MonoBehaviour:
     - 5.6752195
     strength: 1.42
     maskBlend: 4.4
-    maskVerticalShift: -2.22
+    maskVerticalShift: -1.85
   biomeNoiseSettings:
     _Octaves: 4
     _Offset: {x: 18.26378, y: 27.556099, z: 5.6752195}
