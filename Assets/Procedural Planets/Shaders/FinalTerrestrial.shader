@@ -345,8 +345,6 @@ Shader "Custom/FinalTerrestrial"
             float3 compoundColor = lerp(finalColor, _FresnelColor, IN.fresnel * _UseFresnel);
             o.Albedo = compoundColor;
 
-            o.Metallic = metallic;
-            o.Smoothness = smoothness;
 
             TriplanarUV triUVA = GetTriplanarUV(IN.vertPos, _NormalOffsetA, _NormalScaleA);
             TriplanarUV triUVB = GetTriplanarUV(IN.vertPos, _NormalOffsetB, _NormalScaleB);
@@ -356,6 +354,10 @@ Shader "Custom/FinalTerrestrial"
             float3 PNormals = GetMappedTriplanarNormal(_NormalTextureP, triUVP, _NormalPowerP, IN.normal);
             float planetNormal = lerp(ANormals, BNormals, blendValue);
             o.Normal += lerp(planetNormal, PNormals, polarBlendValue);
+
+            
+            o.Metallic = metallic;
+            o.Smoothness = smoothness;
         }
 
         ENDCG
