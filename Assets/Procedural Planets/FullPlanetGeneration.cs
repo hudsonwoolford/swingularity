@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.XR;
 using System.Linq;
 using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteAlways]
@@ -372,19 +373,27 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     public void RandomizeOffset()
     {
+
+        Vector3[] offset = new Vector3[9]; 
         //random offset
-        float[] offset = { UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond, UnityEngine.Random.value * System.DateTime.Now.Millisecond };
-        //setting the offsets to randomly generated offset
-        planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[1]);
-        planet.terrainVar.warpedNoiseSettings.offset = offset;
-        planet.terrainVar.continentNoiseSettings.offset = offset;
-        planet.terrainVar.ridgeNoiseSettings.offset = offset;
-        planet.terrainVar.detailNoiseSettings.offset = offset;
-        planet.terrainVar.shapeNoiseSettings.offset = offset;
-        planet.terrainVar.maskNoiseSettings.offset = offset;
-        planet.terrainVar.biomeNoiseSettings._Offset = new Vector3(offset[0], offset[1], offset[2]);
-        planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = new Vector3(offset[0], offset[1], offset[2]);
+        for (int i = 0; i < 9; i++)
+        {
+            //setting the offsets to randomly generated offset
+            UnityEngine.Random.InitState(Mathf.RoundToInt(UnityEngine.Random.value * 1000000));
+            offset[i] = new Vector3(UnityEngine.Random.value* System.DateTime.Now.Millisecond, UnityEngine.Random.value* System.DateTime.Now.Millisecond, UnityEngine.Random.value* System.DateTime.Now.Millisecond);
+        }
+        planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[0].x);
+        planet.terrainVar.warpedNoiseSettings.offset =          new float[] { offset[1].x, offset[1].y, offset[1].z };
+        planet.terrainVar.continentNoiseSettings.offset =       new float[] { offset[2].x, offset[2].y, offset[2].z };
+        planet.terrainVar.ridgeNoiseSettings.offset =           new float[] { offset[3].x, offset[3].y, offset[3].z };
+        planet.terrainVar.detailNoiseSettings.offset =          new float[] { offset[4].x, offset[4].y, offset[4].z };
+        planet.terrainVar.shapeNoiseSettings.offset =           new float[] { offset[5].x, offset[5].y, offset[5].z };
+        planet.terrainVar.maskNoiseSettings.offset =            new float[] { offset[6].x, offset[6].y, offset[6].z };
+        planet.terrainVar.biomeNoiseSettings._Offset =          offset[7];
+        planet.terrainVar.biomeWarpNoiseSettings._WarpOffset =  offset[8];
+        
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
+
         ClearAllTrees();
     }
     public void RandomizeShading()
