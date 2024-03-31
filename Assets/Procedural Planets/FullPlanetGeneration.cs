@@ -81,6 +81,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
         //Setting variables inside the ocean material and planet material
         oceanMat.color = planet.oceanVariables._OceanColor; //color
+        oceanMat.SetTexture("_MainTex", planet.oceanVariables._OceanNormal);
         oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic); //metallic
         oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness); //smoothness
 

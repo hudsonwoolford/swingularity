@@ -18,16 +18,18 @@ public class FullPlanetObj : ScriptableObject
 [Serializable]
 public class OceanVariables
 {
-    [Range(0, 1)]
+    [Range(0, 5)]
     [SerializeField] public float _OceanBlendEnd = 0.01f;
-    [Range(0, 10)]
+    [Range(0, 5)]
     [SerializeField] public float _OceanBlendIntensity = 0.01f;
-    [Range(0, 1)]
+    [Range(0, 0.5f)]
     [SerializeField] public float _BeachBlendEnd = 0.01f;
-    [Range(0, 10)]
+    [Range(0, 5)]
     [SerializeField] public float _BeachBlendIntensity = 0.01f;
     [SerializeField] public Color _SeabedColor = Color.black;
+    [ColorUsageAttribute(true, true)]
     [SerializeField] public Color _OceanColor = Color.blue;
+    [SerializeField] public Texture2D _OceanNormal;
     [Range(0, 1)]
     [SerializeField] public float _OceanMetallic = 0.2f;
     [Range(0, 1)]

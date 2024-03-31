@@ -1,6 +1,6 @@
 ﻿Shader "Custom/DistortionFlow" {
 	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
+		[HDR]_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		[NoScaleOffset] _FlowMap ("Flow (RG, A noise)", 2D) = "black" {}
 		[NoScaleOffset] _DerivHeightMap ("Deriv (AG) Height (B)", 2D) = "black" {}
