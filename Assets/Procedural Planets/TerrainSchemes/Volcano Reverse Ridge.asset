@@ -16,7 +16,7 @@ MonoBehaviour:
     colorSchemePools: []
   generalSettings:
     subdivisions: 8
-    seed: 49
+    seed: 4
     ocean: 1
     _SeaLevel: 1
   craterSettings:
@@ -37,9 +37,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.8
     offset:
-    - 109.299965
-    - 34.06264
-    - 31.124317
+    - 6.545965
+    - 0.88662505
+    - 6.93432
     elevation: 0.42
   detailNoiseSettings:
     applyNoise: 1
@@ -50,9 +50,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.72
     offset:
-    - 108.02886
-    - 2.2653594
-    - 98.02947
+    - 1.8719223
+    - 3.9190345
+    - 4.7521777
     elevation: 0.7
   ridgeNoiseSettings:
     applyNoise: 1
@@ -64,23 +64,23 @@ MonoBehaviour:
     gain: 1
     power: 11.53
     offset:
-    - 57.051254
-    - 48.354115
-    - 108.23956
+    - 4.4718375
+    - 6.0121093
+    - 0.67511487
     elevation: -3.07
     smoothing: 1.11
   warpedNoiseSettings:
     applyNoise: 0
     octaves: 3
-    scale: 1
-    persistence: 0
-    lacunarity: 0
-    multiplier: 1
+    scale: 3.07
+    persistence: 0.7
+    lacunarity: 2
+    multiplier: 0.73
     gain: 1
     offset:
-    - 21.241467
-    - 0.9168664
-    - 92.90943
+    - 0.59876543
+    - 0.5296417
+    - 6.7951846
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -91,9 +91,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 49.861565
-    - 11.762101
-    - 37.315266
+    - 1.4839177
+    - 5.1442103
+    - 3.1378918
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -106,15 +106,15 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 107.6786
-    - 95.89762
-    - 88.68038
+    - 5.3548613
+    - 1.6846358
+    - 2.9473643
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     _Octaves: 3
-    _Offset: {x: 18.443638, y: 52.7135, z: 72.04725}
+    _Offset: {x: 1.139997, y: 6.533771, z: 4.5006475}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0
@@ -122,7 +122,7 @@ MonoBehaviour:
     _Gain: 1
   biomeWarpNoiseSettings:
     _WarpOctaves: 3
-    _WarpOffset: {x: 65.31478, y: 73.087296, z: 52.880253}
+    _WarpOffset: {x: 2.3939018, y: 5.331109, z: 6.37432}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0
