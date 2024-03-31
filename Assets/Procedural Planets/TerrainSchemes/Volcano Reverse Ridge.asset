@@ -13,10 +13,17 @@ MonoBehaviour:
   m_Name: Volcano Reverse Ridge
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Obsidian + Colour
+      oPrimary: 1
+      aPrimary: 1
+      primaryBiome: {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      polarColorSchemes: []
   generalSettings:
-    subdivisions: 8
-    seed: 34
+    subdivisions: 6
+    seed: 23
     ocean: 1
     _SeaLevel: 1
   craterSettings:
@@ -37,22 +44,22 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.8
     offset:
-    - 283.24957
-    - 325.84872
-    - 216.47763
+    - 269.4541
+    - 325.7119
+    - 133.55849
     elevation: 0.42
   detailNoiseSettings:
     applyNoise: 1
     octaves: 3
     scale: 1.33
-    persistence: 3.45
-    lacunarity: 2.4
+    persistence: 4.07
+    lacunarity: 2.76
     multiplier: 1
     gain: 0.72
     offset:
-    - 320.63547
-    - 192.64592
-    - 103.94574
+    - 219.03017
+    - 437.4616
+    - 437.2486
     elevation: 0.7
   ridgeNoiseSettings:
     applyNoise: 1
@@ -64,9 +71,9 @@ MonoBehaviour:
     gain: 1
     power: 9.68
     offset:
-    - 9.719918
-    - 326.92957
-    - 48.864536
+    - 316.74152
+    - 87.11362
+    - 338.75888
     elevation: -3.07
     smoothing: 1.11
   warpedNoiseSettings:
@@ -78,9 +85,9 @@ MonoBehaviour:
     multiplier: 0.73
     gain: 1
     offset:
-    - 203.16945
-    - 48.524857
-    - 343.52856
+    - 234.46498
+    - 150.18549
+    - 69.73175
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -91,9 +98,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 118.711464
-    - 89.97942
-    - 94.726715
+    - 279.83527
+    - 88.06072
+    - 316.20465
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -106,16 +113,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 222.97792
-    - 13.042527
-    - 230.00008
+    - 163.26308
+    - 412.19043
+    - 258.14822
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 198.14261, y: 313.96725, z: 94.0508}
+    _Offset: {x: 437.19196, y: 120.40066, z: 247.527}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0
@@ -124,7 +131,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 130.56123, y: 22.971876, z: 206.81146}
+    _WarpOffset: {x: 264.04666, y: 351.43976, z: 202.6586}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0
