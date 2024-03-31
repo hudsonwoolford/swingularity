@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2128562cbd13124698a8ad24adadd60, type: 3}
+  m_Name: Spiral Warp
+  m_EditorClassIdentifier: 
+  colorSchemePools:
+    colorSchemePools: []
+  generalSettings:
+    subdivisions: 8
+    seed: 431
+    ocean: 1
+    _SeaLevel: 1
+  craterSettings:
+    rimWidth: 0
+    floorHeight: 0
+    rimSteepness: 0
+    smoothness: 0
+    craterBias: 0
+    minCraterSize: 0
+    maxCraterSize: 0
+    numCraters: 0
+  shapeNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 2.45
+    persistence: 0.5
+    lacunarity: 2
+    multiplier: 1.59
+    gain: 0
+    offset:
+    - 158.34389
+    - 55.430027
+    - 449.18246
+    elevation: 1
+  detailNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.83
+    persistence: 5.96
+    lacunarity: 2.18
+    multiplier: 1
+    gain: 0.25
+    offset:
+    - 405.70502
+    - 565.4902
+    - 139.56293
+    elevation: 1.39
+  ridgeNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.15
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1
+    gain: 1
+    power: 1.93
+    offset:
+    - 129.81754
+    - 397.05392
+    - 193.9766
+    elevation: -2.35
+    smoothing: 0
+  warpedNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.42
+    persistence: 0.5
+    lacunarity: 2
+    multiplier: 1.16
+    gain: 1.35
+    offset:
+    - 424.98474
+    - 132.65028
+    - 420.3373
+    strength: 1.47
+  continentNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.28
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1
+    gain: 0
+    offset:
+    - 497.94363
+    - 133.28842
+    - 305.21884
+    depthMultiplier: 4.55
+    oceanFloorDepth: 5.39
+    oceanFloorSmoothing: 1
+  maskNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1
+    persistence: 0.5
+    lacunarity: 2
+    multiplier: 1
+    gain: 1
+    offset:
+    - 99.04995
+    - 302.4021
+    - 421.74268
+    strength: 1
+    maskBlend: 3.5
+    maskVerticalShift: 9.11
+  biomeNoiseSettings:
+    randomizeNoise: 1
+    _Octaves: 3
+    _Offset: {x: 566.42395, y: 56.542538, z: 381.0758}
+    _Scale: 0.64
+    _Persistence: 0.5
+    _Lacunarity: 2
+    _Multiplier: 1
+    _Gain: 1
+  biomeWarpNoiseSettings:
+    randomizeNoise: 1
+    _WarpOctaves: 3
+    _WarpOffset: {x: 606.53705, y: 64.23103, z: 617.8775}
+    _WarpScale: 1
+    _WarpPersistence: 0
+    _WarpLacunarity: 0
+    _WarpMultiplier: 1
+    _WarpGain: 1
+  biomeDetailNoiseSettings:
+    _Octaves: 3
+    _Offset: {x: 0, y: 0, z: 0}
+    _Scale: 1
+    _Persistence: 0
+    _Lacunarity: 0
+    _Multiplier: 1
+    _Gain: 1
+  polarBiomeSettings:
+    _PolarHeight: 3.3
+    _PolarBlendIntensity: 65.05
