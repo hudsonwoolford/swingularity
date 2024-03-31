@@ -110,6 +110,7 @@ Shader "Custom/FinalTerrestrial"
      _NormalOffsetP("Normal Offset P", vector) = (1,1,1)
      _NormalPowerP("Normal Power P", float) = 1
      _NormalScaleP("Normal Scale P", float) = 1
+     bodyScale("Body Scale", float) = 2.23
      [Header(Noise)] //Noise
 
      [HideInInspector][IntRange]_Octaves("Octaves", Range(0,5)) = 1
@@ -264,7 +265,7 @@ Shader "Custom/FinalTerrestrial"
         {
 
             float3 sphereNormal = normalize(IN.vertPos); //a perfect sphere normal
-            float3 normalizedVertexPos = sphereNormal * _SeaLevel;
+            float3 normalizedVertexPos = sphereNormal * bodyScale;
             float seaLevelHeight = length(_SeaLevel*sphereNormal); //height of sealevel from middle of the sphere
             float elevation = length(IN.vertPos) - seaLevelHeight; //elevation of vert above sea level
 

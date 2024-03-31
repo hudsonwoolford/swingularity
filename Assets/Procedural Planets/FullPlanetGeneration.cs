@@ -91,6 +91,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_BeachBlendEnd", planet.oceanVariables._BeachBlendEnd); //ocean blending between shoreline and seabed
         mat.SetFloat("_BeachBlendIntensity", planet.oceanVariables._BeachBlendIntensity); //ocean blending intensity between shoreline and seabed
         mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
+        mat.SetFloat("bodyScale", 1);
     }
     void UpdateAtmosphere()
     {

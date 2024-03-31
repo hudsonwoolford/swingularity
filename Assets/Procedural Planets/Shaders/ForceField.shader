@@ -19,6 +19,7 @@ Shader "Custom/ForceField"
         
         [Header(Collision Ripple)]
         _RippleFalloff ("Ripple Falloff", Range(0, 0.2)) = 0.1
+        _RippleCutoff ("Ripple Cutoff", float) = 0.1
         _RippleHeight("Ripple Height", Range(0, 0.1)) = 0.1
         _RippleSpeed ("Ripple Speed", Float) = 1.0
         _RippleBlendFallofff ("Ripple Blend Falloff", Float) = 0
@@ -88,6 +89,7 @@ Shader "Custom/ForceField"
         float2 _HitInfo[10];
 
         float _RippleHeight; //z
+        float _RippleCutoff;
         float _RippleFalloff; //i
         float _RippleBlendFallofff; //i
         float _RippleSpeed; //a
@@ -100,6 +102,7 @@ Shader "Custom/ForceField"
         {
             float timeSinceHit = _Time.y - _HitInfo[i].x; //time since hit
             float hitPower = pow(_HitInfo[i].y * _RipplePowerScaling, _RippleExponent);
+            if (hitPower < _RippleCutoff) return float2(0, 0);
 
             float theLine = timeSinceHit * _RippleSpeed; //ripple line distance
             float distToHit = length(_HitPos[i] - faceCentre); //distance to hit
