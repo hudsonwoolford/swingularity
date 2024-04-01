@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using UnityEngine.XR;
+using UnityEngine.SceneManagement;
 using System.Linq;
 using Unity.VisualScripting;
 using JetBrains.Annotations;
+using UnityEditor.SceneManagement;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteAlways]
@@ -701,6 +702,131 @@ public class FullPlanetGeneration : MonoBehaviour
     }
     #endregion
     #region Editor Tools
+    [MenuItem("ProceduralTools/Tester")]
+    static void Tester()
+    {
+        Camera cam = Instantiate(Camera.main).GetComponent <Camera>();
+    }
+
+    [MenuItem("ProceduralTools/Save As Sprite")]
+    static void SavePlanetAsSprite()
+    {
+        GameObject selectedObj = Selection.activeGameObject; //store selection
+
+
+        if (selectedObj == null || selectedObj.GetComponent<FullPlanetGeneration>() == null) //selection must have fullplanetgeneration
+        {
+            Debug.LogWarning("Please select a valid game object");
+            return;
+        }
+
+        MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
+        if(oceanRend == false)
+        {
+            Debug.LogWarning("Please have a child called 'Ocean'");
+            return;
+        }
+
+        Material oceanMat = oceanRend.sharedMaterial;
+        Material cullMat = new Material(Shader.Find("Custom/OceanInvisMask"));
+        oceanRend.sharedMaterial = cullMat;
+
+        Camera cam = Instantiate(Camera.main).GetComponent<Camera>();
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0, 0, 0, 0);
+        cam.cullingMask = LayerMask.GetMask("Planet Front Capture");
+
+
+        Scene emptyScene = EditorSceneManager.NewPreviewScene();
+        EditorSceneManager.MoveGameObjectToScene(cam.gameObject, emptyScene);
+
+        //Front Texture
+        RenderTexture frontTexture = new RenderTexture(1000, 1000, 0);
+        cam.targetTexture = frontTexture;
+        cam.Render();
+
+        Sprite frontSprite = ConvertRenderTextureToSprite(frontTexture);
+
+        //Ocean disabled
+        oceanRend.gameObject.SetActive(false);
+
+        //Back Texture
+        cam.cullingMask = LayerMask.GetMask("Planet Back Capture", "Planet Front Capture");
+
+        RenderTexture backTexture = new RenderTexture(1000, 1000, 0);
+        cam.targetTexture = backTexture;
+        cam.Render();
+
+        Sprite backSprite = ConvertRenderTextureToSprite(backTexture);
+
+        //Creation of prefab object
+
+        GameObject planetParent = new GameObject("Planet Parent");
+        planetParent.transform.position = Vector3.zero;
+        planetParent.transform.localScale = Vector3.one * 0.3f;
+
+        GameObject frontObject = new GameObject("frontObject");
+        frontObject.transform.parent = planetParent.transform;
+        frontObject.transform.localScale = Vector3.one;
+        SpriteRenderer frontSR = frontObject.AddComponent<SpriteRenderer>();
+        frontSR.sprite = frontSprite;
+        frontSR.sortingOrder = 1;
+
+
+        GameObject backObject = new GameObject("backObject");
+        backObject.transform.parent = planetParent.transform;
+        backObject.transform.position += new Vector3(0, 0, 2);
+        backObject.transform.localScale = Vector3.one;
+        SpriteRenderer backSR = backObject.AddComponent<SpriteRenderer>();
+        backSR.sprite = backSprite;
+        backSR.sortingOrder = -1;
+
+        GameObject ocean = Instantiate(oceanRend.gameObject, planetParent.transform);
+        ocean.GetComponent<MeshRenderer>().material = oceanMat;
+        ocean.transform.position += new Vector3(0, 0, 2);
+        ocean.transform.localScale = Vector3.one * 6.86f;
+        ocean.SetActive(true);
+
+
+        //string assetPath = EditorUtility.SaveFilePanel("Save Planet", "Assets/Procedural Planets/Baked Planets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
+        //if (assetPath.Length == 0) //in case the user cancels the file path
+        //{
+        //    DestroyImmediate(planetParent);
+        //    //Resetting
+        //    oceanRend.sharedMaterial = oceanMat;
+        //    oceanRend.gameObject.SetActive(true);
+
+        //    EditorSceneManager.ClosePreviewScene(emptyScene);
+        //    return;
+        //}
+
+
+        //assetPath = assetPath.Substring(assetPath.IndexOf("Assets/")); //editing the path so its compatible with unity
+        //PrefabUtility.SaveAsPrefabAsset(planetParent, assetPath); //saves the prefab
+
+        //AssetDatabase.AddObjectToAsset(frontSprite, assetPath);        //saves the planet material
+        //AssetDatabase.AddObjectToAsset(backSprite, assetPath);   //saves the ocean  material
+        //AssetDatabase.SaveAssets();
+
+        //DestroyImmediate(planetParent);
+        //Resetting
+        oceanRend.sharedMaterial = oceanMat;
+        oceanRend.gameObject.SetActive(true);
+
+        EditorSceneManager.ClosePreviewScene(emptyScene);
+
+    }
+    public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)
+    {
+        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
+
+        RenderTexture.active = renderTexture;
+        texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        texture.Apply();
+
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+        return sprite;
+    }
     [MenuItem("ProceduralTools/Save As Planet Prefab")]
     static void CreatePrefab()
     {
