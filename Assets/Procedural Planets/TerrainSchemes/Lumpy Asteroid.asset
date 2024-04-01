@@ -13,10 +13,29 @@ MonoBehaviour:
   m_Name: Lumpy Asteroid
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Pastel
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 4249ee8147814d34092f5aaa6793dcf3, type: 2}
+      - {fileID: 11400000, guid: 93e4be72a7f478447bc71e062cc8a941, type: 2}
+      - {fileID: 11400000, guid: c6075693f22dacd4db00522faa768e46, type: 2}
+      - {fileID: 11400000, guid: 757c6a2a30310254d88495a822dc6b9e, type: 2}
+      - {fileID: 11400000, guid: c140b963f3111ae4aac158f9ff7a8767, type: 2}
+      - {fileID: 11400000, guid: 0dfb6dae34a5d734f95126133a0eb25d, type: 2}
+      - {fileID: 11400000, guid: 4249ee8147814d34092f5aaa6793dcf3, type: 2}
+      - {fileID: 11400000, guid: 93e4be72a7f478447bc71e062cc8a941, type: 2}
+      - {fileID: 11400000, guid: c6075693f22dacd4db00522faa768e46, type: 2}
+      - {fileID: 11400000, guid: 757c6a2a30310254d88495a822dc6b9e, type: 2}
+      - {fileID: 11400000, guid: c140b963f3111ae4aac158f9ff7a8767, type: 2}
+      - {fileID: 11400000, guid: 0dfb6dae34a5d734f95126133a0eb25d, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 3
+    seed: 319
     ocean: 0
     atmosphere: 0
     _SeaLevel: 0
@@ -39,9 +58,9 @@ MonoBehaviour:
     multiplier: -10.39
     gain: 1.8
     offset:
-    - 116.23465
-    - 38.643448
-    - 25.40699
+    - 50.50703
+    - 205.16193
+    - 293.78497
     elevation: 0.39
   detailNoiseSettings:
     applyNoise: 0
@@ -52,9 +71,9 @@ MonoBehaviour:
     multiplier: 0.31
     gain: 0.49
     offset:
-    - 147.06029
-    - 140.41075
-    - 17.528278
+    - 103.202194
+    - 259.34335
+    - 135.56479
     elevation: 1.78
   ridgeNoiseSettings:
     applyNoise: 0
@@ -66,9 +85,9 @@ MonoBehaviour:
     gain: 1
     power: 3.62
     offset:
-    - 135.45795
-    - 124.09957
-    - 125.96729
+    - 239.82288
+    - 303.85593
+    - 63.202427
     elevation: 1
     smoothing: 8.58
   warpedNoiseSettings:
@@ -80,9 +99,9 @@ MonoBehaviour:
     multiplier: 0.35
     gain: 1
     offset:
-    - 132.29196
-    - 100.7898
-    - 176.18498
+    - 320.31934
+    - 201.3535
+    - 82.33575
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -93,9 +112,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 160.99551
-    - 96.65763
-    - 179.82619
+    - 181.2081
+    - 230.2774
+    - 215.39296
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -108,16 +127,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 29.687231
-    - 76.332565
-    - 84.74473
+    - 312.20416
+    - 156.23369
+    - 159.13646
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 180.48427, y: 24.879099, z: 131.9888}
+    _Offset: {x: 252.55005, y: 223.26674, z: 108.631096}
     _Scale: 0.4
     _Persistence: 0.98
     _Lacunarity: 0.77
@@ -126,7 +145,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 151.99525, y: 188.96828, z: 106.66088}
+    _WarpOffset: {x: 117.22228, y: 292.26025, z: 32.17775}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0

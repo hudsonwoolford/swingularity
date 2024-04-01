@@ -14,20 +14,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorSchemePools:
     colorSchemePools:
+    - name: Terrestrial
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 7e47fd3b4fa614e958430eeb0fb4cd6a, type: 2}
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+      - {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
+      - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
+      polarColorSchemes: []
     - name: Obsidian + Colour
       oPrimary: 0
       aPrimary: 0
       singleBiome: 1
       primaryBiome: {fileID: 0}
       planetColorSchemes:
+      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
       - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
       - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      polarColorSchemes: []
+    - name: Primordial
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      planetColorSchemes:
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      polarColorSchemes: []
+    - name: Wastelands
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 540
+    seed: 4
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
@@ -40,6 +68,7 @@ MonoBehaviour:
     minCraterSize: 0
     maxCraterSize: 0
     numCraters: 0
+    craterIntersectionTolerance: 0
   shapeNoiseSettings:
     applyNoise: 1
     octaves: 3
@@ -49,9 +78,9 @@ MonoBehaviour:
     multiplier: 1.59
     gain: 0
     offset:
-    - 138.89287
-    - 610.3741
-    - 214.51936
+    - 256.5982
+    - 491.78616
+    - 376.79086
     elevation: 1
   detailNoiseSettings:
     applyNoise: 1
@@ -62,9 +91,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.25
     offset:
-    - 117.765
-    - 162.73418
-    - 47.304367
+    - 642.46185
+    - 455.61758
+    - 87.17967
     elevation: 1.39
   ridgeNoiseSettings:
     applyNoise: 1
@@ -76,9 +105,9 @@ MonoBehaviour:
     gain: 1
     power: 1.93
     offset:
-    - 532.2371
-    - 217.78058
-    - 288.65137
+    - 73.16166
+    - 39.715702
+    - 433.85696
     elevation: -2.35
     smoothing: 0
   warpedNoiseSettings:
@@ -90,9 +119,9 @@ MonoBehaviour:
     multiplier: 1.51
     gain: 1.63
     offset:
-    - 404.21884
-    - 600.8918
-    - 379.31012
+    - 793.8169
+    - 515.8019
+    - 331.1551
     strength: 1.17
   continentNoiseSettings:
     applyNoise: 1
@@ -103,9 +132,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 258.79773
-    - 113.71805
-    - 550.9241
+    - 195.03273
+    - 553.9097
+    - 721.9576
     depthMultiplier: 4.55
     oceanFloorDepth: 5.39
     oceanFloorSmoothing: 1
@@ -118,16 +147,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 579.642
-    - 114.38917
-    - 132.73997
+    - 858.73004
+    - 60.19306
+    - 458.87585
     strength: 1
     maskBlend: 3.5
     maskVerticalShift: 9.11
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 465.14386, y: 573.133, z: 358.8597}
+    _Offset: {x: 308.53024, y: 523.55835, z: 503.75327}
     _Scale: 0.64
     _Persistence: 0.5
     _Lacunarity: 2
@@ -136,7 +165,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 44.93176, y: 567.38043, z: 113.24464}
+    _WarpOffset: {x: 630.89655, y: 652.47296, z: 69.64773}
     _WarpScale: 1
     _WarpPersistence: 0.5
     _WarpLacunarity: 2

@@ -14,18 +14,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorSchemePools:
     colorSchemePools:
-    - name: Earth+Polar
+    - name: Earth+Desert
       oPrimary: 1
       aPrimary: 1
+      singleBiome: 0
       primaryBiome: {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
       planetColorSchemes:
       - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
       - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
+      polarColorSchemes: []
+    - name: Alphine+Desert
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 7e47fd3b4fa614e958430eeb0fb4cd6a, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
+      polarColorSchemes: []
+    - name: Volcano+Desert
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 7032071db733a534488805e125933140, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
+      polarColorSchemes: []
+    - name: Alpine Volcano+Desert
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 2cb73938250941248bee21240209fd78, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
       polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 375
+    seed: 364
     ocean: 1
+    atmosphere: 1
     _SeaLevel: 1.04
   craterSettings:
     rimWidth: 0.156
@@ -36,6 +73,7 @@ MonoBehaviour:
     minCraterSize: 0.156
     maxCraterSize: 0.068
     numCraters: 0
+    craterIntersectionTolerance: 0
   shapeNoiseSettings:
     applyNoise: 1
     octaves: 6
@@ -45,9 +83,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 375.17966
-    - 319.40414
-    - 84.92624
+    - 192.68863
+    - 253.54312
+    - 401.3024
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -58,9 +96,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 96.32915
-    - 67.50124
-    - 364.55835
+    - 37.616
+    - 74.72518
+    - 467.17545
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -72,9 +110,9 @@ MonoBehaviour:
     gain: 2.58
     power: 15.31
     offset:
-    - 187.05397
-    - 6.508499
-    - 4.5961857
+    - 77.294945
+    - 77.223274
+    - 43.09097
     elevation: 3.35
     smoothing: 15.62
   warpedNoiseSettings:
@@ -86,9 +124,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 172.57478
-    - 199.50664
-    - 234.86046
+    - 246.01064
+    - 188.919
+    - 44.975533
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -99,9 +137,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 251.57616
-    - 267.83133
-    - 376.17514
+    - 570.222
+    - 498.01874
+    - 552.4994
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -114,9 +152,9 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 284.47134
-    - 154.78552
-    - 366.9434
+    - 571.9459
+    - 226.74385
+    - 433.8747
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
@@ -127,7 +165,7 @@ MonoBehaviour:
     _Scale: 0.04
     _Persistence: 1.34
     _Lacunarity: 2.99
-    _Multiplier: 0.7
+    _Multiplier: 0.54
     _Gain: 1.06
   biomeWarpNoiseSettings:
     randomizeNoise: 0
