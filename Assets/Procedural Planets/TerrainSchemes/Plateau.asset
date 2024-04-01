@@ -36,11 +36,10 @@ MonoBehaviour:
     - name: Rocky
       oPrimary: 1
       aPrimary: 1
-      singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: f81147e1fa804874693888a9f43a3d95, type: 2}
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
       planetColorSchemes:
       - {fileID: 11400000, guid: f81147e1fa804874693888a9f43a3d95, type: 2}
-      - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
       polarColorSchemes: []
     - name: Mesa
       oPrimary: 1
@@ -54,7 +53,7 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 7
-    seed: 508
+    seed: 392
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
@@ -77,9 +76,9 @@ MonoBehaviour:
     multiplier: 0.55
     gain: 0
     offset:
-    - 110.81889
-    - 601.1748
-    - 370.04596
+    - 381.72855
+    - 623.76984
+    - 823.4878
     elevation: 1
   detailNoiseSettings:
     applyNoise: 0
@@ -90,9 +89,9 @@ MonoBehaviour:
     multiplier: 1.18
     gain: 0.27
     offset:
-    - 109.48451
-    - 28.584946
-    - 249.30017
+    - 409.95526
+    - 14.940327
+    - 55.27503
     elevation: 2.58
   ridgeNoiseSettings:
     applyNoise: 1
@@ -104,9 +103,9 @@ MonoBehaviour:
     gain: 1
     power: 1
     offset:
-    - 439.4851
-    - 561.4752
-    - 405.49548
+    - 25.406824
+    - 254.95483
+    - 426.4958
     elevation: 0.34
     smoothing: 7.31
   warpedNoiseSettings:
@@ -118,9 +117,9 @@ MonoBehaviour:
     multiplier: 1.16
     gain: 1.48
     offset:
-    - 35.59462
-    - 162.21907
-    - 174.0626
+    - 563.8734
+    - 458.06277
+    - 3.0467868
     strength: 0.83
   continentNoiseSettings:
     applyNoise: 1
@@ -131,9 +130,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 571.75714
-    - 498.77774
-    - 258.24796
+    - 613.657
+    - 168.2796
+    - 172.6591
     depthMultiplier: -0.36
     oceanFloorDepth: 1
     oceanFloorSmoothing: 1
@@ -146,16 +145,16 @@ MonoBehaviour:
     multiplier: 0.62
     gain: 0.72
     offset:
-    - 12.928434
-    - 554.6509
-    - 174.95506
+    - 824.29517
+    - 262.91287
+    - 471.60794
     strength: 1.52
     maskBlend: 0.21
     maskVerticalShift: 0.3
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 303.8446, y: 266.2442, z: 149.60588}
+    _Offset: {x: 358.08682, y: 33.01448, z: 372.61197}
     _Scale: 1.81
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -164,7 +163,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 407.51044, y: 604.5801, z: 459.82474}
+    _WarpOffset: {x: 379.9325, y: 591.2333, z: 500.7614}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0

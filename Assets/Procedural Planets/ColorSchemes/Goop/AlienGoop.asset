@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
+  m_Name: AlienGoop
+  m_EditorClassIdentifier: 
+  _FlatColor: {r: 0, g: 0, b: 0, a: 1}
+  _FlatColorVariant: {r: 0.03218636, g: 0.8207547, b: 0, a: 1}
+  _SteepColor: {r: 0, g: 0.3490566, b: 0.1322772, a: 1}
+  _HighElevationColor: {r: 0, g: 0, b: 0, a: 1}
+  _HighElevationSteepColor: {r: 0.19976442, g: 0.8018868, b: 0, a: 1}
+  _ShorelineColor: {r: 0, g: 0, b: 0, a: 1}
+  _Metallic: 0
+  _Smoothness: 0
+  _VegetationLine: 0.04
+  _VegetationLineHarshness: 10
+  _SteepMultiplier: 5
+  _Normal: {fileID: 0}
+  _NormalScale: 1
+  _NormalOffset: {x: 0, y: 0, z: 0}
+  _NormalPower: 1
+  oceanVariables:
+    _OceanBlendEnd: 0.01
+    _OceanBlendIntensity: 0.01
+    _BeachBlendEnd: 0.01
+    _BeachBlendIntensity: 0.01
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0, g: 0, b: 1, a: 1}
+    _OceanNormal: {fileID: 0}
+    _OceanMetallic: 0.2
+    _OceanSmoothness: 0.6
+  atmosphereVariables:
+    _OuterBandColor: {r: 0.22967836, g: 0.745283, b: 0.2732035, a: 1}
+    _OuterBandRange: 2.37
+    _OuterBandIntensity: 0.44
+    _InnerBandColor: {r: 0.3464729, g: 0.6226415, b: 0, a: 1}
+    _InnerBandRange: 2.2
+    _InnerBandIntensity: 0.97
+    _FrontColor: {r: 0.0025612318, g: 0.5471698, b: 0, a: 1}
+    _FrontRange: 2.23
+    _FrontIntensity: 0.21
+  fresnelVariables:
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.5935253, g: 0.9716981, b: 0.4644594, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 0
+    _TreeObjects: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
+    _NumTrees: 100
