@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: Canyon Moon
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Ice
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: b3285bcdb26420c44b898e826156b2ff, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: ef139d73efaec344e9a003805e6db888, type: 2}
+      - {fileID: 11400000, guid: b3285bcdb26420c44b898e826156b2ff, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 200
+    seed: 126
     ocean: 0
+    atmosphere: 1
     _SeaLevel: 1
   craterSettings:
     rimWidth: 0.9
@@ -27,9 +37,10 @@ MonoBehaviour:
     craterBias: 0.72
     minCraterSize: 0.089
     maxCraterSize: 0.27
-    numCraters: 92
+    numCraters: 0
+    craterIntersectionTolerance: 11.8
   shapeNoiseSettings:
-    applyNoise: 1
+    applyNoise: 0
     octaves: 6
     scale: 1.79
     persistence: 1.77
@@ -37,9 +48,9 @@ MonoBehaviour:
     multiplier: 0.99
     gain: 0.85
     offset:
-    - 440.88394
-    - 469.59204
-    - 128.64822
+    - 224.54991
+    - 245.91924
+    - 91.87017
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -50,25 +61,25 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 284.50204
-    - 193.29532
-    - 168.63518
+    - 108.37389
+    - 190.9957
+    - 179.8788
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
     octaves: 3
-    scale: 1
-    persistence: 0.54
-    lacunarity: 0.6
-    multiplier: 1
-    gain: 1.11
-    power: 14.6
+    scale: 0.65
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1.03
+    gain: 0
+    power: 13.9
     offset:
-    - 538.8837
-    - 428.77408
-    - 548.0845
-    elevation: -3.13
-    smoothing: 3.4
+    - 101.11254
+    - 88.19513
+    - 49.38165
+    elevation: -1.94
+    smoothing: 2.69
   warpedNoiseSettings:
     applyNoise: 0
     octaves: 3
@@ -78,9 +89,9 @@ MonoBehaviour:
     multiplier: 0.35
     gain: 1
     offset:
-    - 159.79724
-    - 465.2574
-    - 245.66862
+    - 151.57823
+    - 156.39091
+    - 161.49988
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -91,9 +102,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 485.83438
-    - 537.60077
-    - 411.3269
+    - 124.10868
+    - 89.34935
+    - 144.36359
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -106,25 +117,25 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 110.187
-    - 573.4354
-    - 84.37723
+    - 197.59161
+    - 208.96048
+    - 191.20782
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 315.9636, y: 351.59232, z: 36.03727}
-    _Scale: 0.71
-    _Persistence: 1.44
-    _Lacunarity: -0.12
+    _Offset: {x: 122.04824, y: 151.90382, z: 71.35857}
+    _Scale: 0.63
+    _Persistence: 1.6
+    _Lacunarity: 0.51
     _Multiplier: 0.75
     _Gain: 0.73
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 483.15094, y: 435.59662, z: 271.19855}
+    _WarpOffset: {x: 62.436066, y: 69.55443, z: 153.44128}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
