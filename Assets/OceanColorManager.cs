@@ -21,7 +21,7 @@ public class OceanColorManager : MonoBehaviour
     }
     void Update()
     {
-        
+        UpdateOcean();
     }
     public void UpdateOcean()
     {
