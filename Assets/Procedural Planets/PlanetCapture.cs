@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlanetCapture : MonoBehaviour
 {
+    [SerializeField] RenderTexture renderTexture;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +15,7 @@ public class PlanetCapture : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GetComponent<SpriteRenderer>().sprite = ConvertRenderTextureToSprite(renderTexture);
     }
 
     public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture){
