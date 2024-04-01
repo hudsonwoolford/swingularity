@@ -13,10 +13,32 @@ MonoBehaviour:
   m_Name: CrateredTerrestrial
   m_EditorClassIdentifier: 
   colorSchemePools:
-    colorSchemePools: []
+    colorSchemePools:
+    - name: Earth
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 7e47fd3b4fa614e958430eeb0fb4cd6a, type: 2}
+      - {fileID: 11400000, guid: 2cb73938250941248bee21240209fd78, type: 2}
+      - {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
+      - {fileID: 11400000, guid: 7032071db733a534488805e125933140, type: 2}
+      polarColorSchemes:
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+      - {fileID: 0}
+    - name: Mystical
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
+      - {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 179
+    seed: 213
     ocean: 1
     atmosphere: 1
     _SeaLevel: 0.97
@@ -39,9 +61,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 70.61474
-    - 186.71794
-    - 27.91495
+    - 680.5521
+    - 609.339
+    - 204.96805
     elevation: 0.24
   detailNoiseSettings:
     applyNoise: 1
@@ -52,9 +74,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 130.94463
-    - 116.781425
-    - 75.59343
+    - 63.700104
+    - 808.9842
+    - 83.4946
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -66,9 +88,9 @@ MonoBehaviour:
     gain: 2.58
     power: 5.6
     offset:
-    - 145.73218
-    - 41.75557
-    - 67.525536
+    - 622.53204
+    - 188.49153
+    - 62.542282
     elevation: -2.45
     smoothing: 1.57
   warpedNoiseSettings:
@@ -80,9 +102,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 151.11021
-    - 51.27005
-    - 181.29953
+    - 947.7417
+    - 564.58014
+    - 990.65857
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -93,9 +115,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 9.719949
-    - 165.79407
-    - 66.19715
+    - 205.67664
+    - 750.4931
+    - 951.55505
     depthMultiplier: 1.66
     oceanFloorDepth: 30.7
     oceanFloorSmoothing: 15.31
@@ -108,16 +130,16 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 183.07892
-    - 163.78586
-    - 3.5580323
+    - 156.74925
+    - 984.20667
+    - 771.042
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -1.85
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 65.70698, y: 92.66427, z: 154.1367}
+    _Offset: {x: 234.41844, y: 127.0565, z: 182.76224}
     _Scale: 0.9
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -126,7 +148,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 210.83847, y: 19.303352, z: 196.1482}
+    _WarpOffset: {x: 263.22415, y: 651.10254, z: 836.2612}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
@@ -141,5 +163,5 @@ MonoBehaviour:
     _Multiplier: 0.23
     _Gain: 0.69
   polarBiomeSettings:
-    _PolarHeight: 0.84
-    _PolarBlendIntensity: 8.77
+    _PolarHeight: 0.83
+    _PolarBlendIntensity: 2.71
