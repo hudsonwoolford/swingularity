@@ -75,16 +75,17 @@ public class FullPlanetGeneration : MonoBehaviour
         {   
             ocean.gameObject.SetActive(true);
         }
-        Material oceanMat = ocean.GetComponent<MeshRenderer>().sharedMaterial; //caching ocean material
+        OceanColorManager colourManager = ocean.GetComponent<OceanColorManager>(); //caching ocean material
         Material mat = planet.planetMaterial; //caching planet material
 
         ocean.localScale = (planet.terrainVar.generalSettings._SeaLevel + 0.01f) * Vector3.one * 2; //ocean scale depending on sea level
 
         //Setting variables inside the ocean material and planet material
-        oceanMat.color = planet.oceanVariables._OceanColor; //color
-        oceanMat.SetTexture("_MainTex", planet.oceanVariables._OceanNormal);
-        oceanMat.SetFloat("_Metallic", planet.oceanVariables._OceanMetallic); //metallic
-        oceanMat.SetFloat("_Glossiness", planet.oceanVariables._OceanSmoothness); //smoothness
+        colourManager.oceanColor = planet.oceanVariables._OceanColor; //color
+        colourManager.normalTexture =  planet.oceanVariables._OceanNormal;
+        colourManager.metallic =  planet.oceanVariables._OceanMetallic; //metallic
+        colourManager.smoothness = planet.oceanVariables._OceanSmoothness; //smoothness
+        colourManager.UpdateOcean();
 
         int oceanToggle = planet.terrainVar.generalSettings.ocean ? 1 : 0;
         mat.SetFloat("_Ocean", oceanToggle); //ocean is enabled or not
@@ -537,6 +538,7 @@ public class FullPlanetGeneration : MonoBehaviour
                 break;
         }
         RandomPolarBiome(colorSchemes[index]);
+        UpdateOcean();
     }
     void RandomPolarBiome(ColorSchemeStaticReference.ColorSchemePool colorScheme)
     {
