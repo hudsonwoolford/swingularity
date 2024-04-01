@@ -44,9 +44,18 @@ MonoBehaviour:
       planetColorSchemes:
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
       polarColorSchemes: []
+    - name: Wastelands
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
-    seed: 64
+    seed: 238
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
@@ -69,9 +78,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.8
     offset:
-    - 200.55104
-    - 149.16116
-    - 120.17733
+    - 256.07294
+    - 709.3472
+    - 797.2091
     elevation: 0.42
   detailNoiseSettings:
     applyNoise: 1
@@ -82,9 +91,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.72
     offset:
-    - 331.15775
-    - 294.4519
-    - 245.82124
+    - 292.15408
+    - 453.3621
+    - 58.088497
     elevation: 0.7
   ridgeNoiseSettings:
     applyNoise: 1
@@ -96,9 +105,9 @@ MonoBehaviour:
     gain: 1
     power: 9.68
     offset:
-    - 407.80652
-    - 220.04541
-    - 323.14362
+    - 735.5465
+    - 515.19354
+    - 183.3277
     elevation: -3.07
     smoothing: 1.11
   warpedNoiseSettings:
@@ -110,9 +119,9 @@ MonoBehaviour:
     multiplier: 0.73
     gain: 1
     offset:
-    - 269.06866
-    - 338.65176
-    - 198.06937
+    - 954.7395
+    - 518.7265
+    - 514.8689
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -123,9 +132,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 312.25494
-    - 218.29922
-    - 202.25238
+    - 613.3794
+    - 309.45935
+    - 959.8312
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -138,16 +147,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 326.8458
-    - 65.70613
-    - 293.79666
+    - 723.8733
+    - 515.6997
+    - 298.18698
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 135.66034, y: 22.435316, z: 367.3503}
+    _Offset: {x: 439.2054, y: 157.16516, z: 421.40997}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0
@@ -156,7 +165,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 298.99063, y: 411.23608, z: 283.84717}
+    _WarpOffset: {x: 140.09412, y: 909.9492, z: 432.8488}
     _WarpScale: 1
     _WarpPersistence: 0
     _WarpLacunarity: 0
