@@ -67,7 +67,7 @@ public class ForceField : MonoBehaviour
         foreach (ContactPoint contact in col.contacts){
             hitPower += contact.impulse.magnitude;
         }
-        src.PlayOneShot(bump, hitPower / 10);
+        src.PlayOneShot(bump, hitPower / 20);
         hitTime[hitIterator].y = hitPower;
 
         pBlock.SetVectorArray("_HitPos", hitPos);
