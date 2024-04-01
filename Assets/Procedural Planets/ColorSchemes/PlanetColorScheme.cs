@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,15 +25,21 @@ public class PlanetColorScheme : ScriptableObject
     [Range(0f, 5f)]
     public float _SteepMultiplier = 7f;
 
-    public Texture2D _Normal;
-    public float _NormalScale = 1;
-    public Vector3 _NormalOffset;
-    public float _NormalPower = 1;
+    
 
 
     [Header("Optional Variables")]
+    public NormalVariables _NormalVariables = new NormalVariables();    
     public OceanVariables oceanVariables = new OceanVariables();
     public AtmosphereVariables atmosphereVariables = new AtmosphereVariables();
     public FresnelVariables fresnelVariables = new FresnelVariables();
     public TreeVariables treeVariables = new TreeVariables();
+}
+[Serializable]
+public class NormalVariables
+{
+    public Texture2D _Normal;
+    public float _NormalScale = 1;
+    public Vector3 _NormalOffset;
+    public float _NormalPower = 1;
 }

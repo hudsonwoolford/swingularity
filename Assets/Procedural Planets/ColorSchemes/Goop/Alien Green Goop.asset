@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
+  m_Name: Alien Green Goop
+  m_EditorClassIdentifier: 
+  _FlatColor: {r: 0.26576334, g: 0.509434, b: 0.2042542, a: 1}
+  _FlatColorVariant: {r: 0.18232962, g: 0.3962264, b: 0.1738163, a: 1}
+  _SteepColor: {r: 0.19090423, g: 0.24528301, b: 0.21167813, a: 1}
+  _HighElevationColor: {r: 0.29700816, g: 0.754717, b: 0.16731933, a: 1}
+  _HighElevationSteepColor: {r: 0.17658642, g: 0.3679245, b: 0.11280705, a: 1}
+  _ShorelineColor: {r: 0.2270826, g: 0.764151, b: 0.2586749, a: 1}
+  _Metallic: 0
+  _Smoothness: 0
+  _VegetationLine: 0.081
+  _VegetationLineHarshness: 2.26
+  _SteepMultiplier: 5
+  _NormalVariables:
+    _Normal: {fileID: 0}
+    _NormalScale: 1
+    _NormalOffset: {x: 255.3114, y: 224.56929, z: 63.369514}
+    _NormalPower: 1
+  oceanVariables:
+    _OceanBlendEnd: 0.04
+    _OceanBlendIntensity: 0.25
+    _BeachBlendEnd: 0.014
+    _BeachBlendIntensity: 1.42
+    _SeabedColor: {r: 0.19984868, g: 0.4716981, b: 0.14017443, a: 1}
+    _OceanColor: {r: 0.8096466, g: 2, b: 0, a: 0.30588236}
+    _OceanNormal: {fileID: 2800000, guid: ae835be02a0e9f04da60b0f96a2f694b, type: 3}
+    _OceanMetallic: 0.2
+    _OceanSmoothness: 0.6
+  atmosphereVariables:
+    _OuterBandColor: {r: 0.41263074, g: 0.8392157, b: 0.3058824, a: 1}
+    _OuterBandRange: 2.41
+    _OuterBandIntensity: 1.24
+    _InnerBandColor: {r: 0.21313202, g: 1, b: 0, a: 1}
+    _InnerBandRange: 2.2
+    _InnerBandIntensity: 4
+    _FrontColor: {r: 0.6175913, g: 0.9254902, b: 0.5294118, a: 1}
+    _FrontRange: 2
+    _FrontIntensity: 0.15
+  fresnelVariables:
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.5935253, g: 0.9716981, b: 0.4644594, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 0
+    _TreeObjects: []
+    _TreeLeafColors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
+    _NumTrees: 100

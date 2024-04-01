@@ -3,7 +3,7 @@ struct TriplanarUV{
 };
 float3 GetTriplanarWeights (float3 normal) 
 {
-	float3 triW = abs(normal);
+	float3 triW = pow(abs(normal),10);
 	return triW / (triW.x + triW.y + triW.z);
 }
 TriplanarUV GetTriplanarUV (float3 pos, float3 mapOffset, float mapScale)

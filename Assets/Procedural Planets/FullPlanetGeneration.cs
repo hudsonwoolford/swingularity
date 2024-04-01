@@ -377,9 +377,9 @@ public class FullPlanetGeneration : MonoBehaviour
     public void RandomizeOffset()
     {
 
-        Vector3[] offset = new Vector3[9]; 
+        Vector3[] offset = new Vector3[10]; 
         //random offset
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 10; i++)
         {
             //setting the offsets to randomly generated offset
             UnityEngine.Random.InitState(Mathf.RoundToInt(UnityEngine.Random.value * 1000000));
@@ -394,7 +394,9 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar.maskNoiseSettings.offset =            new float[] { offset[6].x, offset[6].y, offset[6].z };
         if(planet.terrainVar.biomeNoiseSettings.randomizeNoise) { planet.terrainVar.biomeNoiseSettings._Offset = offset[7]; }
         if(planet.terrainVar.biomeWarpNoiseSettings.randomizeNoise) { planet.terrainVar.biomeWarpNoiseSettings._WarpOffset = offset[8]; }
-        
+        biomeA._NormalVariables._NormalOffset = offset[9];
+        biomeB._NormalVariables._NormalOffset = offset[9];
+
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
 
         ClearAllTrees();
@@ -572,10 +574,10 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineA", biomeAScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessA", biomeAScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierA", biomeAScheme._SteepMultiplier);
-            mat.SetTexture("_NormalTextureA", biomeAScheme._Normal);
-            mat.SetVector("_NormalOffsetA", biomeAScheme._NormalOffset);
-            mat.SetFloat("_NormalScaleA", biomeAScheme._NormalScale);
-            mat.SetFloat("_NormalPowerA", biomeAScheme._NormalPower);
+            mat.SetTexture("_NormalTextureA", biomeAScheme._NormalVariables._Normal);
+            mat.SetVector("_NormalOffsetA", biomeAScheme._NormalVariables._NormalOffset);
+            mat.SetFloat("_NormalScaleA", biomeAScheme._NormalVariables._NormalScale);
+            mat.SetFloat("_NormalPowerA", biomeAScheme._NormalVariables._NormalPower);
         }
         if(biomeB != null)
         {
@@ -591,10 +593,10 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineB", biomeBScheme._VegetationLine);
             mat.SetFloat("_VegetationLineHarshnessB", biomeBScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierB", biomeBScheme._SteepMultiplier);
-            mat.SetTexture("_NormalTextureB", biomeBScheme._Normal);
-            mat.SetVector("_NormalOffsetB", biomeBScheme._NormalOffset);
-            mat.SetFloat("_NormalScaleB", biomeBScheme._NormalScale);
-            mat.SetFloat("_NormalPowerB", biomeBScheme._NormalPower);
+            mat.SetTexture("_NormalTextureB", biomeBScheme._NormalVariables._Normal);
+            mat.SetVector("_NormalOffsetB", biomeBScheme._NormalVariables._NormalOffset);
+            mat.SetFloat("_NormalScaleB", biomeBScheme._NormalVariables._NormalScale);
+            mat.SetFloat("_NormalPowerB", biomeBScheme._NormalVariables._NormalPower);
         }
         if (biomeP != null)
         {
@@ -612,10 +614,10 @@ public class FullPlanetGeneration : MonoBehaviour
             mat.SetFloat("_VegetationLineHarshnessP", biomePScheme._VegetationLineHarshness);
             mat.SetFloat("_SteepMultiplierP", biomePScheme._SteepMultiplier);
             mat.SetFloat("_SteepMultiplierP", biomePScheme._SteepMultiplier);
-            mat.SetTexture("_NormalTextureP", biomePScheme._Normal);
-            mat.SetVector("_NormalOffsetP", biomePScheme._NormalOffset);
-            mat.SetFloat("_NormalScaleP", biomePScheme._NormalScale);
-            mat.SetFloat("_NormalPowerP", biomePScheme._NormalPower);
+            mat.SetTexture("_NormalTextureP", biomePScheme._NormalVariables._Normal);
+            mat.SetVector("_NormalOffsetP", biomePScheme._NormalVariables._NormalOffset);
+            mat.SetFloat("_NormalScaleP", biomePScheme._NormalVariables._NormalScale);
+            mat.SetFloat("_NormalPowerP", biomePScheme._NormalVariables._NormalPower);
         }
         else
         {
