@@ -40,6 +40,7 @@ public class FullPlanetEditor : Editor
             planetGeneration.RandomizeTerrainScheme();
             planetGeneration.RandomizeOffset();
             if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
+            planetGeneration.ClearAllTrees();
             
         }
         EditorWindow inspectorWindow = EditorWindow.focusedWindow;
