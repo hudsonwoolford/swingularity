@@ -14,37 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorSchemePools:
     colorSchemePools:
-    - name: Obsidian + Red
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian + Green
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian + Blue
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian + Purple
-      oPrimary: 1
-      aPrimary: 1
-      primaryBiome: {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
-      polarColorSchemes: []
     - name: Terrestrial
       oPrimary: 1
       aPrimary: 1
+      singleBiome: 0
       primaryBiome: {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
       planetColorSchemes:
       - {fileID: 11400000, guid: 7e47fd3b4fa614e958430eeb0fb4cd6a, type: 2}
@@ -52,10 +25,22 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
       - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
       polarColorSchemes: []
+    - name: Obsidian + Colour
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
+      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      polarColorSchemes: []
   generalSettings:
     subdivisions: 6
     seed: 238
     ocean: 1
+    atmosphere: 1
     _SeaLevel: 1
   craterSettings:
     rimWidth: 0

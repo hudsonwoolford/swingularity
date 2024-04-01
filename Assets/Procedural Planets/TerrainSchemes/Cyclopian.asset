@@ -16,8 +16,9 @@ MonoBehaviour:
     colorSchemePools: []
   generalSettings:
     subdivisions: 6
-    seed: 219
+    seed: 54
     ocean: 1
+    atmosphere: 1
     _SeaLevel: 1.04
   craterSettings:
     rimWidth: 1.09
@@ -37,9 +38,9 @@ MonoBehaviour:
     multiplier: 0.86
     gain: 0.82
     offset:
-    - 2.1157017
-    - 141.47136
-    - 294.41846
+    - 26.704779
+    - 70.50156
+    - 0.3799353
     elevation: 1.07
   detailNoiseSettings:
     applyNoise: 1
@@ -50,9 +51,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 97.72123
-    - 303.76288
-    - 261.07776
+    - 45.25653
+    - 15.516795
+    - 38.781208
     elevation: 0.03
   ridgeNoiseSettings:
     applyNoise: 1
@@ -64,9 +65,9 @@ MonoBehaviour:
     gain: 2.58
     power: 5.6
     offset:
-    - 354.46985
-    - 48.908493
-    - 56.21908
+    - 41.793667
+    - 64.520424
+    - 13.782663
     elevation: 2.65
     smoothing: 1.57
   warpedNoiseSettings:
@@ -78,9 +79,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 5.2249236
-    - 93.60821
-    - 135.33221
+    - 75.90633
+    - 53.456642
+    - 82.7592
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -91,9 +92,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 106.961426
-    - 320.1638
-    - 205.63754
+    - 57.987236
+    - 25.310127
+    - 51.909252
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -106,16 +107,16 @@ MonoBehaviour:
     multiplier: 0
     gain: 6.79
     offset:
-    - 206.75099
-    - 236.64572
-    - 271.3406
+    - 2.9029772
+    - 13.484319
+    - 1.0480915
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 110.751755, y: 180.83112, z: 364.72202}
+    _Offset: {x: 19.159065, y: 58.658688, z: 46.661377}
     _Scale: 0.9
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -124,7 +125,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 271.0957, y: 219.83705, z: 281.1095}
+    _WarpOffset: {x: 27.395647, y: 69.80988, z: 15.816613}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
