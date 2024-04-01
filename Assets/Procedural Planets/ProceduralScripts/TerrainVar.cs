@@ -63,6 +63,8 @@ public class CraterSettings
 
     [Range(0f, 5000f)]
     public int numCraters;
+
+    public float craterIntersectionTolerance;
 }
 
 [Serializable]

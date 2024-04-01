@@ -17,19 +17,24 @@ MonoBehaviour:
   _SteepColor: {r: 0.254717, g: 0.0817875, b: 0.06848522, a: 1}
   _HighElevationColor: {r: 0.745283, g: 0.20541254, b: 0.17928976, a: 1}
   _HighElevationSteepColor: {r: 0.6320754, g: 0.19081523, b: 0.18783373, a: 1}
+  _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
   _Metallic: 0.609
   _Smoothness: 0
   _VegetationLine: 0.038
   _VegetationLineHarshness: 6
   _SteepMultiplier: 5
+  _Normal: {fileID: 2800000, guid: e6931fb76d3523e48a9c0ba249b6f85d, type: 3}
+  _NormalScale: 0.13
+  _NormalOffset: {x: 0, y: 0, z: 0}
+  _NormalPower: 0.27
   oceanVariables:
     _OceanBlendEnd: 0.018
     _OceanBlendIntensity: 0.82
     _BeachBlendEnd: 0.01
     _BeachBlendIntensity: 0.01
-    _ShorelineColor: {r: 1, g: 0.5480595, b: 0.5137255, a: 1}
     _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
     _OceanColor: {r: 0.26415092, g: 0.07100706, b: 0.03613386, a: 0.8784314}
+    _OceanNormal: {fileID: 0}
     _OceanMetallic: 0.2
     _OceanSmoothness: 0.618
   atmosphereVariables:
@@ -56,5 +61,6 @@ MonoBehaviour:
     - {r: 1, g: 1, b: 1, a: 1}
     - {r: 1, g: 1, b: 1, a: 1}
     _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
     _NumTrees: 100
-    _TreeSeed: 0

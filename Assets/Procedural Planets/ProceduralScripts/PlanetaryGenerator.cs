@@ -11,6 +11,11 @@ public class PlanetaryGenerator : MonoBehaviour
         public float radius;
         public Vector3 centre;
         public float floorHeight;
+        public Crater(float radius, Vector3 centre, float floorHeight){
+            this.radius = radius;
+            this.centre = centre;
+            this.floorHeight = floorHeight;
+        }
     };
     public static Mesh ModifyGeometry(Mesh mesh, TerrainVar terrainVar, ComputeShader calculateVertexHeight)
     {
@@ -22,26 +27,27 @@ public class PlanetaryGenerator : MonoBehaviour
     #region CraterGeneration
     private static Crater[] GenerateRandomCraters(Vector3[] vertices, TerrainVar terrainVar)
     {
-        Crater[] craters = new Crater[terrainVar.craterSettings.numCraters];
+        List<Crater> craters = new List<Crater>(terrainVar.craterSettings.numCraters);
         UnityEngine.Random.InitState(terrainVar.generalSettings.seed);
         for (int i = 0; i < terrainVar.craterSettings.numCraters; i++)
         {
             float radius = Mathf.Lerp(terrainVar.craterSettings.minCraterSize, terrainVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, terrainVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
             float floorHeight = UnityEngine.Random.Range(-0.25f, 0f);
-            bool intersecting = true;
-            for(int u = 0; u < craters.Length; u++){
-                if ((centre - craters[u].centre).magnitude <= craters[u].radius + terrainVar.craterSettings.rimWidth){
+            bool intersecting = false;
+            for(int u = 0; u < craters.Count; u++){
+                if (Vector3.Distance(centre, craters[u].centre) <= craters[u].radius + radius + 2 * terrainVar.craterSettings.rimWidth / terrainVar.craterSettings.craterIntersectionTolerance){
                     intersecting = true;
+                    break;
                 }
             }
             if (!intersecting){
-                craters[i].radius = radius;
-                craters[i].centre = centre;
-                craters[i].floorHeight = floorHeight;
+                Crater crater = new Crater(radius, centre, floorHeight);
+                craters.Add(crater);
             }
         }
-        return craters;
+        
+        return craters.ToArray();
     }
 
 
@@ -62,10 +68,10 @@ public class PlanetaryGenerator : MonoBehaviour
         float[] heights = new float[vertices.Length];
         heightBuffer.SetData(heights);
 
-        SetShaderParams(calculateVertexHeight, terrainVar);
+        SetShaderParams(calculateVertexHeight, terrainVar, craters.Length);
 
 
-        if (terrainVar.craterSettings.numCraters > 0)
+        if (craters.Length > 0)
         {
             ComputeBuffer craterBuffer;
             craterBuffer = new ComputeBuffer(craters.Length, 20);
@@ -88,13 +94,13 @@ public class PlanetaryGenerator : MonoBehaviour
         return vertices;
     }
 
-    private static void SetShaderParams(ComputeShader calculateVertexHeight, TerrainVar terrainVar)
+    private static void SetShaderParams(ComputeShader calculateVertexHeight, TerrainVar terrainVar, int craters)
     {
         //Crater params
         calculateVertexHeight.SetFloat("rimWidth", terrainVar.craterSettings.rimWidth);
         calculateVertexHeight.SetFloat("rimSteepness", terrainVar.craterSettings.rimSteepness);
         calculateVertexHeight.SetFloat("smoothness", terrainVar.craterSettings.smoothness);
-        calculateVertexHeight.SetFloat("numCraters", terrainVar.craterSettings.numCraters);
+        calculateVertexHeight.SetFloat("numCraters", craters);
         calculateVertexHeight.SetFloat("floorHeight", terrainVar.craterSettings.floorHeight);
 
         //ShapeNoise params
