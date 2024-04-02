@@ -723,7 +723,7 @@ public class FullPlanetGeneration : MonoBehaviour
         }
 
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
-        if(oceanRend == false)
+        if(oceanRend == null)
         {
             Debug.LogWarning("Please have a child called 'Ocean'");
             return;
@@ -739,8 +739,10 @@ public class FullPlanetGeneration : MonoBehaviour
         cam.cullingMask = LayerMask.GetMask("Planet Front Capture");
 
 
-        Scene emptyScene = EditorSceneManager.NewPreviewScene();
+        Scene currentScene = EditorSceneManager.GetActiveScene();
+        Scene emptyScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         EditorSceneManager.MoveGameObjectToScene(cam.gameObject, emptyScene);
+        EditorSceneManager.SetActiveScene(currentScene);
 
         //Front Texture
         RenderTexture frontTexture = new RenderTexture(1000, 1000, 0);
@@ -760,13 +762,16 @@ public class FullPlanetGeneration : MonoBehaviour
         cam.Render();
 
         Sprite backSprite = ConvertRenderTextureToSprite(backTexture);
+        backSprite.name = "dsad";
 
         //Creation of prefab object
-
+        
+        //Parent planet
         GameObject planetParent = new GameObject("Planet Parent");
         planetParent.transform.position = Vector3.zero;
         planetParent.transform.localScale = Vector3.one * 0.3f;
 
+        //Front sprite
         GameObject frontObject = new GameObject("frontObject");
         frontObject.transform.parent = planetParent.transform;
         frontObject.transform.localScale = Vector3.one;
@@ -774,7 +779,7 @@ public class FullPlanetGeneration : MonoBehaviour
         frontSR.sprite = frontSprite;
         frontSR.sortingOrder = 1;
 
-
+        //Back sprite
         GameObject backObject = new GameObject("backObject");
         backObject.transform.parent = planetParent.transform;
         backObject.transform.position += new Vector3(0, 0, 2);
@@ -783,26 +788,38 @@ public class FullPlanetGeneration : MonoBehaviour
         backSR.sprite = backSprite;
         backSR.sortingOrder = -1;
 
+        //ocean
         GameObject ocean = Instantiate(oceanRend.gameObject, planetParent.transform);
         ocean.GetComponent<MeshRenderer>().material = oceanMat;
         ocean.transform.position += new Vector3(0, 0, 2);
-        ocean.transform.localScale = Vector3.one * 6.86f;
+        ocean.transform.localScale = Vector3.one * 6.9f;
         ocean.SetActive(true);
 
+        //Atmospheres
+        GameObject[] atmospheres = { selectedObj.transform.GetChild(1).gameObject, selectedObj.transform.GetChild(2).gameObject, selectedObj.transform.GetChild(3).gameObject };
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject instaAtmosphere = Instantiate(atmospheres[i], planetParent.transform);
+            float depth = i == 2 ? 0 : 2;
+            instaAtmosphere.transform.localScale = Vector3.one;
+            instaAtmosphere.transform.position += new Vector3(0, 0, depth);
+        }
 
         //string assetPath = EditorUtility.SaveFilePanel("Save Planet", "Assets/Procedural Planets/Baked Planets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
         //if (assetPath.Length == 0) //in case the user cancels the file path
         //{
-        //    DestroyImmediate(planetParent);
         //    //Resetting
+        //    DestroyImmediate(planetParent);
         //    oceanRend.sharedMaterial = oceanMat;
         //    oceanRend.gameObject.SetActive(true);
 
-        //    EditorSceneManager.ClosePreviewScene(emptyScene);
+        //    EditorSceneManager.CloseScene(emptyScene, true);
         //    return;
         //}
 
-
+        //string planetName = assetPath.Substring(assetPath.LastIndexOf("/"));
+        //frontSprite.name = planetName + "_Front";
+        //backSprite.name = planetName + "_Back";
         //assetPath = assetPath.Substring(assetPath.IndexOf("Assets/")); //editing the path so its compatible with unity
         //PrefabUtility.SaveAsPrefabAsset(planetParent, assetPath); //saves the prefab
 
@@ -810,12 +827,12 @@ public class FullPlanetGeneration : MonoBehaviour
         //AssetDatabase.AddObjectToAsset(backSprite, assetPath);   //saves the ocean  material
         //AssetDatabase.SaveAssets();
 
+        ////Resetting
         //DestroyImmediate(planetParent);
-        //Resetting
         oceanRend.sharedMaterial = oceanMat;
         oceanRend.gameObject.SetActive(true);
 
-        EditorSceneManager.ClosePreviewScene(emptyScene);
+        EditorSceneManager.CloseScene(emptyScene, true);
 
     }
     public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)
