@@ -4,8 +4,8 @@ using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.IO;
 using Unity.VisualScripting;
-using JetBrains.Annotations;
 using UnityEditor.SceneManagement;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -805,30 +805,68 @@ public class FullPlanetGeneration : MonoBehaviour
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);
         }
 
-        //string assetPath = EditorUtility.SaveFilePanel("Save Planet", "Assets/Procedural Planets/Baked Planets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
-        //if (assetPath.Length == 0) //in case the user cancels the file path
-        //{
-        //    //Resetting
-        //    DestroyImmediate(planetParent);
-        //    oceanRend.sharedMaterial = oceanMat;
-        //    oceanRend.gameObject.SetActive(true);
+        string assetPath = EditorUtility.SaveFilePanel("Save Planet", "Assets/Procedural Planets/Baked Planets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
+        if (assetPath.Length == 0) //in case the user cancels the file path
+        {
+            //Resetting
+            DestroyImmediate(planetParent);
+            oceanRend.sharedMaterial = oceanMat;
+            oceanRend.gameObject.SetActive(true);
 
-        //    EditorSceneManager.CloseScene(emptyScene, true);
-        //    return;
-        //}
+            EditorSceneManager.CloseScene(emptyScene, true);
+            return;
+        }
 
-        //string planetName = assetPath.Substring(assetPath.LastIndexOf("/"));
-        //frontSprite.name = planetName + "_Front";
-        //backSprite.name = planetName + "_Back";
-        //assetPath = assetPath.Substring(assetPath.IndexOf("Assets/")); //editing the path so its compatible with unity
-        //PrefabUtility.SaveAsPrefabAsset(planetParent, assetPath); //saves the prefab
+        byte[] frontPNG = frontSprite.texture.EncodeToPNG();
+        byte[] backPNG = backSprite.texture.EncodeToPNG();
 
-        //AssetDatabase.AddObjectToAsset(frontSprite, assetPath);        //saves the planet material
-        //AssetDatabase.AddObjectToAsset(backSprite, assetPath);   //saves the ocean  material
-        //AssetDatabase.SaveAssets();
+        assetPath = assetPath.Substring(assetPath.IndexOf("Assets/")); //editing the path so it's compatible with Unity
+        string planetName = assetPath.Substring(assetPath.LastIndexOf("/") + 1).Replace(".prefab", "");
 
-        ////Resetting
-        //DestroyImmediate(planetParent);
+        string frontPath = assetPath.Replace(planetName + ".prefab", planetName + "_Front.png");
+        string backPath = assetPath.Replace(planetName + ".prefab", planetName + "_Back.png");
+
+        // Save the PNG byte data to the disk
+        File.WriteAllBytes(frontPath, frontPNG);
+        File.WriteAllBytes(backPath, backPNG);
+
+        AssetDatabase.ImportAsset(frontPath);
+        AssetDatabase.ImportAsset(backPath);
+
+        AssetDatabase.SaveAssets();
+
+        TextureImporter[] importers = { (TextureImporter)TextureImporter.GetAtPath(frontPath), (TextureImporter)TextureImporter.GetAtPath(backPath) };
+        for (int i = 0; i < 2; i++)
+        {
+            TextureImporter importer = importers[i]; 
+
+            importer.isReadable = true;
+            importer.textureType = TextureImporterType.Sprite;
+
+            TextureImporterSettings importerSettings = new TextureImporterSettings();
+            importer.ReadTextureSettings(importerSettings);
+            importerSettings.spriteExtrude = 0;
+            importerSettings.spriteGenerateFallbackPhysicsShape = false;
+            importerSettings.spriteMeshType = SpriteMeshType.FullRect;
+            importerSettings.spriteMode = (int)SpriteImportMode.Single;
+            importer.SetTextureSettings(importerSettings);
+
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.maxTextureSize = 1024; // or whatever
+            importer.alphaIsTransparency = true;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.alphaSource = TextureImporterAlphaSource.FromInput;
+
+            EditorUtility.SetDirty(importer);
+            importer.SaveAndReimport();
+        }
+
+        frontSR.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(frontPath);
+        backSR.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(backPath);
+        PrefabUtility.SaveAsPrefabAsset(planetParent, assetPath); //saves the prefab
+
+        //Resetting
+        DestroyImmediate(planetParent);
         oceanRend.sharedMaterial = oceanMat;
         oceanRend.gameObject.SetActive(true);
 
@@ -858,7 +896,6 @@ public class FullPlanetGeneration : MonoBehaviour
         }
 
         GameObject newObj = Instantiate(selectedObj, selectedObj.transform.position, selectedObj.transform.rotation); //create the obj
-        GameObject newOceanObj = newObj.transform.GetChild(0).gameObject; //select the ocean object from the object
 
 
         DestroyImmediate(newObj.GetComponent<FullPlanetGeneration>()); //destroy the fullplanetgeneration on the object
@@ -866,25 +903,19 @@ public class FullPlanetGeneration : MonoBehaviour
 
         MeshFilter meshFilter = selectedObj.GetComponent<MeshFilter>();         //store mesh filter
         MeshRenderer meshRenderer = selectedObj.GetComponent<MeshRenderer>();   //store mesh renderer
-        MeshRenderer oceanRenderer = newOceanObj.GetComponent<MeshRenderer>();  //store ocean mesh renderer
 
         Mesh mesh = meshFilter.sharedMesh;                                      //store mesh
         Material material = meshRenderer.sharedMaterial;                        //store planet material
-        Material oceanMaterial = oceanRenderer.sharedMaterial;                  //store ocean material
 
         Material copyMat = new Material(material.shader);                       //create unique planet material
-        Material copyOceanMat = new Material(oceanMaterial.shader);             //create unique ocean material
         Mesh copyMesh = mesh;                                                   //store copy of the mesh
 
         copyMat.CopyMatchingPropertiesFromMaterial(material); //copy planet material properties
-        copyOceanMat.CopyMatchingPropertiesFromMaterial(oceanMaterial); //copy ocean material properties
 
         MeshFilter newMeshFilter = newObj.GetComponent<MeshFilter>();           //store the new mesh filter
         MeshRenderer newMeshRenderer = newObj.GetComponent<MeshRenderer>();     //store the new mesh renderer
 
         newMeshFilter.mesh = copyMesh;              //setting the mesh in the new object
-        newMeshRenderer.material = copyOceanMat;    //setting the planet material in the new object
-        oceanRenderer.material = copyOceanMat;      //setting the ocean material in the new object
 
         string prefabPath = EditorUtility.SaveFilePanel("Save Prefab", "Assets/", "BakedPlanet", "prefab"); //opens a file panel for the user to choose the file path
 
@@ -898,7 +929,6 @@ public class FullPlanetGeneration : MonoBehaviour
         PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath); //saves the prefab
 
         AssetDatabase.AddObjectToAsset(copyMat, prefabPath);        //saves the planet material
-        AssetDatabase.AddObjectToAsset(copyOceanMat, prefabPath);   //saves the ocean  material
         AssetDatabase.AddObjectToAsset(copyMesh, prefabPath);       //saves the mesh
         AssetDatabase.SaveAssets();
 
