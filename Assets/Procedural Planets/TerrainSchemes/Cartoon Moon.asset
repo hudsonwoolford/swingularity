@@ -34,8 +34,8 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 0dfb6dae34a5d734f95126133a0eb25d, type: 2}
       polarColorSchemes: []
   generalSettings:
-    subdivisions: 7
-    seed: 125
+    subdivisions: 8
+    seed: 1
     ocean: 0
     atmosphere: 0
     _SeaLevel: 1
@@ -48,9 +48,9 @@ MonoBehaviour:
     minCraterSize: 0.089
     maxCraterSize: 0.4
     numCraters: 38
-    craterIntersectionTolerance: 43.7
+    craterIntersectionTolerance: 13.4
   shapeNoiseSettings:
-    applyNoise: 0
+    applyNoise: 1
     octaves: 3
     scale: 1.29
     persistence: 0.85
@@ -58,9 +58,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 77.0177
-    - 114.95663
-    - 190.28053
+    - 2.4533987
+    - 4.4828224
+    - 7.2714386
     elevation: 1
   detailNoiseSettings:
     applyNoise: 0
@@ -71,9 +71,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 131.37311
-    - 9.096049
-    - 82.89955
+    - 1.9533651
+    - 5.389862
+    - 8.977052
     elevation: 0
   ridgeNoiseSettings:
     applyNoise: 0
@@ -85,9 +85,9 @@ MonoBehaviour:
     gain: 1
     power: 3.62
     offset:
-    - 4.207976
-    - 52.313488
-    - 129.058
+    - 1.850262
+    - 7.2511396
+    - 2.8565207
     elevation: 1
     smoothing: 8.58
   warpedNoiseSettings:
@@ -99,9 +99,9 @@ MonoBehaviour:
     multiplier: 0.35
     gain: 1
     offset:
-    - 14.23048
-    - 187.31897
-    - 114.62232
+    - 6.8931956
+    - 6.9742174
+    - 0.64098793
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -112,9 +112,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 131.20566
-    - 105.32713
-    - 45.87953
+    - 5.797368
+    - 8.765793
+    - 1.6740376
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -127,16 +127,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 187.69817
-    - 129.10316
-    - 28.94996
+    - 8.579059
+    - 1.0563152
+    - 5.3094664
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 153.58252, y: 37.258705, z: 128.78922}
+    _Offset: {x: 8.538876, y: 2.4911072, z: 1.0583891}
     _Scale: 0.5
     _Persistence: 1.05
     _Lacunarity: 2.61
@@ -145,7 +145,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 137.21516, y: 176.01062, z: 23.679024}
+    _WarpOffset: {x: 8.2196865, y: 1.2762402, z: 7.2241735}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0

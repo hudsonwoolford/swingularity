@@ -58,7 +58,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
       - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
       polarColorSchemes: []
-    - name: Alpine Volcano+Desert
+    - name: Alpine Volcano+Wastelands
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -68,18 +68,18 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
       - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
       polarColorSchemes: []
-    - name: Alpine Volcano+Desert
+    - name: Fire + Ice
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
-      primaryBiome: {fileID: 0}
+      primaryBiome: {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
       planetColorSchemes:
-      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      - {fileID: 11400000, guid: b3285bcdb26420c44b898e826156b2ff, type: 2}
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
       polarColorSchemes: []
   generalSettings:
-    subdivisions: 6
-    seed: 24
+    subdivisions: 8
+    seed: 208
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1.04
@@ -102,9 +102,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 36.15166
-    - 36.78719
-    - 6.7401505
+    - 210.35034
+    - 271.26334
+    - 112.04114
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -115,9 +115,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 22.804478
-    - 20.135878
-    - 40.547123
+    - 76.81597
+    - 93.706604
+    - 149.43686
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -129,9 +129,9 @@ MonoBehaviour:
     gain: 2.58
     power: 15.31
     offset:
-    - 18.71889
-    - 31.623528
-    - 36.63359
+    - 167.77066
+    - 188.49065
+    - 116.53513
     elevation: 3.35
     smoothing: 15.62
   warpedNoiseSettings:
@@ -143,9 +143,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 27.785881
-    - 4.7595367
-    - 15.750648
+    - 9.689197
+    - 200.32812
+    - 27.189167
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -156,9 +156,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 33.533813
-    - 16.056776
-    - 27.4259
+    - 242.35503
+    - 124.667915
+    - 180.28757
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -171,9 +171,9 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 37.775356
-    - 5.2532167
-    - 39.68613
+    - 50.402653
+    - 20.009201
+    - 117.92782
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
