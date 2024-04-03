@@ -47,26 +47,32 @@ public class LevelGenerator : MonoBehaviour
         Generatelevel(level);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
-        GameObject generator = Instantiate(planetGeneratorPrefab);
+        FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
+        List<GameObject> planetList = new List<GameObject>();
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
+            planetList.Add(GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize));
+        }
+        foreach (GameObject planet in planetList)
+        {
+            planet.SetActive(true);
         }
     }
 
-    void GeneratePlanet(GameObject generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize){
+    GameObject GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize){
         
-        generator.GetComponent<FullPlanetGeneration>().RandomizeTerrainScheme(seed);
-        generator.GetComponent<FullPlanetGeneration>().RandomizeColorScheme(seed);
-        generator.GetComponent<FullPlanetGeneration>().ApplyColorScheme();
-        generator.GetComponent<FullPlanetGeneration>().ClearAllTrees();
-        generator.GetComponent<FullPlanetGeneration>().UpdateAtmosphere();
-        generator.GetComponent<FullPlanetGeneration>().UpdateOcean();
-        generator.GetComponent<FullPlanetGeneration>().UpdateTrees();
+        generator.RandomizeTerrainScheme(seed);
+        generator.RandomizeColorScheme(seed);
+        generator.ApplyColorScheme();
+        generator.ClearAllTrees();
+        generator.UpdateAtmosphere();
+        generator.UpdateOcean();
+        generator.UpdateTrees();
 
-        GameObject newPlanet = ConvertToImage(generator, "ImagingScene" + seed.x);
+        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = position - levelSize/2;
         newPlanet.transform.localScale = Vector3.one * size * planetScale;
+        return newPlanet;
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
