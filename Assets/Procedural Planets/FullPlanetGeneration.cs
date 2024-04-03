@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -770,6 +771,8 @@ public class FullPlanetGeneration : MonoBehaviour
         GameObject planetParent = new GameObject("Planet Parent");
         planetParent.transform.position = Vector3.zero;
         planetParent.transform.localScale = Vector3.one * 0.3f;
+        SortingGroup sr = planetParent.AddComponent<SortingGroup>();
+        sr.sortingLayerName = "Planet Sprites";
 
         //Front sprite
         GameObject frontObject = new GameObject("frontObject");
@@ -786,7 +789,6 @@ public class FullPlanetGeneration : MonoBehaviour
         backObject.transform.localScale = Vector3.one;
         SpriteRenderer backSR = backObject.AddComponent<SpriteRenderer>();
         backSR.sprite = backSprite;
-        backSR.sortingOrder = -1;
 
         //ocean
         GameObject ocean = Instantiate(oceanRend.gameObject, planetParent.transform);
@@ -800,6 +802,7 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject instaAtmosphere = Instantiate(atmospheres[i], planetParent.transform);
+            instaAtmosphere.AddComponent<AtmosphereHandler>();
             float depth = i == 2 ? 0 : 2;
             instaAtmosphere.transform.localScale = Vector3.one;
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);
