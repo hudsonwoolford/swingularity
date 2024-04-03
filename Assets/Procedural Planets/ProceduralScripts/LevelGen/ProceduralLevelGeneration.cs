@@ -10,11 +10,12 @@ using UnityEngineInternal;
 
 public static class ProceduralLevelGeneration
 {
+    [Serializable]
     public struct Level{
-        int numPlanets;
-        float[] planetSizes;
-        Vector3[] planetPoints;
-        Vector3[] planetSeeds;
+        public int numPlanets;
+        public float[] planetSizes;
+        public Vector3[] planetPoints;
+        public Vector3[] planetSeeds;
         public Level(int numPlanets, float[] planetSizes, Vector3[] planetPoints, Vector3[] planetSeeds){
             this.numPlanets = numPlanets;
             this.planetSizes = planetSizes;
@@ -28,6 +29,17 @@ public static class ProceduralLevelGeneration
         float k = Mathf.Pow(1 - bias, 3);
         return (input * k) / (input * k - input + 1);
     }
+    /*Level Gen settings
+    0: minimum number of planets
+    1: maximum number of planets
+    2: minimum size for each planet
+    3: maximum size for each planet
+    4: bias towards or against planet size
+    5: x dimension of size of level
+    6: y dimension of size of level
+    7: number of poisson disk samples before rejecting the point as a spawner
+    8: offset scale for determining random values of planet
+    */
     public static Level CalculateLevel(int seed, params float[] levelGenSettings){
         //Set seed and init variables
         UnityEngine.Random.InitState(seed);
