@@ -23,7 +23,7 @@ public class LevelGenerator : MonoBehaviour
     public int seed;
     //Level gen params
     [SerializeField]
-    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
+    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, poissonRadius, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
     GameObject planetGeneratorPrefab;
     [SerializeField]
@@ -31,12 +31,13 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
-        float[] levelGenSettings = new float[9]{
+        float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
             minSize,
             maxSize,
             sizeBias,
+            poissonRadius,
             xRegionSize,
             yRegionSize,
             samplesBeforeRejection,
@@ -46,22 +47,26 @@ public class LevelGenerator : MonoBehaviour
         Generatelevel(level);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
+        GameObject generator = Instantiate(planetGeneratorPrefab);
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            GeneratePlanet(1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
+            GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
         }
     }
 
-    void GeneratePlanet(float size, Vector3 position, Vector3 seed, Vector3 levelSize){
-        GameObject generator = Instantiate(planetGeneratorPrefab);
+    void GeneratePlanet(GameObject generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize){
+        
         generator.GetComponent<FullPlanetGeneration>().RandomizeTerrainScheme(seed);
         generator.GetComponent<FullPlanetGeneration>().RandomizeColorScheme(seed);
+        generator.GetComponent<FullPlanetGeneration>().ApplyColorScheme();
         generator.GetComponent<FullPlanetGeneration>().ClearAllTrees();
+        generator.GetComponent<FullPlanetGeneration>().UpdateAtmosphere();
+        generator.GetComponent<FullPlanetGeneration>().UpdateOcean();
+        generator.GetComponent<FullPlanetGeneration>().UpdateTrees();
 
         GameObject newPlanet = ConvertToImage(generator, "ImagingScene" + seed.x);
         newPlanet.transform.position = position - levelSize/2;
         newPlanet.transform.localScale = Vector3.one * size * planetScale;
-        Destroy(generator);
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
@@ -152,6 +157,7 @@ public class LevelGenerator : MonoBehaviour
 
         Destroy(cam.gameObject);
         SceneManager.UnloadSceneAsync(emptyScene);
+        planetParent.SetActive(false);
         return planetParent;
     }
     public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)

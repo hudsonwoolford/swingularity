@@ -37,10 +37,11 @@ public static class ProceduralLevelGeneration
     2: minimum size for each planet
     3: maximum size for each planet
     4: bias towards or against planet size
-    5: x dimension of size of level
-    6: y dimension of size of level
-    7: number of poisson disk samples before rejecting the point as a spawner
-    8: offset scale for determining random values of planet
+    5: radius for poisson disk algorithm
+    6: x dimension of size of level
+    7: y dimension of size of level
+    8: number of poisson disk samples before rejecting the point as a spawner
+    9: offset scale for determining random values of planet
     */
     public static Level CalculateLevel(int seed, params float[] levelGenSettings){
         //Set seed and init variables
@@ -59,15 +60,15 @@ public static class ProceduralLevelGeneration
             planetSizes[i] = Mathf.Lerp(minSize, maxSize, ApplyBias(UnityEngine.Random.value, bias));
         }
 
-        float radius = 1;
-        Vector2 regionBounds = new Vector2 (levelGenSettings[5], levelGenSettings[6]);
-        int numSamplesBeforeRejection = (int)levelGenSettings[7];
+        float radius = levelGenSettings[5];
+        Vector2 regionBounds = new Vector2 (levelGenSettings[6], levelGenSettings[7]);
+        int numSamplesBeforeRejection = (int)levelGenSettings[8];
         Vector3[] planetPoints = new Vector3[numPlanets];
 
         planetPoints = PoissonDiskSampling(seed, radius, regionBounds, numSamplesBeforeRejection);
 
         Vector3[] planetSeeds = new Vector3[numPlanets];
-        float offsetScale = levelGenSettings[8];
+        float offsetScale = levelGenSettings[9];
         for (int i = 0; i < numPlanets; i++){
             float xOffset = UnityEngine.Random.value * offsetScale + i * offsetScale;
             float yOffset = UnityEngine.Random.value * offsetScale + 2 * i * offsetScale;

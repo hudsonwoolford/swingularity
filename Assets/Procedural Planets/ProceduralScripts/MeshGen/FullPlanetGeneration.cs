@@ -66,7 +66,7 @@ public class FullPlanetGeneration : MonoBehaviour
         ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
     }
-    void UpdateOcean()
+    public void UpdateOcean()
     {
         if(!planet.terrainVar.generalSettings.ocean)
         {
@@ -98,7 +98,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
         mat.SetFloat("bodyScale", 1);
     }
-    void UpdateAtmosphere()
+    public void UpdateAtmosphere()
     {
         if (!planet.terrainVar.generalSettings.atmosphere)
         {
@@ -133,7 +133,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelStrengthFar", planet.fresnelVariables._FresnelStrengthFar);
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
-    void UpdateTrees(){
+    public void UpdateTrees(){
         if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearAllTrees(); return; } //if no biomes have trees return fucntion
         if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
         //combine tree obj array
@@ -386,6 +386,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             //setting the offsets to randomly generated offset
             UnityEngine.Random.InitState((int)(i * offsetSeed.x));
+            UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
             offset[i] = new Vector3(offsetSeed.x + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.y + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.z + UnityEngine.Random.Range(0, offsetSeed.z));
         }
         planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[0].x);
@@ -450,6 +451,7 @@ public class FullPlanetGeneration : MonoBehaviour
             return;
         }
         UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
         //randomized number for the terrain
         int index = UnityEngine.Random.Range(0, terrainVarPool.Length);
         planet.terrainVar = terrainVarPool[index];
@@ -460,6 +462,7 @@ public class FullPlanetGeneration : MonoBehaviour
         ClearAllTrees();
         ColorSchemeStaticReference.ColorSchemePool[] colorSchemes = planet.terrainVar.colorSchemePools.colorSchemePools; //array for color scheme pool
         UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
         if (colorSchemes.Length == 0){
             Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
             return; 
