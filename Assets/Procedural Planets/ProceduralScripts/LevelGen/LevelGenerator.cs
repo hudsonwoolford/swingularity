@@ -26,6 +26,8 @@ public class LevelGenerator : MonoBehaviour
     float minPlanets, maxPlanets, minSize, maxSize, sizeBias, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
     GameObject planetGeneratorPrefab;
+    [SerializeField]
+    float planetScale;
 
     void Start()
     {
@@ -44,24 +46,25 @@ public class LevelGenerator : MonoBehaviour
         Generatelevel(level);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
-        GameObject generator = Instantiate(planetGeneratorPrefab);
         for (int i = 0; i < level.numPlanets; i++){
-            GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i]);
+            Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
+            GeneratePlanet(1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
         }
     }
 
-    void GeneratePlanet(GameObject generator, float size, Vector3 position, Vector3 seed){
-   
+    void GeneratePlanet(float size, Vector3 position, Vector3 seed, Vector3 levelSize){
+        GameObject generator = Instantiate(planetGeneratorPrefab);
         generator.GetComponent<FullPlanetGeneration>().RandomizeTerrainScheme(seed);
         generator.GetComponent<FullPlanetGeneration>().RandomizeColorScheme(seed);
         generator.GetComponent<FullPlanetGeneration>().ClearAllTrees();
 
-        GameObject newPlanet = ConvertToImage(generator);
-        newPlanet.transform.position = position;
-        newPlanet.transform.localScale = Vector3.one * size;
+        GameObject newPlanet = ConvertToImage(generator, "ImagingScene" + seed.x);
+        newPlanet.transform.position = position - levelSize/2;
+        newPlanet.transform.localScale = Vector3.one * size * planetScale;
+        Destroy(generator);
     }
 
-    GameObject ConvertToImage(GameObject selectedObj)
+    GameObject ConvertToImage(GameObject selectedObj, string sceneName)
     {
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
 
@@ -76,9 +79,9 @@ public class LevelGenerator : MonoBehaviour
 
 
         Scene currentScene = SceneManager.GetActiveScene();
-        Scene emptyScene = SceneManager.CreateScene("CaptureScene");
+        Scene emptyScene = SceneManager.CreateScene(sceneName);
         SceneManager.MoveGameObjectToScene(cam.gameObject, emptyScene);
-        SceneManager.LoadScene("CaptureScene");
+        SceneManager.MoveGameObjectToScene(selectedObj, emptyScene);
         SceneManager.SetActiveScene(currentScene);
 
         //Front Texture
@@ -147,7 +150,7 @@ public class LevelGenerator : MonoBehaviour
         oceanRend.sharedMaterial = oceanMat;
         oceanRend.gameObject.SetActive(true);
 
-        Destroy(cam);
+        Destroy(cam.gameObject);
         SceneManager.UnloadSceneAsync(emptyScene);
         return planetParent;
     }

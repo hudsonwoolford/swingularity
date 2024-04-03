@@ -16,11 +16,13 @@ public static class ProceduralLevelGeneration
         public float[] planetSizes;
         public Vector3[] planetPoints;
         public Vector3[] planetSeeds;
-        public Level(int numPlanets, float[] planetSizes, Vector3[] planetPoints, Vector3[] planetSeeds){
+        public Vector2 levelSize;
+        public Level(int numPlanets, float[] planetSizes, Vector3[] planetPoints, Vector3[] planetSeeds, Vector2 levelSize){
             this.numPlanets = numPlanets;
             this.planetSizes = planetSizes;
             this.planetPoints = planetPoints;
             this.planetSeeds = planetSeeds;
+            this.levelSize = levelSize;
         }
     }
 
@@ -73,7 +75,7 @@ public static class ProceduralLevelGeneration
             planetSeeds[i] = new Vector3(xOffset, yOffset, zOffset);
         }
             
-        return new Level(numPlanets, planetSizes, planetPoints, planetSeeds);
+        return new Level(numPlanets, planetSizes, planetPoints, planetSeeds, regionBounds);
     }
 
     public static Vector3[] PoissonDiskSampling(int seed, float radius, Vector2 regionBounds, int numSamplesBeforeRejection){
