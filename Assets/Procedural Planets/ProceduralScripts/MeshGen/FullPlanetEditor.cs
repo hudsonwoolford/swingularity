@@ -4,7 +4,6 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Reflection;
 
 [CustomEditor(typeof(FullPlanetGeneration))]
 public class FullPlanetEditor : Editor
@@ -37,9 +36,10 @@ public class FullPlanetEditor : Editor
         EditorGUI.BeginChangeCheck();
 
         if (GUILayout.Button("Random")) {
-            planetGeneration.RandomizeTerrainScheme();
-            planetGeneration.RandomizeOffset();
-            if(colorSchemes) { planetGeneration.RandomizeColorScheme(); }
+            UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+            Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
+            planetGeneration.RandomizeTerrainScheme(seed);
+            if(colorSchemes) { planetGeneration.RandomizeColorScheme(seed); }
             planetGeneration.ClearAllTrees();
             
         }
@@ -47,11 +47,15 @@ public class FullPlanetEditor : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Random Terrain", GUILayout.Width(Screen.width / 3f))) 
         {
-            planetGeneration.RandomizeTerrainScheme();
+            UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+            Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
+            planetGeneration.RandomizeTerrainScheme(seed);
         }
         if (GUILayout.Button("Random Offset", GUILayout.MaxWidth(Screen.width / 3f)))
         {
-            planetGeneration.RandomizeOffset();
+            UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+            Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
+            planetGeneration.RandomizeOffset(seed);
         }
         GUILayout.EndHorizontal();
         if (GUILayout.Button("Regen Trees"))
@@ -85,7 +89,9 @@ public class FullPlanetEditor : Editor
             if (GUILayout.Button("Random Color Scheme"))
             {
                 planetGeneration.ClearAllTrees();
-                planetGeneration.RandomizeColorScheme();
+                UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+                Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
+                planetGeneration.RandomizeColorScheme(seed);
             }
             //CS BiomeA: "Object" | CS BiomeB: "Object"
             EditorGUILayout.BeginHorizontal();
