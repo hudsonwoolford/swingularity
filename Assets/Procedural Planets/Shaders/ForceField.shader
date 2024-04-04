@@ -151,7 +151,7 @@ Shader "Custom/ForceField"
             {
                 if (_ObjPos[i].x == 0 && _ObjPos[i].y == 0 && _ObjPos[i].z == 0)
                 {
-                    break;
+                    continue;
                 }
 
                 float lengthToBall = length(_ObjPos[i] - faceCentre) / _Scale;
