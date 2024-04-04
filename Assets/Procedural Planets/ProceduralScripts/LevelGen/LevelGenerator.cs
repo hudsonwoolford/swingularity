@@ -48,10 +48,10 @@ public class LevelGenerator : MonoBehaviour
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
-        List<GameObject> planetList = new List<GameObject>();
+        GameObject[] planetList = new GameObject[level.numPlanets];
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList.Add(GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize));
+            planetList[i] = GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
         }
         foreach (GameObject planet in planetList)
         {
@@ -78,6 +78,7 @@ public class LevelGenerator : MonoBehaviour
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
     {
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
+        bool activeOcean = oceanRend.gameObject.activeInHierarchy;
 
         Material oceanMat = oceanRend.material;
         Material cullMat = new Material(Shader.Find("Custom/OceanInvisMask"));
@@ -145,7 +146,7 @@ public class LevelGenerator : MonoBehaviour
         ocean.GetComponent<MeshRenderer>().material = oceanMat;
         ocean.transform.position += new Vector3(0, 0, 2);
         ocean.transform.localScale = Vector3.one * 6.9f;
-        ocean.SetActive(true);
+        ocean.SetActive(activeOcean);
 
         //Atmospheres
         GameObject[] atmospheres = { selectedObj.transform.GetChild(1).gameObject, selectedObj.transform.GetChild(2).gameObject, selectedObj.transform.GetChild(3).gameObject };
