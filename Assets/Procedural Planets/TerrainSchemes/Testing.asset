@@ -15,20 +15,23 @@ MonoBehaviour:
   colorSchemePools:
     colorSchemePools: []
   generalSettings:
-    subdivisions: 8
+    subdivisions: 3
     seed: 0
     ocean: 1
+    atmosphere: 1
     _SeaLevel: 1
   craterSettings:
     rimWidth: 0.645
+    floorHeight: 0
     rimSteepness: 1
     smoothness: 0.318
     craterBias: 0.792
     minCraterSize: 0.594
     maxCraterSize: 1
-    numCraters: 2
+    numCraters: 0
+    craterIntersectionTolerance: 0
   shapeNoiseSettings:
-    applyNoise: 1
+    applyNoise: 0
     octaves: 1
     scale: 2.38
     persistence: 0
@@ -69,7 +72,7 @@ MonoBehaviour:
     elevation: -0.79
     smoothing: 0
   warpedNoiseSettings:
-    applyNoise: 1
+    applyNoise: 0
     octaves: 3
     scale: 1
     persistence: 0
@@ -112,6 +115,7 @@ MonoBehaviour:
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
+    randomizeNoise: 0
     _Octaves: 3
     _Offset: {x: 0, y: 0, z: 0}
     _Scale: 1
@@ -120,6 +124,7 @@ MonoBehaviour:
     _Multiplier: 1
     _Gain: 1
   biomeWarpNoiseSettings:
+    randomizeNoise: 0
     _WarpOctaves: 3
     _WarpOffset: {x: 0, y: 0, z: 0}
     _WarpScale: 1

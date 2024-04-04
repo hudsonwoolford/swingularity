@@ -60,12 +60,12 @@ public static class ProceduralLevelGeneration
             planetSizes[i] = Mathf.Lerp(minSize, maxSize, ApplyBias(UnityEngine.Random.value, bias));
         }
 
-        float radius = levelGenSettings[5];
+        float minRadius = levelGenSettings[5];
         Vector2 regionBounds = new Vector2 (levelGenSettings[6], levelGenSettings[7]);
         int numSamplesBeforeRejection = (int)levelGenSettings[8];
         Vector3[] planetPoints = new Vector3[numPlanets];
 
-        planetPoints = PoissonDiskSampling(seed, radius, regionBounds, numSamplesBeforeRejection);
+        planetPoints = PoissonDiskSampling(seed, minRadius, regionBounds, numSamplesBeforeRejection);
 
         Vector3[] planetSeeds = new Vector3[numPlanets];
         float offsetScale = levelGenSettings[9];
