@@ -7,6 +7,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ForceField : MonoBehaviour
 {
+    static float intensityMult = 1.5f;
     [Header("Script Variables")]
     [SerializeField] Transform planet;
     [SerializeField] List<Transform> interactableObject = new List<Transform>(3);
@@ -62,9 +63,9 @@ public class ForceField : MonoBehaviour
         if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(); }
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) / 2;
-        Color fc = pOuterAtmosphere.color * 1.5f;
-        frontColor = new Color(fc.r, fc.g, fc.b, 0) ;
-        fresnelColor = pOuterAtmosphere.color * 1.75f;
+        Color fc = pOuterAtmosphere.color;
+        frontColor = new Color(fc.r, fc.g, fc.b, 0);
+        fresnelColor = fc * intensityMult;
     }
     void SetPBlockProp()
     {
