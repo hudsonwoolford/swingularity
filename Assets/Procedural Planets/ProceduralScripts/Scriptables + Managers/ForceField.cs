@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -7,7 +9,7 @@ public class ForceField : MonoBehaviour
 {
     [Header("Script Variables")]
     [SerializeField] Transform planet;
-    [SerializeField] Transform interactableObject;
+    [SerializeField] List<Transform> interactableObject = new List<Transform>(3);
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
     [SerializeField] Material forceMat;
@@ -33,9 +35,9 @@ public class ForceField : MonoBehaviour
     private Light pOuterAtmosphere;
     private void Awake()
     {
-        if (interactableObject == null)
+        if(interactableObject.Count == 0)
         {
-            interactableObject = GameObject.FindGameObjectWithTag("Player").transform;
+            interactableObject.Add(GameObject.FindGameObjectWithTag("Player").transform);
         }
         meshRenderer = GetComponent<MeshRenderer>();
         forceMat = meshRenderer.sharedMaterial;
@@ -74,17 +76,22 @@ public class ForceField : MonoBehaviour
         //p Block
         pBlock.SetColor("_FrontColor", frontColor);
         pBlock.SetColor("_FresnelColor", fresnelColor);
-        //Obj info
+        interactableObject.RemoveAll(Transform => Transform == null);
+        if (interactableObject.Count > 0)
+        {
+            Vector4[] ioVectors = Array.ConvertAll<Transform, Vector4>(interactableObject.ToArray(), t => t.position);
+            pBlock.SetVectorArray("_ObjPos", ioVectors);
+        }
         pBlock.SetFloat("_Scale", transform.localScale.x);
         pBlock.SetVector("_TransformWorldPos", transform.position);
-        forceMat.SetVector("_ObjPos", interactableObject.position);
+
         meshRenderer.SetPropertyBlock(pBlock);
     }
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.layer == 7) { return; } // simulation layer
 
-        hitPos[hitIterator] = interactableObject.position; //colision pos
+        hitPos[hitIterator] = col.transform.position; //colision pos
         hitTime[hitIterator].x = Time.time; //time of hit
         
         //calculate hit power

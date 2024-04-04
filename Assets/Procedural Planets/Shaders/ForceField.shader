@@ -75,7 +75,7 @@ Shader "Custom/ForceField"
         float _FresnelStrengthNear;
         float _FresnelStrengthFar;
 
-        float3 _ObjPos;
+        float3 _ObjPos[3];
         float _InteractiveDistance;
         float _InteractiveMultiplier;
         float _FalloffIntensity;
@@ -145,7 +145,18 @@ Shader "Custom/ForceField"
             }
             totalY*=1-ripDistRatio; 
 
-            float distToBall = length(_ObjPos - faceCentre);
+
+            float distToBall = 10000;
+            for(int i = 0; i<_ObjPos.Length; i++)
+            {
+                if (_ObjPos[i].x == 0 && _ObjPos[i].y == 0 && _ObjPos[i].z == 0)
+                {
+                    break;
+                }
+
+                float lengthToBall = length(_ObjPos[i] - faceCentre) / _Scale;
+                distToBall = distToBall > lengthToBall ? lengthToBall : distToBall;
+            }
             if (distToBall <= _InteractiveDistance){ o.objNear = true; }
             if (totalY > 0) { o.inRipple = true; }
 

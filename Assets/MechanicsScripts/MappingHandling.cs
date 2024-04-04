@@ -25,14 +25,12 @@ public class MappingHandling : MonoBehaviour
         if(!camArea.bounds.Contains(ball.position))
         {
             //out of view
-            print("oov");
             Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - ball.position;
             Ray backToCameraRay = new Ray(ball.position, dirtoCamera);
             Debug.DrawRay(ball.position, dirtoCamera, Color.red, 0f);
             RaycastHit[] hits = Physics.RaycastAll(backToCameraRay, 1000);
             if (hits!=null)
             {
-                print("Hit");
                 int dist = 0;
                 foreach (RaycastHit r in hits)
                 {
@@ -45,7 +43,6 @@ public class MappingHandling : MonoBehaviour
                         {
                             print(dist);
                             ShootBall.triggerReset?.Invoke();
-                            canvasAnimator.Play("ShowOOB");
                         }
 
                     }
