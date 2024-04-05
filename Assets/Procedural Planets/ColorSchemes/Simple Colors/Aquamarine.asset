@@ -17,20 +17,29 @@ MonoBehaviour:
   _SteepColor: {r: 0, g: 0.41568628, b: 0.11119089, a: 1}
   _HighElevationColor: {r: 0.1607843, g: 0.8666667, b: 0.39191762, a: 1}
   _HighElevationSteepColor: {r: 0.1607843, g: 0.5372549, b: 0.281719, a: 1}
+  _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}
   _Metallic: 0.341
   _Smoothness: 0
   _VegetationLine: 0.1
   _VegetationLineHarshness: 7
   _SteepMultiplier: 5
+  _NormalVariables:
+    _Normal: {fileID: 0}
+    _NormalScale: 1
+    _NormalOffset: {x: 0, y: 0, z: 0}
+    _NormalPower: 1
   oceanVariables:
     _OceanBlendEnd: 0.01
     _OceanBlendIntensity: 1.06
-    _ShorelineColor: {r: 0.8263182, g: 1, b: 0.7783019, a: 1}
+    _BeachBlendEnd: 0.01
+    _BeachBlendIntensity: 0.01
     _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
     _OceanColor: {r: 0.14732689, g: 0.33962262, b: 0.05286579, a: 0.8352941}
+    _OceanNormal: {fileID: 0}
     _OceanMetallic: 0.241
     _OceanSmoothness: 0.671
   atmosphereVariables:
+    _ForceFieldColor: {r: 0.4117647, g: 1, b: 0.16470589, a: 1}
     _OuterBandColor: {r: 0.41135353, g: 1, b: 0.16509432, a: 1}
     _OuterBandRange: 2.29
     _OuterBandIntensity: 0.26
@@ -48,12 +57,12 @@ MonoBehaviour:
     _FresnelPower: 8
   treeVariables:
     _UseTrees: 0
-    _TreePrefabs: []
-    _DynamicMaterialBooleans: []
+    _TreeObjects: []
     _TreeLeafColors:
     - {r: 1, g: 1, b: 1, a: 1}
     - {r: 1, g: 1, b: 1, a: 1}
     - {r: 1, g: 1, b: 1, a: 1}
     _TreeBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
     _NumTrees: 100
-    _TreeSeed: 0

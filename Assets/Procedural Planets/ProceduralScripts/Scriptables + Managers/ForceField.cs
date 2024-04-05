@@ -34,6 +34,7 @@ public class ForceField : MonoBehaviour
     private MaterialPropertyBlock pBlock;
     private MeshRenderer meshRenderer;
     private Light pOuterAtmosphere;
+    private PlanetDataHolder pData;
     private void Awake()
     {
         if(interactableObject.Count == 0)
@@ -60,12 +61,14 @@ public class ForceField : MonoBehaviour
     void PlanetCorrespond()
     {
         if (planet == null) {Debug.LogWarning("Set planet object in inspector"); return; }
-        if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(); }
+        if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true); }
+        if (pData == null) { pData = planet.gameObject.GetComponent<PlanetDataHolder>(); }
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) / 2;
-        Color fc = pOuterAtmosphere.color;
-        frontColor = new Color(fc.r, fc.g, fc.b, 0);
-        fresnelColor = fc * intensityMult;
+        if (pData == null) { return; }
+        Color c = pData.forceFieldColor;
+        frontColor = new Color(c.r, c.g, c.b, 0);
+        fresnelColor = c * intensityMult;
     }
     void SetPBlockProp()
     {
@@ -102,7 +105,7 @@ public class ForceField : MonoBehaviour
         }
         hitTime[hitIterator].y = hitPower; //hit power array var
 
-        src.PlayOneShot(bump, Mathf.Clamp01(hitPower / 20)); //noise
+        src.PlayOneShot(bump, Mathf.Clamp01(hitPower / 30)); //noise
 
         //property setting
         pBlock.SetVectorArray("_HitPos", hitPos);

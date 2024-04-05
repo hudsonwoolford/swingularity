@@ -20,13 +20,32 @@ MonoBehaviour:
       singleBiome: 0
       primaryBiome: {fileID: 0}
       planetColorSchemes:
+      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
       - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
-      - {fileID: 11400000, guid: c6bfe0be45ff33743bfcd3611134418a, type: 2}
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
+      polarColorSchemes: []
+    - name: Grass+
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 2cb73938250941248bee21240209fd78, type: 2}
+      - {fileID: 11400000, guid: 7032071db733a534488805e125933140, type: 2}
+      polarColorSchemes: []
+    - name: Ashen + Ores
+      oPrimary: 1
+      aPrimary: 1
+      singleBiome: 0
+      primaryBiome: {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: f93cee500fbe23c49bfb5f89c9945c72, type: 2}
+      - {fileID: 11400000, guid: 9445b015b31199c4e991170e1d118bee, type: 2}
+      - {fileID: 11400000, guid: 130e103288635904eb77a69dde64d78b, type: 2}
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 414
+    seed: 1571
     ocean: 0
     atmosphere: 1
     _SeaLevel: 1
@@ -49,9 +68,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 418.48648
-    - 539.67126
-    - 222.9029
+    - 1433.4093
+    - 724.5
+    - 1097.8103
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -62,9 +81,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 152.82336
-    - 186.42682
-    - 297.3007
+    - 1405.0115
+    - 590.55615
+    - 1015.24365
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -76,9 +95,9 @@ MonoBehaviour:
     gain: 9.61
     power: 2.84
     offset:
-    - 333.77533
-    - 374.9972
-    - 231.84358
+    - 1278.3618
+    - 286.65552
+    - 1050.6285
     elevation: 0.64
     smoothing: 1.57
   warpedNoiseSettings:
@@ -90,9 +109,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 19.276402
-    - 398.54755
-    - 54.092133
+    - 1411.9512
+    - 374.9253
+    - 995.8368
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -103,9 +122,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 482.15894
-    - 248.02353
-    - 358.67737
+    - 1542.9573
+    - 560.11487
+    - 810.4671
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -118,16 +137,16 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 100.27475
-    - 39.807777
-    - 234.61429
+    - 1044.1262
+    - 801.3031
+    - 1177.3629
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: 0.72
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 516.04706, y: 228.76457, z: 156.99207}
+    _Offset: {x: 1549.2388, y: 287.49503, z: 1269.1178}
     _Scale: 0.9
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -136,7 +155,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 77.99545, y: 4.649969, z: 63.248573}
+    _WarpOffset: {x: 1051.9154, y: 785.4675, z: 1087.0338}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0

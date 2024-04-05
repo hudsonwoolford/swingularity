@@ -38,6 +38,8 @@ public class OceanVariables
 [Serializable]
 public class AtmosphereVariables
 {
+    [ColorUsage(true, true)]
+    [SerializeField] public Color _ForceFieldColor = Color.white;
     [SerializeField] public Color _OuterBandColor = Color.white;
     [Range(0, 5)]
     [SerializeField] public float _OuterBandRange = 2.2f;

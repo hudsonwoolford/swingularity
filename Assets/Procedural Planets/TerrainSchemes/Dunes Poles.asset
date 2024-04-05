@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2128562cbd13124698a8ad24adadd60, type: 3}
+  m_Name: Dunes Poles
+  m_EditorClassIdentifier: 
+  colorSchemePools:
+    colorSchemePools:
+    - name: Desert
+      oPrimary: 0
+      aPrimary: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
+      - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
+      polarColorSchemes:
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+  generalSettings:
+    subdivisions: 7
+    seed: 794
+    ocean: 1
+    _SeaLevel: 1
+  craterSettings:
+    rimWidth: 0
+    floorHeight: 0
+    rimSteepness: 0
+    smoothness: 0
+    craterBias: 0
+    minCraterSize: 0
+    maxCraterSize: 0
+    numCraters: 0
+  shapeNoiseSettings:
+    applyNoise: 1
+    octaves: 5
+    scale: 2.41
+    persistence: 1
+    lacunarity: 2
+    multiplier: 0.55
+    gain: 0
+    offset:
+    - 872.2618
+    - 85.70461
+    - 11.332572
+    elevation: 1
+  detailNoiseSettings:
+    applyNoise: 0
+    octaves: 2
+    scale: 1.27
+    persistence: 1.16
+    lacunarity: 1.48
+    multiplier: 1.18
+    gain: 0.27
+    offset:
+    - 523.05133
+    - 412.7943
+    - 651.3933
+    elevation: 2.58
+  ridgeNoiseSettings:
+    applyNoise: 0
+    octaves: 3
+    scale: -0.22
+    persistence: -7.44
+    lacunarity: 0.22
+    multiplier: 2.13
+    gain: 1
+    power: 1
+    offset:
+    - 322.80588
+    - 595.20825
+    - 163.4724
+    elevation: 0.01
+    smoothing: 2.14
+  warpedNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1.42
+    persistence: 0.5
+    lacunarity: 2
+    multiplier: 1.16
+    gain: 1.48
+    offset:
+    - 466.90503
+    - 730.5386
+    - 235.36906
+    strength: 0.83
+  continentNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 2.07
+    persistence: 0.5
+    lacunarity: 2
+    multiplier: 1
+    gain: 0
+    offset:
+    - 711.1893
+    - 166.87163
+    - 517.68726
+    depthMultiplier: -0.36
+    oceanFloorDepth: 1
+    oceanFloorSmoothing: 1
+  maskNoiseSettings:
+    applyNoise: 1
+    octaves: 3
+    scale: 1
+    persistence: 0
+    lacunarity: 0
+    multiplier: 1
+    gain: 1
+    offset:
+    - 808.22736
+    - 185.8679
+    - 535.89575
+    strength: 1
+    maskBlend: 0
+    maskVerticalShift: 0
+  biomeNoiseSettings:
+    randomizeNoise: 1
+    _Octaves: 3
+    _Offset: {x: 896.14, y: 511.9945, z: 581.81244}
+    _Scale: 0.7
+    _Persistence: 0.71
+    _Lacunarity: 0
+    _Multiplier: 0.55
+    _Gain: 0.78
+  biomeWarpNoiseSettings:
+    randomizeNoise: 1
+    _WarpOctaves: 3
+    _WarpOffset: {x: 881.6365, y: 155.7609, z: 891.61017}
+    _WarpScale: 1
+    _WarpPersistence: 0
+    _WarpLacunarity: 0
+    _WarpMultiplier: 1
+    _WarpGain: 1
+  biomeDetailNoiseSettings:
+    _Octaves: 3
+    _Offset: {x: 0, y: 0, z: 0}
+    _Scale: 1
+    _Persistence: 0
+    _Lacunarity: 0
+    _Multiplier: 1
+    _Gain: 1
+  polarBiomeSettings:
+    _PolarHeight: 0.9
+    _PolarBlendIntensity: 3.84

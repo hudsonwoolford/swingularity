@@ -34,6 +34,8 @@ public class FullPlanetGeneration : MonoBehaviour
     List<GameObject> treesA; //list of instantiated trees
     List<GameObject> treesB;
     List<GameObject> treesP;
+    AtmosphereHandler[] aHandlers = new AtmosphereHandler[3];
+    PlanetDataHolder planetData;
     private void Awake()
     {
         //initialisation
@@ -63,8 +65,22 @@ public class FullPlanetGeneration : MonoBehaviour
         UpdateAtmosphere(); //updating the atmosphere from the atmosphere variables
         UpdateOcean(); //updating the ocean from the ocean variables
         UpdateTrees();
+        UpdateData();
         ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
         meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
+    }
+    public void UpdateData()
+    {
+        if(planetData == null)
+        {
+            planetData = gameObject.AddComponent<PlanetDataHolder>();
+        }
+        planetData.biomeA = biomeA;
+        planetData.biomeB = biomeB;
+        planetData.oBiomeA = oBiomeA;
+        planetData.oBiomeB = oBiomeB;
+        planetData.aBiomeA = aBiomeA;
+        planetData.aBiomeB = aBiomeB;
     }
     public void UpdateOcean()
     {
@@ -112,6 +128,10 @@ public class FullPlanetGeneration : MonoBehaviour
             innerAtmosphere.gameObject.SetActive(true);
             outerAtmosphere.gameObject.SetActive(true);
         }
+        if(!innerAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[0])) { aHandlers[0] = innerAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
+        if(!outerAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[1])) { aHandlers[1] = outerAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
+        if(!frontAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[2])) { aHandlers[2] = frontAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
+
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
@@ -778,6 +798,14 @@ public class FullPlanetGeneration : MonoBehaviour
         planetParent.transform.localScale = Vector3.one * 0.3f;
         SortingGroup sr = planetParent.AddComponent<SortingGroup>();
         sr.sortingLayerName = "Planet Sprites";
+        PlanetDataHolder pd = planetParent.AddComponent<PlanetDataHolder>();
+        PlanetDataHolder cd = selectedObj.GetComponent<PlanetDataHolder>();
+        pd.biomeA =  cd.biomeA;
+        pd.biomeB =  cd.biomeB;
+        pd.oBiomeA = cd.oBiomeA;
+        pd.oBiomeB = cd.oBiomeB;
+        pd.aBiomeA = cd.aBiomeA;
+        pd.aBiomeB = cd.aBiomeB;
 
         //Front sprite
         GameObject frontObject = new GameObject("frontObject");
@@ -807,7 +835,6 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject instaAtmosphere = Instantiate(atmospheres[i], planetParent.transform);
-            instaAtmosphere.AddComponent<AtmosphereHandler>();
             float depth = i == 2 ? 0 : 2;
             instaAtmosphere.transform.localScale = Vector3.one;
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);

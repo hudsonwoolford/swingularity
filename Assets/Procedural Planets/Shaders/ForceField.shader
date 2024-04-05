@@ -192,8 +192,8 @@ Shader "Custom/ForceField"
 
             if(affected)
             {
-                o.Emission = c * 0.5;
-                o.Alpha = lerp(c.a * _InteractiveMultiplier, normalAlpha, saturate(pow(IN.objDistRatio, falloff))) * 0.5;
+                o.Emission = c * _InteractiveMultiplier;
+                o.Alpha = lerp(c.a, normalAlpha, saturate(pow(IN.objDistRatio, falloff))) * 0.5;
                 return;
             }
 

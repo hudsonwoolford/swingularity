@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "planetColorScheme", menuName = "planetColorScheme")]
+[Serializable]
 public class PlanetColorScheme : ScriptableObject
 {
     public Color _FlatColor = Color.white;
