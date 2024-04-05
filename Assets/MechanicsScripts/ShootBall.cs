@@ -15,7 +15,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] bool straight;
     [SerializeField] LineRenderer lr; //line renderer
     [SerializeField] float maxLength; //how big can the arrow get (straight)
-    [SerializeField] LayerMask playerLayer; //the layer that the player and only the player is on
+    [SerializeField] LayerMask playerLayer, obstacles; //the layer that the player and only the player is on
     [SerializeField] int verts; //how detailed is the arrow / how many vertices
     [Header("Simulated arrow")]
     [SerializeField] bool simulated;
@@ -100,14 +100,19 @@ public class ShootBall : MonoBehaviour
         //lr setup
         lr.positionCount = verts;
         //local variable declaration
-        Vector2 dir; //direction to the initial mouse pos, also the direction of the ball
-        float dist; //distance from initial mouse pos
+        Vector2 dir = Vector2.zero; //direction to the initial mouse pos, also the direction of the ball
+        float dist = 0; //distance from initial mouse pos
         while(Input.GetMouseButton(0)) 
         {
             dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
+            if(Physics.Raycast(transform.position, dir, 0.75f, obstacles))
+            {
+                dir = Vector2.zero;
+                dist = 0;
+            }
 
             if(simulated)
             {
@@ -132,10 +137,10 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
 
-        dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
-        dist = dir.magnitude;
+        //dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
+        //dist = dir.magnitude;
         
-        dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
+        //dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
         
         Vector2 force = dir.normalized * dist; //the force
 
@@ -176,6 +181,7 @@ public class ShootBall : MonoBehaviour
     }
     void SimulateScene(Vector3 forceVar)
     {
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         Physics.simulationMode = SimulationMode.Script; //manual control over time
         if(simulatedObj==null) //instantiation new ball if it doesn't exist
         {
@@ -192,7 +198,6 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;
         slr.positionCount = maxstep; //setting up lr
         
-        Vector3 originSim = transform.position; //for some reason the ball on our side of the simulation moves when simulated so it must be reset  
         float length = 0; //will keep track of line length to be compared against maxlength
         for (int i = 0; i < maxstep; i++) //for each step
         {
@@ -210,7 +215,6 @@ public class ShootBall : MonoBehaviour
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
         Destroy(simulatedObj); //not performant must be object pooled later
-        transform.position = originSim;
         // // srb.velocity = oVelo;
         // // srb.angularVelocity = oAlo;
         // // simulatedObj.transform.position = pos;
