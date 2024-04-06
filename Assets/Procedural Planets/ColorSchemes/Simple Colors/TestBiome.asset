@@ -23,10 +23,11 @@ MonoBehaviour:
   _VegetationLine: 0.1
   _VegetationLineHarshness: 7
   _SteepMultiplier: 5
-  _Normal: {fileID: 0}
-  _NormalScale: 0
-  _NormalOffset: {x: 0, y: 0, z: 0}
-  _NormalPower: 0
+  _NormalVariables:
+    _Normal: {fileID: 0}
+    _NormalScale: 1
+    _NormalOffset: {x: 0, y: 0, z: 0}
+    _NormalPower: 1
   oceanVariables:
     _OceanBlendEnd: 0.01
     _OceanBlendIntensity: 0.01
@@ -34,17 +35,19 @@ MonoBehaviour:
     _BeachBlendIntensity: 1.4
     _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
     _OceanColor: {r: 0, g: 0, b: 1, a: 1}
+    _OceanNormal: {fileID: 0}
     _OceanMetallic: 0.2
     _OceanSmoothness: 0.6
   atmosphereVariables:
+    _ForceFieldColor: {r: 1, g: 1, b: 1, a: 1}
     _OuterBandColor: {r: 1, g: 1, b: 1, a: 1}
-    _OuterBandRange: 2.2
-    _OuterBandIntensity: 0.6
+    _OuterBandRange: 2.5
+    _OuterBandIntensity: 0.25
     _InnerBandColor: {r: 1, g: 1, b: 1, a: 1}
-    _InnerBandRange: 2.1
-    _InnerBandIntensity: 4
+    _InnerBandRange: 2.3
+    _InnerBandIntensity: 0.25
     _FrontColor: {r: 1, g: 1, b: 1, a: 1}
-    _FrontRange: 2
+    _FrontRange: 2.2
     _FrontIntensity: 0.15
   fresnelVariables:
     _UseFresnel: 0

@@ -43,19 +43,19 @@ public class AtmosphereVariables
     [SerializeField] public Color _OuterBandColor = Color.white;
     [Range(0, 5)]
     [SerializeField] public float _OuterBandRange = 2.2f;
-    [Range(0, 5)]
+    [Range(0, 2.5f)]
     [SerializeField] public float _OuterBandIntensity = 0.6f;
 
     [SerializeField] public Color _InnerBandColor = Color.white;
     [Range(0, 5)]
     [SerializeField] public float _InnerBandRange = 2.1f;
-    [Range(0, 5)]
+    [Range(0, 2.5f)]
     [SerializeField] public float _InnerBandIntensity = 4f;
 
     [SerializeField] public Color _FrontColor = Color.white;
     [Range(0, 5)]
     [SerializeField] public float _FrontRange = 2.0f;
-    [Range(0, 5)]
+    [Range(0, 2.5f)]
     [SerializeField] public float _FrontIntensity = 0.15f;
 }
 [Serializable]

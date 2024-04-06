@@ -16,6 +16,7 @@ public class ForceField : MonoBehaviour
     [SerializeField] Material forceMat;
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
+    [SerializeField] bool autoMass = false;
 
     [Header("Property Variables (Set by script)")]
     [ColorUsage(true, true)]
@@ -35,6 +36,7 @@ public class ForceField : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Light pOuterAtmosphere;
     private PlanetDataHolder pData;
+    private Rigidbody rb;
     private void Awake()
     {
         if(interactableObject.Count == 0)
@@ -44,6 +46,7 @@ public class ForceField : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         forceMat = meshRenderer.sharedMaterial;
         pBlock = new MaterialPropertyBlock();
+        rb = GetComponent<Rigidbody>();
     }
     void Start()
     {
@@ -55,16 +58,17 @@ public class ForceField : MonoBehaviour
     }
     void Update()
     {
+        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2) * 100; }
         SetPBlockProp();
         PlanetCorrespond();
     }
     void PlanetCorrespond()
     {
         if (planet == null) {Debug.LogWarning("Set planet object in inspector"); return; }
-        if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true); }
+        if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true); if (pOuterAtmosphere == null) { return; } }
         if (pData == null) { pData = planet.gameObject.GetComponent<PlanetDataHolder>(); }
         transform.position = planet.position;
-        transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) / 2;
+        transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) * 1.075f / 2;
         if (pData == null) { return; }
         Color c = pData.forceFieldColor;
         frontColor = new Color(c.r, c.g, c.b, 0);

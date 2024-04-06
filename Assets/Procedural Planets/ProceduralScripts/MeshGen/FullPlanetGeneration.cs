@@ -73,7 +73,8 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         if(planetData == null)
         {
-            planetData = gameObject.AddComponent<PlanetDataHolder>();
+            planetData = GetComponent<PlanetDataHolder>();
+            if(planetData == null) { planetData = gameObject.AddComponent<PlanetDataHolder>(); }
         }
         planetData.biomeA = biomeA;
         planetData.biomeB = biomeB;
@@ -118,19 +119,23 @@ public class FullPlanetGeneration : MonoBehaviour
     {
         if (!planet.terrainVar.generalSettings.atmosphere)
         {
-            frontAtmosphere.gameObject.SetActive(false);
-            innerAtmosphere.gameObject.SetActive(false);
-            outerAtmosphere.gameObject.SetActive(false);
+            frontAtmosphere.enabled = false;
+            innerAtmosphere.enabled = false;
+            outerAtmosphere.enabled = false;
         }
         else if (!outerAtmosphere.gameObject.activeInHierarchy! || innerAtmosphere.gameObject.activeInHierarchy! || frontAtmosphere.gameObject.activeInHierarchy)
         {
-            frontAtmosphere.gameObject.SetActive(true);
-            innerAtmosphere.gameObject.SetActive(true);
-            outerAtmosphere.gameObject.SetActive(true);
+            frontAtmosphere.enabled = true;
+            innerAtmosphere.enabled = true;
+            outerAtmosphere.enabled = true;
         }
         if(!innerAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[0])) { aHandlers[0] = innerAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
         if(!outerAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[1])) { aHandlers[1] = outerAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
         if(!frontAtmosphere.gameObject.TryGetComponent<AtmosphereHandler>(out aHandlers[2])) { aHandlers[2] = frontAtmosphere.gameObject.AddComponent<AtmosphereHandler>(); }
+        foreach (AtmosphereHandler a in aHandlers)
+        {
+            a.enabled = false;
+        }
 
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
@@ -835,6 +840,7 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject instaAtmosphere = Instantiate(atmospheres[i], planetParent.transform);
+            instaAtmosphere.GetComponent<AtmosphereHandler>().enabled = true;
             float depth = i == 2 ? 0 : 2;
             instaAtmosphere.transform.localScale = Vector3.one;
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);
