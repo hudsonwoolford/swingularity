@@ -45,10 +45,11 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 1571
+    seed: 600
     ocean: 0
     atmosphere: 1
     _SeaLevel: 1
+    atmosphereScale: 1.05
   craterSettings:
     rimWidth: 0.156
     floorHeight: 0
@@ -68,9 +69,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 1433.4093
-    - 724.5
-    - 1097.8103
+    - 477.14697
+    - 799.404
+    - 211.38611
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -81,9 +82,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 1405.0115
-    - 590.55615
-    - 1015.24365
+    - 406.30362
+    - 564.40314
+    - 351.34296
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -95,9 +96,9 @@ MonoBehaviour:
     gain: 9.61
     power: 2.84
     offset:
-    - 1278.3618
-    - 286.65552
-    - 1050.6285
+    - 382.35257
+    - 638.9849
+    - 259.81256
     elevation: 0.64
     smoothing: 1.57
   warpedNoiseSettings:
@@ -109,9 +110,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 1411.9512
-    - 374.9253
-    - 995.8368
+    - 426.32446
+    - 746.43744
+    - 313.2198
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -122,9 +123,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 1542.9573
-    - 560.11487
-    - 810.4671
+    - 522.8419
+    - 772.0233
+    - 272.46652
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -137,16 +138,16 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 1044.1262
-    - 801.3031
-    - 1177.3629
+    - 377.15823
+    - 768.6277
+    - 207.86899
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: 0.72
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 1549.2388, y: 287.49503, z: 1269.1178}
+    _Offset: {x: 505.6267, y: 663.92267, z: 207.89935}
     _Scale: 0.9
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -155,7 +156,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 1051.9154, y: 785.4675, z: 1087.0338}
+    _WarpOffset: {x: 573.37744, y: 598.1053, z: 263.90125}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
