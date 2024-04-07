@@ -36,6 +36,7 @@ public class GeneralSettings
 
     [Range(0, 5)]
     public float _SeaLevel = 1;
+    public float atmosphereScale = 1;
 }
 [Serializable]
 public class CraterSettings
