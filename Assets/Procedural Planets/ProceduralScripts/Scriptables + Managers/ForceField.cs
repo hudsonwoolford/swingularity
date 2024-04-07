@@ -58,7 +58,7 @@ public class ForceField : MonoBehaviour
     }
     void Update()
     {
-        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2) * 100; }
+        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 100; }
         SetPBlockProp();
         PlanetCorrespond();
     }

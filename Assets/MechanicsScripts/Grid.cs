@@ -14,7 +14,7 @@ public class Grid
     Rigidbody ball;
     Vector2[,] gridArray;
 
-    public Grid(int width, int height, float cellSize, float colorDivisor, Vector3 origin, Rigidbody[] planets, Rigidbody ball, GameObject arrow, Transform parent, Gradient colorGrad)
+    public Grid(int width, int height, float cellSize, int subDivisions, float maxMult, float divisor, Vector3 origin, Rigidbody[] planets, Rigidbody ball, LineRenderer xlr, LineRenderer ylr)
     {
         this.width = width;
         this.height = height;
@@ -23,39 +23,61 @@ public class Grid
         this.planets = planets;
         this.ball = ball;
 
-        gridArray = new Vector2[width, height];
 
+        gridArray = new Vector2[width, height];
+        if(subDivisions == 0 ) { return; }
+        xlr.positionCount = 0;
+        xlr.positionCount = subDivisions*(width * height);
+        ylr.positionCount = 0;
+        ylr.positionCount = subDivisions*(width * height);
         for (int x = 0; x < gridArray.GetLength(0); x++)
         {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            for (int y = 0; y < gridArray.GetLength(1) * subDivisions; y++)
             {
-                GameObject arrowInsta = Object.Instantiate(arrow, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f, Quaternion.identity);
-                arrowInsta.transform.localScale = Vector3.one * cellSize;
-                arrowInsta.transform.SetParent(parent, true);
-                Vector3 force = ArtificialGravity.GravityForceAtPoint(GetWorldPosition(x, y), planets, ball.mass);
-                if(force.magnitude != 0)
+                float yValue = (float)y / subDivisions;
+                Vector3 pos = GetWorldPosition(x, yValue) + new Vector3(cellSize, cellSize) * 0.5f;
+                Vector3 displacement = ArtificialGravity.CalculateDisplacement(GetWorldPosition(x, yValue), planets, cellSize * maxMult, divisor);
+
+                if (x % 2 == 0 || x == 0) {
+                    int h = height * subDivisions;
+                    xlr.SetPosition((x) * (h) + y, pos + displacement); 
+                }
+                else { 
+                    int h = height*subDivisions;
+                    xlr.SetPosition((x) * (h) + ((h - 1) - y), pos + displacement); 
+                }
+            }
+        }
+        for (int y = 0; y < gridArray.GetLength(1); y++)
+        {
+            for (int x = 0; x < gridArray.GetLength(0) * subDivisions; x++)
+            {
+                float xValue = (float)x / subDivisions;
+                Vector3 pos = GetWorldPosition(xValue, y) + new Vector3(cellSize, cellSize) * 0.5f;
+                Vector3 displacement = ArtificialGravity.CalculateDisplacement(GetWorldPosition(xValue, y), planets, cellSize * maxMult, divisor);
+
+                if (y % 2 == 0 || y == 0)
                 {
-                    arrow.GetComponent<SpriteRenderer>().color = colorGrad.Evaluate(1-(1 / (force.magnitude / colorDivisor)));
-                    
+                    int w = width * subDivisions;
+                    ylr.SetPosition((y) * (w) + x, pos + displacement);
                 }
                 else
                 {
-                    GameObject.Destroy(arrowInsta);
+                    int w = width * subDivisions;
+                    ylr.SetPosition((y) * (w) + ((w - 1) - x), pos + displacement);
                 }
-                float zRot = Mathf.Atan2(force.normalized.y, force.normalized.x) * Mathf.Rad2Deg;
-                arrowInsta.transform.rotation = Quaternion.Euler(0, 0, zRot);
             }
         }
     }
-    Vector3 GetWorldPosition(int x, int y)
+    Vector3 GetWorldPosition(float x, float y)
     {
-        return origin + new Vector3(x, y) * cellSize;
+        return new Vector3(origin.x-width/2, origin.y-height/2) * cellSize + new Vector3(x, y) * cellSize;
     }
 }
 public static class ArtificialGravity
 {
     public static float G = 1f;
-    public static float GravitationalCutoff = 15;
+    public static float GravitationalCutoff = 0;
 
     public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
     {
@@ -97,5 +119,24 @@ public static class ArtificialGravity
             return totalForceNormalized;
         }
 
+    }
+    public static Vector2 CalculateDisplacement(Vector2 vertexPosition, Rigidbody[] planetRB, float max, float divisor)
+    {
+        float deltaZ = 0;
+        foreach (Rigidbody rbAttracting in planetRB)
+        {
+            // Calculate the distance between the vertex and the planet
+            float distance = Vector2.Distance(vertexPosition, rbAttracting.position);
+            distance = distance == 0 ? 1 : distance;
+
+            // Calculate the displacement
+            deltaZ += 1 / Mathf.Pow(distance, 2f) ;
+        }
+        divisor = divisor == 0 ? 1 : divisor;
+        deltaZ = deltaZ == 0 ? 1 : deltaZ;
+        float deltaX = vertexPosition.x / deltaZ / divisor;
+        float deltaY = vertexPosition.y / deltaZ / divisor;
+
+        return Vector2.ClampMagnitude(new Vector2(deltaX, deltaY), max*5);
     }
 }

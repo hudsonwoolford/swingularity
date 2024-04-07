@@ -5,6 +5,7 @@ Shader "Custom/ForceField"
         _MainTex("UV Map", 2D) = "white" {}
         [HDR]_FrontColor ("Front Color", Color) = (1,1,1,1)
         [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1,1)
+        [Toggle(_OnlyAffected)]_OnlyAffected("Only Affected", float) = 0
 
         [Header(Shield Variables)]
         _PanelSpread ("Panel Spread", Range(0, 0.25)) = 1
@@ -66,6 +67,7 @@ Shader "Custom/ForceField"
         half _Metallic;
         fixed4 _FrontColor; //front surface color
         fixed4 _BackColor; //back surface color
+        float _OnlyAffected;
         float _PanelSpread;
         float _Frequency;
 
@@ -188,7 +190,7 @@ Shader "Custom/ForceField"
             bool affected = IN.inRipple || IN.objNear;
             
             if(!affected) {c.a *= compoundColor.a;}
-            float normalAlpha = saturate(c.a * pow(IN.displacementRatio, 4));
+            float normalAlpha = saturate(c.a * pow(IN.displacementRatio, 6));
 
             if(affected)
             {
@@ -201,7 +203,7 @@ Shader "Custom/ForceField"
 
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = normalAlpha;
+            o.Alpha = normalAlpha * (1-_OnlyAffected); //_OnlyAffected means that it will only show the ForceField while in ripple or near an object 
 
         }
         ENDCG

@@ -12,6 +12,10 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] Animator canvasAnimator;
     Camera mainCam;
     Vector3 point;
+    private void Awake()
+    {
+        if(ball == null) { ball = GameObject.FindGameObjectWithTag("Player").transform; }
+    }
     // Start is called before the first frame update
     void Start()
     {

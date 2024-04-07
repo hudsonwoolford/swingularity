@@ -18,7 +18,6 @@
 	SubShader {
 		Tags { "RenderType"="Transparent"  "RenderQueue"="Transparent"  "ForceNoShadowCasting" = "True"}
 		LOD 200
-
 		CGPROGRAM
 		#pragma surface surf Standard fullforwardshadows alpha
 		#pragma target 3.0
