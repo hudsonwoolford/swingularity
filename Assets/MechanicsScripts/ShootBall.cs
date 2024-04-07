@@ -167,7 +167,7 @@ public class ShootBall : MonoBehaviour
     #region Simulation
     void PhysicsScene()
     {
-        simulationScene = SceneManager.CreateScene("Simulation");
+        simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
         physicsScene = simulationScene.GetPhysicsScene(); //gets the physics scene
         foreach (Transform tr in simulatedEnv) //children of environment
         {

@@ -6,6 +6,7 @@ using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class MoonManager : MonoBehaviour
 {
     [SerializeField] Transform orbitPlanet;
@@ -21,22 +22,23 @@ public class MoonManager : MonoBehaviour
     float orbitRadius;
     LineRenderer lr;
 
-    float periapsis, apoapsis;
+    float periapsis, apoapsis, semiMinorAxis;
     Rigidbody rb;
 
     void Start(){
-        rb = gameObject.AddComponent<Rigidbody>();
+        if(rb == null) { rb = GetComponent<Rigidbody>(); }
+        if(rb == null) { rb = gameObject.AddComponent<Rigidbody>(); }
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.useGravity = false;
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
-        float semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
+        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
         float gravitationalParameter = gravitationalConstant * (rb.mass + orbitPlanet.GetComponent<Rigidbody>().mass);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
         Vector2 pos = new Vector2 (apoapsis, 0f) + new Vector2 (orbitPlanet.position.x, orbitPlanet.position.y);
         float tangentGradient = -(pos.x * Mathf.Pow(semiMajorAxis, 2)) / (pos.y * Mathf.Pow(semiMajorAxis, 2));
         transform.position = pos;
-        Vector3 dir = new Vector3 (0, 1.5f, 0);
+        Vector3 dir = new Vector3 (0, 1f, 0);
         rb.AddForce(velocity * dir, ForceMode.VelocityChange);
     }
     // Update is called once per frame
@@ -49,18 +51,6 @@ public class MoonManager : MonoBehaviour
         }
         if(lr == null) { lr = GetComponent<LineRenderer>(); }
         if(lr == null) { lr = gameObject.AddComponent<LineRenderer>(); }
-
-        if(Application.isPlaying)
-        {
-            progress += Time.deltaTime * speed;
-            if(progress >= Mathf.PI * 2)
-            {
-                progress -= Mathf.PI * 2;
-            }
-        }
-        // orbitRadius = orbitPlanet.localScale.magnitude * 2 + radiusOffset;
-        // Vector3 dir = new Vector3(Mathf.Cos(progress), Mathf.Sin(progress));
-        // transform.position = orbitPlanet.position + dir * orbitRadius;
 
         DrawOrbit();
     }
@@ -79,8 +69,8 @@ public class MoonManager : MonoBehaviour
         for (int i = 0; i < points; i++)
         {
             mockProgress += Mathf.PI * 2 / points;
-            Vector3 dir = new Vector3(Mathf.Cos(mockProgress), Mathf.Sin(mockProgress));
-            lr.SetPosition(i, orbitPlanet.position + dir * orbitRadius);
+            Vector3 dir = new Vector3(semiMajorAxis * Mathf.Cos(mockProgress), semiMinorAxis * Mathf.Sin(mockProgress));
+            lr.SetPosition(i, dir);
         }
     }
     private void OnDrawGizmosSelected()
