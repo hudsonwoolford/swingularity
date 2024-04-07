@@ -14,6 +14,7 @@ public class HackMode : MonoBehaviour
     [SerializeField] float cellSize = 0.5f, maxMult = 5, divisor = 20;
     [SerializeField] Vector3 origin = Vector3.zero;
     [Header("Post Var")]
+    [SerializeField] float fadeTime;
     [SerializeField] bool blitInEditor;
     [SerializeField] Material blurEffect;
     [SerializeField] Material edgeEffect;
@@ -51,9 +52,16 @@ public class HackMode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             hackMode = !hackMode;
+            //StopAllCoroutines();
+            //StartCoroutine(FadeHackMode())
         }
         EnableFabric(hackMode);
         if(hackMode && updateInPlaymode) { UpdateFabric(planets); }
+    }
+    IEnumerator FadeHackMode(bool enable)
+    {
+
+        yield return null;
     }
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
