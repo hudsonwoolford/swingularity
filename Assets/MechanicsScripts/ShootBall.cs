@@ -37,6 +37,7 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     float bounciness;
     Camera main;
+    TrailRenderer tr;
     bool liningUpShot;
     public delegate void OnShoot();
     public static OnShoot onShoot;
@@ -49,6 +50,7 @@ public class ShootBall : MonoBehaviour
 
     private void Awake()
     {
+        tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         int i = 0;
         foreach (Transform t in planetTransform)
@@ -159,6 +161,7 @@ public class ShootBall : MonoBehaviour
     void BallReset()
     {
         transform.position = origin; //back to start
+        tr?.Clear();
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line

@@ -46,6 +46,7 @@ Shader "Hidden/HackMode"
             sampler2D _CameraDepthTexture;
             float2 _MainTex_TexelSize;
             float _Threshold;
+            float _Progress;
             float4 _EdgeColor;
 
             fixed4 frag (v2f i) : SV_Target
