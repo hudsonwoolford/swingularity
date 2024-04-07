@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
-[ExecuteInEditMode]
+[ExecuteInEditMode] 
 public class MoonManager : MonoBehaviour
 {
     [SerializeField] Transform orbitPlanet;
     [SerializeField] float radiusOffset = 0.5f;
     [SerializeField] float speed = 1;
     [SerializeField] float progress;
+    [SerializeField] float semiMajorAxis, gravitationalConstant, eccentricity;
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
     [SerializeField] float width = 0.1f;
@@ -18,7 +20,13 @@ public class MoonManager : MonoBehaviour
     float orbitRadius;
     LineRenderer lr;
 
+    float periapsis, apoapsis;
 
+    void Start(){
+        periapsis = semiMajorAxis * (1 - eccentricity);
+        apoapsis = semiMajorAxis * (1 + eccentricity);
+        speed = Mathf.Sqrt(gravitationalConstant * ((2/apoapsis) - (1/semiMajorAxis)));
+    }
     // Update is called once per frame
     void Update()
     {
