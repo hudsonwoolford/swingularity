@@ -140,15 +140,15 @@ public class FullPlanetGeneration : MonoBehaviour
         Material mat = planet.planetMaterial; //caching planet material
         //inner atmosphere variable setting
         innerAtmosphere.color = planet.atmosphereVariables._InnerBandColor;
-        innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange * transform.localScale.x;
+        innerAtmosphere.range = planet.atmosphereVariables._InnerBandRange * transform.localScale.x * planet.terrainVar.generalSettings.atmosphereScale;
         innerAtmosphere.intensity = planet.atmosphereVariables._InnerBandIntensity;
         //outer atmosphere variable setting
         outerAtmosphere.color = planet.atmosphereVariables._OuterBandColor;
-        outerAtmosphere.range = planet.atmosphereVariables._OuterBandRange * transform.localScale.x;
+        outerAtmosphere.range = planet.atmosphereVariables._OuterBandRange * transform.localScale.x * planet.terrainVar.generalSettings.atmosphereScale;
         outerAtmosphere.intensity = planet.atmosphereVariables._OuterBandIntensity;
         //front atmosphere variable setting
         frontAtmosphere.color = planet.atmosphereVariables._FrontColor;
-        frontAtmosphere.range = planet.atmosphereVariables._FrontRange * transform.localScale.x;
+        frontAtmosphere.range = planet.atmosphereVariables._FrontRange * transform.localScale.x * planet.terrainVar.generalSettings.atmosphereScale;
         frontAtmosphere.intensity = planet.atmosphereVariables._FrontIntensity;
         float fresnelToggle = planet.fresnelVariables._UseFresnel ? 1 : 0;
 
