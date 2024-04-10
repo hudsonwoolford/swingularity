@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Callbacks;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [ExecuteInEditMode]
 public class MoonManager : MonoBehaviour
@@ -23,6 +22,7 @@ public class MoonManager : MonoBehaviour
     LineRenderer lr;
 
     float periapsis, apoapsis, semiMinorAxis;
+    Vector2 centre;
     Rigidbody rb;
 
     void Start(){
@@ -33,10 +33,14 @@ public class MoonManager : MonoBehaviour
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
         semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
+        float centerDistance = semiMajorAxis * eccentricity;
+        Vector2 focus1 = orbitPlanet.position;
+        Vector2 focus2 = focus1 + new Vector2 (centerDistance * 2, 0f);
+        centre = (focus1 + focus2)/2f;
         float gravitationalParameter = gravitationalConstant * (rb.mass + orbitPlanet.GetComponent<Rigidbody>().mass);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
-        Vector2 pos = new Vector2 (apoapsis, 0f) + new Vector2 (orbitPlanet.position.x, orbitPlanet.position.y);
-        float tangentGradient = -(pos.x * Mathf.Pow(semiMajorAxis, 2)) / (pos.y * Mathf.Pow(semiMajorAxis, 2));
+        Vector2 pos = new Vector2 (semiMajorAxis, 0f) + centre;
+        float tangentGradient = -(pos.x * Mathf.Pow(semiMajorAxis, 2)) / (pos.y * Mathf.Pow(semiMinorAxis, 2));
         transform.position = pos;
         Vector3 dir = new Vector3 (0, 1f, 0);
         rb.AddForce(velocity * dir, ForceMode.VelocityChange);
@@ -44,7 +48,6 @@ public class MoonManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.AddForce(ArtificialGravity.AttractForce(rb, orbitPlanet.GetComponent<Rigidbody>()));
         if (orbitPlanet == null)
         {
             return;
@@ -53,6 +56,10 @@ public class MoonManager : MonoBehaviour
         if(lr == null) { lr = gameObject.AddComponent<LineRenderer>(); }
 
         DrawOrbit();
+    }
+
+    void FixedUpdate(){
+         rb.AddForce(ArtificialGravity.AttractForce(rb, orbitPlanet.GetComponent<Rigidbody>()), ForceMode.Force);
     }
 
     private void DrawOrbit()
@@ -69,7 +76,7 @@ public class MoonManager : MonoBehaviour
         for (int i = 0; i < points; i++)
         {
             mockProgress += Mathf.PI * 2 / points;
-            Vector3 dir = new Vector3(semiMajorAxis * Mathf.Cos(mockProgress), semiMinorAxis * Mathf.Sin(mockProgress));
+            Vector3 dir = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(mockProgress), centre.y + semiMinorAxis * Mathf.Sin(mockProgress));
             lr.SetPosition(i, dir);
         }
     }

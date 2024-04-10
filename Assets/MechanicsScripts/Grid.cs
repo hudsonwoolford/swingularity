@@ -77,7 +77,6 @@ public class Grid
 public static class ArtificialGravity
 {
     public static float G = 1f;
-    public static float GravitationalCutoff = 0;
 
     public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
     {
@@ -87,14 +86,7 @@ public static class ArtificialGravity
         float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
-        if( force.magnitude > GravitationalCutoff)
-        {
             return force; //returning force
-        }
-        else
-        {
-            return force.normalized;
-        }
     }
     public static Vector2 GravityForceAtPoint(Vector3 worldPos, Rigidbody[] planetRB, float objMass)
     {
@@ -106,18 +98,11 @@ public static class ArtificialGravity
             float distance = direction.magnitude; //distance
 
             float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
-            Vector3 force = (direction.normalized * forceMagnitude).magnitude > GravitationalCutoff ? direction.normalized * forceMagnitude : direction.normalized; //storing force
+            Vector3 force = direction.normalized * forceMagnitude ; //storing force
             totalForce += new Vector2(force.x, force.y);
             totalForceNormalized += new Vector2(force.x, force.y).normalized;
         }
-        if (totalForce.magnitude > GravitationalCutoff)
-        {
             return totalForce;
-        }
-        else
-        {
-            return totalForceNormalized;
-        }
 
     }
     public static Vector2 CalculateDisplacement(Vector2 vertexPosition, Rigidbody[] planetRB, float max, float divisor)
