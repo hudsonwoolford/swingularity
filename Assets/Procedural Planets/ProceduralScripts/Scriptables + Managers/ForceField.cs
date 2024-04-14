@@ -100,7 +100,7 @@ public class ForceField : MonoBehaviour
         if (col.gameObject.layer == 7) { return; } // simulation layer
 
         hitPos[hitIterator] = col.transform.position; //colision pos
-        hitTime[hitIterator].x = Time.time; //time of hit
+        hitTime[hitIterator].x = Time.timeSinceLevelLoad; //time of hit
         
         //calculate hit power
         float hitPower = 0;
