@@ -29,19 +29,23 @@ public class LevelSelect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void OnValidate()
-    {
-        if(buttonsCanvas == null) { return; }
-        systemButtons = buttonsCanvas.GetComponentsInChildren<Button>();
+        if(!Application.isPlaying) { return; }
+        if (buttonsCanvas == null) { return; }
         SystemPositions();
         Linerendering();
+        DrawAllCircles();
+    }
+    private void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            SystemPositions();
+        }
     }
     void SystemPositions()
     {
+        systemButtons = buttonsCanvas.GetComponentsInChildren<Button>();
+
         levelAmount = systemButtons.Length;
 
         float height = Camera.main.orthographicSize * 2; //camera height in units
@@ -58,22 +62,13 @@ public class LevelSelect : MonoBehaviour
     }
     void Linerendering()
     {
-        //compensating for linerenderers
-        lr = GetComponentsInChildren<LineRenderer>();
-        while(lr.Length != systemButtons.Length-1)
+        lr = new LineRenderer[levelAmount-1];
+        for (int i = 0; i < levelAmount - 1; i++)
         {
-            while (lr.Length < systemButtons.Length-1) 
-            {
-                Transform obj = new GameObject().transform;
-                obj.parent = transform;
-                obj.AddComponent<LineRenderer>();
-            }
-            while (lr.Length > systemButtons.Length-1)
-            {
-                GameObject obj = lr[0].gameObject;
-                DestroyImmediate(obj);
-            }
-            lr = GetComponentsInChildren<LineRenderer>();
+            Transform obj = new GameObject().transform;
+            obj.parent = transform;
+            lr[i] = obj.AddComponent<LineRenderer>();
+            obj.name = "Line";
         }
 
         //drawing every line renderer
@@ -90,16 +85,25 @@ public class LevelSelect : MonoBehaviour
             lr[i].SetPosition(1, pos2); //Assign pos2
         }
     }
+    void DrawAllCircles()
+    {
+        foreach (Transform t in buttonsCanvas)
+        {
+            DrawCircle(t.position, circleRad, 180);
+        }
+    }
     void DrawCircle(Vector3 centre, float radius, int subDivs)
     {
 
         Transform obj = new GameObject().transform;
+        obj.parent = transform;
+        obj.name = "Circle";
         LineRenderer l =  obj.AddComponent<LineRenderer>();
-        UpdateLineRenderer(l, subDivs);
+        UpdateLineRenderer(l, subDivs + 1);
 
-        float radianJump = Mathf.PI * 2 / (float)subDivs*2;
+        float radianJump = Mathf.PI * 2 / (float)subDivs;
 
-        for (int i = 0; i < subDivs; i++)
+        for (int i = 0; i < subDivs + 1; i++)
         {
             Vector3 dir = new Vector3(Mathf.Cos(i * radianJump), Mathf.Sin(i * radianJump), 0);
             Vector3 pos = centre + dir * radius;
