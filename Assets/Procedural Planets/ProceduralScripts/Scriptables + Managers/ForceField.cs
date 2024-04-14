@@ -14,7 +14,6 @@ public class ForceField : MonoBehaviour
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
     [SerializeField] Material forceMat;
-    [SerializeField] AudioSource src;
     [SerializeField] AudioClip bump;
     [SerializeField] bool autoMass = false;
 
@@ -32,6 +31,7 @@ public class ForceField : MonoBehaviour
     [HideInInspector]
     [SerializeField] int hitIterator;
 
+    private AudioSource src;
     private MaterialPropertyBlock pBlock;
     private MeshRenderer meshRenderer;
     private Light pOuterAtmosphere;
@@ -43,6 +43,7 @@ public class ForceField : MonoBehaviour
         {
             interactableObject.Add(GameObject.FindGameObjectWithTag("Player").transform);
         }
+        src = GameObject.FindGameObjectWithTag("SRC").GetComponent<AudioSource>();
         meshRenderer = GetComponent<MeshRenderer>();
         forceMat = meshRenderer.sharedMaterial;
         pBlock = new MaterialPropertyBlock();
@@ -66,10 +67,10 @@ public class ForceField : MonoBehaviour
     {
         if (planet == null) {Debug.LogWarning("Set planet object in inspector"); return; }
         if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true); if (pOuterAtmosphere == null) { return; } }
-        if (pData == null) { pData = planet.gameObject.GetComponent<PlanetDataHolder>(); }
+        if (pData == null) { pData = planet.GetComponent<PlanetDataHolder>(); }
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) * 1.075f / 2;
-        if (pData == null) { return; }
+        if (pData == null) {Debug.LogWarning("Planet Object does not contain: Planet Data Holder component"); return; }
         Color c = pData.forceFieldColor;
         frontColor = new Color(c.r, c.g, c.b, 0);
         fresnelColor = c * intensityMult;

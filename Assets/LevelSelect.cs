@@ -12,25 +12,24 @@ public class LevelSelect : MonoBehaviour
 {
     [Header("System Variables")]
     [SerializeField] Transform buttonsCanvas;
-    Button[] systemButtons; //solar system scenes
+    SceneButton[] systemButtons; //solar system scenes
     [Header("Line Variables")]
     [SerializeField] Gradient lineColor;
     [SerializeField] float lineWidth = 0.2f;
     [SerializeField] float lineDist = 1f;
     [SerializeField] float circleRad = 1f;
     [SerializeField] Material lineMat;
-    int levelAmount;
     LineRenderer[] lr = new LineRenderer[5];
     private void Awake()
     {
-        systemButtons = buttonsCanvas.GetComponentsInChildren<Button>();
-        levelAmount = systemButtons.Length;
+        systemButtons = buttonsCanvas.GetComponentsInChildren<SceneButton>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        if(!Application.isPlaying) { return; }
-        if (buttonsCanvas == null) { return; }
+        if(!Application.isPlaying) { return; } //only do function in game
+        if (buttonsCanvas == null) { return; } //crucial variable
+        //calling functions
         SystemPositions();
         Linerendering();
         DrawAllCircles();
@@ -44,9 +43,9 @@ public class LevelSelect : MonoBehaviour
     }
     void SystemPositions()
     {
-        systemButtons = buttonsCanvas.GetComponentsInChildren<Button>();
+        systemButtons = buttonsCanvas.GetComponentsInChildren<SceneButton>();
 
-        levelAmount = systemButtons.Length;
+        int levelAmount = systemButtons.Length;
 
         float height = Camera.main.orthographicSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
@@ -62,9 +61,12 @@ public class LevelSelect : MonoBehaviour
     }
     void Linerendering()
     {
+        int levelAmount = systemButtons.Length;
+
         lr = new LineRenderer[levelAmount-1];
-        for (int i = 0; i < levelAmount - 1; i++)
+        for (int i = 0; i < lr.Length; i++)
         {
+            if (!systemButtons[i+1].unlocked) { break; }
             Transform obj = new GameObject().transform;
             obj.parent = transform;
             lr[i] = obj.AddComponent<LineRenderer>();
@@ -74,6 +76,7 @@ public class LevelSelect : MonoBehaviour
         //drawing every line renderer
         for (int i = 0; i < systemButtons.Length-1; i++)
         {
+            if (!systemButtons[i + 1].unlocked) { return; }
             Transform t = systemButtons[i].transform;   //first button
             Transform t2 = systemButtons[i+1].transform;//second button
 
@@ -85,13 +88,16 @@ public class LevelSelect : MonoBehaviour
             lr[i].SetPosition(1, pos2); //Assign pos2
         }
     }
+    //Draws a circle for every level
     void DrawAllCircles()
     {
-        foreach (Transform t in buttonsCanvas)
+        for (int i = 0; i < systemButtons.Length; i++)
         {
-            DrawCircle(t.position, circleRad, 180);
+            if (!systemButtons[i].unlocked) { return; }
+            DrawCircle(systemButtons[i].transform.position, circleRad, 180);
         }
     }
+    //Draws a circle by spawning a linerenderer
     void DrawCircle(Vector3 centre, float radius, int subDivs)
     {
 
@@ -110,6 +116,7 @@ public class LevelSelect : MonoBehaviour
             l.SetPosition(i, pos);
         }
     }
+    // Updates all the linerender values to inspector values
     void UpdateLineRenderer(LineRenderer l, int posCount)
     {
         l.positionCount = posCount;
@@ -121,7 +128,6 @@ public class LevelSelect : MonoBehaviour
         l.textureScale = new Vector2(3, 1);
         l.textureMode = LineTextureMode.Tile;
     }
-
 
     private void OnDrawGizmosSelected()
     {
