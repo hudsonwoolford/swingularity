@@ -105,8 +105,8 @@ public static class ProceduralLevelGeneration
             Vector2 spawnCentre = spawnPoints[spawnIndex];
             bool candidateAccepted = false;
             for (int i = 0; i < numSamplesBeforeRejection; i++){
-                float angle = UnityEngine.Random.value * MathF.PI * 2;
-                Vector2 dir = new Vector2(MathF.Sin(angle), MathF.Cos(angle));
+                float angle = UnityEngine.Random.value * Mathf.PI * 2;
+                Vector2 dir = new Vector2(Mathf.Sin(angle), MathF.Cos(angle));
                 Vector2 candidate = spawnCentre + dir * UnityEngine.Random.Range(radius, 2*radius);
 
                 if (PointIsValid(candidate, regionBounds, cellSize, radius, points, grid)){
@@ -140,8 +140,8 @@ public static class ProceduralLevelGeneration
             int searchStartY = Mathf.Max(0, cellY-2);
             int searchEndY = Mathf.Min(cellY+2, grid.GetLength(1)-1);
             //Iterate through each grid point in the 5x5 area
-            for (int x = searchStartX; x < searchEndX; x++){
-                for (int y = searchStartY; y < searchEndY; y++){
+            for (int x = searchStartX; x <= searchEndX; x++){
+                for (int y = searchStartY; y <= searchEndY; y++){
                     //If grid[x,y]=0 i.e. no point, then grid[x,y] = -1
                     int pointIndex = grid[x,y]-1;
                     if (pointIndex != -1){

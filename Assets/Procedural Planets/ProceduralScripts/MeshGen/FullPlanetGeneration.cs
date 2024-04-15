@@ -403,7 +403,7 @@ public class FullPlanetGeneration : MonoBehaviour
 
 
     }
-    public void RandomizeOffset(Vector3 offsetSeed)
+    public void RandomizeOffset(Vector3 offsetSeed, int index)
     {
 
         Vector3[] offset = new Vector3[10]; 
@@ -411,7 +411,7 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             //setting the offsets to randomly generated offset
-            UnityEngine.Random.InitState((int)(i * offsetSeed.x));
+            UnityEngine.Random.InitState((int)(i * offsetSeed.x * index));
             UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
             offset[i] = new Vector3(offsetSeed.x + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.y + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.z + UnityEngine.Random.Range(0, offsetSeed.z));
         }
@@ -481,9 +481,9 @@ public class FullPlanetGeneration : MonoBehaviour
         //randomized number for the terrain
         int index = UnityEngine.Random.Range(0, terrainVarPool.Length);
         planet.terrainVar = terrainVarPool[index];
-        RandomizeOffset(offsetSeed);
+        RandomizeOffset(offsetSeed, 0);
     }
-    public void RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType)
+    public void RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType, int planetI)
     {
         ClearAllTrees();
         List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> pool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
@@ -496,7 +496,7 @@ public class FullPlanetGeneration : MonoBehaviour
                 }
             }
         }
-        UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState((int)offsetSeed.x * planetI);
         UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
         if (pool.Count == 0){
             Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
@@ -552,6 +552,11 @@ public class FullPlanetGeneration : MonoBehaviour
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
             RandomPolarBiome(poolScheme, offsetSeed);
+            
+            planet.terrainVar = pool[index].Item2;
+            RandomizeOffset(offsetSeed, planetI);
+
+            UpdateOcean();
             return;
         }
         int index3 = UnityEngine.Random.Range(0, poolScheme.planetColorSchemes.Length); //Index of the second biome
@@ -580,10 +585,8 @@ public class FullPlanetGeneration : MonoBehaviour
         }
         RandomPolarBiome(poolScheme, offsetSeed);
 
-        UnityEngine.Random.InitState((int)offsetSeed.x);
-        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
         planet.terrainVar = pool[index].Item2;
-        RandomizeOffset(offsetSeed);
+        RandomizeOffset(offsetSeed, planetI);
 
         UpdateOcean();
     }
@@ -700,7 +703,7 @@ public class FullPlanetGeneration : MonoBehaviour
         UnityEngine.Random.InitState((int)offsetSeed.x);
         UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
         planet.terrainVar = pool[index].Item2;
-        RandomizeOffset(offsetSeed);
+        RandomizeOffset(offsetSeed, 0);
 
         UpdateOcean();
     }

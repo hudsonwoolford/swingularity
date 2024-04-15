@@ -64,7 +64,7 @@ public class LevelGenerator : MonoBehaviour
         Instantiate(audioSrcPrefab);
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList[i] = GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
+            planetList[i] = GeneratePlanet(generator, 1f, i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
             GenerateForcefield(planetList[i]);
         }
         foreach (Planet planet in planetList)
@@ -82,8 +82,8 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType){
-        generator.RandomizeColorScheme(seed, planetType);
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType){
+        generator.RandomizeColorScheme(seed, planetType, index);
         generator.ApplyColorScheme();
         generator.ClearAllTrees();
         generator.UpdateAtmosphere();

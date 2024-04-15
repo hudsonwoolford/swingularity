@@ -55,7 +55,7 @@ public class FullPlanetEditor : Editor
         {
             UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
             Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
-            planetGeneration.RandomizeOffset(seed);
+            planetGeneration.RandomizeOffset(seed, 0);
         }
         GUILayout.EndHorizontal();
         if (GUILayout.Button("Regen Trees"))
