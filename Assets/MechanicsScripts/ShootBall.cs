@@ -109,7 +109,7 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
-            if(Physics.Raycast(transform.position, dir, 0.75f, obstacles))
+            if(Physics.Raycast(transform.position, dir, 0.75f, obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
                 dir = Vector2.zero;
                 dist = 0;
@@ -137,11 +137,6 @@ public class ShootBall : MonoBehaviour
         }
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
-
-        //dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
-        //dist = dir.magnitude;
-        
-        //dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
         
         Vector2 force = dir.normalized * dist; //the force
 
