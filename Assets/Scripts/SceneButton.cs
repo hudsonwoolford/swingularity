@@ -10,10 +10,10 @@ using Unity.VisualScripting;
 [ExecuteInEditMode()]
 public class SceneButton : MonoBehaviour
 {
-    [SerializeField] string sceneName = "Scene", levelName = "Level";
-    [SerializeField] bool scaleText = false;
+    [SerializeField] string sceneName = "Scene", stringName = "Name";
     [ColorUsage(true, true)]
     [SerializeField] Color color = Color.white;
+    [SerializeField] bool scaleText = false;
     public bool unlocked = false;
     Button button;
     Image image;
@@ -22,8 +22,8 @@ public class SceneButton : MonoBehaviour
     void Start()
     {
 
-        nameText = GetComponentInChildren<TextMeshProUGUI>();
-        image = GetComponentInChildren<Image>();
+        nameText = GetComponentInChildren<TextMeshProUGUI>(true);
+        image = GetComponentInChildren<Image>(true);
         button = GetComponent<Button>();
     }
 
@@ -31,7 +31,7 @@ public class SceneButton : MonoBehaviour
     void Update()
     {
         if(nameText == null) { nameText = GetComponentInChildren<TextMeshProUGUI>(); }
-        nameText.text = levelName;
+        nameText.text = stringName;
         image.color = color;
         button.enabled = unlocked;
         if (scaleText)
