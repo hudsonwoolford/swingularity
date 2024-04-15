@@ -24,11 +24,11 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(ball.position.x, ball.position.y, -10);
         if(!innerShape.bounds.Contains(new Vector3(ball.position.x, ball.position.y, innerShape.transform.position.z)))
         {
             return;
         }
+        transform.position = new Vector3(ball.position.x, ball.position.y, -10);
     }
     Vector2[] PolygonPositions(Vector2 start, Vector2 end)
     {
