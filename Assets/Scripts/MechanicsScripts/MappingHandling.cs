@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class MappingHandling : MonoBehaviour
 {
-    [SerializeField] BoxCollider camArea, camAreaSmaller;
+    [SerializeField] BoxCollider camArea;
+    [Range(0, 2)]
+    [SerializeField] float smallerBounds = 0.9f;
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
     [SerializeField] Animator canvasAnimator;
+    BoxCollider camAreaSmaller;
     Camera mainCam;
     Vector3 point;
     private void Awake()
@@ -19,6 +23,11 @@ public class MappingHandling : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Transform cas = new GameObject("Cam Area Smaller").transform;
+        cas.SetParent(transform);
+        cas.localScale = camArea.transform.localScale - Vector3.one * smallerBounds;
+        camAreaSmaller = cas.AddComponent<BoxCollider>();
+        camAreaSmaller.isTrigger = true;
         mainCam = Camera.main;
     }
 
@@ -26,7 +35,9 @@ public class MappingHandling : MonoBehaviour
     void Update()
     {
         arrow.position = Vector3.one * 100;
-        if(!camArea.bounds.Contains(ball.position))
+        camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        if (!camArea.bounds.Contains(ball.position))
         {
             //out of view
             Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - ball.position;
@@ -46,7 +57,8 @@ public class MappingHandling : MonoBehaviour
                         if(dist > 100)
                         {
                             print(dist);
-                            ShootBall.triggerReset?.Invoke();
+                           
+                            ShootBall.boundsReset?.Invoke();
                         }
 
                     }
@@ -78,5 +90,7 @@ public class MappingHandling : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawCube(point, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, camArea.transform.localScale - Vector3.one * smallerBounds);
+        Gizmos.DrawWireCube(Vector3.zero, camArea.transform.localScale - Vector3.one * 100);
     }
 }

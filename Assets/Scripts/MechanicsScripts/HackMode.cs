@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -41,6 +42,7 @@ public class HackMode : MonoBehaviour
     }
     private void Update()
     {
+        if(env==null) { return; }
         if(lrParent == null) { return; }
         if (ylr == null || xlr == null) { ylr = lrParent.GetComponentsInChildren<LineRenderer>()[0]; xlr = lrParent.GetComponentsInChildren<LineRenderer>()[1]; }
         Rigidbody[] planets = env.GetComponentsInChildren<Rigidbody>();

@@ -47,6 +47,8 @@ public class ShootBall : MonoBehaviour
     public static OnHole onHole;
     public delegate void TriggerReset();
     public static TriggerReset triggerReset;
+    public delegate void BoundsReset();
+    public static BoundsReset boundsReset;
 
     private void Awake()
     {
@@ -303,9 +305,11 @@ public class ShootBall : MonoBehaviour
     private void OnEnable()
     {
         triggerReset += BallReset;
+        boundsReset += BallReset;
     }
     private void OnDisable()
     {
         triggerReset -= BallReset;
+        boundsReset -= BallReset;
     }
 }
