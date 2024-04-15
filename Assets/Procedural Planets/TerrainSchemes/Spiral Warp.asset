@@ -15,6 +15,7 @@ MonoBehaviour:
   colorSchemePools:
     colorSchemePools:
     - name: Grass+
+      planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -30,18 +31,36 @@ MonoBehaviour:
       - {fileID: 11400000, guid: b87c6e7eebaba8541873da6bd895d72c, type: 2}
       polarColorSchemes:
       - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
-    - name: Obsidian + Colour
+    - name: Obsidian Goop
+      planetType: 4
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      polarColorSchemes: []
+    - name: Obsidian Mythical
+      planetType: 6
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      polarColorSchemes: []
+    - name: Obsidian Fire
+      planetType: 3
       oPrimary: 0
       aPrimary: 0
       singleBiome: 1
       primaryBiome: {fileID: 0}
       planetColorSchemes:
       - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
-      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
-      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
       polarColorSchemes: []
     - name: Primordial
+      planetType: 6
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -50,6 +69,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
       polarColorSchemes: []
     - name: Wastelands
+      planetType: 5
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -60,6 +80,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
       polarColorSchemes: []
     - name: Goop
+      planetType: 4
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -74,10 +95,11 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 724
+    seed: 88
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
+    atmosphereScale: 1
   craterSettings:
     rimWidth: 0
     floorHeight: 0
@@ -97,9 +119,9 @@ MonoBehaviour:
     multiplier: 1.59
     gain: 0
     offset:
-    - 718.4263
-    - 595.7512
-    - 1266.9955
+    - 74.39249
+    - 137.76108
+    - 140.73782
     elevation: 1
   detailNoiseSettings:
     applyNoise: 1
@@ -110,9 +132,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.25
     offset:
-    - 615.8762
-    - 598.0275
-    - 833.25354
+    - 86.33464
+    - 104.26708
+    - 176.27693
     elevation: 1.39
   ridgeNoiseSettings:
     applyNoise: 1
@@ -124,9 +146,9 @@ MonoBehaviour:
     gain: 1
     power: 1.93
     offset:
-    - 664.291
-    - 914.0563
-    - 878.56494
+    - 84.18416
+    - 110.81824
+    - 150.75024
     elevation: -2.35
     smoothing: 0
   warpedNoiseSettings:
@@ -138,9 +160,9 @@ MonoBehaviour:
     multiplier: 1.51
     gain: 1.63
     offset:
-    - 505.99896
-    - 642.62537
-    - 918.36707
+    - 77.82327
+    - 114.784935
+    - 205.04562
     strength: 1.17
   continentNoiseSettings:
     applyNoise: 1
@@ -151,9 +173,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 441.05603
-    - 715.6005
-    - 1568.1283
+    - 78.144684
+    - 127.06055
+    - 251.61731
     depthMultiplier: 4.55
     oceanFloorDepth: 5.39
     oceanFloorSmoothing: 1
@@ -166,16 +188,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 628.4581
-    - 865.86926
-    - 884.0667
+    - 53.203773
+    - 118.66968
+    - 174.10028
     strength: 1
     maskBlend: 3.5
     maskVerticalShift: 9.11
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 392.9693, y: 902.9713, z: 1151.5809}
+    _Offset: {x: 49.007828, y: 122.87649, z: 137.73839}
     _Scale: 0.64
     _Persistence: 0.5
     _Lacunarity: 2
@@ -184,7 +206,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 509.7021, y: 886.183, z: 1323.6486}
+    _WarpOffset: {x: 72.99726, y: 130.12494, z: 173.80928}
     _WarpScale: 1
     _WarpPersistence: 0.5
     _WarpLacunarity: 2

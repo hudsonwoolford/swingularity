@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using System.Linq.Expressions;
+using System;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -24,9 +25,21 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     float minPlanets, maxPlanets, minSize, maxSize, sizeBias, poissonRadius, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
-    GameObject planetGeneratorPrefab;
+    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
     [SerializeField]
     float planetScale;
+    [SerializeField]
+    ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes;
+
+    [Serializable]
+    public struct Planet{
+        public GameObject planet;
+        public ColorSchemeStaticReference.PlanetType planetType;
+        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType){
+            this.planet = planet;
+            this.planetType = planetType;
+        }
+    }
 
     void Start()
     {
@@ -42,36 +55,46 @@ public class LevelGenerator : MonoBehaviour
             samplesBeforeRejection,
             offsetScale
         };
-        ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, levelGenSettings);
+        ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
         Generatelevel(level);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
-        GameObject[] planetList = new GameObject[level.numPlanets];
+        Planet[] planetList = new Planet[level.numPlanets];
+        Instantiate(audioSrcPrefab);
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList[i] = GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize);
+            planetList[i] = GeneratePlanet(generator, 1f, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
+            GenerateForcefield(planetList[i]);
         }
-        foreach (GameObject planet in planetList)
+        foreach (Planet planet in planetList)
         {
-            planet.SetActive(true);
+            planet.planet.SetActive(true);
         }
     }
 
-    GameObject GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize){
-        
-        generator.RandomizeTerrainScheme(seed);
-        generator.RandomizeColorScheme(seed);
+    void GenerateForcefield(Planet planet){
+        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.moon || planet.planetType != ColorSchemeStaticReference.PlanetType.star){  
+            GameObject forcefield = Instantiate(forcefieldPrefab);
+
+            forcefield.GetComponent<ForceField>().planet = planet.planet.transform;
+            forcefield.GetComponent<ForceField>().enabled = true;
+        }
+    }
+
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType){
+        generator.RandomizeColorScheme(seed, planetType);
         generator.ApplyColorScheme();
         generator.ClearAllTrees();
         generator.UpdateAtmosphere();
         generator.UpdateOcean();
         generator.UpdateTrees();
+        generator.UpdateData();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = position - levelSize/2;
         newPlanet.transform.localScale = Vector3.one * size * planetScale;
-        return newPlanet;
+        return new Planet (newPlanet, ColorSchemeStaticReference.PlanetType.blackhole);
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
@@ -123,6 +146,14 @@ public class LevelGenerator : MonoBehaviour
         planetParent.transform.localScale = Vector3.one * 0.3f;
         SortingGroup sr = planetParent.AddComponent<SortingGroup>();
         sr.sortingLayerName = "Planet Sprites";
+        PlanetDataHolder pd = planetParent.AddComponent<PlanetDataHolder>();
+        PlanetDataHolder cd = selectedObj.GetComponent<PlanetDataHolder>();
+        pd.biomeA =  cd.biomeA;
+        pd.biomeB =  cd.biomeB;
+        pd.oBiomeA = cd.oBiomeA;
+        pd.oBiomeB = cd.oBiomeB;
+        pd.aBiomeA = cd.aBiomeA;
+        pd.aBiomeB = cd.aBiomeB;
 
         //Front sprite
         GameObject frontObject = new GameObject("frontObject");
@@ -177,4 +208,5 @@ public class LevelGenerator : MonoBehaviour
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
         return sprite;
     }
+    
 }

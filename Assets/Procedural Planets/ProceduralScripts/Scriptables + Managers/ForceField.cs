@@ -9,8 +9,8 @@ public class ForceField : MonoBehaviour
 {
     static float intensityMult = 1.5f;
     [Header("Script Variables")]
-    [SerializeField] Transform planet;
-    [SerializeField] List<Transform> interactableObject = new List<Transform>(3);
+    [SerializeField] public Transform planet;
+    [SerializeField] public List<Transform> interactableObject = new List<Transform>(3);
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
     [SerializeField] Material forceMat;
@@ -31,7 +31,7 @@ public class ForceField : MonoBehaviour
     [HideInInspector]
     [SerializeField] int hitIterator;
 
-    private AudioSource src;
+    public AudioSource src;
     private MaterialPropertyBlock pBlock;
     private MeshRenderer meshRenderer;
     private Light pOuterAtmosphere;

@@ -24,7 +24,7 @@ public class FullPlanetGeneration : MonoBehaviour
     public bool colorSchemesOut; //if colorschemes are folded out/on
     [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
     [HideInInspector]
-    [SerializeField] PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
+    [SerializeField] public PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
     [HideInInspector]
     [SerializeField] bool oBiomeA, oBiomeB, aBiomeA, aBiomeB; //booleans determining which biome/colorscheme has control over the atmosphere or the ocean or trees
     [HideInInspector]
@@ -482,25 +482,34 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar = terrainVarPool[index];
         RandomizeOffset(offsetSeed);
     }
-    public void RandomizeColorScheme(Vector3 offsetSeed)
+    public void RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType)
     {
         ClearAllTrees();
-        ColorSchemeStaticReference.ColorSchemePool[] colorSchemes = planet.terrainVar.colorSchemePools.colorSchemePools; //array for color scheme pool
+        List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> pool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
+
+        for (int i = 0; i < terrainVarPool.Length; i++){
+            TerrainVar currentTerrain = terrainVarPool[i];
+            for (int u = 0; u < currentTerrain.colorSchemePools.colorSchemePools.Length; u++){
+                if (planetType == currentTerrain.colorSchemePools.colorSchemePools[u].planetType){
+                    pool.Add((currentTerrain.colorSchemePools.colorSchemePools[u], currentTerrain)); 
+                }
+            }
+        }
         UnityEngine.Random.InitState((int)offsetSeed.x);
         UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
-        if (colorSchemes.Length == 0){
+        if (pool.Count == 0){
             Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
             return; 
         }
 
-        int index = UnityEngine.Random.Range(0, colorSchemes.Length); //Index of the pool
-        if (colorSchemes[index].planetColorSchemes.Length == 0)
+        int index = UnityEngine.Random.Range(0, pool.Count); //Index of the pool
+        if (pool[index].Item1.planetColorSchemes.Length == 0)
         {
-            Debug.LogWarning("Color Scheme Pool: [" + colorSchemes[index].name + "] does not contain secondary biomes");
+            Debug.LogWarning("Color Scheme Pool: [" + pool[index].Item1.name + "] does not contain secondary biomes");
             return;
         }
-        int index2= UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the first biome
-        if(colorSchemes[index].primaryBiome!=null) //If a primary biome is used
+        int index2= UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length); //Index of the first biome
+        if(pool[index].Item1.primaryBiome!=null) //If a primary biome is used
         {
             //Randomizes which biome is primary
             ref PlanetColorScheme primaryBiomeBiome = ref biomeA;
@@ -508,19 +517,19 @@ public class FullPlanetGeneration : MonoBehaviour
             switch (choiceBiome)
             {
                 case 0:
-                    biomeA = colorSchemes[index].planetColorSchemes[index2];
-                    biomeB = colorSchemes[index].primaryBiome;
+                    biomeA = pool[index].Item1.planetColorSchemes[index2];
+                    biomeB = pool[index].Item1.primaryBiome;
                     primaryBiomeBiome = ref biomeB;
                     break;
                 case 1:
-                    biomeB = colorSchemes[index].planetColorSchemes[index2];
-                    biomeA = colorSchemes[index].primaryBiome;
+                    biomeB = pool[index].Item1.planetColorSchemes[index2];
+                    biomeA = pool[index].Item1.primaryBiome;
                     primaryBiomeBiome = ref biomeA;
                     break;
                 default:
                     break;
             }
-            if(colorSchemes[index].oPrimary) //if ocean variables come from the primary
+            if(pool[index].Item1.oPrimary) //if ocean variables come from the primary
             {
                 oBiomeA = primaryBiomeBiome == biomeA ? true : false; //setting bool for which biome is determined by for ocean
                 oBiomeB = primaryBiomeBiome == biomeB ? true : false; //setting bool for which biome is determined by for ocean
@@ -530,7 +539,7 @@ public class FullPlanetGeneration : MonoBehaviour
                 oBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool fo which biome is determined by for ocean
                 oBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for ocean
             }
-            if(colorSchemes[index].aPrimary) //if atmosphere variables come from the primary
+            if(pool[index].Item1.aPrimary) //if atmosphere variables come from the primary
             {
                 aBiomeA = primaryBiomeBiome == biomeA ? true : false;
                 aBiomeB = primaryBiomeBiome == biomeB ? true : false;
@@ -540,34 +549,40 @@ public class FullPlanetGeneration : MonoBehaviour
                 aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
                 aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
             }
-            RandomPolarBiome(colorSchemes[index], offsetSeed);
+            RandomPolarBiome(pool[index].Item1, offsetSeed);
             return;
         }
-        int index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length); //Index of the second biome
-        while(index3==index2 && colorSchemes[index].planetColorSchemes.Length > 1) //Make sure they are not the same as the first biome
+        int index3 = UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length); //Index of the second biome
+        while(index3==index2 && pool[index].Item1.planetColorSchemes.Length > 1) //Make sure they are not the same as the first biome
         {
-            index3 = UnityEngine.Random.Range(0, colorSchemes[index].planetColorSchemes.Length);
+            index3 = UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length);
         }
         //Randomizes which biome is which
-        int choice = (!colorSchemes[index].singleBiome) ? UnityEngine.Random.Range(0, 2) : 3;
+        int choice = (!pool[index].Item1.singleBiome) ? UnityEngine.Random.Range(0, 2) : 3;
         switch (choice)
         {
             case 0:
-                biomeA = colorSchemes[index].planetColorSchemes[index2];
-                biomeB = colorSchemes[index].planetColorSchemes[index3];
+                biomeA = pool[index].Item1.planetColorSchemes[index2];
+                biomeB = pool[index].Item1.planetColorSchemes[index3];
                 break;
             case 1:
-                biomeB = colorSchemes[index].planetColorSchemes[index2];
-                biomeA = colorSchemes[index].planetColorSchemes[index3];
+                biomeB = pool[index].Item1.planetColorSchemes[index2];
+                biomeA = pool[index].Item1.planetColorSchemes[index3];
                 break;
             case 3: //singular biome
-                biomeA = colorSchemes[index].planetColorSchemes[index2];
-                biomeB = colorSchemes[index].planetColorSchemes[index2];
+                biomeA = pool[index].Item1.planetColorSchemes[index2];
+                biomeB = pool[index].Item1.planetColorSchemes[index2];
                 break;
             default:
                 break;
         }
-        RandomPolarBiome(colorSchemes[index], offsetSeed);
+        RandomPolarBiome(pool[index].Item1, offsetSeed);
+
+        UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
+        planet.terrainVar = pool[index].Item2;
+        RandomizeOffset(offsetSeed);
+
         UpdateOcean();
     }
     void RandomPolarBiome(ColorSchemeStaticReference.ColorSchemePool colorScheme, Vector3 offsetSeed)
@@ -584,6 +599,107 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             biomeP = null;
         }
+    }
+    public void RandomizeColorScheme(Vector3 offsetSeed)
+    {
+        ClearAllTrees();
+        List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> pool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
+
+        for (int i = 0; i < terrainVarPool.Length; i++){
+            TerrainVar currentTerrain = terrainVarPool[i];
+            for (int u = 0; u < currentTerrain.colorSchemePools.colorSchemePools.Length; u++){
+                    pool.Add((currentTerrain.colorSchemePools.colorSchemePools[u], currentTerrain)); 
+            }
+        }
+        UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
+        if (pool.Count == 0){
+            Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
+            return; 
+        }
+
+        int index = UnityEngine.Random.Range(0, pool.Count); //Index of the pool
+        if (pool[index].Item1.planetColorSchemes.Length == 0)
+        {
+            Debug.LogWarning("Color Scheme Pool: [" + pool[index].Item1.name + "] does not contain secondary biomes");
+            return;
+        }
+        int index2= UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length); //Index of the first biome
+        if(pool[index].Item1.primaryBiome!=null) //If a primary biome is used
+        {
+            //Randomizes which biome is primary
+            ref PlanetColorScheme primaryBiomeBiome = ref biomeA;
+            int choiceBiome = UnityEngine.Random.Range(0, 2);
+            switch (choiceBiome)
+            {
+                case 0:
+                    biomeA = pool[index].Item1.planetColorSchemes[index2];
+                    biomeB = pool[index].Item1.primaryBiome;
+                    primaryBiomeBiome = ref biomeB;
+                    break;
+                case 1:
+                    biomeB = pool[index].Item1.planetColorSchemes[index2];
+                    biomeA = pool[index].Item1.primaryBiome;
+                    primaryBiomeBiome = ref biomeA;
+                    break;
+                default:
+                    break;
+            }
+            if(pool[index].Item1.oPrimary) //if ocean variables come from the primary
+            {
+                oBiomeA = primaryBiomeBiome == biomeA ? true : false; //setting bool for which biome is determined by for ocean
+                oBiomeB = primaryBiomeBiome == biomeB ? true : false; //setting bool for which biome is determined by for ocean
+            }
+            else //if ocean variables doesn't come from the primary
+            {
+                oBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool fo which biome is determined by for ocean
+                oBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for ocean
+            }
+            if(pool[index].Item1.aPrimary) //if atmosphere variables come from the primary
+            {
+                aBiomeA = primaryBiomeBiome == biomeA ? true : false;
+                aBiomeB = primaryBiomeBiome == biomeB ? true : false;
+            }
+            else //if atmosphere variables doesn't come from the primary
+            {
+                aBiomeA = primaryBiomeBiome != biomeA ? true : false; //setting bool for which biome is determined by for atmosphere
+                aBiomeB = primaryBiomeBiome != biomeB ? true : false; //setting bool for which biome is determined by for atmosphere
+            }
+            RandomPolarBiome(pool[index].Item1, offsetSeed);
+            return;
+        }
+        int index3 = UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length); //Index of the second biome
+        while(index3==index2 && pool[index].Item1.planetColorSchemes.Length > 1) //Make sure they are not the same as the first biome
+        {
+            index3 = UnityEngine.Random.Range(0, pool[index].Item1.planetColorSchemes.Length);
+        }
+        //Randomizes which biome is which
+        int choice = (!pool[index].Item1.singleBiome) ? UnityEngine.Random.Range(0, 2) : 3;
+        switch (choice)
+        {
+            case 0:
+                biomeA = pool[index].Item1.planetColorSchemes[index2];
+                biomeB = pool[index].Item1.planetColorSchemes[index3];
+                break;
+            case 1:
+                biomeB = pool[index].Item1.planetColorSchemes[index2];
+                biomeA = pool[index].Item1.planetColorSchemes[index3];
+                break;
+            case 3: //singular biome
+                biomeA = pool[index].Item1.planetColorSchemes[index2];
+                biomeB = pool[index].Item1.planetColorSchemes[index2];
+                break;
+            default:
+                break;
+        }
+        RandomPolarBiome(pool[index].Item1, offsetSeed);
+
+        UnityEngine.Random.InitState((int)offsetSeed.x);
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
+        planet.terrainVar = pool[index].Item2;
+        RandomizeOffset(offsetSeed);
+
+        UpdateOcean();
     }
     #region Color Schemes
     public void ApplyColorScheme()

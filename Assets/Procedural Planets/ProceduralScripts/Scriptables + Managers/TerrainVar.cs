@@ -192,10 +192,24 @@ public class PolarBiomeSettings
 
 [Serializable]
 public static class ColorSchemeStaticReference{
+    public enum PlanetType{
+        earth,
+        desert,
+        ice,
+        fire,
+        goop,
+        waste,
+        mythical,
+        moon,
+        blackhole,
+        star,
+    }
+
     [Serializable]
     public struct ColorSchemePool
     {
         public string name; //name of the pool
+        public PlanetType planetType;
         public bool oPrimary, aPrimary; //ocean variables or atmosphere variables are taken from primary biome
         public bool singleBiome;
         [Tooltip("This is optional")]

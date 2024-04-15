@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: fc87970342d8c0a469fe19acda85d04f, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0062791337, g: 0.013370585, b: 0.022761526, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014785795, g: 0.0013591028, b: 0.0012890887, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -565,7 +565,7 @@ Transform:
   - {fileID: 1271836653}
   - {fileID: 1434832216}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &618819253
 PrefabInstance:
@@ -811,7 +811,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1338159109
 MonoBehaviour:
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293daa8024f40f241aba01d0268cb405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 2147483647
+  seed: 1322
   minPlanets: 2
   maxPlanets: 7
   minSize: 1
@@ -838,7 +838,12 @@ MonoBehaviour:
   offsetScale: 8.71
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
+  forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
+    type: 3}
+  audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
+    type: 3}
   planetScale: 0.1
+  possiblePlanetTypes: 0600000003000000
 --- !u!4 &1434832216 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7910038564911542053, guid: 750cf8bfccf00584b81e7a7f3d0dc0f2,
@@ -1135,12 +1140,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1199a6ad802c8ba4ea3b449492e97750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  planet: {fileID: 0}
+  interactableObject:
+  - {fileID: 0}
+  rangeOffset: 0
+  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
+  autoMass: 0
   frontColor: {r: 0.52934986, g: 0.2516911, b: 0.0823988, a: 0}
   fresnelColor: {r: 3.4415903, g: 1.2287785, b: 0, a: 1}
-  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
-  interactableObject: {fileID: 1870987254}
-  src: {fileID: 1657006683}
-  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   hitPos:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
@@ -1164,6 +1172,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   hitIterator: 0
+  src: {fileID: 0}
 --- !u!23 &1609494407
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1214,134 +1223,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609494402}
   m_Mesh: {fileID: 289301614986012343, guid: 77921efe4a76d5b4fb49a295c64dd2d0, type: 3}
---- !u!1 &1657006682
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1657006684}
-  - component: {fileID: 1657006683}
-  m_Layer: 0
-  m_Name: SRC
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!82 &1657006683
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657006682}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!4 &1657006684
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657006682}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1673055126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,12 +1319,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1199a6ad802c8ba4ea3b449492e97750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  planet: {fileID: 0}
+  interactableObject:
+  - {fileID: 0}
+  rangeOffset: 0
+  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
+  autoMass: 0
   frontColor: {r: 0.5294118, g: 0.08235294, b: 0.2939088, a: 0}
   fresnelColor: {r: 0.52672213, g: 0, b: 3.4415908, a: 1}
-  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
-  interactableObject: {fileID: 1870987254}
-  src: {fileID: 1657006683}
-  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   hitPos:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
@@ -1467,6 +1351,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   hitIterator: 0
+  src: {fileID: 0}
 --- !u!23 &1673055131
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1560,6 +1445,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 0
   verts: 20
   simulated: 1
   colIcons: 1
@@ -2029,12 +1917,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1199a6ad802c8ba4ea3b449492e97750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  planet: {fileID: 0}
+  interactableObject:
+  - {fileID: 0}
+  rangeOffset: 0
+  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
+  autoMass: 0
   frontColor: {r: 0.1867299, g: 0.5294118, b: 0.08235294, a: 0}
   fresnelColor: {r: 0.7971448, g: 2.9960785, b: 0, a: 1}
-  forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
-  interactableObject: {fileID: 1870987254}
-  src: {fileID: 1657006683}
-  bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   hitPos:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
@@ -2058,6 +1949,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   hitIterator: 0
+  src: {fileID: 0}
 --- !u!23 &2056719248
 MeshRenderer:
   m_ObjectHideFlags: 0

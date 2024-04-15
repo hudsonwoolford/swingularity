@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,12 +16,14 @@ public static class ProceduralLevelGeneration
         public float[] planetSizes;
         public Vector3[] planetPoints;
         public Vector3[] planetSeeds;
+        public ColorSchemeStaticReference.PlanetType[] planetTypes;
         public Vector2 levelSize;
-        public Level(int numPlanets, float[] planetSizes, Vector3[] planetPoints, Vector3[] planetSeeds, Vector2 levelSize){
+        public Level(int numPlanets, float[] planetSizes, Vector3[] planetPoints, Vector3[] planetSeeds,  ColorSchemeStaticReference.PlanetType[] planetTypes, Vector2 levelSize){
             this.numPlanets = numPlanets;
             this.planetSizes = planetSizes;
             this.planetPoints = planetPoints;
             this.planetSeeds = planetSeeds;
+            this.planetTypes = planetTypes;
             this.levelSize = levelSize;
         }
     }
@@ -42,7 +45,7 @@ public static class ProceduralLevelGeneration
     8: number of poisson disk samples before rejecting the point as a spawner
     9: offset scale for determining random values of planet
     */
-    public static Level CalculateLevel(int seed, params float[] levelGenSettings){
+    public static Level CalculateLevel(int seed, ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes,  params float[] levelGenSettings){
         //Set seed and init variables
         UnityEngine.Random.InitState(seed);
         float minPlanets = levelGenSettings[0];
@@ -74,8 +77,14 @@ public static class ProceduralLevelGeneration
             float zOffset = UnityEngine.Random.value * offsetScale + 3 * i * offsetScale;
             planetSeeds[i] = new Vector3(xOffset, yOffset, zOffset);
         }
-            
-        return new Level(numPlanets, planetSizes, planetPoints, planetSeeds, regionBounds);
+
+        ColorSchemeStaticReference.PlanetType[] planetTypes = new ColorSchemeStaticReference.PlanetType[numPlanets];        
+        for (int i = 0; i < numPlanets; i++){
+            int index = UnityEngine.Random.Range(0, possiblePlanetTypes.Length);
+            planetTypes[i] = possiblePlanetTypes[index];
+        }
+    
+        return new Level(numPlanets, planetSizes, planetPoints, planetSeeds, planetTypes, regionBounds);
     }
 
     public static Vector3[] PoissonDiskSampling(int seed, float radius, Vector2 regionBounds, int numSamplesBeforeRejection){

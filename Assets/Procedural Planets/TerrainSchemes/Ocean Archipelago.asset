@@ -15,6 +15,7 @@ MonoBehaviour:
   colorSchemePools:
     colorSchemePools:
     - name: Terrestrial
+      planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -26,6 +27,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
       polarColorSchemes: []
     - name: Goop
+      planetType: 4
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -39,6 +41,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
       polarColorSchemes: []
     - name: Wastelands + Ore
+      planetType: 5
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -50,6 +53,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 130e103288635904eb77a69dde64d78b, type: 2}
       polarColorSchemes: []
     - name: Primordia
+      planetType: 6
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -61,6 +65,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
       polarColorSchemes: []
     - name: Wastelands + Ore
+      planetType: 5
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -73,10 +78,11 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 726
+    seed: 88
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1.04
+    atmosphereScale: 1
   craterSettings:
     rimWidth: 0.156
     floorHeight: 0
@@ -96,9 +102,9 @@ MonoBehaviour:
     multiplier: 2.32
     gain: 0.82
     offset:
-    - 692.42413
-    - 491.60376
-    - 540.5482
+    - 74.39249
+    - 137.76108
+    - 140.73782
     elevation: 0.16
   detailNoiseSettings:
     applyNoise: 1
@@ -109,9 +115,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 636.9454
-    - 807.7771
-    - 519.4535
+    - 86.33464
+    - 104.26708
+    - 176.27693
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -123,9 +129,9 @@ MonoBehaviour:
     gain: 2.58
     power: 5.6
     offset:
-    - 589.74194
-    - 776.6473
-    - 819.6568
+    - 84.18416
+    - 110.81824
+    - 150.75024
     elevation: 4.11
     smoothing: 1.57
   warpedNoiseSettings:
@@ -137,9 +143,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 714.9321
-    - 784.0052
-    - 750.4464
+    - 77.82327
+    - 114.784935
+    - 205.04562
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -150,9 +156,9 @@ MonoBehaviour:
     multiplier: 0.42
     gain: 1.11
     offset:
-    - 643.4155
-    - 658.7367
-    - 826.6848
+    - 78.144684
+    - 127.06055
+    - 251.61731
     depthMultiplier: 5.6
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 7.2
@@ -165,16 +171,16 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 617.0103
-    - 668.152
-    - 684.6614
+    - 53.203773
+    - 118.66968
+    - 174.10028
     strength: 1.42
     maskBlend: 7.44
     maskVerticalShift: -2.22
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 718.7462, y: 602.6978, z: 513.61707}
+    _Offset: {x: 49.007828, y: 122.87649, z: 137.73839}
     _Scale: 2.04
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -183,7 +189,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 581.53326, y: 701.6167, z: 712.6912}
+    _WarpOffset: {x: 72.99726, y: 130.12494, z: 173.80928}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0

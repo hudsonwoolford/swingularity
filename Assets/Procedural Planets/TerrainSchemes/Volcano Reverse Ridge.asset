@@ -15,6 +15,7 @@ MonoBehaviour:
   colorSchemePools:
     colorSchemePools:
     - name: Terrestrial
+      planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -25,18 +26,36 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
       - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
       polarColorSchemes: []
-    - name: Obsidian + Colour
+    - name: Obsidian Mythical
+      planetType: 6
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      polarColorSchemes: []
+    - name: Obsidian Fire
+      planetType: 3
       oPrimary: 0
       aPrimary: 0
       singleBiome: 1
       primaryBiome: {fileID: 0}
       planetColorSchemes:
       - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
-      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
+      polarColorSchemes: []
+    - name: Obsidian Goop
+      planetType: 4
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 1
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
       - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
-      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
       polarColorSchemes: []
     - name: Primordial
+      planetType: 6
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -45,6 +64,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
       polarColorSchemes: []
     - name: Wastelands
+      planetType: 0
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -55,6 +75,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
       polarColorSchemes: []
     - name: Goop
+      planetType: 4
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
@@ -69,10 +90,11 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 201
+    seed: 79
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
+    atmosphereScale: 1
   craterSettings:
     rimWidth: 0
     floorHeight: 0
@@ -92,9 +114,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.8
     offset:
-    - 143.03043
-    - 250.06589
-    - 854.9777
+    - 76.541016
+    - 102.53417
+    - 181.98
     elevation: 0.42
   detailNoiseSettings:
     applyNoise: 1
@@ -105,9 +127,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.72
     offset:
-    - 191.61008
-    - 206.6611
-    - 1032.817
+    - 76.44873
+    - 110.47245
+    - 125.273605
     elevation: 0.7
   ridgeNoiseSettings:
     applyNoise: 1
@@ -119,9 +141,9 @@ MonoBehaviour:
     gain: 1
     power: 9.68
     offset:
-    - 201.32076
-    - 255.48537
-    - 1027.2188
+    - 64.211754
+    - 85.460434
+    - 148.48825
     elevation: -3.07
     smoothing: 1.11
   warpedNoiseSettings:
@@ -133,9 +155,9 @@ MonoBehaviour:
     multiplier: 0.73
     gain: 1
     offset:
-    - 180.72797
-    - 257.88788
-    - 985.8535
+    - 73.434906
+    - 103.75319
+    - 127.19075
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -146,9 +168,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 180.77393
-    - 275.42548
-    - 1026.8187
+    - 75.43524
+    - 94.45607
+    - 126.2151
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -161,16 +183,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 175.43
-    - 206.44666
-    - 1014.79266
+    - 67.329544
+    - 115.0865
+    - 139.96545
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 153.29868, y: 216.67773, z: 685.048}
+    _Offset: {x: 63.0934, y: 107.806946, z: 169.66019}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0

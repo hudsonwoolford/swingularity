@@ -15,6 +15,7 @@ MonoBehaviour:
   colorSchemePools:
     colorSchemePools:
     - name: Desert
+      planetType: 1
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -26,6 +27,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
       - {fileID: 0}
     - name: Mars
+      planetType: 1
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -37,7 +39,7 @@ MonoBehaviour:
       - {fileID: 0}
   generalSettings:
     subdivisions: 8
-    seed: 1834
+    seed: 205
     ocean: 0
     atmosphere: 1
     _SeaLevel: 1.01
@@ -61,9 +63,9 @@ MonoBehaviour:
     multiplier: 1.44
     gain: 0.93
     offset:
-    - 1681.3796
-    - 1819.3815
-    - 699.23315
+    - 112.10219
+    - 375.39777
+    - 1023.2949
     elevation: 0.13
   detailNoiseSettings:
     applyNoise: 1
@@ -74,9 +76,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 1145.905
-    - 1194.0731
-    - 659.985
+    - 179.1648
+    - 335.27237
+    - 1281.7083
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -88,9 +90,9 @@ MonoBehaviour:
     gain: -0.13
     power: 9.58
     offset:
-    - 1100.4412
-    - 1001.3285
-    - 670.5139
+    - 123.00064
+    - 394.18066
+    - 903.6921
     elevation: 0.51
     smoothing: 4.1
   warpedNoiseSettings:
@@ -102,9 +104,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 1318.5441
-    - 1714.4423
-    - 444.17563
+    - 143.9765
+    - 354.30615
+    - 1490.3649
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -115,9 +117,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 1675.051
-    - 1756.8889
-    - 754.4769
+    - 202.02257
+    - 369.31525
+    - 1724.6794
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -130,16 +132,16 @@ MonoBehaviour:
     multiplier: 0.78
     gain: 5.7
     offset:
-    - 1766.6084
-    - 1247.6987
-    - 606.3902
+    - 125.67417
+    - 393.55936
+    - 1547.9098
     strength: 2.82
     maskBlend: 4.4
     maskVerticalShift: 2.69
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 4
-    _Offset: {x: 956.32056, y: 1198.0574, z: 454.693}
+    _Offset: {x: 120.48551, y: 352.94736, z: 1073.027}
     _Scale: 0.94
     _Persistence: 1.41
     _Lacunarity: 0.77
@@ -148,7 +150,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 0
-    _WarpOffset: {x: 1213.0171, y: 1695.81, z: 452.95096}
+    _WarpOffset: {x: 176.26614, y: 328.8363, z: 1098.1096}
     _WarpScale: 2.71
     _WarpPersistence: 0.25
     _WarpLacunarity: 0
