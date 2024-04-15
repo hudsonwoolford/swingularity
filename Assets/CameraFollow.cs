@@ -7,7 +7,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector2 startPos, endPos;
     [SerializeField] float feather = 1;
     [SerializeField] float resistance = 1;
-    PolygonCollider2D innerShape;
+    [SerializeField]PolygonCollider2D innerShape;
     Transform ball;
     private void Awake()
     {
@@ -17,7 +17,7 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         transform.position = startPos;
-        innerShape = GetComponent<PolygonCollider2D>();
+
         innerShape.points = PolygonPositions(startPos, endPos);
     }
 
@@ -25,6 +25,10 @@ public class CameraFollow : MonoBehaviour
     void Update()
     {
         transform.position = new Vector3(ball.position.x, ball.position.y, -10);
+        if(!innerShape.bounds.Contains(new Vector3(ball.position.x, ball.position.y, innerShape.transform.position.z)))
+        {
+            return;
+        }
     }
     Vector2[] PolygonPositions(Vector2 start, Vector2 end)
     {
