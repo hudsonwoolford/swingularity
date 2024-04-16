@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -138,6 +137,7 @@ public class CameraFollow : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, Vector2.one * bufferBox*2);
     }
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(CameraFollow))]
 public class CameraFollowEditor : Editor
 {
@@ -167,3 +167,4 @@ public class CameraFollowEditor : Editor
         endPos = serializedObject.FindProperty("endPos");
     }
 }
+#endif

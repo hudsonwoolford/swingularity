@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
 using Unity.VisualScripting;
 
 [ExecuteInEditMode()]

@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
@@ -7,7 +6,9 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
 using Unity.VisualScripting;
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 using System.Xml.Schema;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -296,8 +297,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             int objIndex = Random.Range(0, biome.treeVariables._TreeObjects.Length); //random prefab from tree
             TreeObject selectedTreeObj = biome.treeVariables._TreeObjects[objIndex];
-            GameObject tree = PrefabUtility.InstantiatePrefab(selectedTreeObj.treePrefab) as GameObject;
-            PrefabUtility.UnpackPrefabInstance(tree, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            GameObject tree = Instantiate(selectedTreeObj.treePrefab);
 
             Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
 
@@ -856,6 +856,7 @@ public class FullPlanetGeneration : MonoBehaviour
         }
     }
     #endregion
+#if UNITY_EDITOR
     #region Editor Tools
     [MenuItem("ProceduralTools/Tester")]
     static void Tester()
@@ -1183,7 +1184,7 @@ public class FullPlanetGeneration : MonoBehaviour
             fpg.planet = fullPlanetObj;
         }
     }
-}
 #endregion
 #endif
+}
 
