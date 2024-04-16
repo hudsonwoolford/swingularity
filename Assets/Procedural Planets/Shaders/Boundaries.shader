@@ -29,15 +29,17 @@ Shader "Hidden/Boundaries"
                 float4 vertex : SV_POSITION;
                 float3 worldPos : TEXCOORD1;
             };
+            float2 _CamSize;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+
                 float4 vert = float4(o.vertex.xy, 0, 1);
                 float3 objW = mul(unity_ObjectToWorld, vert).xyz;
-                o.worldPos = (float3(objW.x * 16, objW.y * 8, 0)+ float3(_WorldSpaceCameraPos.x*1.125f, _WorldSpaceCameraPos.y, 0));
+                o.worldPos = (float3(objW.x * (_CamSize.x / 2), objW.y * (_CamSize.y / 2), 0) + _WorldSpaceCameraPos);
                 o.worldPos.z = 0;
                 return o;
             }
@@ -58,7 +60,6 @@ Shader "Hidden/Boundaries"
 
                 // Convert vector 1 to a line (line 1) of infinite length.
                 // We want the line in linear equation standard form: A*x + B*y + C = 0
-                // See: http://en.wikipedia.org/wiki/Linear_equation
                 a1 = v1y2 - v1y1;
                 b1 = v1x1 - v1x2;
                 c1 = (v1x2 * v1y1) - (v1x1 * v1y2);
@@ -108,40 +109,39 @@ Shader "Hidden/Boundaries"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float minX = 0, maxY = 0, minY = 0, maxX = 0;
-                for(int u = 0; u < polygonP.Length; u++)
-                {
-                    maxY = max(polygonP[u].y, maxY);
-                    maxX = max(polygonP[u].x, maxX);
-                    minY = min(polygonP[u].y, minY);
-                    minX = min(polygonP[u].x, minX);
-                }
+                fixed4 col = tex2D(_MainTex, i.uv);
+                
+                //for(int k; k < polygonP.Length; k++)
+                //{
+                //    if(length(i.worldPos - polygonP[k]) < 1)
+                //    {
+                //        col.rgb = 1 - col.rgb;
+                //        return col;
+                //    }
+                
+                //}
+                //return col;
 
                 float3 wp = i.worldPos.xyz;
-                fixed4 col = tex2D(_MainTex, i.uv);
-                //if(wp.x < minX || wp.x > maxX || wp.y < minY || wp.y > maxY)
-                //{
-                //    return col;
-                //}
 
-                float3 outsidePoint = minX - 1.7/wp.y;
+                float3 outsidePoint = (100, 100);
                 int intersections = 0;
+                bool colLin = false;
                 for(int x = 0; x<5; x++)
                 {
                     float check = areIntersecting(outsidePoint.x, outsidePoint.y, wp.x, wp.y, polygonP[x].x, polygonP[x].y, polygonP[x+1].x, polygonP[x+1].y);
                     intersections += check;
                 }
                 float check = areIntersecting(outsidePoint.x, outsidePoint.y, wp.x, wp.y, polygonP[polygonP.Length-1].x, polygonP[polygonP.Length-1].y, polygonP[0].x, polygonP[0].y);
-                intersections = check;
-
+                intersections += check;
 
                 if(intersections % 2 == 0) 
                 {
+                    col.rgb = col.rgb * float3(10, 0.3, 0.3);
                     return col;
                 }
                 else
                 {
-                    col.rgb = 1 - col.rgb;
                     return col;
                 }
                 

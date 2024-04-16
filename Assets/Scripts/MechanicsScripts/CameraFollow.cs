@@ -20,7 +20,7 @@ public class CameraFollow : MonoBehaviour
     Transform ball;                            //ball transform
     Vector3 vel; 
     float sizeVelocity;                              //camera velocity
-    float cameraSize, defaultCameraSize;
+    float cameraSize, defaultCameraSize, targetCameraSize;
     //Information event
     public static bool panning = false;
     private void Awake()
@@ -34,6 +34,7 @@ public class CameraFollow : MonoBehaviour
     {
         defaultCameraSize = Camera.main.orthographicSize;
         cameraSize = defaultCameraSize;
+        targetCameraSize = cameraSize;
 
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
        
@@ -45,32 +46,39 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        if(Input.GetMouseButton(2) || Input.GetMouseButton(0)) { cameraSize = Mathf.SmoothDamp(cameraSize, defaultCameraSize, ref sizeVelocity, smoothness) ;}
-        if(!Input.GetMouseButton(0)){
-            cameraSize -= Input.mouseScrollDelta.y;
-        }
-        cameraSize = Mathf.Clamp(cameraSize, cameraMinMax.x, cameraMinMax.y);
-        Camera.main.orthographicSize = cameraSize;
-
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
             StartCoroutine(Panning());
         }
-        if(panning) { return; }
+        if (Input.GetMouseButton(2) || Input.GetMouseButton(0)) 
+        { 
+            targetCameraSize =  defaultCameraSize;
+        }
+        if(!Input.GetMouseButton(0)){
+            targetCameraSize -= Input.mouseScrollDelta.y;
+        }
+        targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
+        Camera.main.orthographicSize = cameraSize;
+        if (panning) { return; }
+
+        Vector3 targetPos = Vector3.zero;
         if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y))) //out of boundaries
         {
-            Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y));                     //closest point on boundary perimeter to position
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(closestPoint.x, closestPoint.y, transform.position.z), ref vel, smoothness);//smoothdamp function for smoothness
-            return;
+            Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
+            targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
         }
-
-        Vector3 focus = new Vector3(ball.position.x, ball.position.y, -10);        
+        else
+        {
+            targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
+        }
+               
         if (cameraSize > defaultCameraSize && !Input.GetMouseButton(0)){
             float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-            Vector2 pos = Vector2.Lerp(focus, (endPos + startPos)/2, camLerpVal);
-            focus = new Vector3(pos.x, pos.y, -10);
-        }                   //ball position in camera z
-        transform.position = Vector3.SmoothDamp(transform.position, focus, ref vel, smoothness);//smoothdamp function for smoothness
+            Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
+            targetPos = new Vector3(pos.x, pos.y, -10);
+        }                   
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
+        cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
     }
     IEnumerator Panning()
     {
