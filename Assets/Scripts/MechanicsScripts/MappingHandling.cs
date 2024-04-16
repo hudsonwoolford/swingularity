@@ -6,15 +6,15 @@ using Unity.VisualScripting;
 
 public class MappingHandling : MonoBehaviour
 {
-    [SerializeField] BoxCollider camArea;
+    [SerializeField] BoxCollider2D camArea;
     [Range(0, 2)]
     [SerializeField] float smallerBounds = 0.9f;
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
     [SerializeField] Animator canvasAnimator;
-    BoxCollider camAreaSmaller;
-    Collider2D boundaries;
+    BoxCollider2D camAreaSmaller;
+    PolygonCollider2D boundaries;
     Camera mainCam;
     Vector3 point;
     private void Awake()
@@ -26,38 +26,47 @@ public class MappingHandling : MonoBehaviour
     {
         Transform cas = new GameObject("Cam Area Smaller").transform;
         cas.SetParent(transform);
-        cas.localScale = camArea.transform.localScale - Vector3.one * smallerBounds;
-        camAreaSmaller = cas.AddComponent<BoxCollider>();
+        cas.localScale = Vector3.one;
+        camAreaSmaller = cas.AddComponent<BoxCollider2D>();
         camAreaSmaller.isTrigger = true;
         mainCam = Camera.main;
+        boundaries = CameraFollow.innerShape;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float height = mainCam.orthographicSize * 2; //camera height in units
+        float width = height * mainCam.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height, 0);
+        camArea.transform.localScale = camSize;
+        camAreaSmaller.transform.localScale = camArea.transform.localScale - new Vector3(1,1,0) * smallerBounds;
+
+
         arrow.position = Vector3.one * 100;
         camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
         camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+
+        if(CameraFollow.panning) { return; }
         if (!camArea.bounds.Contains(ball.position))
         {
             //out of view
             Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - ball.position;
-            Ray backToCameraRay = new Ray(ball.position, dirtoCamera);
+            Ray2D backToCameraRay = new Ray2D(ball.position, dirtoCamera);
             Debug.DrawRay(ball.position, dirtoCamera, Color.red, 0f);
-            RaycastHit[] hits = Physics.RaycastAll(backToCameraRay, 1000);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(ball.position, dirtoCamera, 1000);
             if (hits!=null)
             {
                 int dist = 0;
-                foreach (RaycastHit r in hits)
+                foreach (RaycastHit2D r in hits)
                 {
-                    if(r.collider == boundaries)
+                    if (r.collider == boundaries)
                     {
                         point = r.point;
                         dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
                         if (dist > 100)
                         {
                             print(dist);
-
                             ShootBall.boundsReset?.Invoke();
                         }
                     }
@@ -89,12 +98,27 @@ public class MappingHandling : MonoBehaviour
                 }
                 distText.text = dist.ToString();
             }
+            
         }
     } 
+    void ShowOOB()
+    {
+        canvasAnimator.Play("ShowOOB");
+    }
+    private void OnEnable()
+    {
+        ShootBall.boundsReset += ShowOOB;
+    }
+    private void OnDisable()
+    {
+        ShootBall.boundsReset -= ShowOOB;
+    }
     private void OnDrawGizmosSelected()
     {
+        float height = Camera.main.orthographicSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height);
         Gizmos.DrawCube(point, Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, camArea.transform.localScale - Vector3.one * smallerBounds);
-        Gizmos.DrawWireCube(Vector3.zero, camArea.transform.localScale - Vector3.one * 100);
+        Gizmos.DrawWireCube(Vector3.zero, camSize - Vector3.one * smallerBounds);
     }
 }
