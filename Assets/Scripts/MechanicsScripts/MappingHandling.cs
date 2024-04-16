@@ -14,6 +14,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] Transform arrow;
     [SerializeField] Animator canvasAnimator;
     BoxCollider camAreaSmaller;
+    Collider2D boundaries;
     Camera mainCam;
     Vector3 point;
     private void Awake()
@@ -49,18 +50,21 @@ public class MappingHandling : MonoBehaviour
                 int dist = 0;
                 foreach (RaycastHit r in hits)
                 {
-                    
+                    if(r.collider == boundaries)
+                    {
+                        point = r.point;
+                        dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
+                        if (dist > 100)
+                        {
+                            print(dist);
+
+                            ShootBall.boundsReset?.Invoke();
+                        }
+                    }
                     if (r.collider == camArea)
                     {
                         point = r.point;
                         dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
-                        if(dist > 100)
-                        {
-                            print(dist);
-                           
-                            ShootBall.boundsReset?.Invoke();
-                        }
-
                     }
                     if (r.collider == camAreaSmaller)
                     {
