@@ -45,7 +45,7 @@ public class MappingHandling : MonoBehaviour
         camAreaSmaller.transform.localScale = camArea.transform.localScale - new Vector3(1,1,0) * smallerBounds;
 
 
-        arrow.position = Vector3.one * 100;
+        arrow.position = -Vector3.one * 100;
         camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
         camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
 
@@ -88,7 +88,7 @@ public class MappingHandling : MonoBehaviour
                             dt.localRotation = Quaternion.Euler(0, 0, 0);
                             distText.alignment = TextAlignmentOptions.Right;
                         }
-                        arrow.position = arrowPos + new Vector3(0,0,-5);
+                        arrow.position = Camera.main.WorldToScreenPoint(arrowPos + new Vector3(0,0,-5));
                     }
                                 
                 }

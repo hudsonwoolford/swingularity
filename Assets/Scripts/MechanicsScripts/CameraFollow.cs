@@ -51,8 +51,8 @@ public class CameraFollow : MonoBehaviour
             StartCoroutine(Panning());
         }
         if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
-        { 
-            targetCameraSize = (defaultCameraSize + cameraSize) / 2;
+        {
+            targetCameraSize = defaultCameraSize;
         }
         if (!Input.GetMouseButton(0)){
             targetCameraSize -= Input.mouseScrollDelta.y;

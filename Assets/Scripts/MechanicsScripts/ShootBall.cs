@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.PlayerSettings;
 
 public class ShootBall : MonoBehaviour
 {
@@ -20,10 +21,13 @@ public class ShootBall : MonoBehaviour
     [SerializeField] bool simulated;
     [SerializeField] bool colIcons = true, showBallPos = false;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
+    [SerializeField] LayerMask simulationLayer;
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
-    [Range(0, 500)]
+    [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
+    [SerializeField] int stepSize; //size of steps taken
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
+    [SerializeField] float restitution; //line can become pretty long, this is the limiter
     [SerializeField] public Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
@@ -71,7 +75,7 @@ public class ShootBall : MonoBehaviour
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
-        if(simulated) {PhysicsScene();}
+        //if(simulated) {PhysicsScene();}
     }
     // Update is called once per frame
     void Update()
@@ -117,7 +121,8 @@ public class ShootBall : MonoBehaviour
 
             if(simulated)
             {
-                SimulateScene(dir.normalized * dist);   
+                PerformSimulation(rb.position, dir.normalized * dist, rb.velocity);
+                //SimulateScene(dir.normalized * dist);   
             }
 
             if(!straight) {yield return null; continue;}
@@ -162,6 +167,42 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
     }
+    #region Performant Simulation
+    void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
+    {
+        slr.positionCount = maxstep + 1;
+        slr.SetPosition(0, startPos);
+        Vector3 trackPos = startPos;
+        Vector3 prevPos = startPos;
+        Vector3 velocity = forceVar / rb.mass + currentVelocity;
+        float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
+        int totalhits = 0;
+        for (int i = 0; i < maxstep; i++)
+        {
+            Vector3 gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
+            velocity += gravForce * 0.02f / rb.mass;
+            trackPos += velocity / 50;
+
+            RaycastHit rayHit;
+            if (Physics.Raycast(prevPos, (trackPos - prevPos).normalized, out rayHit, (trackPos - prevPos).magnitude))
+            {
+                slr.positionCount = i + 2;
+                trackPos = rayHit.point;
+                slr.SetPosition(i + 1, trackPos);
+                break;
+                //if(rayHit.collider.isTrigger) { return; }
+                //if(velocity.magnitude / rayHit.rigidbody.mass > Physics.bounceThreshold) { break; }
+                //velocity = restitution * Vector3.Reflect(velocity, (rayHit.point-rayHit.collider.transform.position).normalized);
+                //totalhits++;
+            }
+
+            slr.SetPosition(i + 1, trackPos);
+            prevPos = trackPos;
+        }
+        print(totalhits);
+    }
+
+    #endregion
     #region Simulation
     void PhysicsScene()
     {
@@ -188,6 +229,10 @@ public class ShootBall : MonoBehaviour
         }
 
         SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
+        Vector3 oVelo = srb.velocity;
+        Vector3 oAlo  = srb.angularVelocity;
+        Vector3 oPos  = simulatedObj.transform.position;
+        Quaternion oRot  = simulatedObj.transform.rotation;
         
         srb.velocity = rb.velocity;
         srb.AddForce(forceVar, ForceMode.Impulse); //force that would happen if mouse release
@@ -211,11 +256,10 @@ public class ShootBall : MonoBehaviour
             srb.AddForce(ArtificialGravity.GravityForceAtPoint(srb.position, planets.ToArray(), rb.mass));
             slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
         }
-        Destroy(simulatedObj); //not performant must be object pooled later
-        // // srb.velocity = oVelo;
-        // // srb.angularVelocity = oAlo;
-        // // simulatedObj.transform.position = pos;
-        // // simulatedObj.transform.rotation = rot;
+        srb.velocity = oVelo;
+        srb.angularVelocity = oAlo;
+        simulatedObj.transform.position = oPos;
+        simulatedObj.transform.rotation = oRot;
         Physics.simulationMode = SimulationMode.FixedUpdate; //going back to normal fixed update
         if (colIcons) { DrawCollisionIcons(); } //After fully simulated for the frame, draws the icons for collisions
     }

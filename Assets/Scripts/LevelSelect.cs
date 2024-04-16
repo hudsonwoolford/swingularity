@@ -47,15 +47,11 @@ public class LevelSelect : MonoBehaviour
 
         int levelAmount = systemButtons.Length;
 
-        float height = Camera.main.orthographicSize * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
-
-        float xJump = width / (levelAmount + 1); //space between each level
-        float leftEdge = 0 - width / 2; //left edge of screen x pos
+        float xJump = Screen.width / (levelAmount + 1); //space between each level
 
         for (int i = 0; i < levelAmount; i++) //rendering each level
         {
-            systemButtons[i].transform.position = new Vector3(leftEdge + xJump * (i + 1), systemButtons[i].transform.position.y); //setting system position
+            systemButtons[i].transform.position = new Vector3(xJump * (i + 1), systemButtons[i].transform.position.y); //setting system position
         }
 
     }
@@ -77,11 +73,13 @@ public class LevelSelect : MonoBehaviour
         for (int i = 0; i < systemButtons.Length-1; i++)
         {
             if (!systemButtons[i + 1].unlocked) { return; }
-            Transform t = systemButtons[i].transform;   //first button
-            Transform t2 = systemButtons[i+1].transform;//second button
+            Vector3 p1 = Camera.main.ScreenToWorldPoint(systemButtons[i].transform.position);   //first button
+            p1.z = 0;
+            Vector3 p2 = Camera.main.ScreenToWorldPoint(systemButtons[i+1].transform.position);//second button
+            p2.z = 0;
 
-            Vector3 pos1 = t.position + (t2.position - t.position).normalized * lineDist; //button 1 pos, taking into account offset
-            Vector3 pos2 = t2.position + (t.position - t2.position).normalized * lineDist;//button 2 pos, taking into account offset
+            Vector3 pos1 = p1 + (p2 - p1).normalized * lineDist; //button 1 pos, taking into account offset
+            Vector3 pos2 = p2 + (p1 - p2).normalized * lineDist;//button 2 pos, taking into account offset
 
             UpdateLineRenderer(lr[i], 2); //updating values
             lr[i].SetPosition(0, pos1); //Assign pos1
@@ -94,13 +92,13 @@ public class LevelSelect : MonoBehaviour
         for (int i = 0; i < systemButtons.Length; i++)
         {
             if (!systemButtons[i].unlocked) { return; }
-            DrawCircle(systemButtons[i].transform.position, circleRad, 180);
+            DrawCircle(Camera.main.ScreenToWorldPoint(systemButtons[i].transform.position), circleRad, 180);
         }
     }
     //Draws a circle by spawning a linerenderer
     void DrawCircle(Vector3 centre, float radius, int subDivs)
     {
-
+        centre.z = 0;
         Transform obj = new GameObject().transform;
         obj.parent = transform;
         obj.name = "Circle";
