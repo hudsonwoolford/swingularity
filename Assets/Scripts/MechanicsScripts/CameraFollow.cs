@@ -11,6 +11,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector2 startPos; //startpos of path
     [SerializeField] Vector2 endPos; //endpos of path
     [Header("Camera Following")]
+    [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
     [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
@@ -60,6 +61,7 @@ public class CameraFollow : MonoBehaviour
         Camera.main.orthographicSize = cameraSize;
         cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
         if (panning) { return; }
+        if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
         Vector3 targetPos = Vector3.zero;
         if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y))) //out of boundaries
         {
@@ -81,9 +83,8 @@ public class CameraFollow : MonoBehaviour
     IEnumerator Panning()
     {
         panning = true;
-        Vector2 startPos = transform.position;
         Vector2 startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        while (Input.GetMouseButton(1))
+        while (Input.GetMouseButton(1) && panning)
         {
             Vector2 mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousPos - startMousePos;
@@ -137,6 +138,20 @@ public class CameraFollow : MonoBehaviour
         }
 
         return finalPoints; //final points
+    }
+    void OnReset()
+    {
+        panning = false;
+    }
+    private void OnEnable()
+    {
+        ShootBall.triggerReset += OnReset;
+        ShootBall.onHole += OnReset;
+    }
+    private void OnDisable()
+    {
+        ShootBall.triggerReset -= OnReset;
+        ShootBall.onHole -= OnReset;
     }
     private void OnDrawGizmosSelected()
     {

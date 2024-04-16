@@ -49,7 +49,11 @@ public class MappingHandling : MonoBehaviour
         camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
         camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
 
-        if(CameraFollow.panning) { return; }
+        if(!boundaries.OverlapPoint(ball.position))
+        {
+            ShootBall.boundsReset?.Invoke();
+        }
+        if (CameraFollow.panning) { return; }
         if (!camArea.bounds.Contains(ball.position))
         {
             //out of view
@@ -62,15 +66,6 @@ public class MappingHandling : MonoBehaviour
                 float dist = 0;
                 foreach (RaycastHit2D r in hits)
                 {
-                    if (r.collider == boundaries)
-                    {
-                        point = r.point;
-                        dist = Vector3.Distance(point, ball.position);
-                        if (dist > maxDistance)
-                        {
-                            ShootBall.boundsReset?.Invoke();
-                        }
-                    }
                     if (r.collider == camArea)
                     {
                         point = r.point;
