@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class ShootBall : MonoBehaviour
 {
-    [SerializeField] PhysicMaterial ballMat;
     [SerializeField] Transform planetTransform;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
@@ -67,7 +66,6 @@ public class ShootBall : MonoBehaviour
         attractors.Clear();
 
         origin = transform.position;
-        bounciness = ballMat.bounciness;
 
         rb.constraints = RigidbodyConstraints.FreezeAll; //stops any movement
 
@@ -299,7 +297,6 @@ public class ShootBall : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        ballMat.bounciness = bounciness; //makes sure the bounciness is retained, THIS MAY CAUSE ISSUES IN THE FUTURE
     }
     #endregion
     private void OnEnable()

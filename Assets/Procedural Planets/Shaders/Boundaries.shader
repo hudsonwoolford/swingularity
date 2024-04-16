@@ -108,34 +108,45 @@ Shader "Hidden/Boundaries"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 points[4] = {float2(0.5,0.5), float2(0.5,-0.5), float2(-0.5,-0.5), float2(-0.5,0.5)};
                 float minX = 0, maxY = 0, minY = 0, maxX = 0;
-                for(int u = 0; u < points.Length; u++)
+                for(int u = 0; u < polygonP.Length; u++)
                 {
-                    maxY = max(points[u].y, maxY);
-                    maxX = max(points[u].x, maxX);
-                    minY = min(points[u].y, minY);
-                    minX = min(points[u].x, minX);
+                    maxY = max(polygonP[u].y, maxY);
+                    maxX = max(polygonP[u].x, maxX);
+                    minY = min(polygonP[u].y, minY);
+                    minX = min(polygonP[u].x, minX);
                 }
 
                 float3 wp = i.worldPos.xyz;
                 fixed4 col = tex2D(_MainTex, i.uv);
-                if(wp.x < minX || wp.x > maxX || wp.y < minY || wp.x > maxY)
+                //if(wp.x < minX || wp.x > maxX || wp.y < minY || wp.y > maxY)
+                //{
+                //    return col;
+                //}
+
+                float3 outsidePoint = minX - 1.7/wp.y;
+                int intersections = 0;
+                for(int x = 0; x<5; x++)
+                {
+                    float check = areIntersecting(outsidePoint.x, outsidePoint.y, wp.x, wp.y, polygonP[x].x, polygonP[x].y, polygonP[x+1].x, polygonP[x+1].y);
+                    intersections += check;
+                }
+                float check = areIntersecting(outsidePoint.x, outsidePoint.y, wp.x, wp.y, polygonP[polygonP.Length-1].x, polygonP[polygonP.Length-1].y, polygonP[0].x, polygonP[0].y);
+                intersections = check;
+
+
+                if(intersections % 2 == 0) 
                 {
                     return col;
                 }
-
-                int intersect = 0;
-                for(int x = 0; x<5; x++)
+                else
                 {
+                    col.rgb = 1 - col.rgb;
+                    return col;
                 }
-
-
-
-
+                
                 // just invert the colors
-                col.rgb = 1 - col.rgb;
-                return col;
+                
             }
             ENDCG
         }
