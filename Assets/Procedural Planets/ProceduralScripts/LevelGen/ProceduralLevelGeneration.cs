@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -36,10 +38,10 @@ public static class ProceduralLevelGeneration
     /*Level Gen settings
     0: minimum number of planets
     1: maximum number of planets
-    2: minimum size for each planet
-    3: maximum size for each planet
+    2: minimum radius for each poisson point
+    3: maximum radius for each poisson point
     4: bias towards or against planet size
-    5: radius for poisson disk algorithm
+    5: scaling factor determining size of actual planet visual
     6: x dimension of size of level
     7: y dimension of size of level
     8: number of poisson disk samples before rejecting the point as a spawner
@@ -51,49 +53,51 @@ public static class ProceduralLevelGeneration
         float minPlanets = levelGenSettings[0];
         float maxPlanets = levelGenSettings[1];
 
-        int numPlanets = (int)UnityEngine.Random.Range(minPlanets, maxPlanets);
 
-        float[] planetSizes = new float[numPlanets];
         float minSize = levelGenSettings[2];
         float maxSize = levelGenSettings[3];
         float bias = levelGenSettings[4];
-        //Loop through planets and assign a size
-        for (int i = 0; i < numPlanets; i++){
-            planetSizes[i] = Mathf.Lerp(minSize, maxSize, ApplyBias(UnityEngine.Random.value, bias));
-        }
 
-        float minRadius = levelGenSettings[5];
+        float radiusScale = levelGenSettings[5];
         Vector2 regionBounds = new Vector2 (levelGenSettings[6], levelGenSettings[7]);
         int numSamplesBeforeRejection = (int)levelGenSettings[8];
-        Vector3[] planetPoints = new Vector3[numPlanets];
 
-        planetPoints = PoissonDiskSampling(seed, minRadius, regionBounds, numSamplesBeforeRejection);
+        (Vector3, float)[] poisson = PoissonDiskSampling(seed, minSize, maxSize, bias, regionBounds, numSamplesBeforeRejection);
+        Vector3[] planetPoints = new Vector3[poisson.Length];
+        float[] planetSizes = new float[poisson.Length];
 
-        Vector3[] planetSeeds = new Vector3[numPlanets];
+        for (int i = 0; i < poisson.Length; i++){
+            planetPoints[i] = poisson[i].Item1;
+            planetSizes[i] = poisson[i].Item2;
+        }
+
+  
+        Vector3[] planetSeeds = new Vector3[poisson.Length];
         float offsetScale = levelGenSettings[9];
-        for (int i = 0; i < numPlanets; i++){
+        for (int i = 0; i < poisson.Length; i++){
             float xOffset = UnityEngine.Random.value * offsetScale + i * offsetScale;
             float yOffset = UnityEngine.Random.value * offsetScale + 2 * i * offsetScale;
             float zOffset = UnityEngine.Random.value * offsetScale + 3 * i * offsetScale;
             planetSeeds[i] = new Vector3(xOffset, yOffset, zOffset);
         }
 
-        ColorSchemeStaticReference.PlanetType[] planetTypes = new ColorSchemeStaticReference.PlanetType[numPlanets];        
-        for (int i = 0; i < numPlanets; i++){
+        ColorSchemeStaticReference.PlanetType[] planetTypes = new ColorSchemeStaticReference.PlanetType[poisson.Length];        
+        for (int i = 0; i < poisson.Length; i++){
             int index = UnityEngine.Random.Range(0, possiblePlanetTypes.Length);
             planetTypes[i] = possiblePlanetTypes[index];
         }
     
-        return new Level(numPlanets, planetSizes, planetPoints, planetSeeds, planetTypes, regionBounds);
+        return new Level(poisson.Length, planetSizes, planetPoints, planetSeeds, planetTypes, regionBounds);
     }
 
-    public static Vector3[] PoissonDiskSampling(int seed, float radius, Vector2 regionBounds, int numSamplesBeforeRejection){
+    public static (Vector3, float)[] PoissonDiskSampling(int seed, float minRadius, float maxRadius, float sizeBias, Vector2 regionBounds, int numSamplesBeforeRejection){
         //Cell diagonal is same length as radius
-        float cellSize = radius/Mathf.Sqrt(2);
+        float cellSize = minRadius/Mathf.Sqrt(2);
         int[,] grid = new int[Mathf.CeilToInt(regionBounds.x/cellSize), Mathf.CeilToInt(regionBounds.y/cellSize)];
 
         List<Vector2> points = new List<Vector2>();
         List<Vector2> spawnPoints = new List<Vector2>();
+        List<float> sizes = new List<float>();
 
         spawnPoints.Add(regionBounds/2);
 
@@ -104,14 +108,18 @@ public static class ProceduralLevelGeneration
 
             Vector2 spawnCentre = spawnPoints[spawnIndex];
             bool candidateAccepted = false;
+
+            float radius = Mathf.Lerp(minRadius, maxRadius, ApplyBias(UnityEngine.Random.value, sizeBias));
+
             for (int i = 0; i < numSamplesBeforeRejection; i++){
                 float angle = UnityEngine.Random.value * Mathf.PI * 2;
                 Vector2 dir = new Vector2(Mathf.Sin(angle), MathF.Cos(angle));
                 Vector2 candidate = spawnCentre + dir * UnityEngine.Random.Range(radius, 2*radius);
 
-                if (PointIsValid(candidate, regionBounds, cellSize, radius, points, grid)){
+                if (PointIsValid(candidate, regionBounds, minRadius, maxRadius, cellSize, radius, points, grid)){
                     //Add point to the lists
-                    points.Add(candidate);
+                    points.Add(candidate); 
+                    sizes.Add(radius);
                     spawnPoints.Add(candidate);
                     //Set grid square to include that point
                     grid[(int)(candidate.x/cellSize), (int)(candidate.y/cellSize)] = points.Count;
@@ -126,20 +134,28 @@ public static class ProceduralLevelGeneration
         }
         Vector3[] pointsArray = VectorConversion(points.ToArray());
 
-        return pointsArray;
+        (Vector3, float)[] result = new (Vector3, float)[pointsArray.Length];
+        for (int i = 0; i < pointsArray.Length; i++) {
+            result[i] = (pointsArray[i], sizes[i]);
+        }
+
+        return result;
     }
 
-    public static bool PointIsValid(Vector2 candidate, Vector2 regionBounds, float cellSize, float radius, List<Vector2> points, int [,] grid){
+    public static bool PointIsValid(Vector2 candidate, Vector2 regionBounds, float minRadius, float maxRadius, float cellSize, float radius, List<Vector2> points, int [,] grid){
         //First check that the point is within bounds
         if (candidate.x >= 0 && candidate.y >= 0 && candidate.x < regionBounds.x && candidate.y < regionBounds.y){
             //Calculate 5x5 bounds around point (maximum distance for intersection)
             int cellX = (int)(candidate.x/cellSize);
             int cellY = (int)(candidate.y/cellSize);
-            int searchStartX = Mathf.Max(0, cellX-2);
-            int searchEndX = Mathf.Min(cellX+2, grid.GetLength(0)-1);
-            int searchStartY = Mathf.Max(0, cellY-2);
-            int searchEndY = Mathf.Min(cellY+2, grid.GetLength(1)-1);
-            //Iterate through each grid point in the 5x5 area
+
+            int searchRadius = Mathf.CeilToInt(radius * 2/minRadius);
+
+            int searchStartX = Mathf.Max(0, cellX-searchRadius);
+            int searchEndX = Mathf.Min(cellX+searchRadius, grid.GetLength(0)-1);
+            int searchStartY = Mathf.Max(0, cellY-searchRadius);
+            int searchEndY = Mathf.Min(cellY+searchRadius, grid.GetLength(1)-1);
+            //Iterate through each grid point in the possible area
             for (int x = searchStartX; x <= searchEndX; x++){
                 for (int y = searchStartY; y <= searchEndY; y++){
                     //If grid[x,y]=0 i.e. no point, then grid[x,y] = -1
@@ -147,7 +163,7 @@ public static class ProceduralLevelGeneration
                     if (pointIndex != -1){
                         //Calculate the candidate distance from the nearby point
                         float sqrDst = (candidate - points[pointIndex]).sqrMagnitude;
-                        if (sqrDst < radius*radius){
+                        if (sqrDst < maxRadius*maxRadius){
                             return false;
                         }
                     }

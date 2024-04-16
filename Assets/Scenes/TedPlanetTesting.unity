@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 92287119}
   - component: {fileID: 92287122}
   - component: {fileID: 92287121}
+  - component: {fileID: 92287123}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -177,7 +178,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.5
+  orthographic size: 7.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -201,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92287117}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4.51}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -285,6 +286,14 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 3.6
+--- !u!81 &92287123
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92287117}
+  m_Enabled: 1
 --- !u!1 &156410844
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +542,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b808d0732dfe2f94e883e81ded59fd24, type: 3}
+--- !u!1 &523141868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 523141870}
+  - component: {fileID: 523141869}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &523141869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523141868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe5d00833946bea4d99ab71e7cd3ce4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRadius: 1.56
+  maxRadius: 4.6
+  sizeBias: 0.05
+  displayRadiusScale: 0.4
+  regionSize: {x: 12.07, y: 8.31}
+  rejectionSamples: 30
+  seed: 1113
+--- !u!4 &523141870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523141868}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.2005992, y: 6.7506995, z: 10.915272}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &523281755
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,15 +885,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293daa8024f40f241aba01d0268cb405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 13645
-  minPlanets: 2
-  maxPlanets: 7
-  minSize: 1
-  maxSize: 1
-  sizeBias: 0.5
-  poissonRadius: 1.09
-  xRegionSize: 3.56
-  yRegionSize: 2
+  seed: 32487
+  minPlanets: 39
+  maxPlanets: 40
+  minSize: 2.64
+  maxSize: 6.29
+  sizeBias: 0.05
+  sizeScale: 1
+  xRegionSize: 33
+  yRegionSize: 21.3
   samplesBeforeRejection: 21
   offsetScale: 12.08
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
@@ -842,8 +902,8 @@ MonoBehaviour:
     type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
-  planetScale: 0.1
-  possiblePlanetTypes: 06000000
+  planetScale: 0.55
+  possiblePlanetTypes: 00000000
 --- !u!4 &1434832216 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7910038564911542053, guid: 750cf8bfccf00584b81e7a7f3d0dc0f2,
@@ -1566,7 +1626,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870987248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.15, z: 0}
+  m_LocalPosition: {x: -121.7, y: 6.15, z: 0}
   m_LocalScale: {x: 22.01, y: 22.01, z: 22.01}
   m_ConstrainProportionsScale: 1
   m_Children: []

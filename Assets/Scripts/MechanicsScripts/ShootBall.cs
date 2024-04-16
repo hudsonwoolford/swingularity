@@ -25,7 +25,7 @@ public class ShootBall : MonoBehaviour
     [Range(0, 500)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
-    [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
+    [SerializeField] public Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
     PhysicsScene physicsScene;

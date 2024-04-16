@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
-using System.Linq.Expressions;
 using System;
+using Unity.VisualScripting;
 
 public class LevelGenerator : MonoBehaviour
 {
-
-    /*Level Gen params settings
+        /*Level Gen settings
     0: minimum number of planets
     1: maximum number of planets
-    2: minimum size for each planet
-    3: maximum size for each planet
+    2: minimum radius for each poisson point
+    3: maximum radius for each poisson point
     4: bias towards or against planet size
-    5: x dimension of size of level
-    6: y dimension of size of level
-    7: number of poisson disk samples before rejecting the point as a spawner
-    8: offset scale for determining random values of planet
+    5: IGNORE
+    6: x dimension of size of level
+    7: y dimension of size of level
+    8: number of poisson disk samples before rejecting the point as a spawner
+    9: offset scale for determining random values of planet
     */
     public int seed;
     //Level gen params
     [SerializeField]
-    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, poissonRadius, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
+    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
     GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
     [SerializeField]
@@ -41,6 +41,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+
     void Start()
     {
         float[] levelGenSettings = new float[10]{
@@ -49,9 +50,9 @@ public class LevelGenerator : MonoBehaviour
             minSize,
             maxSize,
             sizeBias,
-            poissonRadius,
-            xRegionSize,
-            yRegionSize,
+            sizeScale,
+            xRegionSize - 2 * maxSize,
+            yRegionSize - 2 * maxSize,
             samplesBeforeRejection,
             offsetScale
         };
@@ -62,24 +63,29 @@ public class LevelGenerator : MonoBehaviour
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
+        GameObject env = new GameObject("Env");
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList[i] = GeneratePlanet(generator, 1f, i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
-            GenerateForcefield(planetList[i]);
-        }
-        foreach (Planet planet in planetList)
-        {
-            planet.planet.SetActive(true);
+            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
+            print(level.planetSizes[i]);
+            GameObject forcefield = GenerateForcefield(planetList[i]);
+            planetList[i].planet.SetActive(true);
+            forcefield.transform.parent = env.transform;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.GetComponent<ShootBall>().simulatedEnv = env.transform;   
         }
     }
 
-    void GenerateForcefield(Planet planet){
-        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.moon || planet.planetType != ColorSchemeStaticReference.PlanetType.star){  
-            GameObject forcefield = Instantiate(forcefieldPrefab);
+    GameObject GenerateForcefield(Planet planet){
+        GameObject forcefield = this.gameObject;
+        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.star){  
+            forcefield = Instantiate(forcefieldPrefab);
 
             forcefield.GetComponent<ForceField>().planet = planet.planet.transform;
             forcefield.GetComponent<ForceField>().enabled = true;
+            
         }
+        return forcefield;
     }
 
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType){
@@ -93,7 +99,7 @@ public class LevelGenerator : MonoBehaviour
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = position - levelSize/2;
-        newPlanet.transform.localScale = Vector3.one * size * planetScale;
+        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
         return new Planet (newPlanet, ColorSchemeStaticReference.PlanetType.blackhole);
     }
 
@@ -107,6 +113,7 @@ public class LevelGenerator : MonoBehaviour
         oceanRend.sharedMaterial = cullMat;
 
         Camera cam = Instantiate(Camera.main).GetComponent<Camera>();
+        cam.orthographicSize = 1.5f;
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = new Color(0, 0, 0, 0);
         cam.cullingMask = LayerMask.GetMask("Planet Front Capture");
@@ -208,5 +215,12 @@ public class LevelGenerator : MonoBehaviour
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
         return sprite;
     }
-    
+
+    void OnDrawGizmos(){
+        if (!Application.isPlaying){
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawCube(Vector2.zero, new Vector2(xRegionSize - maxSize, yRegionSize - maxSize));
+        }
+    }
+
 }
