@@ -12,9 +12,8 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector2 endPos; //endpos of path
     [Header("Camera Following")]
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
-    [SerializeField] float bufferBox = 1;
     [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
-    [SerializeField] float resistance = 1.3f;  //resistance when going out of bounds
+    [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath;              //inner boundaries
     public static PolygonCollider2D innerShape;
     Transform ball;                            //ball transform
@@ -27,7 +26,7 @@ public class CameraFollow : MonoBehaviour
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, 1f); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, 2f); //to scale version
     }
     // Start is called before the first frame update
     void Start()
@@ -50,17 +49,17 @@ public class CameraFollow : MonoBehaviour
         {
             StartCoroutine(Panning());
         }
-        if (Input.GetMouseButton(2) || Input.GetMouseButton(0)) 
+        if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
         { 
-            targetCameraSize =  defaultCameraSize;
+            targetCameraSize = (defaultCameraSize + cameraSize) / 2;
         }
-        if(!Input.GetMouseButton(0)){
+        if (!Input.GetMouseButton(0)){
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
+        cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
         if (panning) { return; }
-
         Vector3 targetPos = Vector3.zero;
         if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y))) //out of boundaries
         {
@@ -71,14 +70,13 @@ public class CameraFollow : MonoBehaviour
         {
             targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
         }
-               
-        if (cameraSize > defaultCameraSize && !Input.GetMouseButton(0)){
+        bool focusingBall = focusBall == true ? Input.GetMouseButton(0) : false;       
+        if (cameraSize > defaultCameraSize && !focusingBall){
             float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
             Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
             targetPos = new Vector3(pos.x, pos.y, -10);
         }                   
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
-        cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
     }
     IEnumerator Panning()
     {
@@ -152,7 +150,6 @@ public class CameraFollow : MonoBehaviour
         Gizmos.DrawLine(polygon[polygon.Length - 1], polygon[0]);
 
         Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(transform.position, Vector2.one * bufferBox*2);
     }
 }
 public static class Toolkit {

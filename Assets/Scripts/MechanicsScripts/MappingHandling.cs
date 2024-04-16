@@ -9,6 +9,8 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] BoxCollider2D camArea;
     [Range(0, 2)]
     [SerializeField] float smallerBounds = 0.9f;
+    [Min(0)]
+    [SerializeField] float maxDistance = 5f;
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
@@ -57,16 +59,15 @@ public class MappingHandling : MonoBehaviour
             RaycastHit2D[] hits = Physics2D.RaycastAll(ball.position, dirtoCamera, 1000);
             if (hits!=null)
             {
-                int dist = 0;
+                float dist = 0;
                 foreach (RaycastHit2D r in hits)
                 {
                     if (r.collider == boundaries)
                     {
                         point = r.point;
-                        dist = Mathf.RoundToInt(Vector3.Distance(point, ball.position) * 10);
-                        if (dist > 100)
+                        dist = Vector3.Distance(point, ball.position);
+                        if (dist > maxDistance)
                         {
-                            print(dist);
                             ShootBall.boundsReset?.Invoke();
                         }
                     }
@@ -96,7 +97,7 @@ public class MappingHandling : MonoBehaviour
                     }
                                 
                 }
-                distText.text = dist.ToString();
+                distText.text = ((int)dist).ToString();
             }
             
         }

@@ -3,6 +3,7 @@ Shader "Hidden/Boundaries"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Color ("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -46,6 +47,7 @@ Shader "Hidden/Boundaries"
 
             sampler2D _MainTex;
             float3 polygonP[6];
+            fixed4 _Color;
 
             #define NO 0
             #define YES 1
@@ -137,8 +139,7 @@ Shader "Hidden/Boundaries"
 
                 if(intersections % 2 == 0) 
                 {
-                    col.rgb = col.rgb * float3(10, 0.3, 0.3);
-                    return col;
+                    return _Color;
                 }
                 else
                 {
