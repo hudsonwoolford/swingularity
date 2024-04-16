@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -17,7 +18,8 @@ public class CameraFollow : MonoBehaviour
     PolygonCollider2D cameraPath;              //inner boundaries
     public static PolygonCollider2D innerShape;
     Transform ball;                            //ball transform
-    Vector3 vel;                               //camera velocity
+    Vector3 vel; 
+    float sizeVelocity;                              //camera velocity
     float cameraSize, defaultCameraSize;
     //Information event
     public static bool panning = false;
@@ -43,8 +45,10 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        if(Input.GetMouseButtonDown(2)) { cameraSize = defaultCameraSize;}
-        cameraSize -= Input.mouseScrollDelta.y;
+        if(Input.GetMouseButton(2) || Input.GetMouseButton(0)) { cameraSize = Mathf.SmoothDamp(cameraSize, defaultCameraSize, ref sizeVelocity, smoothness) ;}
+        if(!Input.GetMouseButton(0)){
+            cameraSize -= Input.mouseScrollDelta.y;
+        }
         cameraSize = Mathf.Clamp(cameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
 
@@ -59,8 +63,14 @@ public class CameraFollow : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, new Vector3(closestPoint.x, closestPoint.y, transform.position.z), ref vel, smoothness);//smoothdamp function for smoothness
             return;
         }
-        Vector3 ballFocus = new Vector3(ball.position.x, ball.position.y, -10);                     //ball position in camera z
-        transform.position = Vector3.SmoothDamp(transform.position, ballFocus, ref vel, smoothness);//smoothdamp function for smoothness
+
+        Vector3 focus = new Vector3(ball.position.x, ball.position.y, -10);        
+        if (cameraSize > defaultCameraSize && !Input.GetMouseButton(0)){
+            float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
+            Vector2 pos = Vector2.Lerp(focus, (endPos + startPos)/2, camLerpVal);
+            focus = new Vector3(pos.x, pos.y, -10);
+        }                   //ball position in camera z
+        transform.position = Vector3.SmoothDamp(transform.position, focus, ref vel, smoothness);//smoothdamp function for smoothness
     }
     IEnumerator Panning()
     {
@@ -137,6 +147,11 @@ public class CameraFollow : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, Vector2.one * bufferBox*2);
     }
 }
+public static class Toolkit {
+    public static float Remap (this float value, float from1, float to1, float from2, float to2) {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+    }
+}
 #if UNITY_EDITOR
 [CustomEditor(typeof(CameraFollow))]
 public class CameraFollowEditor : Editor
@@ -166,5 +181,6 @@ public class CameraFollowEditor : Editor
         startPos = serializedObject.FindProperty("startPos");
         endPos = serializedObject.FindProperty("endPos");
     }
+    
 }
 #endif
