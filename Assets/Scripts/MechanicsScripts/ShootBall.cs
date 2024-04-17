@@ -27,7 +27,6 @@ public class ShootBall : MonoBehaviour
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
-    [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
     PhysicsScene physicsScene;
@@ -256,7 +255,7 @@ public class ShootBall : MonoBehaviour
     {
         simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
         physicsScene = simulationScene.GetPhysicsScene(); //gets the physics scene
-        foreach (Transform tr in simulatedEnv) //children of environment
+        foreach (Transform tr in planetTransform) //children of environment
         {
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
             obj.GetComponent<Renderer>().enabled = false; //hides it
