@@ -56,6 +56,7 @@ public class ShootBall : MonoBehaviour
         {
             planets.Add(t.gameObject.GetComponent<Rigidbody>());
         }
+
     }
 
     private void Awake()
@@ -129,7 +130,7 @@ public class ShootBall : MonoBehaviour
             if(simulated)
             {
                 PerformSimulation(rb.position, dir.normalized * dist, rb.velocity);
-                //SimulateScene(dir.normalized * dist);   
+                // SimulateScene(dir.normalized * dist);   
             }
 
             if(!straight) {yield return null; continue;}
@@ -175,6 +176,7 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
     }
+
     #region Performant Simulation
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
