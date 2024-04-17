@@ -26,9 +26,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
-    [SerializeField] int stepSize; //size of steps taken
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
-    [SerializeField] float restitution; //line can become pretty long, this is the limiter
     [SerializeField] public Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
@@ -178,8 +176,7 @@ public class ShootBall : MonoBehaviour
         Vector3 prevPos = startPos;
         Vector3 velocity = forceVar / rb.mass + currentVelocity;
         Vector3 gravForce = Vector3.zero;
-        gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
-
+        float dist = 0;
 
         float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
         for (int i = 0; i < maxstep; i++)
@@ -239,6 +236,15 @@ public class ShootBall : MonoBehaviour
             }
 
             //end physics update
+            if(dist + (trackPos - prevPos).magnitude > maxLengthSim)
+            {
+                float distDifference = maxLengthSim - dist;
+                Vector3 finalPos = prevPos + (trackPos-prevPos).normalized * distDifference;
+                slr.positionCount = i + 2;
+                slr.SetPosition(i+1, finalPos);
+                return;
+            }
+            dist += (trackPos - prevPos).magnitude;
             prevPos = trackPos;
             slr.SetPosition(i + 1, trackPos);
         }

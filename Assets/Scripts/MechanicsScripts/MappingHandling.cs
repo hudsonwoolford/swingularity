@@ -10,7 +10,6 @@ public class MappingHandling : MonoBehaviour
     [Range(0, 2)]
     [SerializeField] float smallerBounds = 0.9f;
     [Min(0)]
-    [SerializeField] float maxDistance = 5f;
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
