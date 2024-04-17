@@ -13,7 +13,9 @@ public class ForceField : MonoBehaviour
     [SerializeField] public List<Transform> interactableObject = new List<Transform>(3);
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
+    [SerializeField] float meshChangeThreshold = 2;
     [SerializeField] Material forceMat;
+    [SerializeField] Mesh smallMesh, bigMesh;
     [SerializeField] AudioClip bump;
     [SerializeField] bool autoMass = false;
 
@@ -34,6 +36,7 @@ public class ForceField : MonoBehaviour
     public AudioSource src;
     private MaterialPropertyBlock pBlock;
     private MeshRenderer meshRenderer;
+    private MeshFilter meshFilter;
     private Light pOuterAtmosphere;
     private PlanetDataHolder pData;
     private Rigidbody rb;
@@ -45,6 +48,7 @@ public class ForceField : MonoBehaviour
         }
         src = GameObject.FindGameObjectWithTag("SRC").GetComponent<AudioSource>();
         meshRenderer = GetComponent<MeshRenderer>();
+        meshFilter = GetComponent<MeshFilter>();
         forceMat = meshRenderer.sharedMaterial;
         pBlock = new MaterialPropertyBlock();
         rb = GetComponent<Rigidbody>();
@@ -93,6 +97,13 @@ public class ForceField : MonoBehaviour
         }
         pBlock.SetFloat("_Scale", transform.localScale.x);
         pBlock.SetVector("_TransformWorldPos", transform.position);
+
+        if (transform.localScale.x > meshChangeThreshold){
+            meshFilter.mesh = bigMesh;
+        }
+        else{
+            meshFilter.mesh = smallMesh;
+        }
 
         meshRenderer.SetPropertyBlock(pBlock);
     }
