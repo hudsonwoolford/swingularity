@@ -36,7 +36,6 @@ public class ShootBall : MonoBehaviour
     Vector3 mousePos;
     Vector3 origin;
     Rigidbody rb;
-    float bounciness;
     Camera main;
     TrailRenderer tr;
     bool liningUpShot;
@@ -56,7 +55,6 @@ public class ShootBall : MonoBehaviour
         {
             planets.Add(t.gameObject.GetComponent<Rigidbody>());
         }
-
     }
 
     private void Awake()
@@ -76,7 +74,7 @@ public class ShootBall : MonoBehaviour
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
-        //if (simulated) { PhysicsScene(); }
+        if (simulated) { PhysicsScene(); }
 
     }
     // Update is called once per frame
@@ -115,6 +113,8 @@ public class ShootBall : MonoBehaviour
         //local variable declaration
         Vector2 dir = Vector2.zero; //direction to the initial mouse pos, also the direction of the ball
         float dist = 0; //distance from initial mouse pos
+        Vector3 forceLastFrame = Vector3.zero;
+        Vector3 force = Vector3.zero;
         while(Input.GetMouseButton(0)) 
         {
             dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
@@ -126,13 +126,15 @@ public class ShootBall : MonoBehaviour
                 dir = Vector2.zero;
                 dist = 0;
             }
+            force = dir.normalized * dist;
 
-            if(simulated)
+            if(simulated && Vector3.Distance(force, forceLastFrame)>0.01f)
             {
-                PerformSimulation(rb.position, dir.normalized * dist, rb.velocity);
-                // SimulateScene(dir.normalized * dist);   
+                PerformSimulation(rb.position, force, rb.velocity);
+                //SimulateScene(dir.normalized * dist);   
             }
 
+            forceLastFrame = force;
             if(!straight) {yield return null; continue;}
 
             float powerPercent = dist / maxPower; //percentage of max power
@@ -151,9 +153,7 @@ public class ShootBall : MonoBehaviour
         }
         //slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
-        
-        Vector2 force = dir.normalized * dist; //the force
-
+       
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
@@ -176,7 +176,6 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
     }
-
     #region Performant Simulation
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
@@ -187,10 +186,23 @@ public class ShootBall : MonoBehaviour
         Vector3 velocity = forceVar / rb.mass + currentVelocity;
         Vector3 gravForce = Vector3.zero;
         float dist = 0;
+        if (simulatedObj == null) //instantiate new ball if it doesn't exist
+        {
+            simulatedObj = Instantiate(simulationBall, transform.position, transform.rotation);
+            srb = simulatedObj.GetComponent<Rigidbody>();
+        }
+        SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
 
+        int simCounter = 0;
         float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
         for (int i = 0; i < maxstep; i++)
         {
+            if(velocity.magnitude < 0.1f)
+            {
+                slr.positionCount = i + 2;
+                slr.SetPosition(i + 1, trackPos);
+                return;
+            }
             //fixed update
             gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
             velocity += gravForce * Time.fixedDeltaTime / rb.mass;
@@ -200,8 +212,18 @@ public class ShootBall : MonoBehaviour
             trackPos += velocity * Time.fixedDeltaTime;
             foreach (SphereCollider t in planetTransform.GetComponentsInChildren<SphereCollider>())
             {
-                if(Vector3.Distance(t.transform.position, trackPos) <= rad + t.transform.localScale.x)
+                if (Vector3.Distance(t.transform.position, trackPos) <= rad + 0.001f + t.transform.localScale.x)
                 {
+                    srb.position = prevPos;
+                    srb.velocity = velocity;
+                    int maxIterations = maxstep;
+                    Physics.simulationMode = SimulationMode.Script;
+                    physicsScene.Simulate(Time.fixedDeltaTime);
+                    Physics.simulationMode = SimulationMode.FixedUpdate;
+                    trackPos = srb.position;
+                    velocity = srb.velocity;
+                    simCounter++;
+                    print("Simulation at step #" + i + " | Total Simulations: " + simCounter);
                     //slr.positionCount = i + 2;
                     //slr.SetPosition(i + 1, trackPos);
                     //return;
@@ -213,7 +235,7 @@ public class ShootBall : MonoBehaviour
 
 
                     //velocity = (velocity* 0.45f);
-                    RaycastHit raycastHit;
+                    //RaycastHit raycastHit;
                     //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
                     //{
                     //    float totalDist = (trackPos - prevPos).magnitude;
@@ -243,20 +265,20 @@ public class ShootBall : MonoBehaviour
 
                     //    break;
                     //}
-                    if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
-                    {
-                        float totalDist = (trackPos - prevPos).magnitude;
-                        Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
-                        float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
+                    //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+                    //{
+                    //    float totalDist = (trackPos - prevPos).magnitude;
+                    //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
+                    //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
 
-                        Vector3 n = Vector3.Project(velocity, raycastHit.normal);
-                        Vector3 a = velocity - n;
+                    //    Vector3 n = Vector3.Project(velocity, raycastHit.normal);
+                    //    Vector3 a = velocity - n;
 
-                        velocity = a - n;
-                        trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
+                    //    velocity = a - n;
+                    //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
 
-                        break;
-                    }
+                    //    break;
+                    //}
                 }
             }
 
@@ -286,7 +308,7 @@ public class ShootBall : MonoBehaviour
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
             obj.GetComponent<Renderer>().enabled = false; //hides it
             obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
-             attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
+            attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
             SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
         }
     }
