@@ -148,7 +148,7 @@ public class ShootBall : MonoBehaviour
         {
             Destroy(simulatedObj);
         }
-        slr.positionCount = 0;//deleting line
+        //slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
         
         Vector2 force = dir.normalized * dist; //the force
@@ -200,9 +200,9 @@ public class ShootBall : MonoBehaviour
             {
                 if(Vector3.Distance(t.transform.position, trackPos) <= rad + t.transform.localScale.x)
                 {
-                    slr.positionCount = i + 2;
-                    slr.SetPosition(i + 1, trackPos);
-                    return;
+                    //slr.positionCount = i + 2;
+                    //slr.SetPosition(i + 1, trackPos);
+                    //return;
 
                     //float surfaceAngle = Vector3.Angle(velocity, (trackPos - t.transform.position).normalized);
                     //float coefficient = velocity.magnitude >= 0.01f ? 0.45f : 0.45f;
@@ -211,14 +211,15 @@ public class ShootBall : MonoBehaviour
 
 
                     //velocity = (velocity* 0.45f);
-                    //RaycastHit raycastHit;
+                    RaycastHit raycastHit;
                     //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
                     //{
                     //    float totalDist = (trackPos - prevPos).magnitude;
                     //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
                     //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
                     //    // Calculate the reflection of velocity using the surface normal
-                    //    velocity = Vector3.Reflect(velocity, raycastHit.normal);
+
+                    //    velocity = 0* Vector3.Reflect(velocity, raycastHit.normal);
 
                     //    // Move the object to the collision point
                     //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
@@ -235,11 +236,25 @@ public class ShootBall : MonoBehaviour
                     //    Vector3 u = Vector3.Dot(velocity, raycastHit.normal) * raycastHit.normal;
                     //    Vector3 w = velocity - u;
 
-                    //    velocity = w - u;
-                    //    trackPos = sphereCentre + (0.02f * (extraDist/totalDist) * velocity);
+                    //    velocity = w - u * 1f;
+                    //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity) + (0.02f * velocity);
 
                     //    break;
                     //}
+                    if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+                    {
+                        float totalDist = (trackPos - prevPos).magnitude;
+                        Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
+                        float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
+
+                        Vector3 n = Vector3.Project(velocity, raycastHit.normal);
+                        Vector3 a = velocity - n;
+
+                        velocity = a - n;
+                        trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
+
+                        break;
+                    }
                 }
             }
 
