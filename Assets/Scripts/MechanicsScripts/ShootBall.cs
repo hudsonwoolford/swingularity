@@ -8,7 +8,7 @@ using static UnityEditor.PlayerSettings;
 
 public class ShootBall : MonoBehaviour
 {
-    [SerializeField] Transform planetTransform;
+    [SerializeField] public Transform planetTransform;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
@@ -27,7 +27,7 @@ public class ShootBall : MonoBehaviour
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
-    [SerializeField] public Transform simulatedEnv; //the env that will be in the simulated physics scene
+    [SerializeField] Transform simulatedEnv; //the env that will be in the simulated physics scene
     List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
     PhysicsScene physicsScene;

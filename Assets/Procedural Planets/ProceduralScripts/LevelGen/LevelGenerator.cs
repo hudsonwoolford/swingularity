@@ -72,7 +72,7 @@ public class LevelGenerator : MonoBehaviour
             planetList[i].planet.SetActive(true);
             forcefield.transform.parent = env.transform;
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.GetComponent<ShootBall>().simulatedEnv = env.transform;   
+            player.GetComponent<ShootBall>().planetTransform = env.transform;   
         }
     }
 
