@@ -51,16 +51,18 @@ public class ShootBall : MonoBehaviour
     public delegate void BoundsReset();
     public static BoundsReset boundsReset;
 
+    public void Init(){
+        foreach (Transform t in planetTransform)
+        {
+            planets.Add(t.gameObject.GetComponent<Rigidbody>());
+        }
+    }
+
     private void Awake()
     {
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
-        int i = 0;
-        foreach (Transform t in planetTransform)
-        {
-            planets.Add(t.gameObject.GetComponent<Rigidbody>());
-            i++;
-        }
+        planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
     }
     private void Start()
     {
@@ -74,10 +76,18 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
         //if (simulated) { PhysicsScene(); }
+
     }
     // Update is called once per frame
     void Update()
     {
+        if(planets.Count != planetTransform.childCount){
+            planets.Clear();
+            foreach (Transform t in planetTransform)
+            {
+                planets.Add(t.gameObject.GetComponent<Rigidbody>());
+            }
+        }
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
         if(Input.GetMouseButtonDown(0))
@@ -92,8 +102,7 @@ public class ShootBall : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
     }
-    void FixedUpdate()
-    {
+    void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s

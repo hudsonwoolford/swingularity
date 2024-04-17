@@ -25,7 +25,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
+    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab, ballPrefab;
     [SerializeField]
     float planetScale;
     [SerializeField]
@@ -41,6 +41,8 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    public delegate void LevelInit();
+    public static LevelInit levelInit;
 
     void Start()
     {
@@ -63,7 +65,7 @@ public class LevelGenerator : MonoBehaviour
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
-        GameObject env = new GameObject("Env");
+        GameObject env = GameObject.FindGameObjectWithTag("Environment");
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
@@ -71,10 +73,12 @@ public class LevelGenerator : MonoBehaviour
             GameObject forcefield = GenerateForcefield(planetList[i]);
             planetList[i].planet.SetActive(true);
             forcefield.transform.parent = env.transform;
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.GetComponent<ShootBall>().planetTransform = env.transform;   
         }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player.GetComponent<ShootBall>().planetTransform = env.transform;   
+        player.GetComponent<ShootBall>().Init();
     }
+
 
     GameObject GenerateForcefield(Planet planet){
         GameObject forcefield = this.gameObject;

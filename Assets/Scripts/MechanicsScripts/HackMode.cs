@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[ExecuteInEditMode()]
 public class HackMode : MonoBehaviour
 {
     [SerializeField] Transform env;
