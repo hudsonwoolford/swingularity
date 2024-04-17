@@ -136,7 +136,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 2
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2
 --- !u!114 &4001304445180854819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,12 +166,17 @@ MonoBehaviour:
   colIcons: 1
   showBallPos: 0
   slr: {fileID: 4156436077573313242}
+  simulationLayer:
+    serializedVersion: 2
+    m_Bits: 128
   simulationBall: {fileID: 7338985779832413967, guid: a52775a160cff344cbbb5650cf168a8c,
     type: 3}
   collisionVisual: {fileID: 5545570058873106883, guid: 23660415c2b73a747ac3fa4b2533ae2e,
     type: 3}
-  maxstep: 21
+  maxstep: 30
+  stepSize: 0
   maxLengthSim: 7.5
+  restitution: 0.7745967
   simulatedEnv: {fileID: 0}
 --- !u!96 &6428762038808385085
 TrailRenderer:
@@ -452,7 +457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8267218066955037366
 Transform:
   m_ObjectHideFlags: 0

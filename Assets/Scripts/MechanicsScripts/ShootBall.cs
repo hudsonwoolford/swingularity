@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -75,7 +76,7 @@ public class ShootBall : MonoBehaviour
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
-        //if(simulated) {PhysicsScene();}
+        //if (simulated) { PhysicsScene(); }
     }
     // Update is called once per frame
     void Update()
@@ -136,6 +137,7 @@ public class ShootBall : MonoBehaviour
             }
             yield return null; //wait for next frame
         }
+
         if(simulatedObj!=null)
         {
             Destroy(simulatedObj);
@@ -175,31 +177,71 @@ public class ShootBall : MonoBehaviour
         Vector3 trackPos = startPos;
         Vector3 prevPos = startPos;
         Vector3 velocity = forceVar / rb.mass + currentVelocity;
+        Vector3 gravForce = Vector3.zero;
+        gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
+
+
         float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
-        int totalhits = 0;
         for (int i = 0; i < maxstep; i++)
         {
-            Vector3 gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
-            velocity += gravForce * 0.02f / rb.mass;
-            trackPos += velocity / 50;
+            //fixed update
+            gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
+            velocity += gravForce * Time.fixedDeltaTime / rb.mass;
 
-            RaycastHit rayHit;
-            if (Physics.Raycast(prevPos, (trackPos - prevPos).normalized, out rayHit, (trackPos - prevPos).magnitude))
+
+            //physics update
+            trackPos += velocity * Time.fixedDeltaTime;
+            foreach (SphereCollider t in planetTransform.GetComponentsInChildren<SphereCollider>())
             {
-                slr.positionCount = i + 2;
-                trackPos = rayHit.point;
-                slr.SetPosition(i + 1, trackPos);
-                break;
-                //if(rayHit.collider.isTrigger) { return; }
-                //if(velocity.magnitude / rayHit.rigidbody.mass > Physics.bounceThreshold) { break; }
-                //velocity = restitution * Vector3.Reflect(velocity, (rayHit.point-rayHit.collider.transform.position).normalized);
-                //totalhits++;
+                if(Vector3.Distance(t.transform.position, trackPos) <= rad + t.transform.localScale.x)
+                {
+                    slr.positionCount = i + 2;
+                    slr.SetPosition(i + 1, trackPos);
+                    return;
+
+                    //float surfaceAngle = Vector3.Angle(velocity, (trackPos - t.transform.position).normalized);
+                    //float coefficient = velocity.magnitude >= 0.01f ? 0.45f : 0.45f;
+                    //float normalForce = rb.mass * gravForce.magnitude;
+                    //float friction = normalForce * coefficient * Mathf.Cos(surfaceAngle);
+
+
+                    //velocity = (velocity* 0.45f);
+                    //RaycastHit raycastHit;
+                    //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+                    //{
+                    //    float totalDist = (trackPos - prevPos).magnitude;
+                    //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
+                    //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
+                    //    // Calculate the reflection of velocity using the surface normal
+                    //    velocity = Vector3.Reflect(velocity, raycastHit.normal);
+
+                    //    // Move the object to the collision point
+                    //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
+
+
+                    //    break; // Exit the loop after handling the collision
+                    //}
+                    //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+                    //{
+                    //    float totalDist = (trackPos - prevPos).magnitude;
+                    //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
+                    //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
+
+                    //    Vector3 u = Vector3.Dot(velocity, raycastHit.normal) * raycastHit.normal;
+                    //    Vector3 w = velocity - u;
+
+                    //    velocity = w - u;
+                    //    trackPos = sphereCentre + (0.02f * (extraDist/totalDist) * velocity);
+
+                    //    break;
+                    //}
+                }
             }
 
-            slr.SetPosition(i + 1, trackPos);
+            //end physics update
             prevPos = trackPos;
+            slr.SetPosition(i + 1, trackPos);
         }
-        print(totalhits);
     }
 
     #endregion
