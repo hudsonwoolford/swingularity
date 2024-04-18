@@ -57,7 +57,9 @@ public class LevelGenerator : MonoBehaviour
             seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f)* Time.time);
         }
         Vector2 camSize = CamSize();
-        regionSize = CalculateBounds(camSize);
+        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
+        float extensionAmount = UnityEngine.Random.value;
+        regionSize = CalculateBounds(camSize, extensionAmount, xOry);
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -72,7 +74,7 @@ public class LevelGenerator : MonoBehaviour
         };
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
         Planet[] planets = Generatelevel(level);
-        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize);
+        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
         float maxZoom = Mathf.Max((regionSize.x) / (2 * Camera.main.aspect), regionSize.y / 2) * 1.4f;
@@ -80,7 +82,7 @@ public class LevelGenerator : MonoBehaviour
         Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
 
-    (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize){
+    (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize, float extensionAmount, bool x){
         Vector3 avg = Vector3.zero;
         foreach (Planet planet in planets){
             avg += planet.planet.transform.position;
@@ -88,18 +90,17 @@ public class LevelGenerator : MonoBehaviour
         avg /= planets.Length;
         Vector2 planetsCenter = avg;
 
-        Vector2 startPos = planetsCenter - camSize/2;
+        Vector2 startPos = planetsCenter - camSize /2;
         Vector2 endPos = planetsCenter + camSize/2;
         return (startPos, endPos);
     }
 
-    Vector2 CalculateBounds(Vector3 camSize){
+    Vector2 CalculateBounds(Vector3 camSize, float extensionAmount, bool x){
         //Extend in the x direction maybe?
-        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
+        
         Vector2 regionSize = camSize;
-        print(xOry);
-        if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * regionExtension.x, 0); }
-        else{ regionSize += new Vector2(0, UnityEngine.Random.value * regionExtension.y);}
+        if(x){ regionSize += new Vector2(extensionAmount * regionExtension.x, 0); }
+        else{ regionSize += new Vector2(0, extensionAmount * regionExtension.y);}
 
         return regionSize;
     }
