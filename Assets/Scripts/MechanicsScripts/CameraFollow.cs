@@ -97,7 +97,7 @@ public class CameraFollow : MonoBehaviour
     {
         panning = true;
         Vector2 startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        while (Input.GetMouseButton(1) && panning)
+        while (Input.GetMouseButton(2) && panning)
         {
             Vector2 mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousPos - startMousePos;

@@ -79,7 +79,7 @@ public class LevelGenerator : MonoBehaviour
     }
 
     (Vector2, Vector3, Vector3) CalculateBounds(){
-        float height = 15 * 2; //camera height in units
+        float height = Camera.main.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
 
