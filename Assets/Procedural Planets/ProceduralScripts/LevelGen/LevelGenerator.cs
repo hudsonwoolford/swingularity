@@ -64,8 +64,8 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            regionSize.x - maxSize,
-            regionSize.y - maxSize,
+            regionSize.x,
+            regionSize.y,
             samplesBeforeRejection,
             offsetScale
         };
@@ -97,7 +97,6 @@ public class LevelGenerator : MonoBehaviour
         if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * regionExtension.x, 0); }
         else{ regionSize += new Vector2(0, UnityEngine.Random.value * regionExtension.y);}
 
-   
         return regionSize;
     }
     Planet[] Generatelevel(ProceduralLevelGeneration.Level level){
@@ -166,7 +165,7 @@ public class LevelGenerator : MonoBehaviour
         generator.UpdateAndApplyAll();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
-        newPlanet.transform.position = position - levelSize / 2;
+        newPlanet.transform.position = position;
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
         return new Planet(newPlanet, ColorSchemeStaticReference.PlanetType.blackhole);
     }
