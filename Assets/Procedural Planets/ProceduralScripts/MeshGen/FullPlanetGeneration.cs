@@ -9,7 +9,6 @@ using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
 #endif
-using System.Xml.Schema;
 
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteAlways]
@@ -1184,7 +1183,7 @@ public class FullPlanetGeneration : MonoBehaviour
             fpg.planet = fullPlanetObj;
         }
     }
-#endregion
-#endif
+    #endregion
+    #endif
 }
 

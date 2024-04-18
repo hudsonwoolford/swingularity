@@ -9,8 +9,8 @@ public class ForceField : MonoBehaviour
 {
     static float intensityMult = 1.5f;
     [Header("Script Variables")]
-    [SerializeField] public Transform planet;
-    [SerializeField] public List<Transform> interactableObject = new List<Transform>(3);
+    [SerializeField] Transform planet;
+    [SerializeField] List<Transform> interactableObject = new List<Transform>(3);
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
     [SerializeField] float meshChangeThreshold = 2;
@@ -40,9 +40,15 @@ public class ForceField : MonoBehaviour
     private Light pOuterAtmosphere;
     private PlanetDataHolder pData;
     private Rigidbody rb;
+    public void Init(Transform p)
+    {
+        planet = p;
+        PlanetCorrespond();
+    }
     private void Awake()
     {
-        if(interactableObject.Count == 0)
+        interactableObject.RemoveAll(Transform => Transform == null);
+        if (interactableObject.Count == 0)
         {
             interactableObject.Add(GameObject.FindGameObjectWithTag("Player").transform);
         }
@@ -111,6 +117,7 @@ public class ForceField : MonoBehaviour
     {
         if (col.gameObject.layer == 7) { return; } // simulation layer
 
+        if(Time.timeSinceLevelLoad < 0.25f) { return; }
         hitPos[hitIterator] = col.transform.position; //colision pos
         hitTime[hitIterator].x = Time.timeSinceLevelLoad; //time of hit
         
@@ -121,7 +128,7 @@ public class ForceField : MonoBehaviour
         }
         hitTime[hitIterator].y = hitPower; //hit power array var
 
-        src.PlayOneShot(bump, Mathf.Clamp01(hitPower / 30)); //noise
+        src.PlayOneShot(bump, Mathf.Clamp01(hitPower / 40)); //noise
 
         //property setting
         pBlock.SetVectorArray("_HitPos", hitPos);

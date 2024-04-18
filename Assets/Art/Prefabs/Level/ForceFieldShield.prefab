@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3159997371337105200}
-  m_Mesh: {fileID: 289301614986012343, guid: 77921efe4a76d5b4fb49a295c64dd2d0, type: 3}
+  m_Mesh: {fileID: 289301614986012343, guid: c27feec8a43237b4288847f2f6ab4811, type: 3}
 --- !u!23 &149981736588089624
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -99,9 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planet: {fileID: 0}
-  interactableObject: []
+  interactableObject:
+  - {fileID: 0}
   rangeOffset: 0
-  meshChangeThreshold: 1.78
+  meshChangeThreshold: 2.25
   forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
   smallMesh: {fileID: 289301614986012343, guid: 77921efe4a76d5b4fb49a295c64dd2d0,
     type: 3}

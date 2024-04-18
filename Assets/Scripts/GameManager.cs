@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    private void Start()
+    private void Awake()
     {
         if (Instance != null)
         {
@@ -16,5 +17,9 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         DontDestroyOnLoad(gameObject);
+    }
+    private void Start()
+    {
+        GetComponentInChildren<EventSystem>().enabled = true;
     }
 }

@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.PlayerSettings;
+
 
 public class ShootBall : MonoBehaviour
 {
-    [SerializeField] public Transform planetTransform;
+    [SerializeField] Transform planetTransform;
     [Header("Power")]
     [SerializeField] float maxPower; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
@@ -27,7 +28,6 @@ public class ShootBall : MonoBehaviour
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
-    List<Rigidbody> attractors = new List<Rigidbody>();
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -50,15 +50,34 @@ public class ShootBall : MonoBehaviour
     public delegate void BoundsReset();
     public static BoundsReset boundsReset;
 
-    public void Init(){
+    public void Init(Transform env, Vector3 originPos){
+        planetTransform = env;
+        transform.position = originPos;
+        origin = originPos;
         foreach (Transform t in planetTransform)
         {
             planets.Add(t.gameObject.GetComponent<Rigidbody>());
+        }
+        if(simulationScene != null)
+        {
+            StartCoroutine(RecreatePhysicsScene());
+        }
+        tr.Clear();
+    }
+    IEnumerator RecreatePhysicsScene()
+    {
+        if (simulationScene == null)
+        {
+
+            AsyncOperation removingScene = SceneManager.UnloadSceneAsync(simulationScene);
+            yield return removingScene;
+            PhysicsScene();
         }
     }
 
     private void Awake()
     {
+        origin = transform.position;
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
@@ -66,16 +85,13 @@ public class ShootBall : MonoBehaviour
     private void Start()
     {
         main = Camera.main;
-        attractors.Clear();
-
-        origin = transform.position;
 
         rb.constraints = RigidbodyConstraints.FreezeAll; //stops any movement
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
-        if (simulated) { PhysicsScene(); }
 
+        if (simulated) { PhysicsScene(); }
     }
     // Update is called once per frame
     void Update()
@@ -312,7 +328,6 @@ public class ShootBall : MonoBehaviour
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
             obj.GetComponent<Renderer>().enabled = false; //hides it
             obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
-            attractors.Add(obj.GetComponent<Rigidbody>()); //adds attractor to a list to later be used in simulation
             SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
         }
     }

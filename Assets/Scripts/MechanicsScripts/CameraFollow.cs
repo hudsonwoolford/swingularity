@@ -16,13 +16,12 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath;              //inner boundaries
-    public static PolygonCollider2D innerShape;
     Transform ball;                            //ball transform
-    Vector3 vel; 
+    Vector3 vel;
     float sizeVelocity;                              //camera velocity
     float cameraSize, defaultCameraSize, targetCameraSize;
-    //Information event
-    public static bool panning = false;
+    public static PolygonCollider2D innerShape { get; private set; }
+    public static bool panning { get; private set; } = false;
     private void Awake()
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
@@ -153,7 +152,7 @@ public class CameraFollow : MonoBehaviour
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;
     }
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         //scene view visuals
         Gizmos.color = Color.green;

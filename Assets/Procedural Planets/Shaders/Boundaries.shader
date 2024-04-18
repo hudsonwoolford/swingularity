@@ -40,7 +40,7 @@ Shader "Hidden/Boundaries"
 
                 float4 vert = float4(o.vertex.xy, 0, 1);
                 float3 objW = mul(unity_ObjectToWorld, vert).xyz;
-                o.worldPos = (float3(objW.x * (_CamSize.x / 2), objW.y * (_CamSize.y / 2), 0) + _WorldSpaceCameraPos);
+                o.worldPos = (float3(objW.x * (_CamSize.x / 2), objW.y * -(_CamSize.y / 2), 0) + _WorldSpaceCameraPos);
                 o.worldPos.z = 0;
                 return o;
             }

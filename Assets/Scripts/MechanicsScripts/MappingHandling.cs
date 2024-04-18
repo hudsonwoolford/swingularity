@@ -32,21 +32,16 @@ public class MappingHandling : MonoBehaviour
         camAreaSmaller.isTrigger = true;
         mainCam = Camera.main;
         boundaries = CameraFollow.innerShape;
+        arrow.position = -Vector3.one * 100;
+
+        MatchCameraColliders();
+        distText.text = "";
     }
 
     // Update is called once per frame
     void Update()
     {
-        float height = mainCam.orthographicSize * 2; //camera height in units
-        float width = height * mainCam.aspect;       //camera width in units
-        Vector3 camSize = new Vector3(width, height, 0);
-        camArea.transform.localScale = camSize;
-        camAreaSmaller.transform.localScale = camArea.transform.localScale - new Vector3(1,1,0) * smallerBounds;
-
-
-        arrow.position = -Vector3.one * 100;
-        camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
-        camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        MatchCameraColliders();
 
         if(!boundaries.OverlapPoint(ball.position))
         {
@@ -95,7 +90,18 @@ public class MappingHandling : MonoBehaviour
             }
             
         }
-    } 
+    }
+    void MatchCameraColliders()
+    {
+        float height = mainCam.orthographicSize * 2; //camera height in units
+        float width = height * mainCam.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height, 0);
+        camArea.transform.localScale = camSize;
+        camAreaSmaller.transform.localScale = camArea.transform.localScale * smallerBounds;
+        arrow.position = -Vector3.one * 100;
+        camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+    }
     void ShowOOB()
     {
         canvasAnimator.Play("ShowOOB");

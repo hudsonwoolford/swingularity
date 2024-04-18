@@ -20,6 +20,8 @@ public class LevelGenerator : MonoBehaviour
     8: number of poisson disk samples before rejecting the point as a spawner
     9: offset scale for determining random values of planet
     */
+    [SerializeField] bool randomSeed = false;
+    [SerializeField] Material invisOcean;
     public int seed;
     //Level gen params
     [SerializeField]
@@ -46,6 +48,10 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        if(randomSeed)
+        {
+            seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond + UnityEngine.Random.Range(-1f, 1f)* Time.time);
+        }
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -65,29 +71,56 @@ public class LevelGenerator : MonoBehaviour
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
-        GameObject env = GameObject.FindGameObjectWithTag("Environment");
+        Transform env = GameObject.FindGameObjectWithTag("Environment").transform;
+        Transform allPlanetParent = new GameObject("Planets").transform;
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
             print(level.planetSizes[i]);
             GameObject forcefield = GenerateForcefield(planetList[i]);
             planetList[i].planet.SetActive(true);
-            forcefield.transform.parent = env.transform;
+            planetList[i].planet.transform.parent = allPlanetParent;
+            forcefield.transform.parent = env;
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<ShootBall>().planetTransform = env.transform;   
-        player.GetComponent<ShootBall>().Init();
+        Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
+        SetBallFlagPosition(flag, player.transform, Array.ConvertAll(planetList, t => t.planet.transform));
+        player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
     }
 
-
+    void SetBallFlagPosition(Transform flag, Transform ball, Transform[] candidates)
+    {
+        UnityEngine.Random.InitState(seed);
+        int candidateIndex = UnityEngine.Random.Range(0, candidates.Length-1);
+        int rot = UnityEngine.Random.Range(0, 360);
+        flag.eulerAngles = new Vector3(rot, flag.eulerAngles.y, flag.eulerAngles.z);
+        flag.position = candidates[candidateIndex].position + flag.up * candidates[candidateIndex].localScale.x * (1 / 0.3f);
+        //farthest planet
+        float distTracker = 0;
+        int farthestIndex = 0;
+        int i = 0;
+        foreach (Transform p in candidates)
+        {
+            float dist = (flag.position - p.position).magnitude;
+            if(dist > distTracker)
+            {
+                farthestIndex = i;
+                distTracker = dist;
+            }
+            i++;
+        }
+        float flagAng = Mathf.Atan2((candidates[farthestIndex].position - flag.position).normalized.y, (candidates[farthestIndex].position - flag.position).normalized.x);
+        flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
+        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].localScale.x * (1 / 0.3f) * 1.2f + 0.25f);
+    }
     GameObject GenerateForcefield(Planet planet){
         GameObject forcefield = this.gameObject;
         if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.star){  
             forcefield = Instantiate(forcefieldPrefab);
 
-            forcefield.GetComponent<ForceField>().planet = planet.planet.transform;
-            forcefield.GetComponent<ForceField>().enabled = true;
-            
+            ForceField ff = forcefield.GetComponent<ForceField>();
+            ff.enabled = true;
+            ff.Init(planet.planet.transform);
         }
         return forcefield;
     }
@@ -113,10 +146,12 @@ public class LevelGenerator : MonoBehaviour
         bool activeOcean = oceanRend.gameObject.activeInHierarchy;
 
         Material oceanMat = oceanRend.material;
-        Material cullMat = new Material(Shader.Find("Custom/OceanInvisMask"));
+        Material cullMat = invisOcean;
         oceanRend.sharedMaterial = cullMat;
 
-        Camera cam = Instantiate(Camera.main).GetComponent<Camera>();
+        Camera cam = new GameObject().AddComponent<Camera>();
+        cam.transform.position = Camera.main.transform.position;
+        cam.orthographic = true;
         cam.orthographicSize = 1.5f;
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = new Color(0, 0, 0, 0);
@@ -222,7 +257,7 @@ public class LevelGenerator : MonoBehaviour
 
     void OnDrawGizmos(){
         if (!Application.isPlaying){
-            Gizmos.color = Color.cyan;
+            Gizmos.color = new Color(0, 1, 1, 0.1f);
             Gizmos.DrawCube(Vector2.zero, new Vector2(xRegionSize - maxSize, yRegionSize - maxSize));
         }
     }
