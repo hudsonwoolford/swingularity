@@ -25,13 +25,17 @@ public class LevelGenerator : MonoBehaviour
     public int seed;
     //Level gen params
     [SerializeField]
-    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, maxXRegionSize, maxYRegionSize, samplesBeforeRejection, offsetScale;
+    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
+    [SerializeField]
+    Vector2 regionExtension;
     [SerializeField]
     GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
     [SerializeField]
     float planetScale;
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes;
+
+    Vector2 regionSize;
 
     [Serializable]
     public struct Planet{
@@ -54,8 +58,11 @@ public class LevelGenerator : MonoBehaviour
         }
 
         (Vector2, Vector3, Vector3) levelSizeValues = CalculateBounds();
+        regionSize = levelSizeValues.Item1;
+        print(regionSize);
         Vector3 startPos = levelSizeValues.Item2;
         Vector3 endPos = levelSizeValues.Item3;
+        // Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos);
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -63,8 +70,8 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            xRegionSize - 2 * maxSize,
-            yRegionSize - 2 * maxSize,
+            regionSize.x - 2 * maxSize,
+            regionSize.y - 2 * maxSize,
             samplesBeforeRejection,
             offsetScale
         };
@@ -73,19 +80,21 @@ public class LevelGenerator : MonoBehaviour
     }
 
     (Vector2, Vector3, Vector3) CalculateBounds(){
-        float height = Camera.main.orthographicSize * 2; //camera height in units
+        float height = 15 * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
 
         Vector3 startPos = new Vector3(width/2, height/2);
 
         //Extend in the x direction maybe?
-        bool xOry = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
+        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
         Vector2 regionSize = camSize;
-        if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * maxXRegionSize, 0); }
-        else{ regionSize += new Vector2(0, UnityEngine.Random.value * maxYRegionSize);}
+        print(xOry);
+        if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * regionExtension.x, 0); }
+        else{ regionSize += new Vector2(0, UnityEngine.Random.value * regionExtension.y);}
 
-        Vector3 endPos = new Vector3(regionSize.x - width, regionSize.y - height);
+        Vector3 endPos = new Vector3(regionSize.x - width/2, regionSize.y - height/2);
+        return (regionSize, startPos, endPos);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
@@ -273,10 +282,7 @@ public class LevelGenerator : MonoBehaviour
     }
 
     void OnDrawGizmos(){
-        if (!Application.isPlaying){
-            Gizmos.color = new Color(0, 1, 1, 0.1f);
-            Gizmos.DrawCube(Vector2.zero, new Vector2(xRegionSize - maxSize, yRegionSize - maxSize));
-        }
+
     }
 
 }

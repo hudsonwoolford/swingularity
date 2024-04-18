@@ -13,15 +13,26 @@ public class CameraFollow : MonoBehaviour
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
-    [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
+    [SerializeField] float smoothness = 0.3f, defaultCameraSize;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath;              //inner boundaries
     Transform ball;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
-    float cameraSize, defaultCameraSize, targetCameraSize;
+    float cameraSize, targetCameraSize;
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
+
+    public void InitPositions(Vector2 startPosSent, Vector2 endPosSent){
+        startPos = startPosSent;
+        endPos = endPosSent;
+        cameraSize = defaultCameraSize;
+        targetCameraSize = cameraSize;
+
+        transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
+       
+        cameraPath.points = PolygonPositions(startPos, endPos, 0.4f); //scaled down version of inner shape
+    }   
     private void Awake()
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
@@ -31,14 +42,15 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        defaultCameraSize = Camera.main.orthographicSize;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
 
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
        
 
-        cameraPath = new GameObject("Camera Bounds").AddComponent<PolygonCollider2D>();
+        cameraPath = new GameObject("Camera Bounds"){
+            tag = "CameraBounds"
+        }.AddComponent<PolygonCollider2D>();
         cameraPath.points = PolygonPositions(startPos, endPos, 0.4f); //scaled down version of inner shape
     }
 

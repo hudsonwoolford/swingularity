@@ -325,14 +325,13 @@ MonoBehaviour:
   seed: 433
   minPlanets: 39
   maxPlanets: 40
-  minSize: 2.64
-  maxSize: 6.29
+  minSize: 3.99
+  maxSize: 8.45
   sizeBias: 0.05
   sizeScale: 1
-  xRegionSize: 33
-  yRegionSize: 20.3
   samplesBeforeRejection: 21
   offsetScale: 12.08
+  regionExtension: {x: 28.7, y: 23.94}
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
@@ -10234,6 +10233,11 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3088164974680211252, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: orthographic size
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3245928208868472892, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
       propertyPath: m_Parameters.colorGradient.m_ColorSpace
@@ -20128,6 +20132,21 @@ PrefabInstance:
         type: 3}
       propertyPath: focusBall
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: lockCamera
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: cameraMinMax.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: defaultCameraSize
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
