@@ -74,7 +74,9 @@ public class LevelGenerator : MonoBehaviour
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
-        Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos);
+        float maxZoom = Mathf.Max((regionSize.x) / (2 * Camera.main.aspect), regionSize.y / 2) * 1.4f;
+
+        Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
 
     (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize){
