@@ -128,6 +128,7 @@ public class LevelGenerator : MonoBehaviour
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType){
         generator.RandomizeColorScheme(seed, planetType, index);
         generator.ApplyColorScheme();
+        generator.ApplyBiomeNoise();
         generator.ClearAllTrees();
         generator.UpdateAtmosphere();
         generator.UpdateOcean();

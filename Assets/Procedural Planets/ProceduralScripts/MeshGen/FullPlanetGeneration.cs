@@ -361,7 +361,7 @@ public class FullPlanetGeneration : MonoBehaviour
         outerAtmosphere.gameObject.SetActive(!outerAtmosphere.gameObject.activeInHierarchy);
         innerAtmosphere.gameObject.SetActive(!innerAtmosphere.gameObject.activeInHierarchy);
     }
-    void ApplyBiomeNoise()
+    public void ApplyBiomeNoise()
     { 
         //caching material and biome noise setting
         Material mat = planet.planetMaterial;
