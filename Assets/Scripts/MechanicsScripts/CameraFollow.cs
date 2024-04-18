@@ -13,14 +13,15 @@ public class CameraFollow : MonoBehaviour
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
-    [SerializeField] float smoothness = 0.3f, defaultCameraSize;  //smoothness of camera movement
+    [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath;              //inner boundaries
     Transform ball;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
     float cameraSize;
-    public float targetCameraSize;
+    public float defaultCameraSize;
+    float targetCameraSize;
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
 
