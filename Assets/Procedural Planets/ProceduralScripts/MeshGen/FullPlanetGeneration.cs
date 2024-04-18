@@ -59,6 +59,11 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             meshRenderer.sharedMaterial = planet.planetMaterial;
         }
+        UpdateAndApplyAll();
+        meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
+    }
+    public void UpdateAndApplyAll()
+    {
         if (colorSchemesOut) //if color schemes are on it will always apply them
         {
             ApplyColorScheme();
@@ -68,9 +73,8 @@ public class FullPlanetGeneration : MonoBehaviour
         UpdateTrees();
         UpdateData();
         ApplyBiomeNoise(); //transferring biome noise from terrain var to the material
-        meshFilter.mesh = OctahedronSphereCreator.Create(planet.terrainVar, calculateVertexHeight); //creating the planet
     }
-    public void UpdateData()
+    void UpdateData()
     {
         if(planetData == null)
         {
@@ -84,7 +88,7 @@ public class FullPlanetGeneration : MonoBehaviour
         planetData.aBiomeA = aBiomeA;
         planetData.aBiomeB = aBiomeB;
     }
-    public void UpdateOcean()
+    void UpdateOcean()
     {
         if(!planet.terrainVar.generalSettings.ocean)
         {
@@ -116,7 +120,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetColor("_SeabedColor", planet.oceanVariables._SeabedColor); //seabed color
         mat.SetFloat("bodyScale", 1);
     }
-    public void UpdateAtmosphere()
+    void UpdateAtmosphere()
     {
         if (!planet.terrainVar.generalSettings.atmosphere)
         {
@@ -159,7 +163,7 @@ public class FullPlanetGeneration : MonoBehaviour
         mat.SetFloat("_FresnelStrengthFar", planet.fresnelVariables._FresnelStrengthFar);
         mat.SetFloat("_FresnelPower", planet.fresnelVariables._FresnelPower);
     }
-    public void UpdateTrees(){
+    void UpdateTrees(){
         if(!biomeA.treeVariables._UseTrees && !biomeB.treeVariables._UseTrees) { ClearAllTrees(); return; } //if no biomes have trees return fucntion
         if(biomeA.treeVariables._TreeObjects == null && biomeB.treeVariables._TreeObjects == null) { return; }
         //combine tree obj array
@@ -361,7 +365,7 @@ public class FullPlanetGeneration : MonoBehaviour
         outerAtmosphere.gameObject.SetActive(!outerAtmosphere.gameObject.activeInHierarchy);
         innerAtmosphere.gameObject.SetActive(!innerAtmosphere.gameObject.activeInHierarchy);
     }
-    public void ApplyBiomeNoise()
+    void ApplyBiomeNoise()
     { 
         //caching material and biome noise setting
         Material mat = planet.planetMaterial;

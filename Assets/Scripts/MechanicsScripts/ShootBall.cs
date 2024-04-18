@@ -174,7 +174,6 @@ public class ShootBall : MonoBehaviour
         {
             yield break;
         }
-        print("not broken");
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
