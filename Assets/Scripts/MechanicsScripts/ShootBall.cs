@@ -226,22 +226,22 @@ public class ShootBall : MonoBehaviour
                 slr.SetPosition(i + 1, trackPos);
                 break;
             }
-            if(CameraFollow.innerShape != null)
-            {
-                if(!CameraFollow.innerShape.OverlapPoint(trackPos))
-                {
-                    slr.positionCount = i + 2;
-                    slr.startColor = Color.red;
-                    slr.endColor = Color.red;
-                    slr.SetPosition(i + 1, trackPos);
-                    break;
-                }
-                else
-                {
-                    slr.startColor = Color.white;
-                    slr.endColor = Color.white;
-                }
-            }
+            //if(CameraFollow.innerShape != null)
+            //{
+            //    if(!CameraFollow.innerShape.OverlapPoint(trackPos))
+            //    {
+            //        slr.positionCount = i + 2;
+            //        slr.startColor = Color.red;
+            //        slr.endColor = Color.red;
+            //        slr.SetPosition(i + 1, trackPos);
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        slr.startColor = Color.white;
+            //        slr.endColor = Color.white;
+            //    }
+            //}
             
             //fixed update
             gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
