@@ -281,7 +281,7 @@ public class LevelGenerator : MonoBehaviour
     }
 
     void OnDrawGizmos(){
-        Gizmos.DrawCube(Vector3.zero, regionSize);
+
     }
 
 }
