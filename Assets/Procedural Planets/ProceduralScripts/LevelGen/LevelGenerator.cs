@@ -53,7 +53,7 @@ public class LevelGenerator : MonoBehaviour
     {
         if(randomSeed)
         {
-            seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond + UnityEngine.Random.Range(-1f, 1f)* Time.time);
+            seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f)* Time.time);
         }
         Vector2 camSize = CamSize();
         regionSize = CalculateBounds(camSize);
