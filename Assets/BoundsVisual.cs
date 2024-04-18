@@ -12,6 +12,13 @@ public class BoundsVisual : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
         lr = GetComponent<LineRenderer>();
         boundPoints = Array.ConvertAll<Vector2, Vector4>(CameraFollow.innerShape.GetPath(0), t => new Vector4(t.x, t.y, 0, 0));
         lr.positionCount = boundPoints.Length + 1;
@@ -20,12 +27,6 @@ public class BoundsVisual : MonoBehaviour
             lr.SetPosition(i, boundPoints[i]);
         }
         lr.SetPosition(boundPoints.Length, boundPoints[0]);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {

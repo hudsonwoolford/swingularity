@@ -59,10 +59,8 @@ public class LevelGenerator : MonoBehaviour
 
         (Vector2, Vector3, Vector3) levelSizeValues = CalculateBounds();
         regionSize = levelSizeValues.Item1;
-        print(regionSize);
         Vector3 startPos = levelSizeValues.Item2;
         Vector3 endPos = levelSizeValues.Item3;
-        // Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos);
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -70,13 +68,14 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            regionSize.x - 2 * maxSize,
-            regionSize.y - 2 * maxSize,
+            regionSize.x - maxSize,
+            regionSize.y - maxSize,
             samplesBeforeRejection,
             offsetScale
         };
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
         Generatelevel(level);
+        Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos);
     }
 
     (Vector2, Vector3, Vector3) CalculateBounds(){
@@ -84,7 +83,7 @@ public class LevelGenerator : MonoBehaviour
         float width = height * Camera.main.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
 
-        Vector3 startPos = new Vector3(width/2, height/2);
+        Vector3 startPos = new Vector3(0, 0);
 
         //Extend in the x direction maybe?
         bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
@@ -93,7 +92,7 @@ public class LevelGenerator : MonoBehaviour
         if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * regionExtension.x, 0); }
         else{ regionSize += new Vector2(0, UnityEngine.Random.value * regionExtension.y);}
 
-        Vector3 endPos = new Vector3(regionSize.x - width/2, regionSize.y - height/2);
+        Vector3 endPos = new Vector3(regionSize.x - camSize.x, regionSize.y - camSize.y);
         return (regionSize, startPos, endPos);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){

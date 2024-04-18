@@ -19,7 +19,8 @@ public class CameraFollow : MonoBehaviour
     Transform ball;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
-    float cameraSize, targetCameraSize;
+    float cameraSize;
+    public float targetCameraSize;
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
 
@@ -30,6 +31,7 @@ public class CameraFollow : MonoBehaviour
         targetCameraSize = cameraSize;
 
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
+        innerShape.points = PolygonPositions(startPos, endPos, 2f); //to scale version
        
         cameraPath.points = PolygonPositions(startPos, endPos, 0.4f); //scaled down version of inner shape
     }   
@@ -57,7 +59,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(2))
         {
             StartCoroutine(Panning());
         }
