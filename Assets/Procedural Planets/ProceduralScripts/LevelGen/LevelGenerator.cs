@@ -27,7 +27,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab, ballPrefab;
+    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
     [SerializeField]
     float planetScale;
     [SerializeField]
@@ -111,7 +111,7 @@ public class LevelGenerator : MonoBehaviour
         }
         float flagAng = Mathf.Atan2((candidates[farthestIndex].position - flag.position).normalized.y, (candidates[farthestIndex].position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].localScale.x * (1 / 0.3f) * 1.2f + 0.25f);
+        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].localScale.x * (1 / 0.3f) * 1.2f + 0.15f);
     }
     GameObject GenerateForcefield(Planet planet){
         GameObject forcefield = this.gameObject;
