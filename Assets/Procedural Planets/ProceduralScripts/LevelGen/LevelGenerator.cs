@@ -20,6 +20,7 @@ public class LevelGenerator : MonoBehaviour
     9: offset scale for determining random values of planet
     */
     [SerializeField] bool randomSeed = false;
+    [SerializeField] bool sameColourPoolTwice = false;
     [SerializeField] Material invisOcean;
     public int seed;
     //Level gen params
@@ -85,9 +86,10 @@ public class LevelGenerator : MonoBehaviour
             avg += planet.planet.transform.position;
         }
         avg /= planets.Length;
+        Vector2 planetsCenter = avg;
 
-        Vector2 startPos = camSize/2;
-        Vector2 endPos = regionSize - camSize/2;
+        Vector2 startPos = planetsCenter - camSize/2;
+        Vector2 endPos = planetsCenter + camSize/2;
         return (startPos, endPos);
     }
 
@@ -162,7 +164,7 @@ public class LevelGenerator : MonoBehaviour
 
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType)
     {
-        generator.RandomizeColorScheme(seed, planetType, index);
+        generator.RandomizeColorScheme(seed, planetType, index, sameColourPoolTwice);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
