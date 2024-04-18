@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using System;
-using Unity.VisualScripting;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -56,11 +55,8 @@ public class LevelGenerator : MonoBehaviour
         {
             seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond + UnityEngine.Random.Range(-1f, 1f)* Time.time);
         }
-
-        (Vector2, Vector3, Vector3) levelSizeValues = CalculateBounds();
-        regionSize = levelSizeValues.Item1;
-        Vector3 startPos = levelSizeValues.Item2;
-        Vector3 endPos = levelSizeValues.Item3;
+        Vector2 camSize = CamSize();
+        regionSize = CalculateBounds(camSize);
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -74,17 +70,26 @@ public class LevelGenerator : MonoBehaviour
             offsetScale
         };
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
-        Generatelevel(level);
+        Planet[] planets = Generatelevel(level);
+        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize);
+        Vector2 startPos = startEndPos.Item1;
+        Vector2 endPos = startEndPos.Item2;
         Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos);
     }
 
-    (Vector2, Vector3, Vector3) CalculateBounds(){
-        float height = Camera.main.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
-        Vector3 camSize = new Vector3(width, height);
+    (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize){
+        Vector3 avg = Vector3.zero;
+        foreach (Planet planet in planets){
+            avg += planet.planet.transform.position;
+        }
+        avg /= planets.Length;
 
-        Vector3 startPos = new Vector3(0, 0);
+        Vector2 startPos = camSize/2;
+        Vector2 endPos = regionSize - camSize/2;
+        return (startPos, endPos);
+    }
 
+    Vector2 CalculateBounds(Vector3 camSize){
         //Extend in the x direction maybe?
         bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
         Vector2 regionSize = camSize;
@@ -92,10 +97,10 @@ public class LevelGenerator : MonoBehaviour
         if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * regionExtension.x, 0); }
         else{ regionSize += new Vector2(0, UnityEngine.Random.value * regionExtension.y);}
 
-        Vector3 endPos = new Vector3(regionSize.x - camSize.x, regionSize.y - camSize.y);
-        return (regionSize, startPos, endPos);
+   
+        return regionSize;
     }
-    void Generatelevel(ProceduralLevelGeneration.Level level){
+    Planet[] Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
@@ -114,6 +119,7 @@ public class LevelGenerator : MonoBehaviour
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
         SetBallFlagPosition(flag, player.transform, Array.ConvertAll(planetList, t => t.planet.transform));
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
+        return planetList;
     }
 
     void SetBallFlagPosition(Transform flag, Transform ball, Transform[] candidates)
@@ -282,6 +288,12 @@ public class LevelGenerator : MonoBehaviour
 
     void OnDrawGizmos(){
 
+    }
+    public static Vector2 CamSize(){
+        float height = Camera.main.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height);
+        return camSize;
     }
 
 }
