@@ -120,7 +120,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -174,10 +174,7 @@ MonoBehaviour:
   collisionVisual: {fileID: 5545570058873106883, guid: 23660415c2b73a747ac3fa4b2533ae2e,
     type: 3}
   maxstep: 30
-  stepSize: 0
-  maxLengthSim: 7.5
-  restitution: 0.7745967
-  simulatedEnv: {fileID: 0}
+  maxLengthSim: 10
 --- !u!96 &6428762038808385085
 TrailRenderer:
   serializedVersion: 3

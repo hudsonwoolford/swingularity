@@ -11,6 +11,6 @@ public class SimulationBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        //sB.BallCollides(collision.GetContact(0).point);
+        sB.BallCollides(collision.GetContact(0).point);
     }
 }
