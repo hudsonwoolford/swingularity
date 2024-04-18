@@ -294,6 +294,20 @@ public class LevelGenerator : MonoBehaviour
     void OnDrawGizmos(){
 
     }
+    void ReloadScene()
+    {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.UnloadSceneAsync(currentScene);
+        SceneManager.LoadScene(currentScene);
+    }
+    private void OnEnable()
+    {
+        ShootBall.onHole += ReloadScene;
+    }
+    private void OnDisable()
+    {
+        ShootBall.onHole -= ReloadScene;
+    }
     public static Vector2 CamSize(){
         float height = Camera.main.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
