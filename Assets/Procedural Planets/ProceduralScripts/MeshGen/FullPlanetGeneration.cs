@@ -486,7 +486,7 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar = terrainVarPool[index];
         RandomizeOffset(offsetSeed, 0);
     }
-    public void RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType, int planetI)
+    public void RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType, int planetI, bool sameColourPoolTwice)
     {
         ClearAllTrees();
         List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> pool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
