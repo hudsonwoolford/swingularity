@@ -66,7 +66,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator RecreatePhysicsScene()
     {
-        if (simulationScene == null)
+        if (simulationScene != null)
         {
 
             AsyncOperation removingScene = SceneManager.UnloadSceneAsync(simulationScene);
@@ -137,7 +137,7 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
-            if(Physics.Raycast(transform.position, dir, 0.75f, obstacles)) //this happens if the player is about to shoot directly onto a planet
+            if(Physics.Raycast(transform.position, dir, 0.5f, obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
                 dir = Vector2.zero;
                 dist = 0;
@@ -170,6 +170,11 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
        
+        if(force.magnitude < 0.2f)
+        {
+            yield break;
+        }
+        print("not broken");
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
