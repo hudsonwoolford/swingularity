@@ -25,7 +25,7 @@ public class LevelGenerator : MonoBehaviour
     public int seed;
     //Level gen params
     [SerializeField]
-    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, xRegionSize, yRegionSize, samplesBeforeRejection, offsetScale;
+    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, maxXRegionSize, maxYRegionSize, samplesBeforeRejection, offsetScale;
     [SerializeField]
     GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
     [SerializeField]
@@ -52,6 +52,10 @@ public class LevelGenerator : MonoBehaviour
         {
             seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond + UnityEngine.Random.Range(-1f, 1f)* Time.time);
         }
+
+        (Vector2, Vector3, Vector3) levelSizeValues = CalculateBounds();
+        Vector3 startPos = levelSizeValues.Item2;
+        Vector3 endPos = levelSizeValues.Item3;
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -66,6 +70,22 @@ public class LevelGenerator : MonoBehaviour
         };
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
         Generatelevel(level);
+    }
+
+    (Vector2, Vector3, Vector3) CalculateBounds(){
+        float height = Camera.main.orthographicSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height);
+
+        Vector3 startPos = new Vector3(width/2, height/2);
+
+        //Extend in the x direction maybe?
+        bool xOry = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
+        Vector2 regionSize = camSize;
+        if(xOry){ regionSize += new Vector2(UnityEngine.Random.value * maxXRegionSize, 0); }
+        else{ regionSize += new Vector2(0, UnityEngine.Random.value * maxYRegionSize);}
+
+        Vector3 endPos = new Vector3(regionSize.x - width, regionSize.y - height);
     }
     void Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
