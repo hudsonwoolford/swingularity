@@ -89,9 +89,10 @@ public class LevelGenerator : MonoBehaviour
         }
         avg /= planets.Length;
         Vector2 planetsCenter = avg;
-
-        Vector2 startPos = planetsCenter - camSize /2;
-        Vector2 endPos = planetsCenter + camSize/2;
+        Vector2 startPos = planetsCenter;
+        Vector2 endPos = startPos;
+        if (x){endPos += new Vector2(extensionAmount * regionExtension.x, 0); startPos -= new Vector2(extensionAmount * regionExtension.x, 0); }
+        else{endPos += new Vector2(0, extensionAmount * regionExtension.y); startPos -=  new Vector2(0, extensionAmount * regionExtension.y); }
         return (startPos, endPos);
     }
 
