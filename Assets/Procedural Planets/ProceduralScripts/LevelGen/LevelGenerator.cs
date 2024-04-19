@@ -41,11 +41,13 @@ public class LevelGenerator : MonoBehaviour
     public struct Planet{
         public GameObject planet;
         public ColorSchemeStaticReference.PlanetType planetType;
-        public ColorSchemeStaticReference.ColorSchemePool colorSchemePool;
-        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, ColorSchemeStaticReference.ColorSchemePool colorSchemePool){
+        public PlanetColorScheme biomeA;
+        public PlanetColorScheme biomeB;
+        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB){
             this.planet = planet;
             this.planetType = planetType;
-            this.colorSchemePool = colorSchemePool;
+            this.biomeA = biomeA;
+            this.biomeB = biomeB;
         }
     }
 
@@ -170,18 +172,19 @@ public class LevelGenerator : MonoBehaviour
 
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
     {
-        ColorSchemeStaticReference.ColorSchemePool[] previousColorSchemePools = new ColorSchemeStaticReference.ColorSchemePool[previousPlanets.Length];
+        (PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[previousPlanets.Length];
         for (int i = 0; i < previousPlanets.Length; i++){
-            previousColorSchemePools[i] = previousPlanets[i].colorSchemePool;
+            previousBiomes[i].Item1 = previousPlanets[i].biomeA;
+            previousBiomes[i].Item2 = previousPlanets[i].biomeB;
         }
-        ColorSchemeStaticReference.ColorSchemePool colorSchemePool = generator.RandomizeColorScheme(seed, planetType, index, sameColourPoolTwice, previousColorSchemePools);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = position;
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, planetType, colorSchemePool);
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2);
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)

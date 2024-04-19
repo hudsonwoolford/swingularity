@@ -1,8 +1,10 @@
 using System;
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -136,10 +138,13 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
-            if(Physics.Raycast(transform.position, dir, 0.5f, obstacles)) //this happens if the player is about to shoot directly onto a planet
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
-                dir = Vector2.zero;
-                dist = 0;
+                // Vector2 perpendicularVector = new Vector2(-hit.normal.y, hit.normal.x);
+                // float magnitude = Mathf.Sqrt(perpendicularVector.x * perpendicularVector.x + perpendicularVector.y * perpendicularVector.y);
+                // Vector2 tangentVector = new Vector2(perpendicularVector.x / magnitude, perpendicularVector.y / magnitude);
+                // dir = tangentVector;
             }
             force = dir.normalized * dist;
 
