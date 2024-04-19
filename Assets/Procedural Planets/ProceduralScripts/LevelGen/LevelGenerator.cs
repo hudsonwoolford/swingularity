@@ -134,6 +134,7 @@ public class LevelGenerator : MonoBehaviour
         int rot = UnityEngine.Random.Range(0, 360);
         flag.eulerAngles = new Vector3(rot, flag.eulerAngles.y, flag.eulerAngles.z);
         flag.position = candidates[candidateIndex].position + flag.up * candidates[candidateIndex].localScale.x * (1 / 0.3f);
+        flag.localScale *= Mathf.Clamp(candidates[candidateIndex].localScale.x *1.5f, 0, 5);
         //farthest planet
         float distTracker = 0;
         int farthestIndex = 0;

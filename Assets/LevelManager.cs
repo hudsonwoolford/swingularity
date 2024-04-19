@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public List<string> completedLevels { get; private set; }
+    [SerializeField] List<string> completedLevels;
     private void Awake()
     {
         completedLevels = new List<string>()
@@ -30,6 +30,10 @@ public class LevelManager : MonoBehaviour
         string index = SceneManager.GetActiveScene().name;
         if(completedLevels.Contains(index)) { return; }
         completedLevels.Add(index);
+    }
+    public bool LevelCompleted(string level)
+    {
+        return completedLevels.Contains(level);
     }
     private void OnEnable()
     {
