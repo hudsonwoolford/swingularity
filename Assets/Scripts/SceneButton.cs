@@ -9,7 +9,7 @@ using Unity.VisualScripting;
 [ExecuteInEditMode()]
 public class SceneButton : MonoBehaviour
 {
-    [SerializeField] string sceneName = "Scene", stringName = "Name";
+    [SerializeField] string sceneName = "Scene", requiredScene = "Main Menu", stringName = "Name";
     [ColorUsage(true, true)]
     [SerializeField] Color color = Color.white;
     [SerializeField] bool scaleText = false;
@@ -20,7 +20,10 @@ public class SceneButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if(!unlocked)
+        {
+            unlocked = GameManager.LevelManager.completedLevels.Contains(requiredScene);
+        }
         nameText = GetComponentInChildren<TextMeshProUGUI>(true);
         image = GetComponentInChildren<Image>(true);
         button = GetComponent<Button>();
@@ -29,7 +32,9 @@ public class SceneButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(nameText == null) { nameText = GetComponentInChildren<TextMeshProUGUI>(); }
+        if(nameText == null) { nameText = GetComponentInChildren<TextMeshProUGUI>(true); }
+        if(image == null) {  image = GetComponentInChildren<Image>(true); }
+        if(button == null) { button = GetComponent<Button>(); }
         nameText.text = stringName;
         image.color = color;
         button.enabled = unlocked;

@@ -36,43 +36,44 @@ public class LevelSelect : MonoBehaviour
     }
     private void Update()
     {
-        if (!Application.isPlaying)
+        if (!Application.isPlaying) //Updates system positions in inspector
         {
             SystemPositions();
         }
     }
-    void SystemPositions()
+    void SystemPositions() //sets the positions of the buttons to be equally spaced on the x-axis
     {
-        systemButtons = buttonsCanvas.GetComponentsInChildren<SceneButton>();
+        systemButtons = buttonsCanvas.GetComponentsInChildren<SceneButton>(); //all of the buttons
 
-        int levelAmount = systemButtons.Length;
-
-        float xJump = Screen.width / (levelAmount + 1); //space between each level
+        int levelAmount = systemButtons.Length; //level amount
+        float xJump = Screen.width / (levelAmount + 1); //calculating space between each level
 
         for (int i = 0; i < levelAmount; i++) //rendering each level
         {
-            systemButtons[i].transform.position = new Vector3(xJump * (i + 1), systemButtons[i].transform.position.y); //setting system position
+            systemButtons[i].transform.position = new Vector3(xJump * (i + 1), systemButtons[i].transform.position.y); //setting system position according to xjump
         }
 
     }
-    void Linerendering()
+    #region LineRenderers
+    void Linerendering() //draws lines to connect each button
     {
-        int levelAmount = systemButtons.Length;
+        int levelAmount = systemButtons.Length; // level amount
 
-        lr = new LineRenderer[levelAmount-1];
-        for (int i = 0; i < lr.Length; i++)
+        lr = new LineRenderer[levelAmount-1]; //line renderer array to connect them
+        for (int i = 0; i < lr.Length; i++) //foreach
         {
-            if (!systemButtons[i+1].unlocked) { break; }
-            Transform obj = new GameObject().transform;
+            if (!systemButtons[i+1].unlocked) { break; } //will not draw line if locked
+            //creating linerenderer object
+            Transform obj = new GameObject("Line").transform;
             obj.parent = transform;
             lr[i] = obj.AddComponent<LineRenderer>();
-            obj.name = "Line";
         }
 
         //drawing every line renderer
         for (int i = 0; i < systemButtons.Length-1; i++)
         {
-            if (!systemButtons[i + 1].unlocked) { return; }
+            if (!systemButtons[i + 1].unlocked) { return; } //will not draw line if locked
+
             Vector3 p1 = Camera.main.ScreenToWorldPoint(systemButtons[i].transform.position);   //first button
             p1.z = 0;
             Vector3 p2 = Camera.main.ScreenToWorldPoint(systemButtons[i+1].transform.position);//second button
@@ -98,16 +99,15 @@ public class LevelSelect : MonoBehaviour
     //Draws a circle by spawning a linerenderer
     void DrawCircle(Vector3 centre, float radius, int subDivs)
     {
-        centre.z = 0;
-        Transform obj = new GameObject().transform;
+        centre.z = 0; // make sure on z = 0
+        Transform obj = new GameObject("Circle").transform;
         obj.parent = transform;
-        obj.name = "Circle";
         LineRenderer l =  obj.AddComponent<LineRenderer>();
         UpdateLineRenderer(l, subDivs + 1);
 
-        float radianJump = Mathf.PI * 2 / (float)subDivs;
+        float radianJump = Mathf.PI * 2 / (float)subDivs; //radian jump per point depending on subdivs
 
-        for (int i = 0; i < subDivs + 1; i++)
+        for (int i = 0; i < subDivs + 1; i++) //goes around circle and adds point
         {
             Vector3 dir = new Vector3(Mathf.Cos(i * radianJump), Mathf.Sin(i * radianJump), 0);
             Vector3 pos = centre + dir * radius;
@@ -126,6 +126,7 @@ public class LevelSelect : MonoBehaviour
         l.textureScale = new Vector2(3, 1);
         l.textureMode = LineTextureMode.Tile;
     }
+    #endregion
 
     private void OnDrawGizmosSelected()
     {
