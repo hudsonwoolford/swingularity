@@ -1,18 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] List<string> completedLevels;
+    [Header("Parameters")]
+    [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
+    [Header("Serialized Variables")]
+    [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
+    [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
+    [SerializeField] bool procedural = false; //Whether you are currently in a procedural level or not
+    Canvas levelCanvas; //The canvas for level UI
+    bool chosenOption; //True when the player has clicked a button on the canvas UI
     private void Awake()
     {
-        completedLevels = new List<string>()
-        {
-        };
+        completedLevels = new List<string>();
+        levelCanvas = GetComponent<Canvas>();
+        levelCanvas.enabled = false;
+        chosenOption = false;
     }
     // Start is called before the first frame update
     void Start()
@@ -22,25 +31,78 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //print(completedLevels.Count);
 
     }
-    void CompleteCurrentLevel()
-    {
-        string index = SceneManager.GetActiveScene().name;
-        if(completedLevels.Contains(index)) { return; }
-        completedLevels.Add(index);
-    }
-    public bool LevelCompleted(string level)
+    public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {
         return completedLevels.Contains(level);
     }
+    public void NextLevelUIButton() //Called by the "Next" button
+    {
+        chosenOption = true;
+    }
+    IEnumerator NextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
+    {
+        string name = SceneManager.GetActiveScene().name;
+        int currentIndex = Array.IndexOf(currentGalaxy, name);
+        string nextName = currentIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[currentIndex + 1] : "Main Menu";
+        
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
+        loadNextOp.allowSceneActivation = false;
+        while (!chosenOption)
+        {
+            if(SceneManager.GetActiveScene().name != name) 
+            {
+                levelCanvas.enabled = false;
+                chosenOption = false;
+                yield break; 
+            }
+            yield return new WaitForFixedUpdate();
+        }
+        chosenOption = false;
+        loadNextOp.allowSceneActivation = true;
+        levelCanvas.enabled = false;
+    }
+    #region EventFunctions
+    void CompleteCurrentLevel() //Adds the current level to completed level array
+    {
+        if (procedural) { return; }
+
+        string name = SceneManager.GetActiveScene().name;
+        if(!completedLevels.Contains(name)) { 
+            completedLevels.Add(name);
+        }
+
+        levelCanvas.enabled = true;
+        StartCoroutine(NextLevelUI());
+    }
+    void SetGalaxyLevels(string[] galaxy) //Sets the current galaxy levels, we also know it cannot be procedural
+    {
+        procedural = false;
+        currentGalaxy = galaxy;
+    }
+    void ProceduralInitiation() //Sets procedural to true
+    {
+        procedural = true;
+    }
+    void OnScore(string score, int scoreRelToPar) //Updates score text to the score invoked in the event by LevelScoring
+    {
+        if(scoreText == null) { return; }
+        scoreText.text = score;
+    }
+    #endregion
     private void OnEnable()
     {
-        ShootBall.onHole += CompleteCurrentLevel;
+        LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
+        LevelGenerator.levelInit += ProceduralInitiation;   //Invoked by level generator in start when after generating the level
+        GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
+        ShootBall.onHole += CompleteCurrentLevel;           //Invoked by shoot ball on collision with the flag
     }
     private void OnDisable()
     {
+        LevelScoring.onScore -= OnScore;
+        LevelGenerator.levelInit -= ProceduralInitiation;
+        GalaxyLevels.initGalaxy -= SetGalaxyLevels;
         ShootBall.onHole -= CompleteCurrentLevel;
     }
 }

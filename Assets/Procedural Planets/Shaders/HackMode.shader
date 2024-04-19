@@ -32,13 +32,18 @@ Shader "Hidden/HackMode"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float3 worldPos : TEXCOORD1;
             };
 
+            float2 _CamSize;
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+
+                float3 objW = mul(unity_ObjectToWorld, o.vertex).xyz;
+                o.worldPos = (float3(objW.x * (_CamSize.x / 2), objW.y * -(_CamSize.y / 2), 0) + _WorldSpaceCameraPos);
                 return o;
             }
 
@@ -52,6 +57,14 @@ Shader "Hidden/HackMode"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
+                //if(abs(i.worldPos.x) % 1 < 0.1f)
+                //{
+                //    return 1;
+                //}
+                //if(abs(i.worldPos.y) % 1 < 0.1f)
+                //{
+                //    return 1;
+                //}
                 //offsets of pixel
                 float offsetStep = _MainTex_TexelSize.y;
                 float2 offsets[9] = {

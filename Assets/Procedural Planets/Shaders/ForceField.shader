@@ -139,7 +139,7 @@ Shader "Custom/ForceField"
             float totalY = 0;
             float ripDistRatio = 0;
 
-            for (int i = 0; i < 10; i++){
+            for (uint i = 0; i < 10; i++){
                 if(_HitInfo[i].x == 0) {break;}
                 float2 rippleInfo = CalculateRipple(i, faceCentre);
                 ripDistRatio = rippleInfo.y > ripDistRatio ? rippleInfo.y : ripDistRatio;
@@ -149,14 +149,14 @@ Shader "Custom/ForceField"
 
 
             float distToBall = 10000;
-            for(int i = 0; i<_ObjPos.Length; i++)
+            for(uint u = 0; u<_ObjPos.Length; u++)
             {
-                if (_ObjPos[i].x == 0 && _ObjPos[i].y == 0 && _ObjPos[i].z == 0)
+                if (_ObjPos[u].x == 0 && _ObjPos[u].y == 0 && _ObjPos[u].z == 0)
                 {
                     continue;
                 }
 
-                float lengthToBall = length(_ObjPos[i] - faceCentre) / _Scale;
+                float lengthToBall = length(_ObjPos[u] - faceCentre) / _Scale;
                 distToBall = distToBall > lengthToBall ? lengthToBall : distToBall;
             }
             if (distToBall <= _InteractiveDistance){ o.objNear = true; }

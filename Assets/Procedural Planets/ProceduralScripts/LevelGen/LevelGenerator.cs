@@ -52,11 +52,12 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        Camera mainCam = Camera.main;
         if(randomSeed)
         {
             seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f)* Time.time);
         }
-        Vector2 camSize = CamSize();
+        Vector2 camSize = CamSize(mainCam);
         bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
         float extensionAmount = UnityEngine.Random.value;
         regionSize = CalculateBounds(camSize, extensionAmount, xOry);
@@ -77,9 +78,9 @@ public class LevelGenerator : MonoBehaviour
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
-        float maxZoom = Mathf.Max((regionSize.x) / (2 * Camera.main.aspect), regionSize.y / 2) * 1.4f;
+        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) * 1.4f;
 
-        Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
+        mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
 
     (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize, float extensionAmount, bool x){
@@ -309,9 +310,9 @@ public class LevelGenerator : MonoBehaviour
     {
         ShootBall.onHole -= ReloadScene;
     }
-    public static Vector2 CamSize(){
-        float height = Camera.main.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
+    public static Vector2 CamSize(Camera cam){
+        float height = cam.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
+        float width = height * cam.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
         return camSize;
     }

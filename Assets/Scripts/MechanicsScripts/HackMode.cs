@@ -57,6 +57,7 @@ public class HackMode : MonoBehaviour
         {
             hackMode = !hackMode;
         }
+        CamSize();
         EnableFabric(hackMode);
         if(hackMode && updateInPlaymode) { UpdateFabric(planets); }
     }
@@ -68,6 +69,12 @@ public class HackMode : MonoBehaviour
         Graphics.Blit(source, blur, blurEffect);
         Graphics.Blit(blur, destination, edgeEffect);
         blur.Release();
+    }
+    void CamSize()
+    {
+        float height = Camera.main.orthographicSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        edgeEffect.SetVector("_CamSize", new Vector4(width, height, 0, 0));
     }
     void ColorFabric(Color color)
     {

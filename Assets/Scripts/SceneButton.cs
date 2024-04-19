@@ -9,11 +9,13 @@ using Unity.VisualScripting;
 [ExecuteInEditMode()]
 public class SceneButton : MonoBehaviour
 {
-    [SerializeField] string sceneName = "Scene", requiredScene = "Main Menu", stringName = "Name";
+    public bool unlocked = false;
+    public string sceneName = "Scene";
+
+    [SerializeField] string requiredScene = "Main Menu", stringName = "Name";
     [ColorUsage(true, true)]
     [SerializeField] Color color = Color.white;
     [SerializeField] bool scaleText = false;
-    public bool unlocked = false;
     Button button;
     Image image;
     TextMeshProUGUI nameText;

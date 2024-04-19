@@ -34,7 +34,13 @@ public class CameraFollow : MonoBehaviour
 
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
         innerShape.points = PolygonPositions(startPos, endPos, 2f, 10); //to scale version
-       
+        if (cameraPath == null)
+        {
+            cameraPath = new GameObject("Camera Bounds")
+            {
+                tag = "CameraBounds"
+            }.AddComponent<PolygonCollider2D>();
+        }
         cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
     }   
     private void Awake()
@@ -51,11 +57,13 @@ public class CameraFollow : MonoBehaviour
 
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
        
-
-        cameraPath = new GameObject("Camera Bounds"){
-            tag = "CameraBounds"
-        }.AddComponent<PolygonCollider2D>();
-        cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
+        if(cameraPath == null)
+        {
+            cameraPath = new GameObject("Camera Bounds"){
+                tag = "CameraBounds"
+            }.AddComponent<PolygonCollider2D>();
+            cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
+        }
     }
 
     // Update is called once per frame

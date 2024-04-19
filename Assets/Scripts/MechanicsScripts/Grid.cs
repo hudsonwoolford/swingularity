@@ -115,7 +115,7 @@ public static class ArtificialGravity
             distance = distance == 0 ? 1 : distance;
 
             // Calculate the displacement
-            deltaZ += 1 / Mathf.Pow(distance, 2f) ;
+            deltaZ += (rbAttracting.mass) / Mathf.Pow(distance, 2f) ;
         }
         divisor = divisor == 0 ? 1 : divisor;
         deltaZ = deltaZ == 0 ? 1 : deltaZ;

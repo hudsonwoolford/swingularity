@@ -68,7 +68,6 @@ public class ShootBall : MonoBehaviour
     {
         if (simulationScene != null)
         {
-
             AsyncOperation removingScene = SceneManager.UnloadSceneAsync(simulationScene);
             yield return removingScene;
             PhysicsScene();
@@ -81,6 +80,7 @@ public class ShootBall : MonoBehaviour
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
+        if (simulated) { PhysicsScene(); }
     }
     private void Start()
     {
@@ -91,7 +91,6 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
 
-        if (simulated) { PhysicsScene(); }
     }
     // Update is called once per frame
     void Update()

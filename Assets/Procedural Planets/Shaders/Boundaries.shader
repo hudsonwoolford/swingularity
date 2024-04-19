@@ -126,10 +126,10 @@ Shader "Hidden/Boundaries"
 
                 float3 wp = i.worldPos.xyz;
 
-                float3 outsidePoint = (100, 100);
-                int intersections = 0;
+                float3 outsidePoint = float3(100, 100, 0);   
+                uint intersections = 0;
                 bool colLin = false;
-                for(int x = 0; x<5; x++)
+                for(uint x = 0; x<5; x++)
                 {
                     float check = areIntersecting(outsidePoint.x, outsidePoint.y, wp.x, wp.y, polygonP[x].x, polygonP[x].y, polygonP[x+1].x, polygonP[x+1].y);
                     intersections += check;

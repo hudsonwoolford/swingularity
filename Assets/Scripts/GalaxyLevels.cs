@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 using System.Linq;
 
 [ExecuteInEditMode()]
-public class LevelSelect : MonoBehaviour
+public class GalaxyLevels : MonoBehaviour
 {
     [Header("System Variables")]
     [SerializeField] Transform buttonsCanvas;
@@ -20,6 +20,8 @@ public class LevelSelect : MonoBehaviour
     [SerializeField] float circleRad = 1f;
     [SerializeField] Material lineMat;
     LineRenderer[] lr = new LineRenderer[5];
+    public delegate void InitGalaxy(string[] galaxyLevels);
+    public static InitGalaxy initGalaxy;
     private void Awake()
     {
         systemButtons = buttonsCanvas.GetComponentsInChildren<SceneButton>();
@@ -29,6 +31,7 @@ public class LevelSelect : MonoBehaviour
     {
         if(!Application.isPlaying) { return; } //only do function in game
         if (buttonsCanvas == null) { return; } //crucial variable
+        initGalaxy?.Invoke(System.Array.ConvertAll(systemButtons, s => s.sceneName));
         //calling functions
         SystemPositions();
         Linerendering();

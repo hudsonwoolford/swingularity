@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ScoringManager : MonoBehaviour
+public class LevelScoring : MonoBehaviour
 {
     [Header("Scoring")]
     [SerializeField] int par;
     [SerializeField] List<Score> scores = new List<Score>();
     [Header("UI")]
-    [SerializeField] Animator canvasAnimator;
+    //[SerializeField] Animator canvasAnimator;
     [SerializeField] TextMeshProUGUI parText;
-    [SerializeField] TextMeshProUGUI holeScoreText, numShotsText;
+    [SerializeField] TextMeshProUGUI numShotsText;
     [Serializable]
     struct Score
     {
@@ -20,10 +20,14 @@ public class ScoringManager : MonoBehaviour
         public int scoreRelToPar;
     }
     int numShots;
+    string currentScore;
+
+    public delegate void OnScore(string score, int scoreRelToPar);
+    public static OnScore onScore;
 
     private void Start()
     {
-        holeScoreText.gameObject.SetActive(false);
+        //holeScoreText.gameObject.SetActive(false);
         parText.text = "Par: " + par.ToString();
         numShotsText.text = "Shots: " + numShots.ToString();
     }
@@ -31,8 +35,8 @@ public class ScoringManager : MonoBehaviour
     {
         if(numShots == 1)
         {
-            holeScoreText.text = "Hole in One!";
-            canvasAnimator.Play("ShowScore");
+            currentScore = "Hole in One!";
+            onScore?.Invoke(currentScore, numShots - par);
             return;
         }
         bool namedScore = false;
@@ -41,15 +45,15 @@ public class ScoringManager : MonoBehaviour
             if(par + score.scoreRelToPar == numShots) 
             {
                 namedScore = true;
-                holeScoreText.text = score.name;
+                currentScore = score.name;
                 break;
             }
         }
         if(!namedScore) 
         { 
-            holeScoreText.text = numShots.ToString() + " Shots";
+            currentScore = numShots.ToString() + " Shots";
         }
-        canvasAnimator.Play("ShowScore");
+        onScore?.Invoke(currentScore, numShots - par);
 
 
     }
