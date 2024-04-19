@@ -41,9 +41,11 @@ public class LevelGenerator : MonoBehaviour
     public struct Planet{
         public GameObject planet;
         public ColorSchemeStaticReference.PlanetType planetType;
-        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType){
+        public ColorSchemeStaticReference.ColorSchemePool colorSchemePool;
+        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, ColorSchemeStaticReference.ColorSchemePool colorSchemePool){
             this.planet = planet;
             this.planetType = planetType;
+            this.colorSchemePool = colorSchemePool;
         }
     }
 
@@ -114,7 +116,7 @@ public class LevelGenerator : MonoBehaviour
         Transform allPlanetParent = new GameObject("Planets").transform;
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i]);
+            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i], planetList);
             print(level.planetSizes[i]);
             GameObject forcefield = GenerateForcefield(planetList[i]);
             planetList[i].planet.SetActive(true);
@@ -166,16 +168,20 @@ public class LevelGenerator : MonoBehaviour
         return forcefield;
     }
 
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType)
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
     {
-        generator.RandomizeColorScheme(seed, planetType, index, sameColourPoolTwice);
+        ColorSchemeStaticReference.ColorSchemePool[] previousColorSchemePools = new ColorSchemeStaticReference.ColorSchemePool[previousPlanets.Length];
+        for (int i = 0; i < previousPlanets.Length; i++){
+            previousColorSchemePools[i] = previousPlanets[i].colorSchemePool;
+        }
+        ColorSchemeStaticReference.ColorSchemePool colorSchemePool = generator.RandomizeColorScheme(seed, planetType, index, sameColourPoolTwice, previousColorSchemePools);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = position;
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, ColorSchemeStaticReference.PlanetType.blackhole);
+        return new Planet(newPlanet, planetType, colorSchemePool);
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)

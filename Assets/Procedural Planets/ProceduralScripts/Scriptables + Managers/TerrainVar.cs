@@ -216,6 +216,28 @@ public static class ColorSchemeStaticReference{
         public PlanetColorScheme primaryBiome; //the primary biome
         public PlanetColorScheme[] planetColorSchemes; //array of color schemes
         public PlanetColorScheme[] polarColorSchemes; //array of color schemes
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ColorSchemePool))
+            return false;
+
+            ColorSchemePool other = (ColorSchemePool)obj;
+
+            return this.name == other.name 
+            && this.planetType == other.planetType
+            && this.oPrimary == other.oPrimary
+            && this.aPrimary == other.aPrimary
+            && this.singleBiome == other.singleBiome
+            && this.primaryBiome == other.primaryBiome
+            && this.planetColorSchemes == other.planetColorSchemes
+            && this.polarColorSchemes == other.polarColorSchemes;
+        }
+
+        public override int GetHashCode()
+        {
+            return name.GetHashCode() ^ planetType.GetHashCode() ^ oPrimary.GetHashCode() ^ aPrimary.GetHashCode() ^ singleBiome.GetHashCode() ^ primaryBiome.GetHashCode() ^ planetColorSchemes.GetHashCode() ^ polarColorSchemes.GetHashCode();
+        }
     }
 }
 
