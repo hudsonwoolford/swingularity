@@ -49,7 +49,7 @@ Shader "Custom/GravityGrid"
             for (uint u = 0; u < min(_PlanetCount, 512); u++)
             {
                 float3 direction = float3(_Planets[u].xy, 0) - worldPos;
-                float distance = length(direction);
+                float distance = length(direction) - 1;
                 if (distance == 0) continue; // Avoid division by zero
 
                 float forceMagnitude = 1 * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force

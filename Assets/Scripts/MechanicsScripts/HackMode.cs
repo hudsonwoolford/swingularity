@@ -44,14 +44,7 @@ public class HackMode : MonoBehaviour
     {
         if(env==null) { return; }
         Rigidbody[] planets = env.GetComponentsInChildren<Rigidbody>();
-        if (!Application.isPlaying)
-        {
-            if(!showInEditor) { EnableFabric(false); return; }
 
-            UpdateFabric(planets);
-            EnableFabric(true);
-            return;
-        }
         if (Input.GetKeyDown(KeyCode.H))
         {
             hackMode = !hackMode;
@@ -69,18 +62,18 @@ public class HackMode : MonoBehaviour
         Graphics.Blit(blur, destination, edgeEffect);
         blur.Release();
     }
-
-    void ColorFabric(Color color)
-    {
-        
-    }
     void EnableFabric(bool enable)
     {
         gridMeshRend.enabled = enable;
     }                       
     void UpdateFabric(Rigidbody[] planets)
     {
-        Vector4[] planetInfo = Array.ConvertAll(env.GetComponentsInChildren<Rigidbody>(), r => new Vector4(r.transform.position.x, r.transform.position.y, r.mass, 0));
+        Vector4[] planetInfo = new Vector4[512];
+        Vector4[] realPlanets = Array.ConvertAll(env.GetComponentsInChildren<Rigidbody>(), r => new Vector4(r.transform.position.x, r.transform.position.y, r.mass, 0));
+        for (int i = 0; i < realPlanets.Length; i++)
+        {
+            planetInfo[i] = realPlanets[i];
+        }
         if (planetInfo.Length > 0)
         {
             gravityGrid.SetVectorArray("_Planets", planetInfo);
@@ -95,7 +88,7 @@ public class HackMode : MonoBehaviour
     {
         Vector3 size = CameraFollow.innerShape == null ? new Vector3(width, height, 0) : CameraFollow.innerShape.bounds.extents * 2;
         Vector3 centre = CameraFollow.innerShape == null ? Vector3.one : CameraFollow.innerShape.bounds.center;
-        GenerateMesh(GenerateVerts(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.x / cellSize), cellSize, centre), GenerateIndicies(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.x / cellSize)));
+        GenerateMesh(GenerateVerts(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.y / cellSize), cellSize, centre), GenerateIndicies(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.y / cellSize)));
     }
 
     #region Procedural Grid
