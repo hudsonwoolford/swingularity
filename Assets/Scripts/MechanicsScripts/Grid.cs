@@ -110,12 +110,10 @@ public static class ArtificialGravity
         float deltaZ = 0;
         foreach (Rigidbody rbAttracting in planetRB)
         {
-            // Calculate the distance between the vertex and the planet
-            float distance = Vector2.Distance(vertexPosition, rbAttracting.position);
-            distance = distance == 0 ? 1 : distance;
+            Vector2 direction = new Vector2(rbAttracting.position.x, rbAttracting.position.y) - vertexPosition; //direction vector
+            float distance = direction.magnitude; //distance
 
-            // Calculate the displacement
-            deltaZ += (rbAttracting.mass) / Mathf.Pow(distance, 2f) ;
+            deltaZ = G * (rbAttracting.mass * 1) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         }
         divisor = divisor == 0 ? 1 : divisor;
         deltaZ = deltaZ == 0 ? 1 : deltaZ;

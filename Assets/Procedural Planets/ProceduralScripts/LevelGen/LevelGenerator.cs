@@ -20,7 +20,7 @@ public class LevelGenerator : MonoBehaviour
     9: offset scale for determining random values of planet
     */
     [SerializeField] bool randomSeed = false;
-    [SerializeField] bool sameColourPoolTwice = false;
+    //[SerializeField] bool sameColourPoolTwice = false;
     [SerializeField] Material invisOcean;
     public int seed;
     //Level gen params
@@ -119,7 +119,6 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i], planetList);
-            print(level.planetSizes[i]);
             GameObject forcefield = GenerateForcefield(planetList[i]);
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
@@ -294,11 +293,13 @@ public class LevelGenerator : MonoBehaviour
     {
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
+        RenderTexture prevActive = RenderTexture.active;
         RenderTexture.active = renderTexture;
         texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
         texture.Apply();
 
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+        RenderTexture.active = prevActive;
         return sprite;
     }
 
