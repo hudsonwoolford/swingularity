@@ -43,7 +43,11 @@ public class ForceField : MonoBehaviour
     public void Init(Transform p)
     {
         planet = p;
-        PlanetCorrespond();
+        planet.GetComponentInChildren<AtmosphereHandler>(true).ScaleAtmosphere();
+
+        if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true);}
+        transform.position = planet.position;
+        transform.localScale = Vector3.one * (pOuterAtmosphere.range + rangeOffset) * 1.075f / 2;
     }
     private void Awake()
     {

@@ -11,11 +11,16 @@ public class AtmosphereHandler : MonoBehaviour
     {
         atmosphere = GetComponent<Light>();
         scaleRatio = transform.parent.localScale.x / atmosphere.range;
+        atmosphere.range = transform.parent.localScale.x / scaleRatio;
     }
     // Update is called once per frame
     void Update()
     {
-        if(atmosphere == null) {atmosphere = GetComponent<Light>();}
-        atmosphere.range = transform.parent.localScale.x / scaleRatio;        
+        ScaleAtmosphere();
+    }
+    public void ScaleAtmosphere()
+    {
+        if (atmosphere == null) { atmosphere = GetComponent<Light>(); }
+        atmosphere.range = transform.parent.localScale.x / scaleRatio;
     }
 }

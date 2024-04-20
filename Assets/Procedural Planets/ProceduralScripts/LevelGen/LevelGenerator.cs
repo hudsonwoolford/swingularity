@@ -58,6 +58,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        levelInit?.Invoke();
         Camera mainCam = Camera.main;
         if(randomSeed)
         {
@@ -128,33 +129,34 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < level.numPlanets; i++){
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i], planetList);
-            GameObject forcefield = GenerateForcefield(planetList[i]);
-            planetList[i].forceField = forcefield;
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
+            GameObject forcefield = GenerateForcefield(planetList[i]);
+            planetList[i].forceField = forcefield;
             forcefield.transform.parent = env;
+            //print(forcefield.transform.localScale.x);
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
-        SetBallFlagPosition(flag, player.transform, Array.ConvertAll(planetList, t => t.planet.transform));
+        SetBallFlagPosition(flag, player.transform, planetList);
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
         return planetList;
     }
 
-    void SetBallFlagPosition(Transform flag, Transform ball, Transform[] candidates)
+    void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
     {
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
         int rot = UnityEngine.Random.Range(0, 360);
         flag.eulerAngles = new Vector3(rot, flag.eulerAngles.y, flag.eulerAngles.z);
-        flag.position = candidates[candidateIndex].position + flag.up * candidates[candidateIndex].localScale.x * (1 / 0.3f);
-        flag.localScale *= Mathf.Clamp(candidates[candidateIndex].localScale.x *1.5f, 0, 5);
+        flag.position = candidates[candidateIndex].planet.transform.position + flag.up * candidates[candidateIndex].planet.transform.localScale.x * (1 / 0.3f);
+        flag.localScale *= Mathf.Clamp(candidates[candidateIndex].planet.transform.localScale.x *1.5f, 0, 5);
         //farthest planet
         float distTracker = 0;
         int farthestIndex = 0;
         int i = 0;
-        foreach (Transform p in candidates)
+        foreach (Planet p in candidates)
         {
-            float dist = (flag.position - p.position).magnitude;
+            float dist = (flag.position - p.planet.transform.position).magnitude;
             if(dist > distTracker)
             {
                 farthestIndex = i;
@@ -162,9 +164,9 @@ public class LevelGenerator : MonoBehaviour
             }
             i++;
         }
-        float flagAng = Mathf.Atan2((candidates[farthestIndex].position - flag.position).normalized.y, (candidates[farthestIndex].position - flag.position).normalized.x);
+        float flagAng = Mathf.Atan2((candidates[farthestIndex].planet.transform.position - flag.position).normalized.y, (candidates[farthestIndex].planet.transform.position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].localScale.x * (1 / 0.3f) * 1.2f + 0.15f);
+        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x + 0.22f);
     }
     GameObject GenerateForcefield(Planet planet){
         GameObject forcefield = this.gameObject;

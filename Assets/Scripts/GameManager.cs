@@ -26,5 +26,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GetComponentInChildren<EventSystem>().enabled = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }
