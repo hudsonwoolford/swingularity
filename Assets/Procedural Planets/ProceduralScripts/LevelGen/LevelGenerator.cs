@@ -72,8 +72,8 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            regionSize.x - maxSize/2,
-            regionSize.y - maxSize/2,
+            regionSize.x - maxSize,
+            regionSize.y - maxSize,
             samplesBeforeRejection,
             offsetScale
         };
@@ -181,7 +181,7 @@ public class LevelGenerator : MonoBehaviour
         generator.UpdateAndApplyAll();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
-        newPlanet.transform.position = position;
+        newPlanet.transform.position = new Vector3 (position.x + maxSize/2, position.y + maxSize/2, position.z);
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2);
     }
