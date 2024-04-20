@@ -72,8 +72,8 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            regionSize.x,
-            regionSize.y,
+            regionSize.x - maxSize/2,
+            regionSize.y - maxSize/2,
             samplesBeforeRejection,
             offsetScale
         };
