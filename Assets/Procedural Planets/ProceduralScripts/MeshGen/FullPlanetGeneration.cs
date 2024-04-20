@@ -617,23 +617,16 @@ public class FullPlanetGeneration : MonoBehaviour
     public void RandomizeColorScheme(Vector3 offsetSeed)
     {
         ClearAllTrees();
-        List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> pool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
-
-        for (int i = 0; i < terrainVarPool.Length; i++){
-            TerrainVar currentTerrain = terrainVarPool[i];
-            for (int u = 0; u < currentTerrain.colorSchemePools.colorSchemePools.Length; u++){
-                    pool.Add((currentTerrain.colorSchemePools.colorSchemePools[u], currentTerrain)); 
-            }
-        }
+        ColorSchemeStaticReference.ColorSchemePool[] pool = planet.terrainVar.colorSchemePools.colorSchemePools;
         UnityEngine.Random.InitState((int)offsetSeed.x);
         UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
-        if (pool.Count == 0){
+        if (pool.Length == 0){
             Debug.LogWarning("Terrain variable [" + planet.terrainVar.name + "] does not contain any colour pools");
             return; 
         }
 
-        int index = UnityEngine.Random.Range(0, pool.Count); //Index of the pool
-        ColorSchemeStaticReference.ColorSchemePool poolScheme = pool[index].Item1;
+        int index = UnityEngine.Random.Range(0, pool.Length); //Index of the pool
+        ColorSchemeStaticReference.ColorSchemePool poolScheme = pool[index];
         if (poolScheme.planetColorSchemes.Length == 0)
         {
             Debug.LogWarning("Color Scheme Pool: [" + poolScheme.name + "] does not contain secondary biomes");
@@ -711,8 +704,6 @@ public class FullPlanetGeneration : MonoBehaviour
 
         UnityEngine.Random.InitState((int)offsetSeed.x);
         UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
-        planet.terrainVar = pool[index].Item2;
-        RandomizeOffset(offsetSeed, 0);
 
         UpdateOcean();
     }

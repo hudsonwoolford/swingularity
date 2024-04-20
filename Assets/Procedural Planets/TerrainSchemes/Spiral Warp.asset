@@ -61,12 +61,13 @@ MonoBehaviour:
       polarColorSchemes: []
     - name: Primordial
       planetType: 6
-      oPrimary: 1
-      aPrimary: 1
+      oPrimary: 0
+      aPrimary: 0
       singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      primaryBiome: {fileID: 0}
       planetColorSchemes:
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
+      - {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
       polarColorSchemes: []
     - name: Wastelands
       planetType: 5
@@ -95,7 +96,7 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 88
+    seed: 1292
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
@@ -119,9 +120,9 @@ MonoBehaviour:
     multiplier: 1.59
     gain: 0
     offset:
-    - 74.39249
-    - 137.76108
-    - 140.73782
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     elevation: 1
   detailNoiseSettings:
     applyNoise: 1
@@ -132,9 +133,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.25
     offset:
-    - 86.33464
-    - 104.26708
-    - 176.27693
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     elevation: 1.39
   ridgeNoiseSettings:
     applyNoise: 1
@@ -146,9 +147,9 @@ MonoBehaviour:
     gain: 1
     power: 1.93
     offset:
-    - 84.18416
-    - 110.81824
-    - 150.75024
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     elevation: -2.35
     smoothing: 0
   warpedNoiseSettings:
@@ -160,9 +161,9 @@ MonoBehaviour:
     multiplier: 1.51
     gain: 1.63
     offset:
-    - 77.82327
-    - 114.784935
-    - 205.04562
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     strength: 1.17
   continentNoiseSettings:
     applyNoise: 1
@@ -173,9 +174,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0
     offset:
-    - 78.144684
-    - 127.06055
-    - 251.61731
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     depthMultiplier: 4.55
     oceanFloorDepth: 5.39
     oceanFloorSmoothing: 1
@@ -188,16 +189,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 53.203773
-    - 118.66968
-    - 174.10028
+    - 1292.0181
+    - 317.22028
+    - 1278.9202
     strength: 1
     maskBlend: 3.5
     maskVerticalShift: 9.11
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 49.007828, y: 122.87649, z: 137.73839}
+    _Offset: {x: 1292.0181, y: 317.22028, z: 1278.9202}
     _Scale: 0.64
     _Persistence: 0.5
     _Lacunarity: 2
@@ -206,7 +207,7 @@ MonoBehaviour:
   biomeWarpNoiseSettings:
     randomizeNoise: 1
     _WarpOctaves: 3
-    _WarpOffset: {x: 72.99726, y: 130.12494, z: 173.80928}
+    _WarpOffset: {x: 1292.0181, y: 317.22028, z: 1278.9202}
     _WarpScale: 1
     _WarpPersistence: 0.5
     _WarpLacunarity: 2

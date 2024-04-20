@@ -303,8 +303,10 @@ public class LevelGenerator : MonoBehaviour
         return sprite;
     }
 
-    void OnDrawGizmos(){
-
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(0, 1, 1, 0.1f);
+        Gizmos.DrawCube(regionSize / 2, regionSize);
     }
     void ReloadScene()
     {
