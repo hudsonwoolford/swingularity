@@ -43,11 +43,13 @@ public class LevelGenerator : MonoBehaviour
         public ColorSchemeStaticReference.PlanetType planetType;
         public PlanetColorScheme biomeA;
         public PlanetColorScheme biomeB;
-        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB){
+        public GameObject forceField;
+        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB, GameObject forceField){
             this.planet = planet;
             this.planetType = planetType;
             this.biomeA = biomeA;
             this.biomeB = biomeB;
+            this.forceField = forceField;
         }
     }
 
@@ -72,8 +74,8 @@ public class LevelGenerator : MonoBehaviour
             maxSize,
             sizeBias,
             sizeScale,
-            regionSize.x - maxSize,
-            regionSize.y - maxSize,
+            (regionSize.x - maxSize) / 1.25f,
+            (regionSize.y - maxSize) / 1.25f,
             samplesBeforeRejection,
             offsetScale
         };
@@ -82,7 +84,7 @@ public class LevelGenerator : MonoBehaviour
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
-        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) * 1.4f;
+        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) * 1.1f;
 
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
@@ -104,7 +106,7 @@ public class LevelGenerator : MonoBehaviour
     Vector2 CalculateBounds(Vector3 camSize, float extensionAmount, bool x){
         //Extend in the x direction maybe?
         
-        Vector2 regionSize = camSize;
+        Vector2 regionSize = new Vector3 (camSize.x + maxSize, camSize.y + maxSize, camSize.z);
         if(x){ regionSize += new Vector2(extensionAmount * regionExtension.x, 0); }
         else{ regionSize += new Vector2(0, extensionAmount * regionExtension.y);}
 
@@ -120,6 +122,7 @@ public class LevelGenerator : MonoBehaviour
             Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i], planetList);
             GameObject forcefield = GenerateForcefield(planetList[i]);
+            planetList[i].forceField = forcefield;
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
             forcefield.transform.parent = env;
@@ -183,7 +186,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
         newPlanet.transform.position = new Vector3 (position.x + maxSize/2, position.y + maxSize/2, position.z);
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2);
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
     }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
