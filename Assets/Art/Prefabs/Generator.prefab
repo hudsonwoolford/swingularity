@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2034335963164448373}
   - component: {fileID: 7398286214257961803}
+  - component: {fileID: 6067353834267431769}
   m_Layer: 10
   m_Name: Atmosphere Inner
   m_TagString: Untagged
@@ -43,9 +44,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.19215685, g: 0.68827164, b: 0.94509804, a: 1}
+  m_Color: {r: 0.8392157, g: 0.47063127, b: 0.3058824, a: 1}
   m_Intensity: 0.44
-  m_Range: 2.57
+  m_Range: 2.5749998
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -94,6 +95,18 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &6067353834267431769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736570304964729663}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050426ee9956d2246b0070349499bcae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2229070656619117603
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2557287888597850216}
   - component: {fileID: 7998771579938444643}
+  - component: {fileID: 5468818920275756185}
   m_Layer: 10
   m_Name: Atmosphere Front
   m_TagString: Untagged
@@ -137,9 +151,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.40744036, g: 0.7725985, b: 0.7924528, a: 1}
-  m_Intensity: 0.21
-  m_Range: 2.23
+  m_Color: {r: 0.9245283, g: 0.6733028, b: 0.5276789, a: 1}
+  m_Intensity: 0.07
+  m_Range: 2.266
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -188,6 +202,18 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &5468818920275756185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2229070656619117603}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050426ee9956d2246b0070349499bcae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3976398524113245770
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,8 +257,9 @@ GameObject:
   - component: {fileID: 2735067377891103628}
   - component: {fileID: 3135077523985655670}
   - component: {fileID: 7578884830077894491}
+  - component: {fileID: 6210014292841202630}
   m_Layer: 10
-  m_Name: PlanetGenerator
+  m_Name: Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,7 +283,7 @@ Transform:
   - {fileID: 2557287888597850216}
   - {fileID: 166402838562978958}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2735067377891103628
 MonoBehaviour:
@@ -354,6 +381,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6210014292841202630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4185493507399609543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b755939b8cc8f834eb14dfb802d1da58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biomeA: {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
+  biomeB: {fileID: 11400000, guid: 927e0e9f8f29ee44cb0fee83466d8abe, type: 2}
+  forceFieldColor: {r: 0.8392157, g: 0.47058824, b: 0.30588236, a: 1}
+  oBiomeA: 0
+  oBiomeB: 1
+  aBiomeA: 0
+  aBiomeB: 1
 --- !u!1 &5765096888082882944
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +428,7 @@ Transform:
   m_GameObject: {fileID: 5765096888082882944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.96, y: 1.96, z: 1.96}
+  m_LocalScale: {x: 2.1, y: 2.1, z: 2.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4533032007578357839}
@@ -450,9 +496,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7591a99ac4635de44bcd0ace3f9d8f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
-  metallic: 0
-  smoothness: 0.811
+  oceanColor: {r: 4.8671427, g: 0.18306887, b: 0, a: 0.14901961}
+  metallic: 0.188
+  smoothness: 0.552
   normalTexture: {fileID: 2800000, guid: ca2018cce4b3041ca94fe509b701bce5, type: 3}
 --- !u!1 &8391902579975593360
 GameObject:
@@ -464,6 +510,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2613480131532650213}
   - component: {fileID: 7764789913266523219}
+  - component: {fileID: 2705985632106196405}
   m_Layer: 10
   m_Name: Atmosphere Outer
   m_TagString: Untagged
@@ -497,9 +544,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0, g: 0.84723073, b: 0.9056604, a: 1}
+  m_Color: {r: 0.745283, g: 0, b: 0.021890968, a: 1}
   m_Intensity: 0.97
-  m_Range: 2.4
+  m_Range: 2.369
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -548,3 +595,15 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &2705985632106196405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8391902579975593360}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050426ee9956d2246b0070349499bcae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

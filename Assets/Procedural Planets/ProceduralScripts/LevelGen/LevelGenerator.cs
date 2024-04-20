@@ -61,8 +61,9 @@ public class LevelGenerator : MonoBehaviour
         Camera mainCam = Camera.main;
         if(randomSeed)
         {
-            seed = Mathf.RoundToInt(UnityEngine.Random.Range(-1f, 1f) * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f)* Time.time);
+            seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f) * Time.time);
         }
+        UnityEngine.Random.InitState(seed);
         Vector2 camSize = CamSize(mainCam);
         bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
         float extensionAmount = UnityEngine.Random.value;
@@ -80,6 +81,12 @@ public class LevelGenerator : MonoBehaviour
             offsetScale
         };
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
+        for (int i = 0; level.numPlanets == 0 && i < 50; i++)
+        {
+            level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
+            Debug.LogWarning(seed + " generated no planets. Regenerating planets, iteration: " + i + "/50 | Current Planet Count = " + level.numPlanets);
+            seed++;
+        }
         Planet[] planets = Generatelevel(level);
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
@@ -92,7 +99,7 @@ public class LevelGenerator : MonoBehaviour
     (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize, float extensionAmount, bool x){
         Vector3 avg = Vector3.zero;
         foreach (Planet planet in planets){
-            avg += planet.planet.transform.position;
+            avg += planet.planet.transform.position;             
         }
         avg /= planets.Length;
         Vector2 planetsCenter = avg;
@@ -136,8 +143,7 @@ public class LevelGenerator : MonoBehaviour
 
     void SetBallFlagPosition(Transform flag, Transform ball, Transform[] candidates)
     {
-        UnityEngine.Random.InitState(seed);
-        int candidateIndex = UnityEngine.Random.Range(0, candidates.Length-1);
+        int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
         int rot = UnityEngine.Random.Range(0, 360);
         flag.eulerAngles = new Vector3(rot, flag.eulerAngles.y, flag.eulerAngles.z);
         flag.position = candidates[candidateIndex].position + flag.up * candidates[candidateIndex].localScale.x * (1 / 0.3f);
@@ -306,7 +312,7 @@ public class LevelGenerator : MonoBehaviour
         return sprite;
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0, 1, 1, 0.1f);
         Gizmos.DrawCube(regionSize / 2, regionSize);

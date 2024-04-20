@@ -14,53 +14,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorSchemePools:
     colorSchemePools:
-    - name: Terrestrial
+    - name: Earth
       planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: 7032071db733a534488805e125933140, type: 2}
+      primaryBiome: {fileID: 11400000, guid: 1e52bfbabde3d5b43b765d4a2da3dedd, type: 2}
       planetColorSchemes:
       - {fileID: 11400000, guid: 7e47fd3b4fa614e958430eeb0fb4cd6a, type: 2}
-      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
       - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
-      - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian Mythical
-      planetType: 6
-      oPrimary: 0
-      aPrimary: 0
-      singleBiome: 1
-      primaryBiome: {fileID: 0}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
-      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian Fire
-      planetType: 3
-      oPrimary: 0
-      aPrimary: 0
-      singleBiome: 1
-      primaryBiome: {fileID: 0}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
-      polarColorSchemes: []
-    - name: Obsidian Goop
+      - {fileID: 11400000, guid: 56eb735531c514f0b8746267e42aa317, type: 2}
+      - {fileID: 11400000, guid: d8ea915bb889848868a689913ded0e29, type: 2}
+      polarColorSchemes:
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+    - name: Goop
       planetType: 4
       oPrimary: 0
       aPrimary: 0
-      singleBiome: 1
+      singleBiome: 0
       primaryBiome: {fileID: 0}
       planetColorSchemes:
-      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
+      - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
+      - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
+      - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
+      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
+      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
+      - {fileID: 11400000, guid: 89b70facc28f7954585546a0f83ffa28, type: 2}
+      - {fileID: 11400000, guid: 89b70facc28f7954585546a0f83ffa28, type: 2}
       polarColorSchemes: []
-    - name: Primordial
+    - name: Mythical
       planetType: 6
-      oPrimary: 1
-      aPrimary: 1
+      oPrimary: 0
+      aPrimary: 0
       singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      primaryBiome: {fileID: 0}
       planetColorSchemes:
+      - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
+      - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
+      - {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      - {fileID: 11400000, guid: 867f0cb580f17ff4eaa0b383ffb02b9c, type: 2}
+      - {fileID: 11400000, guid: b4d4f17773fad7347b99cacc89421b3b, type: 2}
+      - {fileID: 11400000, guid: b4d4f17773fad7347b99cacc89421b3b, type: 2}
+      - {fileID: 11400000, guid: 872f3768ef4476144b2d83fd8f741f05, type: 2}
+      - {fileID: 11400000, guid: 872f3768ef4476144b2d83fd8f741f05, type: 2}
+      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
       - {fileID: 11400000, guid: 2cc67ef3949c7af4d84caf40c2c8640a, type: 2}
       polarColorSchemes: []
     - name: Wastelands
@@ -70,27 +69,63 @@ MonoBehaviour:
       singleBiome: 0
       primaryBiome: {fileID: 0}
       planetColorSchemes:
-      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
-      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: 19c65f19974c80b44900ff6ec4c235bd, type: 2}
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
+      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
+      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
+      - {fileID: 11400000, guid: 927e0e9f8f29ee44cb0fee83466d8abe, type: 2}
       polarColorSchemes: []
-    - name: Goop
-      planetType: 4
+    - name: Fire
+      planetType: 3
       oPrimary: 0
       aPrimary: 0
       singleBiome: 0
       primaryBiome: {fileID: 0}
       planetColorSchemes:
-      - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
-      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
+      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      - {fileID: 11400000, guid: 14be479b4b6f9d44ca54ea1bb9010d21, type: 2}
+      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
+      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
+      - {fileID: 11400000, guid: 2cb73938250941248bee21240209fd78, type: 2}
+      - {fileID: 11400000, guid: 7032071db733a534488805e125933140, type: 2}
       - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
-      - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
-      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
-      - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
+      - {fileID: 11400000, guid: b4d4f17773fad7347b99cacc89421b3b, type: 2}
+      - {fileID: 11400000, guid: 927e0e9f8f29ee44cb0fee83466d8abe, type: 2}
+      polarColorSchemes: []
+    - name: Ice
+      planetType: 2
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 89b70facc28f7954585546a0f83ffa28, type: 2}
+      - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
+      - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
+      - {fileID: 11400000, guid: f93cee500fbe23c49bfb5f89c9945c72, type: 2}
+      - {fileID: 11400000, guid: f798f0e93dde4c04fa8883eb36685761, type: 2}
+      - {fileID: 11400000, guid: ef139d73efaec344e9a003805e6db888, type: 2}
+      - {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
+      - {fileID: 11400000, guid: b3285bcdb26420c44b898e826156b2ff, type: 2}
+      polarColorSchemes: []
+    - name: Desert
+      planetType: 1
+      oPrimary: 0
+      aPrimary: 0
+      singleBiome: 0
+      primaryBiome: {fileID: 0}
+      planetColorSchemes:
+      - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
+      - {fileID: 11400000, guid: 448bfc88174f18b4982c247874a1119e, type: 2}
+      - {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
+      - {fileID: 11400000, guid: b87c6e7eebaba8541873da6bd895d72c, type: 2}
+      - {fileID: 11400000, guid: f270e54d7914b1c4cb311800d9bc47ca, type: 2}
+      - {fileID: 11400000, guid: 072e23c5a55a1934fa513588ffdeca54, type: 2}
+      - {fileID: 11400000, guid: 4c9af75ba7726fb4e90b0c469ccd3705, type: 2}
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 96
+    seed: 1316
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1
@@ -114,9 +149,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.8
     offset:
-    - 81.92818
-    - 108.048676
-    - 136.76816
+    - 799.28595
+    - 1550.9583
+    - 3876.5635
     elevation: 0.42
   detailNoiseSettings:
     applyNoise: 1
@@ -127,9 +162,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 0.72
     offset:
-    - 74.091484
-    - 110.011215
-    - 160.60158
+    - 979.32635
+    - 1824.7267
+    - 2612.2449
     elevation: 0.7
   ridgeNoiseSettings:
     applyNoise: 1
@@ -141,9 +176,9 @@ MonoBehaviour:
     gain: 1
     power: 9.68
     offset:
-    - 89.216064
-    - 114.39688
-    - 143.56612
+    - 861.76465
+    - 1903.1287
+    - 2748.4658
     elevation: -3.07
     smoothing: 1.11
   warpedNoiseSettings:
@@ -155,9 +190,9 @@ MonoBehaviour:
     multiplier: 0.73
     gain: 1
     offset:
-    - 95.51889
-    - 104.54225
-    - 228.52281
+    - 1141.8856
+    - 1898.002
+    - 2943.523
     strength: 1
   continentNoiseSettings:
     applyNoise: 0
@@ -168,9 +203,9 @@ MonoBehaviour:
     multiplier: 0
     gain: 0
     offset:
-    - 59.802742
-    - 106.05128
-    - 215.45853
+    - 773.2915
+    - 1402.2568
+    - 3031.5142
     depthMultiplier: 0
     oceanFloorDepth: 0
     oceanFloorSmoothing: 0
@@ -183,16 +218,16 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 87.92648
-    - 124.848114
-    - 211.69626
+    - 1034.7112
+    - 1824.5667
+    - 2708.9492
     strength: 1
     maskBlend: 0
     maskVerticalShift: 0
   biomeNoiseSettings:
     randomizeNoise: 1
     _Octaves: 3
-    _Offset: {x: 54.941185, y: 110.809814, z: 120.62752}
+    _Offset: {x: 764.57513, y: 1585.0459, z: 3304.2996}
     _Scale: 1
     _Persistence: 0
     _Lacunarity: 0

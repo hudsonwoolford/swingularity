@@ -142,8 +142,11 @@ public class ShootBall : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
-                dir = Vector2.zero;
-                dist = 0;
+                if(!hit.collider.isTrigger)
+                {
+                    dir = Vector2.zero;
+                    dist = 0;
+                }
             }
                         
             force = dir.normalized * dist;

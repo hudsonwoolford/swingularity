@@ -415,9 +415,9 @@ public class FullPlanetGeneration : MonoBehaviour
         //random offset
         for (int i = 0; i < 10; i++)
         {
-            //setting the offsets to randomly generated offset
             UnityEngine.Random.InitState((int)(i * offsetSeed.x * index));
             UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
+            //setting the offsets to randomly generated offset
             offset[i] = new Vector3(offsetSeed.x + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.y + UnityEngine.Random.Range(0, offsetSeed.x), offsetSeed.z + UnityEngine.Random.Range(0, offsetSeed.z));
         }
         planet.terrainVar.generalSettings.seed = Mathf.RoundToInt(offset[0].x);
@@ -702,8 +702,6 @@ public class FullPlanetGeneration : MonoBehaviour
         }
         RandomPolarBiome(poolScheme, offsetSeed);
 
-        UnityEngine.Random.InitState((int)offsetSeed.x);
-        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, 10000));
 
         UpdateOcean();
     }
