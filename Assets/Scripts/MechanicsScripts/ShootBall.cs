@@ -37,6 +37,7 @@ public class ShootBall : MonoBehaviour
     List<Rigidbody> planets = new List<Rigidbody>();
     Vector3 mousePos;
     Vector3 origin;
+    Vector3 previousDir;
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
@@ -141,11 +142,10 @@ public class ShootBall : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
-                // Vector2 perpendicularVector = new Vector2(-hit.normal.y, hit.normal.x);
-                // float magnitude = Mathf.Sqrt(perpendicularVector.x * perpendicularVector.x + perpendicularVector.y * perpendicularVector.y);
-                // Vector2 tangentVector = new Vector2(perpendicularVector.x / magnitude, perpendicularVector.y / magnitude);
-                // dir = tangentVector;
+                dir = Vector2.zero;
+                dist = 0;
             }
+                        
             force = dir.normalized * dist;
 
             if(simulated && Vector3.Distance(force, forceLastFrame)>0.01f)
