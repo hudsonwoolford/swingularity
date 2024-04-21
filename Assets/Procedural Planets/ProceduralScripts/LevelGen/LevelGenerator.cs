@@ -21,6 +21,7 @@ public class LevelGenerator : MonoBehaviour
     9: offset scale for determining random values of planet
     */
     [SerializeField] bool randomSeed = false;
+    [SerializeField] bool canSpawnOffPlanet = false;
     //[SerializeField] bool sameColourPoolTwice = false;
     [SerializeField] Material invisOcean;
     public int seed;
@@ -149,15 +150,26 @@ public class LevelGenerator : MonoBehaviour
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
         int rot = UnityEngine.Random.Range(0, 360);
         flag.eulerAngles = new Vector3(flag.eulerAngles.z, flag.eulerAngles.y, rot);
-        bool planetOrRandom = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
+        bool planetOrRandom = true;
+        if(canSpawnOffPlanet){
+            planetOrRandom = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
+        }
         if(planetOrRandom){
             flag.position = candidates[candidateIndex].forceField.transform.position + flag.up * (candidates[candidateIndex].forceField.transform.localScale.x + 1f);
         }
         else{
             bool intersecting = true;
-            for(int u = 0; u < 100 && intersecting; u++){
+            for(int u = 0; u < 15 && intersecting; u++){
+                bool currentlyIntersecting = true;
                 Vector3 position = new Vector3(UnityEngine.Random.value * regionSize.x, UnityEngine.Random.value * regionSize.y, candidates[candidateIndex].forceField.transform.position.z);
                 for (int v = 0; v < candidates.Length; v++){
+                    if((candidates[v].forceField.transform.position - position).magnitude < candidates[candidateIndex].forceField.transform.localScale.x + 1f){
+                        intersecting = true;
+                    }
+                }
+                if (!currentlyIntersecting){
+                    intersecting = false;
+                    flag.position = position;
                 }
             }
         }
