@@ -20,9 +20,6 @@ public class LevelManager : MonoBehaviour
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
 
-    //Procedural streaks
-    int parStreak = 0;
-    int hioStreak = 0;
     private void Awake()
     {
         completedLevels = new List<string>();
@@ -76,24 +73,6 @@ public class LevelManager : MonoBehaviour
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;
     }
-    IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed a procedural level, asynchronously loads the next procedural scene
-    {
-        levelCanvas.enabled = true;
-        scoreText.enabled = true;
-        streakText.enabled = true;
-        hioStreakText.enabled = true;
-
-        scoreText.text = "You Failed!";
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
-        loadNextOp.allowSceneActivation = false;
-        while (!chosenOption)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        chosenOption = false;
-        loadNextOp.allowSceneActivation = true;
-        levelCanvas.enabled = false;
-    }
     #endregion
     #region EventFunctions
     void CompleteCurrentLevel() //Adds the current level to completed level array
@@ -120,29 +99,9 @@ public class LevelManager : MonoBehaviour
     {
         if(scoreText == null) { return; }
         scoreText.text = score;
-        if(!procedural)
+        if(procedural)
         {
-            hioStreak = 0;
-            parStreak = 0;
-        }
-        else
-        {
-            
-
-            hioStreak = totalShots == 1 ? hioStreak + 1 : 0;
-            parStreak = scoreRelToPar <= 0 ? parStreak + 1 : 0;
-
-            streakText.text = "Par Streak: " + parStreak.ToString();
-            hioStreakText.text = "Hole in One Streak: " + hioStreak.ToString();
-
-            if(scoreRelToPar <= 0)
-            {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
-            else
-            {
-                StartCoroutine(ProceduralNextLevelUI());
-            }
         }
     }
     #endregion
