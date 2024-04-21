@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
     }
     IEnumerator NextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
+        levelCanvas.enabled = true;
         string name = SceneManager.GetActiveScene().name;
         int currentIndex = Array.IndexOf(currentGalaxy, name);
         string nextName = currentIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[currentIndex + 1] : "Main Menu";
@@ -73,7 +74,6 @@ public class LevelManager : MonoBehaviour
             completedLevels.Add(name);
         }
 
-        levelCanvas.enabled = true;
         StartCoroutine(NextLevelUI());
     }
     void SetGalaxyLevels(string[] galaxy) //Sets the current galaxy levels, we also know it cannot be procedural

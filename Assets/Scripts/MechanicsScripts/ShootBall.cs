@@ -140,14 +140,15 @@ public class ShootBall : MonoBehaviour
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
             RaycastHit hit;
-            if(Physics.Raycast(transform.position, dir, out hit, 0.75f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
+            if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
                 if(!hit.collider.isTrigger)
                 {
                     Vector2 normal = (transform.position - hit.transform.position).normalized;
+                    Vector2 mouseNormal = (mousePos - hit.transform.position).normalized;
                     dir = new Vector2(-normal.y, normal.x + 0.1f);
-                    dir *= -Vector3.Dot(mousePos - hit.transform.position, dir) / Mathf.Abs(Vector3.Dot(mousePos - hit.transform.position, dir));
-                    dist = Mathf.Clamp(dist, 0, 10 * Mathf.Pow(hit.transform.localScale.x, 0.5f));
+                    dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
+                    dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f) * (1-Vector3.Dot(mouseNormal, normal)));
                 }
             }
                         
