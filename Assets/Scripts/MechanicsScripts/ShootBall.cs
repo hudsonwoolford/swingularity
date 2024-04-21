@@ -139,28 +139,36 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
+            force = dist * dir.normalized;
+            //RaycastHit hit;
+            //if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
+            //{
+            //    if(!hit.collider.isTrigger)
+            //    {
+            //        Vector2 normal = (transform.position - hit.transform.position).normalized;
+            //        Vector2 mouseNormal = (mousePos - hit.transform.position).normalized;
+            //        dir = new Vector2(-normal.y, normal.x + 0.1f);
+            //        dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
+            //        dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f) * (1-Vector3.Dot(mouseNormal, normal)));
+            //    }
+            //}
             RaycastHit hit;
-            if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
+            if (Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass), out hit, 1f, obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
-                if(!hit.collider.isTrigger)
+                Vector2 normal = (transform.position - hit.transform.position).normalized;
+                Vector2 mouseNormal = (mousePos - (transform.position- (new Vector3(normal.x, normal.y) * 0.22f))).normalized;
+                if (Vector2.Dot(mouseNormal, normal) > 0&& HitsPlanet(rb.position, force, rb.velocity, hit.collider))
                 {
-Vector2 normal = (transform.position - hit.transform.position).normalized;
+                    mouseNormal = (mousePos - hit.transform.position).normalized;
+                    dir = new Vector2(-normal.y, normal.x + 0.1f);
+                    dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
 
-        // Calculate the angle between the original direction and the obstacle normal
-        float angle = Vector2.SignedAngle(dir, normal);
-
-        // Rotate the original direction away from the obstacle by a small angle
-        Quaternion rotation = Quaternion.AngleAxis(angle + 45f, Vector3.forward); // Adjust the angle as needed
-        dir = rotation * dir;
-
-        // Optionally, clamp the distance based on the new direction
-        dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f));
                 }
-            }
-                        
-            force = dir.normalized * dist;
 
-            if(simulated && Vector3.Distance(force, forceLastFrame)>0.01f)
+            }
+            force = dist * dir.normalized;
+
+            if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f)
             {
                 PerformSimulation(rb.position, force, rb.velocity);
                 //SimulateScene(dir.normalized * dist);   
@@ -217,6 +225,60 @@ Vector2 normal = (transform.position - hit.transform.position).normalized;
         SceneManager.UnloadSceneAsync(simulationScene);
     }
     #region Performant Simulation
+    bool HitsPlanet(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity, Collider currentPlanet)
+    {
+        Vector3 trackPos = startPos;
+        Vector3 prevPos = startPos;
+        Vector3 velocity = forceVar / rb.mass + currentVelocity;
+        Vector3 gravForce = Vector3.zero;
+        float dist = 0;
+        if (simulatedObj == null) //instantiate new ball if it doesn't exist
+        {
+            simulatedObj = Instantiate(simulationBall, transform.position, transform.rotation);
+            srb = simulatedObj.GetComponent<Rigidbody>();
+            srb.GetComponent<SimulationBall>().Init(this);
+        }
+        SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
+        Physics.simulationMode = SimulationMode.Script;
+        float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
+        for (int i = 0; i < maxstep; i++)
+        {
+            if (velocity.magnitude < 0.1f)
+            {
+                break;
+            }
+
+            //fixed update
+            gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
+            velocity += gravForce * Time.fixedDeltaTime / rb.mass;
+
+
+            //physics update
+            trackPos += velocity * Time.fixedDeltaTime;
+            RaycastHit raycastHit;
+            if (Physics.Raycast(prevPos, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+            {
+                if(raycastHit.collider == currentPlanet)
+                {
+                    Physics.simulationMode = SimulationMode.FixedUpdate;
+
+                    return true;
+                }
+            }
+
+            //end physics update
+            if (dist + (trackPos - prevPos).magnitude > maxLengthSim)
+            {
+                float distDifference = maxLengthSim - dist;
+                Vector3 finalPos = prevPos + (trackPos - prevPos).normalized * distDifference;
+                break;
+            }
+            dist += (trackPos - prevPos).magnitude;
+            prevPos = trackPos;
+        }
+        Physics.simulationMode = SimulationMode.FixedUpdate;
+        return false;
+    }
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
         slr.positionCount = maxstep + 1;

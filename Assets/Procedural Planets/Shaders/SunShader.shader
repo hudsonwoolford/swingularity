@@ -51,10 +51,16 @@ Shader "Custom/SunShader"
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
 
-            //v.vertex.xyz +=  v.normal * (sin(_Time)/3);
-            o.vertPos = v.normal;
-            
+            float angle = snoise((500+_Time) * 0.1 * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
+            float sinValue = sin(angle);
+
+            float3 displacement = v.normal * (0.05 * (sinValue + 1) / 2) ;
+
+            v.vertex = float4(v.vertex.xyz + displacement, 1);
+
+            o.vertPos = normalize(v.vertex);
         }
+
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
