@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using System;
+using Unity.VisualScripting;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -147,9 +148,21 @@ public class LevelGenerator : MonoBehaviour
     {
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
         int rot = UnityEngine.Random.Range(0, 360);
-        flag.eulerAngles = new Vector3(rot, flag.eulerAngles.y, flag.eulerAngles.z);
-        flag.position = candidates[candidateIndex].planet.transform.position + flag.up * candidates[candidateIndex].planet.transform.localScale.x * (1 / 0.3f);
-        flag.localScale *= Mathf.Clamp(candidates[candidateIndex].planet.transform.localScale.x *1.5f, 0, 5);
+        flag.eulerAngles = new Vector3(flag.eulerAngles.z, flag.eulerAngles.y, rot);
+        bool planetOrRandom = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
+        if(planetOrRandom){
+            flag.position = candidates[candidateIndex].forceField.transform.position + flag.up * (candidates[candidateIndex].forceField.transform.localScale.x + 1f);
+        }
+        else{
+            bool intersecting = true;
+            for(int u = 0; u < 100 && intersecting; u++){
+                Vector3 position = new Vector3(UnityEngine.Random.value * regionSize.x, UnityEngine.Random.value * regionSize.y, candidates[candidateIndex].forceField.transform.position.z);
+                for (int v = 0; v < candidates.Length; v++){
+                }
+            }
+        }
+        
+        // flag.localScale *= Mathf.Clamp(candidates[candidateIndex].forceField.transform.localScale.x *1.5f, 0, 5);
         //farthest planet
         float distTracker = 0;
         int farthestIndex = 0;
