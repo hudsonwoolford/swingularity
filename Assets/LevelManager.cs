@@ -10,12 +10,19 @@ public class LevelManager : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
+    [Space()]
+    [SerializeField] TextMeshProUGUI streakText; //Text that displays under par streak
+    [SerializeField] TextMeshProUGUI hioStreakText; //Text that hole in one streak
     [Header("Serialized Variables")]
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
     [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] bool procedural = false; //Whether you are currently in a procedural level or not
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
+
+    //Procedural streaks
+    int parStreak = 0;
+    int hioStreak = 0;
     private void Awake()
     {
         completedLevels = new List<string>();
@@ -41,9 +48,14 @@ public class LevelManager : MonoBehaviour
     {
         chosenOption = true;
     }
+    #region Next Level UI
     IEnumerator NextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
         levelCanvas.enabled = true;
+        scoreText.enabled = true;
+        streakText.enabled = false;
+        hioStreakText.enabled = false;
+
         string name = SceneManager.GetActiveScene().name;
         int currentIndex = Array.IndexOf(currentGalaxy, name);
         string nextName = currentIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[currentIndex + 1] : "Main Menu";
@@ -64,6 +76,25 @@ public class LevelManager : MonoBehaviour
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;
     }
+    IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed a procedural level, asynchronously loads the next procedural scene
+    {
+        levelCanvas.enabled = true;
+        scoreText.enabled = true;
+        streakText.enabled = true;
+        hioStreakText.enabled = true;
+
+        scoreText.text = "You Failed!";
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+        loadNextOp.allowSceneActivation = false;
+        while (!chosenOption)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        chosenOption = false;
+        loadNextOp.allowSceneActivation = true;
+        levelCanvas.enabled = false;
+    }
+    #endregion
     #region EventFunctions
     void CompleteCurrentLevel() //Adds the current level to completed level array
     {
@@ -85,10 +116,34 @@ public class LevelManager : MonoBehaviour
     {
         procedural = true;
     }
-    void OnScore(string score, int scoreRelToPar) //Updates score text to the score invoked in the event by LevelScoring
+    void OnScore(string score, int scoreRelToPar, int totalShots) //Updates score text to the score invoked in the event by LevelScoring
     {
         if(scoreText == null) { return; }
         scoreText.text = score;
+        if(!procedural)
+        {
+            hioStreak = 0;
+            parStreak = 0;
+        }
+        else
+        {
+            
+
+            hioStreak = totalShots == 1 ? hioStreak + 1 : 0;
+            parStreak = scoreRelToPar <= 0 ? parStreak + 1 : 0;
+
+            streakText.text = "Par Streak: " + parStreak.ToString();
+            hioStreakText.text = "Hole in One Streak: " + hioStreak.ToString();
+
+            if(scoreRelToPar <= 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                StartCoroutine(ProceduralNextLevelUI());
+            }
+        }
     }
     #endregion
     private void OnEnable()

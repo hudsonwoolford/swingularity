@@ -319,19 +319,11 @@ public class LevelGenerator : MonoBehaviour
         Gizmos.color = new Color(0, 1, 1, 0.1f);
         Gizmos.DrawCube(regionSize / 2, regionSize);
     }
-    void ReloadScene()
-    {
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.UnloadSceneAsync(currentScene);
-        SceneManager.LoadScene(currentScene);
-    }
     private void OnEnable()
     {
-        ShootBall.onHole += ReloadScene;
     }
     private void OnDisable()
     {
-        ShootBall.onHole -= ReloadScene;
     }
     public static Vector2 CamSize(Camera cam){
         float height = cam.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units

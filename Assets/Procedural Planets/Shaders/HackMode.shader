@@ -4,7 +4,7 @@ Shader "Hidden/HackMode"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Threshold ("Threshold", Range(0,5)) = 0
-        [HDR] _EdgeColor("Edge Color", Color) = (1,1,1,1)
+        _EdgeColor("Edge Color", Color) = (1,1,1,1)
     } 
     SubShader
     {
