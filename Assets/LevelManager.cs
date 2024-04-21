@@ -56,7 +56,7 @@ public class LevelManager : MonoBehaviour
         string name = SceneManager.GetActiveScene().name;
         int currentIndex = Array.IndexOf(currentGalaxy, name);
         string nextName = currentIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[currentIndex + 1] : "Main Menu";
-        
+
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)

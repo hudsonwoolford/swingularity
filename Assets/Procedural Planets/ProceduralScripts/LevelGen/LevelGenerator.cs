@@ -138,6 +138,7 @@ public class LevelGenerator : MonoBehaviour
             forcefield.transform.parent = env;
             //print(forcefield.transform.localScale.x);
         }
+        Destroy(generator.gameObject);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
         SetBallFlagPosition(flag, player.transform, planetList);
@@ -240,11 +241,6 @@ public class LevelGenerator : MonoBehaviour
         cam.cullingMask = LayerMask.GetMask("Planet Front Capture");
 
 
-        Scene currentScene = SceneManager.GetActiveScene();
-        Scene emptyScene = SceneManager.CreateScene(sceneName);
-        SceneManager.MoveGameObjectToScene(cam.gameObject, emptyScene);
-        SceneManager.MoveGameObjectToScene(selectedObj, emptyScene);
-        SceneManager.SetActiveScene(currentScene);
 
         //Front Texture
         RenderTexture frontTexture = new RenderTexture(1000, 1000, 0);
@@ -321,7 +317,6 @@ public class LevelGenerator : MonoBehaviour
         oceanRend.gameObject.SetActive(true);
 
         Destroy(cam.gameObject);
-        SceneManager.UnloadSceneAsync(emptyScene);
         planetParent.SetActive(false);
         return planetParent;
     }

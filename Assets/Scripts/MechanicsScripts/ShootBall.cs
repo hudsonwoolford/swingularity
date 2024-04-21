@@ -206,6 +206,10 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
     }
+    void DeleteSimulation()
+    {
+        SceneManager.UnloadSceneAsync(simulationScene);
+    }
     #region Performant Simulation
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
@@ -473,11 +477,13 @@ public class ShootBall : MonoBehaviour
     #endregion
     private void OnEnable()
     {
+        onHole += DeleteSimulation;
         triggerReset += BallReset;
         boundsReset += BallReset;
     }
     private void OnDisable()
     {
+        onHole -= DeleteSimulation;
         triggerReset -= BallReset;
         boundsReset -= BallReset;
     }
