@@ -25,10 +25,9 @@ Properties
         // Render the object with the texture generated above, and invert the colors
         Pass
         {
-            ZTest Always
 
             CGPROGRAM
-            #pragma vertex vert
+            #pragma vertex vert 
             #pragma fragment frag
             #include "UnityCG.cginc"
 
@@ -69,8 +68,8 @@ Properties
                 // distort based on noise & strength filter
                 float noise = tex2Dlod(_Noise, float4(input.texCoord, 0)).rgb;
                 float3 filt = tex2Dlod(_StrengthFilter, float4(input.texCoord, 0)).rgb;
-                output.grabPos.x += cos(noise*_Time.x*_Speed) * filt * _Strength / 10;
-                output.grabPos.y += sin(noise*_Time.x*_Speed) * filt * _Strength / 10;
+                output.grabPos.x += cos(noise*_Time.y*_Speed) * filt * _Strength / 10;
+                output.grabPos.y += sin(noise*_Time.y*_Speed) * filt * _Strength / 10;
 
                 return output;
             }

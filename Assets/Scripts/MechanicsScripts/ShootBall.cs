@@ -538,7 +538,11 @@ public class ShootBall : MonoBehaviour
             onHole?.Invoke();
             triggerReset?.Invoke();
         }
-         if(other.gameObject.tag == "Respawn")
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Respawn")
         {
             StartCoroutine(ResetDelay(0.3f));
 

@@ -10,12 +10,14 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] float bigNoiseOffset;
     [SerializeField] GameObject collisionParticles;
     [SerializeField] AudioClip collisionClip;
+    SphereCollider col;
     AudioSource source;
     Material sunMaterial;
     ParticleSystem system;
     // Start is called before the first frame update
     void Start()
     {
+        col = GetComponent<SphereCollider>();
         source = GetComponent<AudioSource>();
         sunMaterial = transform.GetChild(0).GetComponent<Material>();
         system = GetComponent<ParticleSystem>();
@@ -26,7 +28,8 @@ public class SunGenerator : MonoBehaviour
     {
         if (!sunMaterial) { sunMaterial = transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial; }
         if (system == null) { system = GetComponent<ParticleSystem>(); } 
-        if(source == null) { source = GetComponent<AudioSource>();}
+        if (source == null) { source = GetComponent<AudioSource>();}
+        if (col == null) { col = GetComponent<SphereCollider>(); }
         sunMaterial.SetColor("_Color1", sunDarkColor);
         sunMaterial.SetColor("_Color2", sunColor);
         sunMaterial.SetFloat("_BigNoise", bigNoiseOffset);
@@ -36,14 +39,11 @@ public class SunGenerator : MonoBehaviour
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(atmosphereColor, 0.0f), new GradientColorKey(atmosphereColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(0.0f, 0f), new GradientAlphaKey(1.0f, 0.15f), new GradientAlphaKey(1.0f, 0.85f), new GradientAlphaKey(0.0f, 1f) });
         colorModule.color = grad;
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision c)
     {
-        if (other.gameObject.layer == 7)
-        {
-            return;
-        }
+        if(c.gameObject.layer == 7) { return; }
         source.PlayOneShot(collisionClip, 0.6f);
-        GameObject insta = Instantiate(collisionParticles, other.transform.position, Quaternion.Euler(new Vector3(-Mathf.Atan2(other.transform.position.y - transform.position.y, other.transform.position.x - transform.position.x) * Mathf.Rad2Deg, 90, -90)));
+        GameObject insta = Instantiate(collisionParticles, c.contacts[0].point + new Vector3(0,0,-5), Quaternion.Euler(new Vector3(-Mathf.Atan2(c.contacts[0].point.y - transform.position.y, c.contacts[0].point.x - transform.position.x) * Mathf.Rad2Deg, 90, -90)));
         SetParticleColours(insta.GetComponentsInChildren<ParticleSystem>());
         Destroy(insta, 4);
     }
