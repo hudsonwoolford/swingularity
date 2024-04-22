@@ -69,6 +69,8 @@ public class LevelManager : MonoBehaviour
             }
             yield return new WaitForFixedUpdate();
         }
+        AsyncOperation unloadCurrentOp = SceneManager.UnloadSceneAsync(name);
+        yield return unloadCurrentOp;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;
@@ -101,8 +103,15 @@ public class LevelManager : MonoBehaviour
         scoreText.text = score;
         if(procedural)
         {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            StartCoroutine(LoadNextProcedural());
         }
+    }
+    IEnumerator LoadNextProcedural()
+    {
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        AsyncOperation unloadCurrentOp = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+        yield return unloadCurrentOp;
+        SceneManager.LoadScene(scene);
     }
     #endregion
     private void OnEnable()

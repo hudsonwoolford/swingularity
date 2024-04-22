@@ -213,9 +213,12 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
+        GetComponent<MeshRenderer>().enabled = true;
+
         transform.position = origin; //back to start
         tr?.Clear();
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
+
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
@@ -535,6 +538,21 @@ public class ShootBall : MonoBehaviour
             onHole?.Invoke();
             triggerReset?.Invoke();
         }
+         if(other.gameObject.tag == "Respawn")
+        {
+            StartCoroutine(ResetDelay(0.3f));
+
+        }
+    }
+    IEnumerator ResetDelay(float delay)
+    {
+        rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
+        GetComponent<MeshRenderer>().enabled = false;
+        yield return new WaitForSeconds(delay);
+        rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
+
+        BallReset();
+
     }
     private void OnDrawGizmosSelected() {
         Gizmos.DrawCube(mousePos, Vector3.one); //mousepos cube

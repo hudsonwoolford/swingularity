@@ -145,7 +145,37 @@ public class LevelGenerator : MonoBehaviour
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
         return planetList;
     }
+    GameObject GenerateForcefield(Planet planet)
+    {
+        GameObject forcefield = this.gameObject;
+        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.star)
+        {
+            forcefield = Instantiate(forcefieldPrefab);
 
+            ForceField ff = forcefield.GetComponent<ForceField>();
+            ff.enabled = true;
+            ff.Init(planet.planet.transform);
+        }
+        return forcefield;
+    }
+
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
+    {
+        (PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[previousPlanets.Length];
+        for (int i = 0; i < previousPlanets.Length; i++)
+        {
+            previousBiomes[i].Item1 = previousPlanets[i].biomeA;
+            previousBiomes[i].Item2 = previousPlanets[i].biomeB;
+        }
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index);
+        generator.ClearAllTrees();
+        generator.UpdateAndApplyAll();
+
+        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
+        newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
+        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
+    }
     void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
     {
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
@@ -194,34 +224,7 @@ public class LevelGenerator : MonoBehaviour
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
         ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x + (ball.localScale.x * ball.GetComponent<SphereCollider>().radius));
     }
-    GameObject GenerateForcefield(Planet planet){
-        GameObject forcefield = this.gameObject;
-        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.star){  
-            forcefield = Instantiate(forcefieldPrefab);
 
-            ForceField ff = forcefield.GetComponent<ForceField>();
-            ff.enabled = true;
-            ff.Init(planet.planet.transform);
-        }
-        return forcefield;
-    }
-
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
-    {
-        (PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[previousPlanets.Length];
-        for (int i = 0; i < previousPlanets.Length; i++){
-            previousBiomes[i].Item1 = previousPlanets[i].biomeA;
-            previousBiomes[i].Item2 = previousPlanets[i].biomeB;
-        }
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index);
-        generator.ClearAllTrees();
-        generator.UpdateAndApplyAll();
-
-        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
-        newPlanet.transform.position = new Vector3 (position.x + maxSize/2, position.y + maxSize/2, position.z);
-        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
-    }
 
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
     {
