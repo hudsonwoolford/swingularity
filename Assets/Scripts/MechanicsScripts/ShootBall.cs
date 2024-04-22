@@ -107,16 +107,20 @@ public class ShootBall : MonoBehaviour
         }
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
-        if(Input.GetMouseButtonDown(0))
-        {
-            
-            if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
+        if (rb.velocity.magnitude <0.1f){
+            onShoot?.Invoke();
+            if(Input.GetMouseButtonDown(0))
             {
-                StartCoroutine(LineUpShot());
-                if(showBallPos)
-                { StartCoroutine(ShowBallSpeed()); }
+            
+                if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
+                {
+                    StartCoroutine(LineUpShot());
+                    if(showBallPos)
+                    { StartCoroutine(ShowBallSpeed()); }
+                }
             }
         }
+
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
     }
     void FixedUpdate(){
