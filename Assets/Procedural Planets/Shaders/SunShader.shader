@@ -17,6 +17,16 @@ Shader "Custom/SunShader"
         _Lacunarity("Lacunarity", Range(0,5)) = 1
         _Multiplier("Multiplier", Range(0,5)) = 1
         _Gain("Gain", Range(0, 5)) = 1
+
+        [Header(WarpNoise)]
+        [IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
+        _WarpOffset("Warp Offset", vector) = (0,0,0)
+        _WarpScale("Warp Scale", Range(0,5)) = 1
+        _WarpPersistence("Warp Persistence", Range(0, 5)) = 1
+        _WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
+        _WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
+        _WarpGain("Warp Gain", Range(0, 5)) = 1
+
     }
     SubShader
     {
@@ -41,6 +51,10 @@ Shader "Custom/SunShader"
         int _Octaves;
         float3 _Offset;
         float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
+        int _WarpOctaves;
+        float3 _WarpOffset;
+        float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
+        
         float _Power, _Speed;
         float _BigNoise;
         float2 hash(float2 p)
@@ -51,16 +65,23 @@ Shader "Custom/SunShader"
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
 
-            //v.vertex.xyz +=  v.normal * (sin(_Time)/3);
-            o.vertPos = v.normal;
-            
+            //float angle = snoise((500+_Time) * 0.1 * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
+            //float sinValue = sin(angle);
+
+            //float3 displacement = v.normal * (0.05 * (sinValue + 1) / 2) ;
+
+            //v.vertex = float4(v.vertex.xyz + displacement, 1);
+
+            o.vertPos = normalize(v.vertex);
         }
+
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             o.Albedo = 0;
             float bigPass =  pow(snoise(IN.vertPos + _BigNoise), 1);
-            float lerpVal =  pow(SimpleNoise(IN.vertPos, _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, float3(_Time.y + 50, _Time.y, _Time.y - 50) * _Speed)/2, _Power) - bigPass;
+            float warp = WarpedNoise(IN.vertPos, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
+            float lerpVal =  pow(SimpleNoise(IN.vertPos + warp, _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, float3(_Time.y + 50, _Time.y, _Time.y - 50) * _Speed)/2, _Power) - bigPass;
             o.Emission = lerp(_Color2, _Color1, saturate(lerpVal));
         }
         ENDCG

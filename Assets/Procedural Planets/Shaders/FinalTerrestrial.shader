@@ -135,7 +135,9 @@ Shader "Custom/FinalTerrestrial"
         {
             "RenderType" = "Opaque"
         }
+
         LOD 200
+        ZTest Off
         CGPROGRAM
         #pragma target 3.5
         #pragma surface surf Standard vertex:vert 

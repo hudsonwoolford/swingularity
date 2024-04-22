@@ -101,7 +101,9 @@ public class LevelManager : MonoBehaviour
         scoreText.text = score;
         if(procedural)
         {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            int scene = SceneManager.GetActiveScene().buildIndex;
+
+            SceneManager.LoadScene(scene);
         }
     }
     #endregion

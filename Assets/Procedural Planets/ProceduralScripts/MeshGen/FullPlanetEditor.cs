@@ -27,6 +27,7 @@ public class FullPlanetEditor : Editor
 
     SerializedProperty biomeA, biomeB, biomeP; //serialized properties for defining biome a and biome b color schemes
     SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty planetFilter;
     #endregion
 
     public override void OnInspectorGUI()
@@ -34,8 +35,20 @@ public class FullPlanetEditor : Editor
         serializedObject.Update();
         DrawDefaultInspector();
         EditorGUI.BeginChangeCheck();
+        if (GUILayout.Button("Random Filtered"))
+        {
+            UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+            Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
+            ColorSchemeStaticReference.PlanetType[] enumArray = new ColorSchemeStaticReference.PlanetType[planetFilter.arraySize];
+            for (int i = 0; i < planetFilter.arraySize; i++)
+            {
+                enumArray[i] = (ColorSchemeStaticReference.PlanetType)planetFilter.GetArrayElementAtIndex(i).enumValueIndex;
+            }
+            if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond); }
+            planetGeneration.ClearAllTrees();
 
-        if (GUILayout.Button("Random")) {
+        }
+        if (GUILayout.Button("Random Any")) {
             UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
             Vector3 seed = new Vector3(UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000), UnityEngine.Random.Range(0, 1000));
             planetGeneration.RandomizeTerrainScheme(seed);
@@ -176,6 +189,7 @@ public class FullPlanetEditor : Editor
         oBiomeB = serializedObject.FindProperty("oBiomeB");
         aBiomeA = serializedObject.FindProperty("aBiomeA");
         aBiomeB = serializedObject.FindProperty("aBiomeB");
+        planetFilter = serializedObject.FindProperty("planetFilter");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;
         shadingEditor = (MaterialEditor)CreateEditor(planetGeneration.planet.planetMaterial);

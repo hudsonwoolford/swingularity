@@ -26,6 +26,8 @@ public class FullPlanetGeneration : MonoBehaviour
     [HideInInspector]
     public bool colorSchemesOut; //if colorschemes are folded out/on
     [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
+    [SerializeField]
+    ColorSchemeStaticReference.PlanetType[] planetFilter;
     [HideInInspector]
     [SerializeField] public PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
     [HideInInspector]
