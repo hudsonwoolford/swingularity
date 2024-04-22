@@ -47,7 +47,7 @@ Shader "Custom/SunShader"
             float2 uv_MainTex;
             float3 vertPos;
         };
-        fixed4 _Color1, _Color2;
+        float4 _Color1, _Color2;
         int _Octaves;
         float3 _Offset;
         float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;

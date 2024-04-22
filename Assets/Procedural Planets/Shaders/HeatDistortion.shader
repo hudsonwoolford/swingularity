@@ -30,6 +30,8 @@ Properties
             #pragma vertex vert 
             #pragma fragment frag
             #include "UnityCG.cginc"
+            #include "Includes/SimplexNoise.cginc"
+
 
             // Properties
             sampler2D _Noise;
@@ -37,6 +39,7 @@ Properties
             sampler2D _BackgroundTexture;
             float     _Strength;
             float     _Speed;
+            float     _Scale;
 
             struct vertexInput
             {
@@ -48,6 +51,7 @@ Properties
             {
                 float4 pos : SV_POSITION;
                 float4 grabPos : TEXCOORD0;
+                float3 uv : TEXCOORD1;
             };
 
             vertexOutput vert(vertexInput input)
@@ -58,7 +62,7 @@ Properties
                 float4 pos = input.vertex;
                 pos = mul(UNITY_MATRIX_P, 
                       mul(UNITY_MATRIX_MV, float4(0, 0, 0, 1))
-                          + float4(pos.x, pos.z, 0, 0));
+                          + float4(pos.x, pos.z, 0, 0) * _Scale);
                 output.pos = pos;                
 
                 // use ComputeGrabScreenPos function from UnityCG.cginc
@@ -66,16 +70,18 @@ Properties
                 output.grabPos = ComputeGrabScreenPos(output.pos);
 
                 // distort based on noise & strength filter
-                float noise = tex2Dlod(_Noise, float4(input.texCoord, 0)).rgb;
+                float noise = snoise(input.vertex * _Time.y * _Speed);
                 float3 filt = tex2Dlod(_StrengthFilter, float4(input.texCoord, 0)).rgb;
-                output.grabPos.x += cos(noise*_Time.y*_Speed) * filt * _Strength / 10;
-                output.grabPos.y += sin(noise*_Time.y*_Speed) * filt * _Strength / 10;
+                output.grabPos.x += sin(noise) * filt * _Strength / 10;
+                output.grabPos.y += cos(noise) * filt * _Strength / 10;
 
+                output.uv = input.texCoord;
                 return output;
             }
 
             float4 frag(vertexOutput input) : COLOR
             {
+                //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
                 //return float4(1,1,1,1); // billboard test
                 return tex2Dproj(_BackgroundTexture, input.grabPos);
             }

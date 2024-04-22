@@ -20,22 +20,23 @@ public class LevelGenerator : MonoBehaviour
     8: number of poisson disk samples before rejecting the point as a spawner
     9: offset scale for determining random values of planet
     */
-    [SerializeField] bool randomSeed = false;
-    [SerializeField] bool canSpawnOffPlanet = false;
+    [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
+    [SerializeField] bool canSpawnOffPlanet = false; //Whether the hole can spawn off a planet 
     //[SerializeField] bool sameColourPoolTwice = false;
-    [SerializeField] Material invisOcean;
-    public int seed;
+    [SerializeField] Material invisOcean; //Invisble ocean material used for imaging
+    public int seed; //The seed for the level
+
     //Level gen params
     [SerializeField]
     float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
     [SerializeField]
-    Vector2 regionExtension;
+    Vector2 regionExtension; //how much region is extended
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab;
+    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
-    float planetScale;
+    float planetScale; //Scale of planets multiplier
     [SerializeField]
-    ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes;
+    ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
 
     Vector2 regionSize;
 
@@ -46,6 +47,7 @@ public class LevelGenerator : MonoBehaviour
         public PlanetColorScheme biomeA;
         public PlanetColorScheme biomeB;
         public GameObject forceField;
+        //Constructor
         public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB, GameObject forceField){
             this.planet = planet;
             this.planetType = planetType;
@@ -55,22 +57,27 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    public delegate void LevelInit();
+    public delegate void LevelInit(); //Delegate called in initiation of procedural level, this coccurs before the level is actually generated
     public static LevelInit levelInit;
 
     void Start()
     {
-        levelInit?.Invoke();
-        Camera mainCam = Camera.main;
+        levelInit?.Invoke(); //Initiation Delegate
+        Camera mainCam = Camera.main; //Cache camera
+        //Randomising or keeping seed
         if(randomSeed)
         {
             seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f) * Time.time);
         }
         UnityEngine.Random.InitState(seed);
-        Vector2 camSize = CamSize(mainCam);
-        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
-        float extensionAmount = UnityEngine.Random.value;
-        regionSize = CalculateBounds(camSize, extensionAmount, xOry);
+
+        //Region size calculation
+        Vector2 camSize = CamSize(mainCam);                             //1. Calculates camera size
+        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
+        float extensionAmount = UnityEngine.Random.value;               //3. Randomizes extension amount. 
+        regionSize = CalculateBounds(camSize, extensionAmount, xOry);   //4. Calculating bounds based off previous variables
+
+        //Sets the level generation settings
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
@@ -83,22 +90,32 @@ public class LevelGenerator : MonoBehaviour
             samplesBeforeRejection,
             offsetScale
         };
+
+        //Calculates level based off settings
         ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
+        //Recalculates levels with (seed+1) if number of planets is less than zero
         for (int i = 0; level.numPlanets == 0 && i < 50; i++)
         {
             level = ProceduralLevelGeneration.CalculateLevel(seed, possiblePlanetTypes, levelGenSettings);
             Debug.LogWarning(seed + " generated no planets. Regenerating planets, iteration: " + i + "/50 | Current Planet Count = " + level.numPlanets);
             seed++;
         }
+        
+        //Generates level based of calculation
         Planet[] planets = Generatelevel(level);
+
+        //Camera start and end positions
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
-        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2);
+        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
 
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
-
+    #region Level Calculation
+    /// <summary>
+    /// Calculates the start pos and end pos for the camera. Takes an average of planet positions.
+    /// </summary>
     (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize, float extensionAmount, bool x){
         Vector3 avg = Vector3.zero;
         foreach (Planet planet in planets){
@@ -112,7 +129,9 @@ public class LevelGenerator : MonoBehaviour
         else{endPos += new Vector2(0, extensionAmount * regionExtension.y); startPos -=  new Vector2(0, extensionAmount * regionExtension.y); }
         return (startPos, endPos);
     }
-
+    /// <summary>
+    /// Calculates the region size
+    /// </summary>
     Vector2 CalculateBounds(Vector3 camSize, float extensionAmount, bool x){
         //Extend in the x direction maybe?
         
@@ -122,6 +141,11 @@ public class LevelGenerator : MonoBehaviour
 
         return regionSize;
     }
+    #endregion
+    #region LevelGeneration
+    /// <summary>
+    /// Generates the planets off of the level parameters
+    /// </summary>
     Planet[] Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
@@ -145,6 +169,9 @@ public class LevelGenerator : MonoBehaviour
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
         return planetList;
     }
+    /// <summary>
+    /// Generates a forcefield for a planet
+    /// </summary>
     GameObject GenerateForcefield(Planet planet)
     {
         GameObject forcefield = this.gameObject;
@@ -158,7 +185,9 @@ public class LevelGenerator : MonoBehaviour
         }
         return forcefield;
     }
-
+    /// <summary>
+    /// Generates a planet using FullPlanetGeneration
+    /// </summary>
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
     {
         (PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[previousPlanets.Length];
@@ -176,6 +205,9 @@ public class LevelGenerator : MonoBehaviour
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
     }
+    /// <summary>
+    /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
+    /// </summary>
     void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
     {
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
@@ -224,8 +256,11 @@ public class LevelGenerator : MonoBehaviour
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
         ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x + (ball.localScale.x * ball.GetComponent<SphereCollider>().radius));
     }
-
-
+    #endregion
+    #region Utility
+    /// <summary>
+    /// Takes an image of the camera render texture and creates a planet object with sprites
+    /// </summary>
     GameObject ConvertToImage(GameObject selectedObj, string sceneName)
     {
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
@@ -323,6 +358,11 @@ public class LevelGenerator : MonoBehaviour
         planetParent.SetActive(false);
         return planetParent;
     }
+    /// <summary>
+    /// Converts a RenderTexture to a Sprite
+    /// </summary>
+    /// <param name="renderTexture"></param>
+    /// <returns></returns>
     public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)
     {
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
@@ -336,7 +376,16 @@ public class LevelGenerator : MonoBehaviour
         RenderTexture.active = prevActive;
         return sprite;
     }
-
+    /// <summary>
+    /// Calculates the Camera Size
+    /// </summary>
+    public static Vector2 CamSize(Camera cam){
+        float height = cam.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
+        float width = height * cam.aspect;       //camera width in units
+        Vector3 camSize = new Vector3(width, height);
+        return camSize;
+    }
+    #endregion
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0, 1, 1, 0.1f);
@@ -348,11 +397,4 @@ public class LevelGenerator : MonoBehaviour
     private void OnDisable()
     {
     }
-    public static Vector2 CamSize(Camera cam){
-        float height = cam.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
-        float width = height * cam.aspect;       //camera width in units
-        Vector3 camSize = new Vector3(width, height);
-        return camSize;
-    }
-
 }

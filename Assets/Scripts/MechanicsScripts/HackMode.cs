@@ -10,7 +10,7 @@ public class HackMode : MonoBehaviour
 {
     [SerializeField] Transform env;
     [Header("Fabric Var")]
-    [SerializeField] bool showInEditor = false, updateInPlaymode;
+    [SerializeField] bool updateInPlaymode;
     [SerializeField] int width = 38, height = 24;
     [SerializeField] float cellSize = 0.5f;
     [SerializeField] Color gridColor = Color.green;
