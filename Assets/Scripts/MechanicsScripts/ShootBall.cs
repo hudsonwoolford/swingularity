@@ -144,17 +144,11 @@ public class ShootBall : MonoBehaviour
             {
                 if(!hit.collider.isTrigger)
                 {
-Vector2 normal = (transform.position - hit.transform.position).normalized;
-
-        // Calculate the angle between the original direction and the obstacle normal
-        float angle = Vector2.SignedAngle(dir, normal);
-
-        // Rotate the original direction away from the obstacle by a small angle
-        Quaternion rotation = Quaternion.AngleAxis(angle + 45f, Vector3.forward); // Adjust the angle as needed
-        dir = rotation * dir;
-
-        // Optionally, clamp the distance based on the new direction
-        dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f));
+                    Vector2 normal = (transform.position - hit.transform.position).normalized;
+                    Vector2 mouseNormal = (mousePos - hit.transform.position).normalized;
+                    dir = new Vector2(-normal.y, normal.x + 0.1f);
+                    dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
+                    dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f) * (1-Vector3.Dot(mouseNormal, normal)));
                 }
             }
                         
