@@ -863,6 +863,7 @@ Transform:
   - {fileID: 1295048829}
   - {fileID: 657365798}
   - {fileID: 724060596}
+  - {fileID: 2120989567}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3189,8 +3190,6 @@ GameObject:
   - component: {fileID: 2120989568}
   - component: {fileID: 2120989566}
   - component: {fileID: 2120989565}
-  - component: {fileID: 2120989569}
-  - component: {fileID: 2120989570}
   - component: {fileID: 2120989571}
   - component: {fileID: 2120989572}
   m_Layer: 0
@@ -8009,7 +8008,7 @@ Transform:
   m_Children:
   - {fileID: 145927253}
   - {fileID: 797610068}
-  m_Father: {fileID: 2136511873}
+  m_Father: {fileID: 523281756}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &2120989568
@@ -8031,54 +8030,6 @@ MonoBehaviour:
   collisionParticles: {fileID: 5146723426314538478, guid: 9d97daab121cf8d4c85728f46ca2e5c1,
     type: 3}
   collisionClip: {fileID: 8300000, guid: 62dbbdb9096dfa44c9c395d0dcd224b2, type: 3}
---- !u!135 &2120989569
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2120989564}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.07
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2120989570
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2120989564}
-  serializedVersion: 4
-  m_Mass: 313.29
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 2
-  m_Constraints: 126
-  m_CollisionDetection: 1
 --- !u!82 &2120989571
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8254,7 +8205,6 @@ Transform:
   - {fileID: 1145956506}
   - {fileID: 623311813}
   - {fileID: 1870791433}
-  - {fileID: 2120989567}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
