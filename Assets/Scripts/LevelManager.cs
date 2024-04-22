@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -101,9 +102,18 @@ public class LevelManager : MonoBehaviour
         scoreText.text = score;
         if(procedural)
         {
-            int scene = SceneManager.GetActiveScene().buildIndex;
-
-            SceneManager.LoadScene(scene);
+            StartCoroutine(LoadProcedural());
+        }
+    }
+    IEnumerator LoadProcedural()
+    {
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(scene);
+        loadNextOp.allowSceneActivation = true;
+        while(!loadNextOp.isDone)
+        {
+            print(loadNextOp.progress);
+            yield return new WaitForSeconds(0.01f);
         }
     }
     #endregion
