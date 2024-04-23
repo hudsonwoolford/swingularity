@@ -899,7 +899,7 @@ public class FullPlanetGeneration : MonoBehaviour
         EditorSceneManager.SetActiveScene(currentScene);
 
         //Front Texture
-        RenderTexture frontTexture = new RenderTexture(1000, 1000, 0);
+        RenderTexture frontTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = frontTexture;
         cam.Render();
 
@@ -911,7 +911,7 @@ public class FullPlanetGeneration : MonoBehaviour
         //Back Texture
         cam.cullingMask = LayerMask.GetMask("Planet Back Capture", "Planet Front Capture");
 
-        RenderTexture backTexture = new RenderTexture(1000, 1000, 0);
+        RenderTexture backTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = backTexture;
         cam.Render();
 
@@ -923,7 +923,7 @@ public class FullPlanetGeneration : MonoBehaviour
         //Parent planet
         GameObject planetParent = new GameObject("Planet Parent");
         planetParent.transform.position = Vector3.zero;
-        planetParent.transform.localScale = Vector3.one * 0.3f;
+        planetParent.transform.localScale = Vector3.one * 0.294f;
         SortingGroup sr = planetParent.AddComponent<SortingGroup>();
         sr.sortingLayerName = "Planet Sprites";
         PlanetDataHolder pd = planetParent.AddComponent<PlanetDataHolder>();
@@ -955,7 +955,7 @@ public class FullPlanetGeneration : MonoBehaviour
         GameObject ocean = Instantiate(oceanRend.gameObject, planetParent.transform);
         ocean.GetComponent<MeshRenderer>().material = oceanMat;
         ocean.transform.position += new Vector3(0, 0, 2);
-        ocean.transform.localScale = Vector3.one * 6.9f;
+        ocean.transform.localScale = Vector3.one * 6.67f;
         ocean.SetActive(true);
 
         //Atmospheres

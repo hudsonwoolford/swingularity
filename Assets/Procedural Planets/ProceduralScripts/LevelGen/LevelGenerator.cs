@@ -32,7 +32,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     Vector2 regionExtension; //how much region is extended
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, audioSrcPrefab; //Needed prefabs
+    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
     float planetScale; //Scale of planets multiplier
     [SerializeField]
@@ -142,7 +142,7 @@ public class LevelGenerator : MonoBehaviour
         return regionSize;
     }
     #endregion
-    #region LevelGeneration
+    #region Level Generation
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
@@ -152,22 +152,60 @@ public class LevelGenerator : MonoBehaviour
         Instantiate(audioSrcPrefab);
         Transform env = GameObject.FindGameObjectWithTag("Environment").transform;
         Transform allPlanetParent = new GameObject("Planets").transform;
+        Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
         for (int i = 0; i < level.numPlanets; i++){
-            Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], levelSize, level.planetTypes[i], planetList);
+            if (level.planetTypes[i] == ColorSchemeStaticReference.PlanetType.star)
+            {
+                planetList[i].planet = GenerateStar(level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+                planetList[i].planet.transform.parent =env;
+                planetList[i].planetType = level.planetTypes[i];
+                planetList[i].forceField = null;
+                continue;
+            }
+            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], planetList);
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
             GameObject forcefield = GenerateForcefield(planetList[i]);
             planetList[i].forceField = forcefield;
+            planetList[i].planetType = level.planetTypes[i];
             forcefield.transform.parent = env;
             //print(forcefield.transform.localScale.x);
         }
         Destroy(generator.gameObject);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
-        SetBallFlagPosition(flag, player.transform, planetList);
+
+        List<Planet> normPlanets = new List<Planet>();
+        for (int i = 0; i < planetList.Length; i++)
+        {
+            if (planetList[i].planetType != (ColorSchemeStaticReference.PlanetType.star | ColorSchemeStaticReference.PlanetType.blackhole))
+            {
+                normPlanets.Add(planetList[i]);
+            }
+        }
+        SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
         return planetList;
+    }
+    /// <summary>
+    /// Generates a planet using FullPlanetGeneration
+    /// </summary>
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, Planet[] planetList)
+    {
+        //(PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[planetList.Length];
+        //for (int i = 0; i < planetList.Length; i++)
+        //{
+        //    previousBiomes[i].Item1 = planetList[i].biomeA;
+        //    previousBiomes[i].Item2 = planetList[i].biomeB;
+        //}
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index);
+        generator.ClearAllTrees();
+        generator.UpdateAndApplyAll();
+
+        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
+        newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
+        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
     }
     /// <summary>
     /// Generates a forcefield for a planet
@@ -185,32 +223,21 @@ public class LevelGenerator : MonoBehaviour
         }
         return forcefield;
     }
-    /// <summary>
-    /// Generates a planet using FullPlanetGeneration
-    /// </summary>
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, Vector3 levelSize, ColorSchemeStaticReference.PlanetType planetType, Planet[] previousPlanets)
+    GameObject GenerateStar(float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
-        (PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[previousPlanets.Length];
-        for (int i = 0; i < previousPlanets.Length; i++)
-        {
-            previousBiomes[i].Item1 = previousPlanets[i].biomeA;
-            previousBiomes[i].Item2 = previousPlanets[i].biomeB;
-        }
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index);
-        generator.ClearAllTrees();
-        generator.UpdateAndApplyAll();
-
-        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
-        newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
-        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
+        Transform star = Instantiate(starPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
+        star.transform.localScale = Vector3.one * size * planetScale * 0.66f;
+        star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z));
+        return star.gameObject;
     }
     /// <summary>
     /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
     /// </summary>
     void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
     {
+        if(candidates.Length == 0) { return; }
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
+
         int rot = UnityEngine.Random.Range(0, 360);
         flag.eulerAngles = new Vector3(flag.eulerAngles.z, flag.eulerAngles.y, rot);
         bool planetOrRandom = true;
@@ -281,7 +308,7 @@ public class LevelGenerator : MonoBehaviour
 
 
         //Front Texture
-        RenderTexture frontTexture = new RenderTexture(1000, 1000, 0);
+        RenderTexture frontTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = frontTexture;
         cam.Render();
 
@@ -293,7 +320,7 @@ public class LevelGenerator : MonoBehaviour
         //Back Texture
         cam.cullingMask = LayerMask.GetMask("Planet Back Capture", "Planet Front Capture");
 
-        RenderTexture backTexture = new RenderTexture(1000, 1000, 0);
+        RenderTexture backTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = backTexture;
         cam.Render();
 
@@ -305,7 +332,7 @@ public class LevelGenerator : MonoBehaviour
         //Parent planet
         GameObject planetParent = new GameObject("Planet Parent");
         planetParent.transform.position = Vector3.zero;
-        planetParent.transform.localScale = Vector3.one * 0.3f;
+        planetParent.transform.localScale = Vector3.one * 0.294f;
         SortingGroup sr = planetParent.AddComponent<SortingGroup>();
         sr.sortingLayerName = "Planet Sprites";
         PlanetDataHolder pd = planetParent.AddComponent<PlanetDataHolder>();
@@ -337,7 +364,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject ocean = Instantiate(oceanRend.gameObject, planetParent.transform);
         ocean.GetComponent<MeshRenderer>().material = oceanMat;
         ocean.transform.position += new Vector3(0, 0, 2);
-        ocean.transform.localScale = Vector3.one * 6.9f;
+        ocean.transform.localScale = Vector3.one * 6.67f;
         ocean.SetActive(activeOcean);
 
         //Atmospheres

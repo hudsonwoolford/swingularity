@@ -102,19 +102,15 @@ public class LevelManager : MonoBehaviour
         scoreText.text = score;
         if(procedural)
         {
-            StartCoroutine(LoadProcedural());
+            int scene = SceneManager.GetActiveScene().buildIndex;
+            AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
+            loadNextOp.allowSceneActivation = true;
         }
     }
     IEnumerator LoadProcedural()
     {
-        int scene = SceneManager.GetActiveScene().buildIndex;
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(scene);
-        loadNextOp.allowSceneActivation = true;
-        while(!loadNextOp.isDone)
-        {
-            print(loadNextOp.progress);
-            yield return new WaitForSeconds(0.01f);
-        }
+        
+        yield return null;
     }
     #endregion
     private void OnEnable()

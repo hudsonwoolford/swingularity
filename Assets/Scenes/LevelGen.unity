@@ -271,7 +271,7 @@ MonoBehaviour:
   randomSeed: 1
   canSpawnOffPlanet: 0
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}
-  seed: 8008
+  seed: 923
   minPlanets: 39
   maxPlanets: 40
   minSize: 3
@@ -285,10 +285,12 @@ MonoBehaviour:
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
     type: 3}
+  starPrefab: {fileID: 5706988348064744954, guid: 3742d9f3e0baa7941871dd063e9973cb,
+    type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
   planetScale: 0.55
-  possiblePlanetTypes: 00000000010000000200000004000000030000000500000006000000
+  possiblePlanetTypes: 010000000300000004000000050000000900000009000000
 --- !u!4 &866247461
 Transform:
   m_ObjectHideFlags: 0
@@ -302,7 +304,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1108948784652166674
 PrefabInstance:
@@ -701,6 +703,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4001304445180854819, guid: 6b22623ac2a29f848a8c3902dfd352e5,
         type: 3}
+      propertyPath: simulated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001304445180854819, guid: 6b22623ac2a29f848a8c3902dfd352e5,
+        type: 3}
       propertyPath: showBallPos
       value: 0
       objectReference: {fileID: 0}
@@ -755,7 +762,7 @@ PrefabInstance:
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}

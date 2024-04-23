@@ -1309,8 +1309,8 @@ ParticleSystem:
       maxColor: {r: 0.7921569, g: 0.22745097, b: 0.31360424, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.58431375, g: 0.40301025, b: 0.20784312, a: 0}
-        key1: {r: 0.58431375, g: 0.40301025, b: 0.20784312, a: 1}
+        key0: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 0}
+        key1: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 1}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4897,8 +4897,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4514127086862924418}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
-  m_LocalScale: {x: 0.22018346, y: 0.22018343, z: 0.22018343}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2086371561311151087}
@@ -4985,8 +4985,8 @@ Transform:
   m_GameObject: {fileID: 5706988348064744954}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.94, y: 1.94, z: 1.94}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8123458760289651611}
   - {fileID: 2272058417958004851}
@@ -5040,12 +5040,13 @@ MonoBehaviour:
     planetType: 6
     sunColor: {r: 3.1209924, g: 0.9569081, b: 1.6519426, a: 1}
     sunDarkColor: {r: 0.4716981, g: 0.13572444, b: 0.25246114, a: 1}
-    atmosphereColor: {r: 0.64467144, g: 0.44455323, b: 0.6981132, a: 1}
-  starSchemeIndex: 1
-  bigNoiseOffset: -8657.996
+    atmosphereColor: {r: 0.5, g: 0.12971699, b: 0.37841102, a: 1}
+  starSchemeIndex: 5
+  bigNoiseOffset: -1674.8701
   collisionParticles: {fileID: 5146723426314538478, guid: 9d97daab121cf8d4c85728f46ca2e5c1,
     type: 3}
   collisionClip: {fileID: 8300000, guid: 62dbbdb9096dfa44c9c395d0dcd224b2, type: 3}
+  autoMass: 1
 --- !u!33 &1646534542660649537
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5221,7 +5222,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5706988348064744954}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 752.72003
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
