@@ -6,7 +6,14 @@ Properties
         _StrengthFilter("Strength Filter", 2D) = "white" {}
         _Strength("Distort Strength", float) = 1.0
         _Speed("Distort Speed", float) = 1.0
-        _Scale("Object Scale", float) = 1.0
+        _Power("Noise Power", float) = 1.0
+        [IntRange]_Octaves("Noise Octaves", Range(0,5)) = 1
+        _Offset("Noise Offset", vector) = (0,0,0)
+        _Scale("Noise Scale", float) = 1
+        _Persistence("Noise Persistence", Range(0, 5)) = 1
+        _Lacunarity("Noise Lacunarity", Range(0,5)) = 1
+        _Gain("Noise Gain", Range(0, 5)) = 1
+        _TwirlStrength("Twirl Strength", float) = 1
     }
 
     SubShader
@@ -31,7 +38,8 @@ Properties
             #pragma vertex vert 
             #pragma fragment frag
             #include "UnityCG.cginc"
-            #include "Includes/SimplexNoise.cginc"
+            #include "Includes/FractalNoise.cginc"
+            #include "Includes/ShaderGraphNodes.cginc"
 
 
             // Properties
@@ -41,19 +49,22 @@ Properties
             float _Strength;
             float _Power;
             float _Speed;
-            float _Scale;
+            int _Octaves;
+            float3 _Offset;
+            float _Scale, _Persistence, _Lacunarity, _Gain;
+            float _TwirlStrength;
 
             struct vertexInput
             {
                 float4 vertex : POSITION;
-                float3 texCoord : TEXCOORD0;
+                float2 texCoord : TEXCOORD0;
             };
 
             struct vertexOutput
             {
                 float4 pos : SV_POSITION;
-                float4 grabPos : TEXCOORD0;
-                float3 uv : TEXCOORD1;
+                float2 grabPos : TEXCOORD0;
+                float2 uv : TEXCOORD1;
             };
 
             vertexOutput vert(vertexInput input)
@@ -62,20 +73,16 @@ Properties
                 
                 // billboard to camera
                 float4 pos = input.vertex;
-                pos = mul(UNITY_MATRIX_P, 
-                      mul(UNITY_MATRIX_MV, float4(0, 0, 0, 1))
-                          + float4(pos.x, pos.z, 0, 0) * _Scale);
-                output.pos = pos;                
+                output.pos = UnityObjectToClipPos(input.vertex);
 
                 // use ComputeGrabScreenPos function from UnityCG.cginc
                 // to get the correct texture coordinate
                 output.grabPos = ComputeGrabScreenPos(output.pos);
 
                 // distort based on noise & strength filter
-                float noise = snoise(input.vertex * _Time.y * _Speed);
-                float3 filt = tex2Dlod(_StrengthFilter, float4(input.texCoord, 0)).rgb;
-                output.grabPos.x += sin(noise) * filt * _Strength / 10;
-                output.grabPos.y += cos(noise) * filt * _Strength / 10;
+                float2 twirledPos = Twirl(input.texCoord, float2(0.5,0.5), _TwirlStrength, float2(0, 0));
+
+                output.grabPos += twirledPos * _Strength;
 
                 output.uv = input.texCoord;
                 return output;
@@ -85,7 +92,7 @@ Properties
             {
                 //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
                 // return float4(1,1,1,1); // billboard test
-                return tex2Dproj(_BackgroundTexture, input.grabPos);
+                return tex2D(_BackgroundTexture, input.grabPos);
             }
 
             ENDCG
@@ -93,3 +100,7 @@ Properties
 
     }
 }
+
+// float noise = SimpleNoise(float3(twirledPos.x, twirledPos.y, 0), _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, _Offset);
+// float poweredNoise = pow(noise, _Power);
+// float3 filt = tex2Dlod(_StrengthFilter, input.vertex).rgb;
