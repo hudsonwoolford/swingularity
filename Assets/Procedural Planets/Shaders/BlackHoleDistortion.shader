@@ -18,6 +18,7 @@ Properties
 
     SubShader
     {
+        ZTest Always
         Tags 
         {
             "Queue" = "Transparent"
@@ -54,47 +55,43 @@ Properties
             float _Scale, _Persistence, _Lacunarity, _Gain;
             float _TwirlStrength;
 
-            struct vertexInput
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float2 texCoord : TEXCOORD0;
             };
 
-            struct vertexOutput
+            struct v2f
             {
                 float4 pos : SV_POSITION;
-                float2 grabPos : TEXCOORD0;
+                float4 grabPos : TEXCOORD0;
                 float2 uv : TEXCOORD1;
             };
 
-            vertexOutput vert(vertexInput input)
+            v2f vert (appdata v)
             {
-                vertexOutput output;
-                
-                // billboard to camera
-                float4 pos = input.vertex;
-                output.pos = UnityObjectToClipPos(input.vertex);
-
-                // use ComputeGrabScreenPos function from UnityCG.cginc
-                // to get the correct texture coordinate
-                output.grabPos = ComputeGrabScreenPos(output.pos);
-
-                // distort based on noise & strength filter
-                float2 twirledPos = Twirl(input.texCoord, float2(0.5,0.5), _TwirlStrength, float2(0, 0));
-
-                output.grabPos += twirledPos * _Strength;
-
-                output.uv = input.texCoord;
-                return output;
+                v2f o;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.uv = v.texCoord;
+                o.grabPos = ComputeGrabScreenPos(o.pos);
+                return o;
             }
-
-            float4 frag(vertexOutput input) : COLOR
+ 
+            half4 frag (v2f i) : SV_Target
             {
-                //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
-                // return float4(1,1,1,1); // billboard test
-                return tex2D(_BackgroundTexture, input.grabPos);
-            }
+                float4 distortionPos = float4(Twirl(i.uv, float2(0.5, 0.5), _TwirlStrength, float2(0, 0)).xy - 0.5, 0.0, 1.0);
+                float4 clipSpaceDistortion = UnityObjectToClipPos(distortionPos);
+                float4 grabDistortion = ComputeGrabScreenPos(clipSpaceDistortion);
+                grabDistortion.xy /= grabDistortion.w;
+ 
+                float2 grabUV = i.grabPos.xy / i.grabPos.w;
 
+                float filt = tex2D(_StrengthFilter, i.uv).r;
+                grabUV = lerp(grabUV, grabDistortion, filt);
+ 
+                half4 col = tex2D(_BackgroundTexture, grabUV);
+                return col;
+            }
             ENDCG
         }
 
@@ -103,4 +100,4 @@ Properties
 
 // float noise = SimpleNoise(float3(twirledPos.x, twirledPos.y, 0), _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, _Offset);
 // float poweredNoise = pow(noise, _Power);
-// float3 filt = tex2Dlod(_StrengthFilter, input.vertex).rgb;
+

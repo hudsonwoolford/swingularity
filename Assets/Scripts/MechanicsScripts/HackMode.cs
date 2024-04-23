@@ -69,7 +69,7 @@ public class HackMode : MonoBehaviour
     void UpdateFabric(Rigidbody[] planets)
     {
         Vector4[] planetInfo = new Vector4[512];
-        Vector4[] realPlanets = Array.ConvertAll(env.GetComponentsInChildren<Rigidbody>(), r => new Vector4(r.transform.position.x, r.transform.position.y, r.mass, 0));
+        Vector4[] realPlanets = Array.ConvertAll(env.GetComponentsInChildren<CelestialMass>(), r => new Vector4(r.transform.position.x, r.transform.position.y, r.mass, 0));
         for (int i = 0; i < realPlanets.Length; i++)
         {
             planetInfo[i] = realPlanets[i];
