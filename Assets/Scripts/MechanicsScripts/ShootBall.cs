@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 
 public class ShootBall : MonoBehaviour
@@ -30,6 +32,8 @@ public class ShootBall : MonoBehaviour
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
+    [SerializeField] float animLength; //Length of animation when hit the hole
+
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -49,6 +53,8 @@ public class ShootBall : MonoBehaviour
     public static OnStill onStill;
     public delegate void OnHole();
     public static OnHole onHole;
+    public delegate void HoleAnim();
+    public static HoleAnim holeAnim;
     public delegate void TriggerReset();
     public static TriggerReset triggerReset;
     public delegate void BoundsReset();
@@ -559,11 +565,31 @@ public class ShootBall : MonoBehaviour
          if(other.gameObject.tag == "Hole")
         {
             other.enabled = false;
-            onHole?.Invoke();
-            triggerReset?.Invoke();
+            StartCoroutine(FinishedLevel());
+            rb.constraints = RigidbodyConstraints.FreezePosition;
         }
 
     }
+    IEnumerator FinishedLevel(){
+        StartCoroutine(StartAnimation());
+        yield return new WaitForSeconds(animLength);
+        onHole?.Invoke();
+        triggerReset?.Invoke();
+    }
+    IEnumerator StartAnimation(){
+        float timeCounter = 0;
+        holeAnim?.Invoke();
+        Transform hole = GameObject.FindGameObjectWithTag("Hole").transform;
+        Vector3 startPos = transform.position;
+        Material mat = GetComponent<MeshRenderer>().material;
+        while (timeCounter < animLength){
+            timeCounter += Time.deltaTime;
+            float progress = timeCounter/animLength;
+            transform.position = Vector3.Lerp(transform.position, hole.position, 0.01f);
+            mat.SetFloat("_Cutoff", 1 - progress);
+            yield return null;
+        }
+    } 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Respawn")

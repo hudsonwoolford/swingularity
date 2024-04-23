@@ -58,9 +58,8 @@ Shader "Custom/Dissolve"
             float noiseVal = sin(SimpleNoise(IN.vertPos, _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, _Offset));
             o.Alpha = step(c.a * noiseVal, _Cutoff);
             float stepProgress = 1 - step(noiseVal + _EdgeAdd, _Cutoff);
-            o.Emission = stepProgress * _EdgeColor;
-
-
+                o.Emission = stepProgress * _EdgeColor;
+        
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;

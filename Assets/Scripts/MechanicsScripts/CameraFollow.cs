@@ -168,15 +168,20 @@ public class CameraFollow : MonoBehaviour
     {
         panning = false;
     }
+    void ZoomIn(){
+        targetCameraSize = cameraMinMax.x;
+    }
     private void OnEnable()
     {
         ShootBall.triggerReset += OnReset;
         ShootBall.onHole += OnReset;
+        ShootBall.holeAnim += ZoomIn;
     }
     private void OnDisable()
     {
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;
+        ShootBall.holeAnim += ZoomIn;
     }
     private void OnDrawGizmos()
     {
