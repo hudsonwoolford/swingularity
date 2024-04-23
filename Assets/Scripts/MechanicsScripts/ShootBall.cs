@@ -34,7 +34,7 @@ public class ShootBall : MonoBehaviour
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
     Rigidbody srb;
-    List<Rigidbody> planets = new List<Rigidbody>();
+    List<CelestialMass> planets = new List<CelestialMass>();
     Vector3 mousePos;
     Vector3 origin;
     Vector3 previousDir;
@@ -60,7 +60,7 @@ public class ShootBall : MonoBehaviour
         origin = originPos;
         foreach (Transform t in planetTransform)
         {
-            planets.Add(t.gameObject.GetComponent<Rigidbody>());
+            planets.Add(t.gameObject.GetComponent<CelestialMass>());
         }
         if(simulationScene != null)
         {
@@ -103,7 +103,7 @@ public class ShootBall : MonoBehaviour
             planets.Clear();
             foreach (Transform t in planetTransform)
             {
-                planets.Add(t.gameObject.GetComponent<Rigidbody>());
+                planets.Add(t.gameObject.GetComponent<CelestialMass>());
             }
         }
         mousePos = Input.mousePosition; //screen position of mouse
@@ -346,9 +346,9 @@ public class ShootBall : MonoBehaviour
 
             //physics update
             trackPos += velocity * Time.fixedDeltaTime;
-            foreach (Rigidbody r in planets)
+            foreach (CelestialMass r in planets)
             {
-                if (Vector3.Distance(r.position, trackPos) <= rad + r.transform.localScale.x)
+                if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x)
                 {
                     if (r.gameObject.tag == "Respawn")
                     {

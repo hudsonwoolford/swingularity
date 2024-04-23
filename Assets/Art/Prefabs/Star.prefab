@@ -4968,7 +4968,7 @@ GameObject:
   - component: {fileID: 6926385171592076521}
   - component: {fileID: 23632398348724005}
   - component: {fileID: 4182447062384443176}
-  - component: {fileID: 5629932334042869301}
+  - component: {fileID: 442879603304201031}
   m_Layer: 0
   m_Name: Star
   m_TagString: Respawn
@@ -5214,30 +5214,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: -0.000000029802322, y: 0, z: 0}
---- !u!54 &5629932334042869301
-Rigidbody:
+--- !u!114 &442879603304201031
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5706988348064744954}
-  serializedVersion: 4
-  m_Mass: 752.72003
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 2
-  m_Constraints: 126
-  m_CollisionDetection: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5cca4f4f122094fb8154517572efff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 0

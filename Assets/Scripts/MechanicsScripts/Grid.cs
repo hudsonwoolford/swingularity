@@ -10,11 +10,11 @@ public class Grid
     int height;
     float cellSize;
     Vector3 origin;
-    Rigidbody[] planets;
+    CelestialMass[] planets;
     Rigidbody ball;
     Vector2[,] gridArray;
 
-    public Grid(int width, int height, float cellSize, int subDivisions, float maxMult, float divisor, Vector3 origin, Rigidbody[] planets, Rigidbody ball, LineRenderer xlr, LineRenderer ylr)
+    public Grid(int width, int height, float cellSize, int subDivisions, float maxMult, float divisor, Vector3 origin, CelestialMass[] planets, Rigidbody ball, LineRenderer xlr, LineRenderer ylr)
     {
         this.width = width;
         this.height = height;
@@ -78,23 +78,23 @@ public static class ArtificialGravity
 {
     public static float G = 1f;
 
-    public static Vector3 AttractForce(Rigidbody rbToAttract, Rigidbody rbAttracting) //brackeys gravity tutorial
+    public static Vector3 AttractForce(CelestialMass attractor, Rigidbody rbAttracting) //brackeys gravity tutorial
     {
-        Vector3 direction = rbAttracting.position - rbToAttract.position; //direction vector
+        Vector3 direction = rbAttracting.position - attractor.transform.position; //direction vector
         float distance = direction.magnitude; //distance
 
-        float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * rbToAttract.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * attractor.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
             return force; //returning force
     }
-    public static Vector2 GravityForceAtPoint(Vector3 worldPos, Rigidbody[] planetRB, float objMass)
+    public static Vector2 GravityForceAtPoint(Vector3 worldPos, CelestialMass[] attractors, float objMass)
     {
         Vector2 totalForce = Vector2.zero;
         Vector2 totalForceNormalized= Vector2.zero;
-        foreach (Rigidbody rbAttracting in planetRB)
+        foreach (CelestialMass rbAttracting in attractors)
         {
-            Vector3 direction = rbAttracting.position - worldPos; //direction vector
+            Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance
 
             float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
@@ -105,15 +105,15 @@ public static class ArtificialGravity
             return totalForce;
 
     }
-    public static Vector2 CalculateDisplacement(Vector2 vertexPosition, Rigidbody[] planetRB, float max, float divisor)
+    public static Vector2 CalculateDisplacement(Vector2 vertexPosition, CelestialMass[] attractors, float max, float divisor)
     {
         float deltaZ = 0;
-        foreach (Rigidbody rbAttracting in planetRB)
+        foreach (CelestialMass attractor in attractors)
         {
-            Vector2 direction = new Vector2(rbAttracting.position.x, rbAttracting.position.y) - vertexPosition; //direction vector
+            Vector2 direction = new Vector2(attractor.transform.position.x, attractor.transform.position.y) - vertexPosition; //direction vector
             float distance = direction.magnitude; //distance
 
-            deltaZ = G * (rbAttracting.mass * 1) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            deltaZ = G * (attractor.mass * 1) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         }
         divisor = divisor == 0 ? 1 : divisor;
         deltaZ = deltaZ == 0 ? 1 : deltaZ;
