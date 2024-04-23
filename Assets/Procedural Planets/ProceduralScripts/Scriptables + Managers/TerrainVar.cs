@@ -200,9 +200,7 @@ public static class ColorSchemeStaticReference{
         goop,
         waste,
         mythical,
-        moon,
-        blackhole,
-        star,
+        special
     }
 
     [Serializable]

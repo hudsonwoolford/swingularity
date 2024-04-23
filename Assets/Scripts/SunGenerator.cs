@@ -92,15 +92,26 @@ public class SunGenerator : MonoBehaviour
     /// <summary>
     /// Randomly chooses fromt sun colour scheme array based on seed
     /// </summary>
-    public void RandomSun(int seed)
+    public void RandomSun(int seed, ColorSchemeStaticReference.PlanetType type)
     {
         //Prevent errors
         if (schemePool.Length == 0) { return; }
         NullChecks();
 
         //Choose a random sun colour scheme and big noise offset
+        List<int> typeSchemeIndices = new List<int>();
+        for (int i = 0; i < schemePool.Length; i++)
+        {
+            if (schemePool[i].planetType == type)
+            {
+                typeSchemeIndices.Add(i);
+            }
+        }
+        if(typeSchemeIndices.Count == 0) { return; }
         UnityEngine.Random.InitState(seed);
-        starSchemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
+
+
+        starSchemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
         bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
 
         //Reset atmosphere particles

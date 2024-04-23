@@ -39,7 +39,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
       polarColorSchemes: []
     - name: Volcano+Desert
-      planetType: 3
+      planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
       polarColorSchemes: []
     - name: Alpine Volcano+Desert
-      planetType: 3
+      planetType: 0
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -61,17 +61,8 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 4978ee19aa806c641b2f1317fc304b0f, type: 2}
       - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
       - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
-      polarColorSchemes: []
-    - name: Alpine Volcano+Wastelands
-      planetType: 3
-      oPrimary: 1
-      aPrimary: 1
-      singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: 2cb73938250941248bee21240209fd78, type: 2}
-      planetColorSchemes:
-      - {fileID: 11400000, guid: c6d68d82e42f94b42949ecc22cefd6bc, type: 2}
+      - {fileID: 11400000, guid: 19c65f19974c80b44900ff6ec4c235bd, type: 2}
       - {fileID: 11400000, guid: 31c4e04e548483544aee1d6e5d9ffa0c, type: 2}
-      - {fileID: 11400000, guid: 7ec3b1364cd4fb94eb3620c01f0f4796, type: 2}
       polarColorSchemes: []
     - name: Fire + Ice
       planetType: 3
@@ -109,7 +100,7 @@ MonoBehaviour:
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 766
+    seed: 383
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1.04
@@ -133,9 +124,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 265.50433
+    - 519.17224
+    - 1142.5691
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -146,9 +137,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 199.19704
+    - 382.00848
+    - 1001.07556
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -160,9 +151,9 @@ MonoBehaviour:
     gain: 2.58
     power: 15.31
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 231.11783
+    - 472.4196
+    - 854.2409
     elevation: 3.35
     smoothing: 15.62
   warpedNoiseSettings:
@@ -174,9 +165,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 258.03394
+    - 561.3155
+    - 832.94763
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -187,9 +178,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 233.40805
+    - 421.52164
+    - 1057.6213
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -202,9 +193,9 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 765.6404
-    - 468.13055
-    - 167.99374
+    - 383.76648
+    - 496.48715
+    - 784.53864
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22

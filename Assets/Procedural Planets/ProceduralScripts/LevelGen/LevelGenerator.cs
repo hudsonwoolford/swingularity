@@ -37,9 +37,29 @@ public class LevelGenerator : MonoBehaviour
     float planetScale; //Scale of planets multiplier
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
+    [SerializeField]
+    SpecialObject[] specialObjects;
 
     Vector2 regionSize;
 
+    [Serializable]
+    public struct SpecialObject
+    {
+        public SpecialType type;
+        public int amount;
+        public SpecialObject(SpecialType type, int amount)
+        {
+            this.type = type;
+            this.amount = amount;
+        }
+    }
+    [Serializable]
+    public enum SpecialType
+    { 
+        Star,
+        BlackHole,
+        Moon
+    }
     [Serializable]
     public struct Planet{
         public GameObject planet;
@@ -143,6 +163,44 @@ public class LevelGenerator : MonoBehaviour
     }
     #endregion
     #region Level Generation
+    (int, SpecialType)[] CalculateSpecialIndices(ProceduralLevelGeneration.Level level)
+    {
+        List<SpecialObject> replaceObjects = new List<SpecialObject>();
+        int numSpecial = 0;
+        for (int i = 0; i < specialObjects.Length; i++)
+        {
+            if (specialObjects[i].type == (SpecialType.Star))
+            {
+                numSpecial += specialObjects[i].amount;
+                replaceObjects.Add(specialObjects[i]);
+            }
+            else if (specialObjects[i].type == SpecialType.BlackHole)
+            {
+                numSpecial += specialObjects[i].amount * 2;
+                replaceObjects.Add(specialObjects[i]);
+            }
+        }
+        numSpecial = Mathf.Clamp(numSpecial, 0, level.numPlanets - 2); //Allow space for 2 normal planets
+
+        SpecialObject[] objects = replaceObjects.ToArray();
+        List<(int, SpecialType)> replacers = new List<(int, SpecialType)>();
+        List<int> availableIndices = new List<int>();
+        for (int i = 0; i < level.numPlanets; i++)
+        {
+            availableIndices.Add(i);
+        }
+
+
+        for (int i = 0; i < numSpecial; i++)
+        {
+            SpecialObject chosenObject = objects[UnityEngine.Random.Range(0, objects.Length)];
+            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+            replacers.Add((index, chosenObject.type));
+            if(chosenObject.type == SpecialType.BlackHole) { i++; }
+        }
+
+        return replacers.ToArray();
+    }
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
@@ -153,15 +211,25 @@ public class LevelGenerator : MonoBehaviour
         Transform env = GameObject.FindGameObjectWithTag("Environment").transform;
         Transform allPlanetParent = new GameObject("Planets").transform;
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
+        (int, SpecialType)[] replacers = CalculateSpecialIndices(level);
         for (int i = 0; i < level.numPlanets; i++){
-            if (level.planetTypes[i] == ColorSchemeStaticReference.PlanetType.star)
+            bool matches = false;
+            for (int u = 0; u < replacers.Length; u++)
             {
-                planetList[i].planet = GenerateStar(level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
-                planetList[i].planet.transform.parent =env;
-                planetList[i].planetType = level.planetTypes[i];
-                planetList[i].forceField = null;
-                continue;
+                if(replacers[u].Item1 == i)
+                {
+                    matches = true; 
+                    if (replacers[u].Item2 == SpecialType.Star)
+                    {
+                        planetList[i].planet = GenerateStar(level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+                        planetList[i].planet.transform.parent = env;
+                        planetList[i].forceField = null;
+                        planetList[i].planetType = ColorSchemeStaticReference.PlanetType.special;
+                        continue;
+                    }
+                }
             }
+            if(matches) { continue; }
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], planetList);
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
@@ -178,7 +246,7 @@ public class LevelGenerator : MonoBehaviour
         List<Planet> normPlanets = new List<Planet>();
         for (int i = 0; i < planetList.Length; i++)
         {
-            if (planetList[i].planetType != (ColorSchemeStaticReference.PlanetType.star | ColorSchemeStaticReference.PlanetType.blackhole))
+            if (planetList[i].planetType != ColorSchemeStaticReference.PlanetType.special)
             {
                 normPlanets.Add(planetList[i]);
             }
@@ -213,21 +281,18 @@ public class LevelGenerator : MonoBehaviour
     GameObject GenerateForcefield(Planet planet)
     {
         GameObject forcefield = this.gameObject;
-        if (planet.planetType != ColorSchemeStaticReference.PlanetType.blackhole || planet.planetType != ColorSchemeStaticReference.PlanetType.star)
-        {
-            forcefield = Instantiate(forcefieldPrefab);
+        forcefield = Instantiate(forcefieldPrefab);
 
-            ForceField ff = forcefield.GetComponent<ForceField>();
-            ff.enabled = true;
-            ff.Init(planet.planet.transform);
-        }
+        ForceField ff = forcefield.GetComponent<ForceField>();
+        ff.enabled = true;
+        ff.Init(planet.planet.transform);
         return forcefield;
     }
     GameObject GenerateStar(float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         Transform star = Instantiate(starPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
         star.transform.localScale = Vector3.one * size * planetScale * 0.66f;
-        star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z));
+        star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z), planetType);
         return star.gameObject;
     }
     /// <summary>
