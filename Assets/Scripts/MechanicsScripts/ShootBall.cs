@@ -42,6 +42,7 @@ public class ShootBall : MonoBehaviour
     Camera main;
     TrailRenderer tr;
     bool liningUpShot;
+    bool ballStill;
     public delegate void OnShoot();
     public static OnShoot onShoot;
     public delegate void OnStill();
@@ -108,7 +109,10 @@ public class ShootBall : MonoBehaviour
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
         if (rb.velocity.magnitude <0.1f){
-            onStill?.Invoke();
+            if(!ballStill){
+                ballStill = true;   
+                onStill?.Invoke();
+            }
             if(Input.GetMouseButtonDown(0))
             {
             
@@ -119,6 +123,9 @@ public class ShootBall : MonoBehaviour
                     { StartCoroutine(ShowBallSpeed()); }
                 }
             }
+        }
+        else{
+            ballStill = false;
         }
 
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
