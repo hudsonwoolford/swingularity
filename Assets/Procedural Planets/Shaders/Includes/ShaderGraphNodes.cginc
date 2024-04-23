@@ -93,3 +93,16 @@ float Unity_Remap_float4(float In, float2 InMinMax, float2 OutMinMax)
 {
     return OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
 }
+float2 Unity_Rotate_Radians_float(float2 UV, float2 Center, float Rotation)
+{
+    UV -= Center;
+    float s = sin(Rotation);
+    float c = cos(Rotation);
+    float2x2 rMatrix = float2x2(c, -s, s, c);
+    rMatrix *= 0.5;
+    rMatrix += 0.5;
+    rMatrix = rMatrix * 2 - 1;
+    UV.xy = mul(UV.xy, rMatrix);
+    UV += Center;
+    return UV;
+}

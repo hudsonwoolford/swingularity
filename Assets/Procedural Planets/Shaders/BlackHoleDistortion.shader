@@ -79,7 +79,8 @@ Properties
  
             half4 frag (v2f i) : SV_Target
             {
-                float4 distortionPos = float4(Twirl(i.uv, float2(0.5, 0.5), _TwirlStrength, float2(0, 0)).xy - 0.5, 0.0, 1.0);
+                float2 rotateduvs = Unity_Rotate_Radians_float(i.uv, float2(0.5, 0.5), _Time.y * _Speed);
+                float4 distortionPos = float4(Twirl(rotateduvs, float2(0.5, 0.5), _TwirlStrength, float2(0, 0)).xy - 0.5, 0.0, 1.0);
                 // float4 noisePos = SimpleNoise(distortionPos, _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, _Offset);
                 distortionPos *= SimpleNoise(distortionPos.xyz, _Octaves, _Scale, _Persistence, _Lacunarity, _Gain, _Offset);
                 float4 clipSpaceDistortion = UnityObjectToClipPos(distortionPos);
