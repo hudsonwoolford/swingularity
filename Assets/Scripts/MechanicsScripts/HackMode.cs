@@ -64,7 +64,7 @@ public class HackMode : MonoBehaviour
     }
     void EnableFabric(bool enable)
     {
-        gridMeshRend.enabled = false;
+        gridMeshRend.enabled = enable;
     }                       
     void UpdateFabric(Rigidbody[] planets)
     {

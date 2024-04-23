@@ -1535,9 +1535,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 759337833}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.152, y: 0.145, z: 0.177}
-  m_LocalScale: {x: 0.13, y: 0.13, z: 0.13}
+  m_LocalRotation: {x: -0.000000007450581, y: 1, z: -0, w: -0.000000014901161}
+  m_LocalPosition: {x: 0.000054453423, y: 0.00016092963, z: -0.00008486899}
+  m_LocalScale: {x: 0.12999998, y: 0.13, z: 0.13}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 773654081}
@@ -1698,7 +1698,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 20
+      scalar: 15
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1803,13 +1803,13 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 2
+      minMaxState: 1
       minColor: {r: 0.3663902, g: 0.15566039, b: 1, a: 1}
       maxColor: {r: 0.6976444, g: 0.27843142, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.9150943, g: 0.7171186, b: 0.13381095, a: 1}
+        key1: {r: 0.8962264, g: 0.31142628, b: 0.004227493, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2570,20 +2570,20 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -1
-          outSlope: -1
-          tangentMode: 34
+          inSlope: 0.083367944
+          outSlope: 0.083367944
+          tangentMode: 0
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.20860925
         - serializedVersion: 3
           time: 1
           value: 0
-          inSlope: -1
-          outSlope: -1
-          tangentMode: 34
+          inSlope: -3.1969702
+          outSlope: -3.1969702
+          tangentMode: 0
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.07615906
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -2830,8 +2830,8 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0
-      minScalar: -0.034906585
+      scalar: -0.08726646
+      minScalar: -0.17453292
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6363,7 +6363,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 773654080}
-  m_LocalRotation: {x: 0.32175535, y: 0.2722955, z: -0.09717431, w: 0.90160185}
+  m_LocalRotation: {x: 0.46371147, y: 0.21688153, z: -0.11819853, w: 0.85086036}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 7.9000006, y: 7.9000006, z: 7.9000006}
   m_ConstrainProportionsScale: 1
@@ -6371,7 +6371,7 @@ Transform:
   - {fileID: 759337834}
   m_Father: {fileID: 1731574407}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 39.28, y: 33.61, z: 0}
+  m_LocalEulerAnglesHint: {x: 57.18, y: 28.6, z: 0}
 --- !u!23 &773654082
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7463,6 +7463,7 @@ GameObject:
   - component: {fileID: 1731574410}
   - component: {fileID: 1731574409}
   - component: {fileID: 1731574408}
+  - component: {fileID: 1731574411}
   m_Layer: 0
   m_Name: Black Hole
   m_TagString: Respawn
@@ -7549,6 +7550,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731574406}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1731574411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731574406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017c2b3b74c6e394e96667b0718749e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  schemePool:
+  - planetType: 0
+    darkColor: {r: 0.8962264, g: 0.31142628, b: 0.004227493, a: 1}
+    lightColor: {r: 0.9150943, g: 0.7171186, b: 0.13381095, a: 1}
+    fresnel: {r: 3.4415908, g: 1.9583788, b: 0.25226307, a: 1}
+  - planetType: 1
+    darkColor: {r: 1, g: 0.2967346, b: 0.02352941, a: 1}
+    lightColor: {r: 0.93333334, g: 0.76625717, b: 0.2352941, a: 1}
+    fresnel: {r: 1.5932716, g: 0.6629346, b: 0.04170867, a: 1}
+  - planetType: 2
+    darkColor: {r: 0.25792095, g: 0.51172745, b: 0.7924528, a: 1}
+    lightColor: {r: 0.1372549, g: 0.53674424, b: 0.5568628, a: 1}
+    fresnel: {r: 0.04170867, g: 1.38616, b: 1.5932716, a: 1}
+  - planetType: 3
+    darkColor: {r: 1, g: 0.02352941, b: 0.23389398, a: 1}
+    lightColor: {r: 0.93333334, g: 0.49767697, b: 0.2352941, a: 1}
+    fresnel: {r: 1.5932716, g: 0.14372903, b: 0.04170867, a: 1}
+  - planetType: 4
+    darkColor: {r: 0.07164473, g: 0.6603774, b: 0.30027878, a: 1}
+    lightColor: {r: 0.48774382, g: 0.7830189, b: 0.18836774, a: 1}
+    fresnel: {r: 0.31942114, g: 1.8632753, b: 0.026367055, a: 1}
+  - planetType: 5
+    darkColor: {r: 0.3584906, g: 0.23926608, b: 0.07271271, a: 1}
+    lightColor: {r: 0.6415094, g: 0.46855778, b: 0.2269491, a: 1}
+    fresnel: {r: 1.1030006, g: 0.6458874, b: 0.09239794, a: 1}
+  - planetType: 6
+    darkColor: {r: 0.22821617, g: 0, b: 1, a: 1}
+    lightColor: {r: 0.3647999, g: 0.054901935, b: 0.7490196, a: 1}
+    fresnel: {r: 0.93132585, g: 0.17427474, b: 5.278032, a: 1}
+  schemeIndex: 0
 --- !u!4 &1864713189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7058972642452695448, guid: d2135fc615dcc254a9eec81c2ea84936,
