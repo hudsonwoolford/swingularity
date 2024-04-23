@@ -885,6 +885,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293daa8024f40f241aba01d0268cb405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomSeed: 0
+  canSpawnOffPlanet: 0
+  invisOcean: {fileID: 0}
   seed: 32487
   minPlanets: 39
   maxPlanets: 40
@@ -892,14 +895,14 @@ MonoBehaviour:
   maxSize: 6.29
   sizeBias: 0.05
   sizeScale: 1
-  xRegionSize: 33
-  yRegionSize: 21.3
   samplesBeforeRejection: 21
   offsetScale: 12.08
+  regionExtension: {x: 0, y: 0}
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
     type: 3}
+  starPrefab: {fileID: 0}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
   planetScale: 0.55
@@ -1104,6 +1107,111 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -14.435, y: 43.1, z: -75.083}
+--- !u!1 &1552324912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1552324916}
+  - component: {fileID: 1552324915}
+  - component: {fileID: 1552324914}
+  - component: {fileID: 1552324913}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!135 &1552324913
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552324912}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1552324914
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552324912}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 35ec9edb39636f842962e27705e4d5ff, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1552324915
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552324912}
+  m_Mesh: {fileID: 289301614986012343, guid: f42ceae93c831c24ca780b43bbc7ec37, type: 3}
+--- !u!4 &1552324916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552324912}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.1178446, y: 13.144904, z: 12.913548}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1609494402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,7 +1312,10 @@ MonoBehaviour:
   interactableObject:
   - {fileID: 0}
   rangeOffset: 0
+  meshChangeThreshold: 2
   forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  smallMesh: {fileID: 0}
+  bigMesh: {fileID: 0}
   bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   autoMass: 0
   frontColor: {r: 0.52934986, g: 0.2516911, b: 0.0823988, a: 0}
@@ -1383,7 +1494,10 @@ MonoBehaviour:
   interactableObject:
   - {fileID: 0}
   rangeOffset: 0
+  meshChangeThreshold: 2
   forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  smallMesh: {fileID: 0}
+  bigMesh: {fileID: 0}
   bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   autoMass: 0
   frontColor: {r: 0.5294118, g: 0.08235294, b: 0.2939088, a: 0}
@@ -1495,7 +1609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12164b2f8b7901647bfb2aaac6493612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballMat: {fileID: 13400000, guid: bf08b8e82e11527439d272d3a4cf3ea7, type: 2}
   planetTransform: {fileID: 2136511873}
   maxPower: 25
   moveScale: 5
@@ -1513,13 +1626,15 @@ MonoBehaviour:
   colIcons: 1
   showBallPos: 0
   slr: {fileID: 156410845}
+  simulationLayer:
+    serializedVersion: 2
+    m_Bits: 0
   simulationBall: {fileID: 7338985779832413967, guid: a52775a160cff344cbbb5650cf168a8c,
     type: 3}
   collisionVisual: {fileID: 5545570058873106883, guid: 23660415c2b73a747ac3fa4b2533ae2e,
     type: 3}
   maxstep: 21
   maxLengthSim: 100
-  simulatedEnv: {fileID: 2136511873}
 --- !u!54 &1870987250
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1981,7 +2096,10 @@ MonoBehaviour:
   interactableObject:
   - {fileID: 0}
   rangeOffset: 0
+  meshChangeThreshold: 2
   forceMat: {fileID: 2100000, guid: 43aa4cb54a2c3644e85188e93c1ad1d4, type: 2}
+  smallMesh: {fileID: 0}
+  bigMesh: {fileID: 0}
   bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   autoMass: 0
   frontColor: {r: 0.1867299, g: 0.5294118, b: 0.08235294, a: 0}
