@@ -5,7 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
+[RequireComponent(typeof (Rigidbody), typeof(LineRenderer))]
+[ExecuteInEditMode()]
 public class MoonManager : MonoBehaviour
 {
     [SerializeField] Transform orbitPlanet;
@@ -26,18 +27,24 @@ public class MoonManager : MonoBehaviour
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
         semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
+        centre = orbitPlanet.position;
     }
     // Update is called once per frame
     void Update()
     {
+        periapsis = semiMajorAxis * (1 - eccentricity);
+        apoapsis = semiMajorAxis * (1 + eccentricity);
+        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
+        centre = orbitPlanet.position;
         if (orbitPlanet == null)
         {
             return;
         }
-        if(lr == null) { lr = GetComponent<LineRenderer>(); }
-        if(lr == null) { lr = gameObject.AddComponent<LineRenderer>(); }
-        MoveMoon();
         DrawOrbit();
+        if(Application.isPlaying)
+        {
+            MoveMoon();
+        }
     }
     private void MoveMoon(){
         float currentDistance = semiMajorAxis * (1 - eccentricity * eccentricity) / (1 + eccentricity * -Mathf.Cos(currentAnomaly));
@@ -58,6 +65,8 @@ public class MoonManager : MonoBehaviour
 
     private void DrawOrbit()
     {
+        if(lr == null) { lr = GetComponent<LineRenderer>(); }
+        if(lr == null) { lr = gameObject.AddComponent<LineRenderer>(); }
         lr.positionCount = points;
         lr.startWidth = width;
         lr.endWidth = width;

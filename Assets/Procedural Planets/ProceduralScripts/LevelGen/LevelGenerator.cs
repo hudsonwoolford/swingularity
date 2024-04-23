@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using System;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class LevelGenerator : MonoBehaviour
 {
-        /*Level Gen settings
+    #region Variables
+    /*Level Gen settings
     0: minimum number of planets
     1: maximum number of planets
     2: minimum radius for each poisson point
@@ -39,18 +41,20 @@ public class LevelGenerator : MonoBehaviour
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
     [SerializeField]
     SpecialObject[] specialObjects;
-
     Vector2 regionSize;
+    public delegate void GeneratePlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType);
 
     [Serializable]
     public struct SpecialObject
     {
         public SpecialType type;
         public int amount;
-        public SpecialObject(SpecialType type, int amount)
+        public GeneratePlanetObject generation;
+        public SpecialObject(SpecialType type, int amount, GameObject prefab, GeneratePlanetObject generation)
         {
             this.type = type;
             this.amount = amount;
+            this.generation = generation;
         }
     }
     [Serializable]
@@ -79,15 +83,23 @@ public class LevelGenerator : MonoBehaviour
 
     public delegate void LevelInit(); //Delegate called in initiation of procedural level, this coccurs before the level is actually generated
     public static LevelInit levelInit;
+    RenderTexture frontTexture, backTexture;
+    Texture2D planetTexture;
 
+    #endregion
     void Start()
     {
         levelInit?.Invoke(); //Initiation Delegate
         Camera mainCam = Camera.main; //Cache camera
+        frontTexture = new RenderTexture(1024, 1024, 0);
+        backTexture = new RenderTexture(1024, 1024, 0);
+        planetTexture = new Texture2D(1024, 1024, TextureFormat.RGBA32, false);
+
+        SetSpecialDelegates();
         //Randomising or keeping seed
         if(randomSeed)
         {
-            seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second + UnityEngine.Random.Range(-1f, 1f) * Time.time);
+            seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * UnityEngine.Random.Range(-1000f, 1000f) + UnityEngine.Random.value * Time.time);
         }
         UnityEngine.Random.InitState(seed);
 
@@ -163,42 +175,72 @@ public class LevelGenerator : MonoBehaviour
     }
     #endregion
     #region Level Generation
-    (int, SpecialType)[] CalculateSpecialIndices(ProceduralLevelGeneration.Level level)
+    /// <summary>
+    /// Calculates what planet indices to replace with special object
+    /// </summary>
+    /// <returns>An index and special object</returns>
+    (int, SpecialObject)[] CalculateReplaceIndices(ProceduralLevelGeneration.Level level)
     {
-        List<SpecialObject> replaceObjects = new List<SpecialObject>();
-        int numSpecial = 0;
-        for (int i = 0; i < specialObjects.Length; i++)
+        List<(int, SpecialObject)> replaceObjects = new List<(int, SpecialObject)>(); //Takes all the special object that replace a planet
+        int numSpecial = 0; //number of objects
+        for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
         {
-            if (specialObjects[i].type == (SpecialType.Star))
+            //Filters on whether they are replace objects or not
+            if (specialObjects[i].type == SpecialType.Star)
             {
                 numSpecial += specialObjects[i].amount;
-                replaceObjects.Add(specialObjects[i]);
+                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
             }
             else if (specialObjects[i].type == SpecialType.BlackHole)
             {
                 numSpecial += specialObjects[i].amount * 2;
-                replaceObjects.Add(specialObjects[i]);
+                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
             }
         }
         numSpecial = Mathf.Clamp(numSpecial, 0, level.numPlanets - 2); //Allow space for 2 normal planets
 
-        SpecialObject[] objects = replaceObjects.ToArray();
-        List<(int, SpecialType)> replacers = new List<(int, SpecialType)>();
-        List<int> availableIndices = new List<int>();
+        List<(int, SpecialObject)> replacers = new List<(int, SpecialObject)>(); //Preparing return array
+        List<int> availableIndices = new List<int>(); //Prevents overlapping indices
         for (int i = 0; i < level.numPlanets; i++)
         {
             availableIndices.Add(i);
         }
 
-
+        //Setting the return array
         for (int i = 0; i < numSpecial; i++)
         {
-            SpecialObject chosenObject = objects[UnityEngine.Random.Range(0, objects.Length)];
-            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
-            replacers.Add((index, chosenObject.type));
-            if(chosenObject.type == SpecialType.BlackHole) { i++; }
-        }
+            //Choosing random special object
+            int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
+            SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
+            if(chosenObject.type == SpecialType.BlackHole && numSpecial - 1 - i <= 2)
+            {
+                replaceObjects.Remove((randomSpecial, chosenObject));
+                if(replaceObjects.Count == 0) { break; }
+                randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
+                chosenObject = replaceObjects[randomSpecial].Item2;
+            }
 
+            //Subtracting from amount on that object
+            replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1-1, replaceObjects[randomSpecial].Item2);
+            if (replaceObjects[randomSpecial].Item1 <=0)
+            {
+                replaceObjects.Remove(replaceObjects[randomSpecial]);
+            }
+
+            //Determining replacement index and adding element
+            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+            availableIndices.Remove(index);
+            replacers.Add((index, chosenObject));
+
+            //Doubling with black holes
+            if(chosenObject.type == SpecialType.BlackHole)
+            {
+                index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+                availableIndices.Remove(index);
+                replacers.Add((index, chosenObject));
+                i++;
+            }
+        }
         return replacers.ToArray();
     }
     /// <summary>
@@ -211,25 +253,18 @@ public class LevelGenerator : MonoBehaviour
         Transform env = GameObject.FindGameObjectWithTag("Environment").transform;
         Transform allPlanetParent = new GameObject("Planets").transform;
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
-        (int, SpecialType)[] replacers = CalculateSpecialIndices(level);
+
+        (int, SpecialObject)[] replacers = CalculateReplaceIndices(level);
+        int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
         for (int i = 0; i < level.numPlanets; i++){
-            bool matches = false;
-            for (int u = 0; u < replacers.Length; u++)
+
+            if(replaceIndices.Contains(i))
             {
-                if(replacers[u].Item1 == i)
-                {
-                    matches = true; 
-                    if (replacers[u].Item2 == SpecialType.Star)
-                    {
-                        planetList[i].planet = GenerateStar(level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
-                        planetList[i].planet.transform.parent = env;
-                        planetList[i].forceField = null;
-                        planetList[i].planetType = ColorSchemeStaticReference.PlanetType.special;
-                        continue;
-                    }
-                }
+                //Generation delegate
+                replacers[Array.IndexOf(replaceIndices, i)].Item2.generation(ref planetList[i], level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+                continue;
             }
-            if(matches) { continue; }
+
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], planetList);
             planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
@@ -255,6 +290,7 @@ public class LevelGenerator : MonoBehaviour
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
         return planetList;
     }
+
     /// <summary>
     /// Generates a planet using FullPlanetGeneration
     /// </summary>
@@ -270,7 +306,9 @@ public class LevelGenerator : MonoBehaviour
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
-        GameObject newPlanet = ConvertToImage(generator.gameObject, "ImagingScene" + seed.x);
+        GameObject newPlanet = ConvertToImage(generator.gameObject);
+        frontTexture.Release();
+        backTexture.Release();
         newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
@@ -288,12 +326,15 @@ public class LevelGenerator : MonoBehaviour
         ff.Init(planet.planet.transform);
         return forcefield;
     }
-    GameObject GenerateStar(float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    void GenerateStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         Transform star = Instantiate(starPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
         star.transform.localScale = Vector3.one * size * planetScale * 0.66f;
+        star.parent = GameObject.FindGameObjectWithTag("Environment").transform;
         star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z), planetType);
-        return star.gameObject;
+        planet.planet = star.gameObject;
+        planet.planetType = ColorSchemeStaticReference.PlanetType.special;
+        planet.forceField = null;
     }
     /// <summary>
     /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
@@ -351,9 +392,31 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     #region Utility
     /// <summary>
+    /// Sets the delegates for generation in each special object
+    /// </summary>
+    void SetSpecialDelegates()
+    {
+        for (int i = 0; i < specialObjects.Length; i++)
+        {
+            switch (specialObjects[i].type)
+            {
+                case SpecialType.Star:
+                    specialObjects[i].generation = GenerateStar;
+                    break;
+                case SpecialType.BlackHole:
+                    specialObjects[i].generation = GenerateStar;
+                    break;
+                case SpecialType.Moon:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    /// <summary>
     /// Takes an image of the camera render texture and creates a planet object with sprites
     /// </summary>
-    GameObject ConvertToImage(GameObject selectedObj, string sceneName)
+    GameObject ConvertToImage(GameObject selectedObj)
     {
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
         bool activeOcean = oceanRend.gameObject.activeInHierarchy;
@@ -373,7 +436,6 @@ public class LevelGenerator : MonoBehaviour
 
 
         //Front Texture
-        RenderTexture frontTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = frontTexture;
         cam.Render();
 
@@ -385,7 +447,6 @@ public class LevelGenerator : MonoBehaviour
         //Back Texture
         cam.cullingMask = LayerMask.GetMask("Planet Back Capture", "Planet Front Capture");
 
-        RenderTexture backTexture = new RenderTexture(1024, 1024, 0);
         cam.targetTexture = backTexture;
         cam.Render();
 
@@ -448,6 +509,7 @@ public class LevelGenerator : MonoBehaviour
 
         Destroy(cam.gameObject);
         planetParent.SetActive(false);
+
         return planetParent;
     }
     /// <summary>
@@ -455,16 +517,16 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     /// <param name="renderTexture"></param>
     /// <returns></returns>
-    public static Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)
+    Sprite ConvertRenderTextureToSprite(RenderTexture renderTexture)
     {
-        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
         RenderTexture prevActive = RenderTexture.active;
         RenderTexture.active = renderTexture;
-        texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-        texture.Apply();
+        planetTexture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
+        planetTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        planetTexture.Apply();
 
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+        Sprite sprite = Sprite.Create(planetTexture, new Rect(0, 0, planetTexture.width, planetTexture.height), Vector2.one * 0.5f);
         RenderTexture.active = prevActive;
         return sprite;
     }
