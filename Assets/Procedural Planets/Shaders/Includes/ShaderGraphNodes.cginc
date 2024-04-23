@@ -70,7 +70,7 @@ inline float unity_valueNoise (float2 uv)
     return t;
 }
 
-float SimpleNoise(float2 UV, float Scale)
+float UnitySimpleNoise(float2 UV, float Scale)
 {
     float t = 0.0;
 
