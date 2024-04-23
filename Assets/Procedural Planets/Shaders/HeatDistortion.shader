@@ -82,8 +82,8 @@ Properties
             float4 frag(vertexOutput input) : COLOR
             {
                 //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
-                return float4(1,1,1,1); // billboard test
-                //return tex2Dproj(_BackgroundTexture, input.grabPos);
+                //return float4(1,1,1,1); // billboard test
+                return tex2Dproj(_BackgroundTexture, input.grabPos);
             }
 
             ENDCG
