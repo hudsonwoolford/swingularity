@@ -39,7 +39,7 @@ public class ForceField : MonoBehaviour
     private MeshFilter meshFilter;
     private Light pOuterAtmosphere;
     private PlanetDataHolder pData;
-    private Rigidbody rb;
+    private CelestialMass cMass;
     public void Init(Transform p)
     {
         planet = p;
@@ -61,7 +61,7 @@ public class ForceField : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         forceMat = meshRenderer.sharedMaterial;
         pBlock = new MaterialPropertyBlock();
-        rb = GetComponent<Rigidbody>();
+        cMass = GetComponent<CelestialMass>();
     }
     void Start()
     {
@@ -73,7 +73,8 @@ public class ForceField : MonoBehaviour
     }
     void Update()
     {
-        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 100; }
+        if(cMass == null) { cMass = GetComponent<CelestialMass>(); }
+        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 100; }
         SetPBlockProp();
         PlanetCorrespond();
     }

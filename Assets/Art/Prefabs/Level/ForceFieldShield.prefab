@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 149981736588089624}
   - component: {fileID: 3244784273351421984}
   - component: {fileID: 6870324798220424577}
-  - component: {fileID: 6749220008259089790}
+  - component: {fileID: 7240803322195757370}
   m_Layer: 0
   m_Name: ForceFieldShield
   m_TagString: Untagged
@@ -28,9 +28,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3159997371337105200}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.94, y: -3.64, z: 0}
-  m_LocalScale: {x: 2.3018975, y: 2.3018975, z: 2.3018975}
+  m_LocalScale: {x: 4.120833, y: 4.120833, z: 4.120833}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -109,8 +109,8 @@ MonoBehaviour:
   bigMesh: {fileID: 289301614986012343, guid: c27feec8a43237b4288847f2f6ab4811, type: 3}
   bump: {fileID: 8300000, guid: e4cd5d3c4ede754409d804ee21248045, type: 3}
   autoMass: 1
-  frontColor: {r: 1, g: 1, b: 1, a: 0}
-  fresnelColor: {r: 1.6256546, g: 1.6256546, b: 1.6256546, a: 1.5}
+  frontColor: {r: 0.06124055, g: 0.5134791, b: 0.7490196, a: 0}
+  fresnelColor: {r: 0.09186082, g: 0.7702187, b: 1.1235294, a: 1.5}
   hitPos:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
@@ -156,30 +156,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.97582567
   m_Center: {x: -0.000000029802322, y: 0.000000029802322, z: 0}
---- !u!54 &6749220008259089790
-Rigidbody:
+--- !u!114 &7240803322195757370
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3159997371337105200}
-  serializedVersion: 4
-  m_Mass: 529.8732
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 2
-  m_Constraints: 126
-  m_CollisionDetection: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5cca4f4f122094fb8154517572efff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 1698.1265

@@ -20,7 +20,7 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] AudioClip collisionClip;
     [SerializeField] bool autoMass = true;
     SphereCollider col;
-    Rigidbody rb;
+    CelestialMass cMass;
     AudioSource source;
     MeshRenderer meshRenderer, heatMeshRenderer;
     ParticleSystem system;
@@ -28,13 +28,12 @@ public class SunGenerator : MonoBehaviour
     void Start()
     {
         NullChecks();
-        rb.mass = transform.localScale.x * transform.localScale.x;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
+        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
 
 
         //Null checks because this script works in edit mode
@@ -128,7 +127,7 @@ public class SunGenerator : MonoBehaviour
         if (system == null) { system = GetComponentInChildren<ParticleSystem>(); }
         if (source == null) { source = GetComponent<AudioSource>(); }
         if (col == null) { col = GetComponent<SphereCollider>(); }
-        if (rb == null) { rb = GetComponent<Rigidbody>(); }
+        if (cMass == null) { cMass = GetComponent<CelestialMass>(); }
     }
     /// <summary>
     /// Sets the particle colours based off of Sun Colours
