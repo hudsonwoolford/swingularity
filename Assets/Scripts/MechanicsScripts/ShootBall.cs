@@ -108,7 +108,7 @@ public class ShootBall : MonoBehaviour
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
         if (rb.velocity.magnitude <0.1f){
-            onShoot?.Invoke();
+            onStill?.Invoke();
             if(Input.GetMouseButtonDown(0))
             {
             
@@ -288,6 +288,7 @@ public class ShootBall : MonoBehaviour
     }
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
+        bool respawn = false;
         slr.positionCount = maxstep + 1;
         slr.SetPosition(0, startPos);
         Vector3 trackPos = startPos;
@@ -342,6 +343,11 @@ public class ShootBall : MonoBehaviour
             {
                 if (Vector3.Distance(r.position, trackPos) <= rad + r.transform.localScale.x)
                 {
+                    if (r.gameObject.tag == "Respawn")
+                    {
+                        respawn = true;
+                        break;
+                    }
                     srb.position = prevPos;
                     srb.velocity = velocity;
                     physicsScene.Simulate(Time.fixedDeltaTime);
@@ -394,6 +400,12 @@ public class ShootBall : MonoBehaviour
             //    }
             //}
             //end physics update
+            if(respawn)
+            {
+                slr.positionCount = i + 2;
+                slr.SetPosition(i + 1, trackPos);
+                break;
+            }
             if (dist + (trackPos - prevPos).magnitude > maxLengthSim)
             {
                 float distDifference = maxLengthSim - dist;
@@ -409,7 +421,7 @@ public class ShootBall : MonoBehaviour
         Physics.simulationMode = SimulationMode.FixedUpdate;
         if(simulated) { DrawCollisionIcons(); }
     }
-
+    
     #endregion
     #region Simulation
     void PhysicsScene()
@@ -539,6 +551,7 @@ public class ShootBall : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
          if(other.gameObject.tag == "Hole")
         {
+            other.enabled = false;
             onHole?.Invoke();
             triggerReset?.Invoke();
         }

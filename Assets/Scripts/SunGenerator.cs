@@ -18,66 +18,110 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] float bigNoiseOffset;
     [SerializeField] GameObject collisionParticles;
     [SerializeField] AudioClip collisionClip;
+    [SerializeField] bool autoMass = true;
     SphereCollider col;
+    Rigidbody rb;
     AudioSource source;
     MeshRenderer meshRenderer, heatMeshRenderer;
     ParticleSystem system;
     // Start is called before the first frame update
     void Start()
     {
-        col = GetComponent<SphereCollider>();
-        source = GetComponent<AudioSource>();
-        meshRenderer = GetComponent<MeshRenderer>();
-        heatMeshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-        system = GetComponent<ParticleSystem>();
+        NullChecks();
+        rb.mass = transform.localScale.x * transform.localScale.x;
     }
 
     // Update is called once per frame
     void Update()
     {
-        starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1);
-        if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
-        if (heatMeshRenderer == null) { heatMeshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>(); }
-        if (system == null) { system = GetComponentInChildren<ParticleSystem>(); } 
-        if (source == null) { source = GetComponent<AudioSource>();}
-        if (col == null) { col = GetComponent<SphereCollider>(); }
-        MaterialPropertyBlock sunBlock = new MaterialPropertyBlock();
+        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 200; }
 
+
+        //Null checks because this script works in edit mode
+        NullChecks();
+
+        //No index out of range errors
+        starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
+
+        //Material property block for the sun sphere
+        MaterialPropertyBlock sunBlock = new MaterialPropertyBlock();
         sunBlock.SetColor("_Color1", schemePool[starSchemeIndex].sunDarkColor);
         sunBlock.SetColor("_Color2", schemePool[starSchemeIndex].sunColor);
         sunBlock.SetFloat("_BigNoise", bigNoiseOffset);
-
         meshRenderer.SetPropertyBlock(sunBlock);
+
+        //Material property block for heat distortion
         MaterialPropertyBlock heatBlock = new MaterialPropertyBlock();
-
         heatBlock.SetFloat("_Scale", transform.localScale.x * 0.45f);
-
         heatMeshRenderer.SetPropertyBlock(heatBlock);
 
-
-        ParticleSystem.ColorOverLifetimeModule colorModule = system.colorOverLifetime;
+        //Setting atmosphere particle colours
         Gradient grad = new Gradient();
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 0.0f), new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(0.0f, 0f), new GradientAlphaKey(1.0f, 0.15f), new GradientAlphaKey(1.0f, 0.85f), new GradientAlphaKey(0.0f, 1f) });
+        ParticleSystem.ColorOverLifetimeModule colorModule = system.colorOverLifetime;
         colorModule.color = grad;
-    }
-    [ContextMenu("Random Sun")]
-    void RandomSun()
-    {
-        if(schemePool.Length == 0) { return; }
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
-        starSchemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
-        bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
-        system.Clear();
-        system.Play();
     }
     private void OnCollisionEnter(Collision c)
     {
-        if(c.gameObject.layer == 7) { return; }
+        if(c.gameObject.layer == 7) { return; } //Simulation layer
         source.PlayOneShot(collisionClip, 0.6f);
+
+        //Instantiates collision particles
         GameObject insta = Instantiate(collisionParticles, c.contacts[0].point + new Vector3(0,0,-5), Quaternion.Euler(new Vector3(-Mathf.Atan2(c.contacts[0].point.y - transform.position.y, c.contacts[0].point.x - transform.position.x) * Mathf.Rad2Deg, 90, -90)));
         SetParticleColours(insta.GetComponentsInChildren<ParticleSystem>());
-        Destroy(insta, 4);
+        Destroy(insta, 1);
     }
+    /// <summary>
+    /// Randomly chooses fromt sun colour scheme array
+    /// </summary>
+    [ContextMenu("Random Sun")] //Can be acessed in the Unity Editor by a button. 3 dots next to the script and it's in the dropdown menu.
+    void RandomSun()
+    {
+        //Prevent errors
+        if(schemePool.Length == 0) { return; }
+
+        //Choose a random sun colour scheme and big noise offset
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        starSchemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
+        bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
+
+        //Reset atmosphere particles
+        system.Clear();
+        system.Play();
+    }
+    /// <summary>
+    /// Randomly chooses fromt sun colour scheme array based on seed
+    /// </summary>
+    public void RandomSun(int seed)
+    {
+        //Prevent errors
+        if (schemePool.Length == 0) { return; }
+        NullChecks();
+
+        //Choose a random sun colour scheme and big noise offset
+        UnityEngine.Random.InitState(seed);
+        starSchemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
+        bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
+
+        //Reset atmosphere particles
+        system.Clear();
+        system.Play();
+    }
+    /// <summary>
+    /// Checks if variables are null and sets them correctly
+    /// </summary>
+    void NullChecks()
+    {
+        if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
+        if (heatMeshRenderer == null) { heatMeshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>(); }
+        if (system == null) { system = GetComponentInChildren<ParticleSystem>(); }
+        if (source == null) { source = GetComponent<AudioSource>(); }
+        if (col == null) { col = GetComponent<SphereCollider>(); }
+        if (rb == null) { rb = GetComponent<Rigidbody>(); }
+    }
+    /// <summary>
+    /// Sets the particle colours based off of Sun Colours
+    /// </summary>
     void SetParticleColours(ParticleSystem[] particleSystems)
     {
         Gradient normalGrad = new Gradient();
