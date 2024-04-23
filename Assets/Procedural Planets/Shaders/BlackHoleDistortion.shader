@@ -1,4 +1,4 @@
-Shader "Custom/BlackHoleDistortion"
+Shader "Unlit/BlackHoleDistortionShader"
 {
 Properties
     {
@@ -6,6 +6,7 @@ Properties
         _StrengthFilter("Strength Filter", 2D) = "white" {}
         _Strength("Distort Strength", float) = 1.0
         _Speed("Distort Speed", float) = 1.0
+        _Scale("Object Scale", float) = 1.0
     }
 
     SubShader
@@ -37,9 +38,10 @@ Properties
             sampler2D _Noise;
             sampler2D _StrengthFilter;
             sampler2D _BackgroundTexture;
-            float     _Strength;
-            float     _Speed;
-            float     _Scale;
+            float _Strength;
+            float _Power;
+            float _Speed;
+            float _Scale;
 
             struct vertexInput
             {
@@ -82,7 +84,7 @@ Properties
             float4 frag(vertexOutput input) : COLOR
             {
                 //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
-                //return float4(1,1,1,1); // billboard test
+                // return float4(1,1,1,1); // billboard test
                 return tex2Dproj(_BackgroundTexture, input.grabPos);
             }
 
