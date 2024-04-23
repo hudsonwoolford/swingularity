@@ -45,7 +45,7 @@ public static class ProceduralLevelGeneration
     6: x dimension of size of level
     7: y dimension of size of level
     8: number of poisson disk samples before rejecting the point as a spawner
-    9: offset scale for determining random values of planet
+    9: offset scale for determining random values of plane
     */
     public static Level CalculateLevel(int seed, ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes,  params float[] levelGenSettings){
         //Set seed and init variables

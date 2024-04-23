@@ -60,7 +60,7 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
         heights[id] += craterHeight;
     }
     
-    float warpedNoiseValue = 0;
+    float3 warpedNoiseValue = 0;
     if (warpedNoiseApply)
     {
         warpedNoiseValue = WarpedNoise(vertexPos, warpedNoiseOctaves, warpedNoiseScale, warpedNoisePersistence, warpedNoiseLacunarity, warpedNoiseMultiplier, warpedNoiseGain, warpedNoiseOffset) * warpedNoiseStrength;
