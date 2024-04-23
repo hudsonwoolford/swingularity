@@ -34,7 +34,7 @@ public class SunGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 200; }
+        if (autoMass) { rb.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
 
 
         //Null checks because this script works in edit mode
