@@ -526,6 +526,7 @@ public class ShootBall : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezePosition;
         bool clockwise = false;
         float distance = Vector3.Distance(transform.position, hole.position);
+        mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         if(transform.position.y > hole.position.y){
             clockwise = true;
         }
