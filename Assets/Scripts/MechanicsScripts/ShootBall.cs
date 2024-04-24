@@ -297,8 +297,6 @@ public class ShootBall : MonoBehaviour
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
         bool respawn = false;
-        slr.positionCount = maxstep + 1;
-        slr.SetPosition(0, startPos);
         Vector3 trackPos = startPos;
         Vector3 prevPos = startPos;
         Vector3 velocity = forceVar / rb.mass + currentVelocity;
@@ -313,7 +311,9 @@ public class ShootBall : MonoBehaviour
         SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
         Physics.simulationMode = SimulationMode.Script;
 
-        int simCounter = 0;
+        slr.positionCount = maxstep +1;
+        slr.SetPosition(0, startPos);
+
         float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
         for (int i = 0; i < maxstep; i++)
         {
@@ -323,22 +323,6 @@ public class ShootBall : MonoBehaviour
                 slr.SetPosition(i + 1, trackPos);
                 break;
             }
-            //if(CameraFollow.innerShape != null)
-            //{
-            //    if(!CameraFollow.innerShape.OverlapPoint(trackPos))
-            //    {
-            //        slr.positionCount = i + 2;
-            //        slr.startColor = Color.red;
-            //        slr.endColor = Color.red;
-            //        slr.SetPosition(i + 1, trackPos);
-            //        break;
-            //    }
-            //    else
-            //    {
-            //        slr.startColor = Color.white;
-            //        slr.endColor = Color.white;
-            //    }
-            //}
             
             //fixed update
             gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
@@ -346,11 +330,16 @@ public class ShootBall : MonoBehaviour
 
 
             //physics update
+            bool blackHole = false;
             trackPos += velocity * Time.fixedDeltaTime;
             foreach (CelestialMass r in planets)
             {
-                if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x)
+                if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x) //may cause issues with scale not matching collider scale
                 {
+                    if(r.gameObject.GetComponent<BlackHoleGenerator>() != null)
+                    {
+                        blackHole = true;
+                    }
                     if (r.gameObject.tag == "Respawn")
                     {
                         respawn = true;
@@ -361,52 +350,9 @@ public class ShootBall : MonoBehaviour
                     physicsScene.Simulate(Time.fixedDeltaTime);
                     trackPos = srb.position;
                     velocity = srb.velocity;
-                    simCounter++;
                     //print("Simulation at step #" + i + " | Total Simulations: " + simCounter);
                 }
             }
-            //RaycastHit raycastHit;
-            //if (Physics.Raycast(prevPos, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude) || colliding)
-            //{
-            //}
-
-            //collisions
-            //foreach (Rigidbody r in planets)
-            //{
-            //    if (Vector3.Distance(r.position, trackPos) <= rad + 0.1f + r.transform.localScale.x)
-            //    {
-            //        //RaycastHit raycastHit;
-            //        //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
-            //        //{
-            //        //    float totalDist = (trackPos - prevPos).magnitude;
-            //        //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
-            //        //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
-            //        //    // Calculate the reflection of velocity using the surface normal
-
-            //        //    velocity = 0* Vector3.Reflect(velocity, raycastHit.normal);
-
-            //        //    // Move the object to the collision point
-            //        //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity);
-
-
-            //        //    break; // Exit the loop after handling the collision
-            //        //}
-            //        //if (Physics.SphereCast(prevPos, rad, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
-            //        //{
-            //        //    float totalDist = (trackPos - prevPos).magnitude;
-            //        //    Vector3 sphereCentre = raycastHit.point + raycastHit.normal * rad;
-            //        //    float extraDist = totalDist - (sphereCentre - prevPos).magnitude;
-
-            //        //    Vector3 u = Vector3.Dot(velocity, raycastHit.normal) * raycastHit.normal;
-            //        //    Vector3 w = velocity - u;
-
-            //        //    velocity = w - u * 1f;
-            //        //    trackPos = sphereCentre + (0.02f * (extraDist / totalDist) * velocity) + (0.02f * velocity);
-
-            //        //    break;
-            //        //}
-            //    }
-            //}
             //end physics update
             if(respawn)
             {
@@ -423,6 +369,7 @@ public class ShootBall : MonoBehaviour
                 break;
             }
             dist += (trackPos - prevPos).magnitude;
+
             prevPos = trackPos;
             slr.SetPosition(i + 1, trackPos);
         }

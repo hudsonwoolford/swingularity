@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 using System;
 using Unity.VisualScripting;
 using System.Linq;
+using static ProceduralLevelGeneration;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -37,24 +38,29 @@ public class LevelGenerator : MonoBehaviour
     GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, blackHolePrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
     float planetScale; //Scale of planets multiplier
+    [SerializeField] int resolution;
+    [SerializeField] float moonCutoffSize = 1;
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
     [SerializeField]
     SpecialObject[] specialObjects;
     Vector2 regionSize;
-    public delegate void GeneratePlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType);
+    public delegate void GenerateSpecialPlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType);
+    public delegate void GenerateSpecialObject(Planet[] planets);
 
     [Serializable]
     public struct SpecialObject
     {
         public SpecialType type;
         public int amount;
-        public GeneratePlanetObject generation;
-        public SpecialObject(SpecialType type, int amount, GameObject prefab, GeneratePlanetObject generation)
+        public GenerateSpecialPlanetObject replaceGeneration;
+        public GenerateSpecialObject addGeneration;
+        public SpecialObject(SpecialType type, int amount, GenerateSpecialPlanetObject replaceGeneration, GenerateSpecialObject addGeneration)
         {
             this.type = type;
             this.amount = amount;
-            this.generation = generation;
+            this.replaceGeneration = replaceGeneration;
+            this.addGeneration = addGeneration;
         }
     }
     [Serializable]
@@ -85,7 +91,7 @@ public class LevelGenerator : MonoBehaviour
     public static LevelInit levelInit;
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
-    [SerializeField] int resolution;
+
 
 
     #endregion
@@ -188,7 +194,7 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
         {
             //Filters on whether they are replace objects or not
-            if (specialObjects[i].type == SpecialType.Star)
+            if (specialObjects[i].type == (SpecialType.Star | SpecialType.Moon))
             {
                 numSpecial += specialObjects[i].amount;
                 replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
@@ -214,10 +220,12 @@ public class LevelGenerator : MonoBehaviour
             //Choosing random special object
             int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
             SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
+
+            //if enough space is left for black hole to spawn
             if(chosenObject.type == SpecialType.BlackHole && numSpecial - 1 - i <= 2)
             {
                 replaceObjects.Remove((randomSpecial, chosenObject));
-                if(replaceObjects.Count == 0) { break; }
+                if(replaceObjects.Count == 0) { break; } //no more objects to choose from
                 randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
                 chosenObject = replaceObjects[randomSpecial].Item2;
             }
@@ -246,6 +254,22 @@ public class LevelGenerator : MonoBehaviour
         return replacers.ToArray();
     }
     /// <summary>
+    /// Calculates which objects in special objects array are adding to the level instead of replacing planets
+    /// </summary>
+    /// <returns></returns>
+    SpecialObject[] CalculateAddObjects()
+    {
+        List<SpecialObject> list = new List<SpecialObject>();
+        for (int i = 0; i < specialObjects.Length; i++)
+        {
+            if (specialObjects[i].type != (SpecialType.Star | SpecialType.BlackHole | SpecialType.Moon))
+            {
+                list.Add(specialObjects[i]);
+            }
+        }
+        return list.ToArray();
+    }
+    /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
     Planet[] Generatelevel(ProceduralLevelGeneration.Level level){
@@ -256,6 +280,7 @@ public class LevelGenerator : MonoBehaviour
         Transform allPlanetParent = new GameObject("Planets").transform;
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
 
+        //Replacement special objects
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level);
         int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
         for (int i = 0; i < level.numPlanets; i++){
@@ -263,21 +288,28 @@ public class LevelGenerator : MonoBehaviour
             if(replaceIndices.Contains(i))
             {
                 //Generation delegate
-                replacers[Array.IndexOf(replaceIndices, i)].Item2.generation(ref planetList[i], level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+                replacers[Array.IndexOf(replaceIndices, i)].Item2.replaceGeneration(ref planetList[i], level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
                 continue;
             }
 
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], planetList);
-            planetList[i].planet.SetActive(true);
             planetList[i].planet.transform.parent = allPlanetParent;
-            GameObject forcefield = GenerateForcefield(planetList[i]);
-            planetList[i].forceField = forcefield;
-            planetList[i].planetType = level.planetTypes[i];
-            forcefield.transform.parent = env;
+            planetList[i].forceField.transform.parent = env;
+
+
             //print(forcefield.transform.localScale.x);
         }
         Destroy(generator.gameObject);
         GenerateBlackHoles();
+
+        ////Additional special objects
+        //SpecialObject[] addObjects = CalculateAddObjects();
+        //for (int i = 0; i < addObjects.Length; i++)
+        //{
+        //    addObjects[i].addGeneration(planetList);
+        //}
+
+        //Ball and flag positions
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
 
@@ -310,25 +342,30 @@ public class LevelGenerator : MonoBehaviour
         generator.UpdateAndApplyAll();
 
         GameObject newPlanet = ConvertToImage(generator.gameObject);
-        frontTexture.Release();
-        backTexture.Release();
+        frontTexture.Release(); //Memory
+        backTexture.Release();  //Memory
+        newPlanet.SetActive(true);
+
         newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
         newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
-        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, gameObject);
+        GameObject forceField = GenerateForcefield(newPlanet.transform);
+
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);
     }
     /// <summary>
     /// Generates a forcefield for a planet
     /// </summary>
-    GameObject GenerateForcefield(Planet planet)
+    GameObject GenerateForcefield(Transform planet)
     {
         GameObject forcefield = this.gameObject;
         forcefield = Instantiate(forcefieldPrefab);
 
         ForceField ff = forcefield.GetComponent<ForceField>();
         ff.enabled = true;
-        ff.Init(planet.planet.transform);
+        ff.Init(planet);
         return forcefield;
     }
+    #region Special Generation
     List<Planet> cachedBlackHoles = new List<Planet>();
     void CacheBlackHole(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
@@ -349,8 +386,8 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < cachedBlackHoles.Count; i+=2)
         {
             print(i);
-            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(false, cachedBlackHoles[i + 1].planet.transform, seed, cachedBlackHoles[i].planetType);
-            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed, cachedBlackHoles[i].planetType);
+            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(false, cachedBlackHoles[i + 1].planet.transform, seed + i, cachedBlackHoles[i].planetType);
+            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
         }
         cachedBlackHoles.Clear();
     }
@@ -364,6 +401,11 @@ public class LevelGenerator : MonoBehaviour
         planet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet.forceField = null;
     }
+    void GenerateMoon(Planet[] planets)
+    {
+
+    }
+    #endregion
     /// <summary>
     /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
     /// </summary>
@@ -429,12 +471,13 @@ public class LevelGenerator : MonoBehaviour
             switch (specialObjects[i].type)
             {
                 case SpecialType.Star:
-                    specialObjects[i].generation = GenerateStar;
+                    specialObjects[i].replaceGeneration = GenerateStar;
                     break;
                 case SpecialType.BlackHole:
-                    specialObjects[i].generation = CacheBlackHole;
+                    specialObjects[i].replaceGeneration = CacheBlackHole;
                     break;
                 case SpecialType.Moon:
+                    specialObjects[i].addGeneration = GenerateMoon;
                     break;
                 default:
                     break;
