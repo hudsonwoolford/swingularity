@@ -527,7 +527,7 @@ public class ShootBall : MonoBehaviour
         bool clockwise = false;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        if(transform.position.y > hole.position.y){
+        if(CheckSpiralDir(hole)){
             clockwise = true;
         }
         while (timeCounter < animLength){
@@ -544,6 +544,15 @@ public class ShootBall : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     } 
+    private bool CheckSpiralDir(Transform hole){
+        float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, Vector3.right);
+        if(dotProduct > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Respawn")
