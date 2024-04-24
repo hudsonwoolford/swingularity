@@ -545,7 +545,7 @@ public class ShootBall : MonoBehaviour
         }
     } 
     private bool CheckSpiralDir(Transform hole){
-        float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, Vector3.right);
+        float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, hole.rotation * Vector3.up);
         if(dotProduct > 0){
             return true;
         }
