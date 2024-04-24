@@ -5,7 +5,7 @@ Properties
         _Noise("Noise", 2D) = "white" {}
         _StrengthFilter("Strength Filter", 2D) = "white" {}
         _Strength("Distort Strength", float) = 1.0
-        _Speed("Distort Speed", float) = 1.0
+        _Speed("Speed", float) = 1.0
         _Power("Noise Power", float) = 1.0
         [IntRange]_Octaves("Noise Octaves", Range(0,5)) = 1
         _Offset("Noise Offset", vector) = (0,0,0)

@@ -16,12 +16,17 @@ public class BlackHoleGenerator : MonoBehaviour
         //[Range(0f, 1f)]
         //public float swirlIntensity;
     }
+    [SerializeField] bool whiteHole = false;
+    [SerializeField] Transform correspondent;
     [SerializeField] SpaceHoleColorScheme[] schemePool;
     [SerializeField] int schemeIndex;
+    [SerializeField] float systemRotSpeed = 8;
 
-    MeshRenderer sphereRenderer;
+    MeshRenderer sphereRenderer, distortRenderer;
     ParticleSystem swirlSystem;
-    MaterialPropertyBlock sphereBlock;
+    Transform distortionQuad;
+    MaterialPropertyBlock sphereBlock, distortBlock;
+    Material distortMat;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,24 +40,66 @@ public class BlackHoleGenerator : MonoBehaviour
         NullChecks();
         Coloring();
     }
+    public void InitRandom(bool white, Transform corresponding, int seed, ColorSchemeStaticReference.PlanetType planetType)
+    {
+        whiteHole = white;
+        correspondent = corresponding;
+        UnityEngine.Random.InitState(seed);
+
+        List<int> typeSchemeIndices = new List<int>();
+        for (int i = 0; i < schemePool.Length; i++)
+        {
+            if (schemePool[i].planetType == planetType)
+            {
+                typeSchemeIndices.Add(i);
+            }
+        }
+        schemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
+
+        //Applying
+        RandomRotation();
+        Coloring();
+
+        //Reset system
+        swirlSystem.Clear();
+        swirlSystem.Play();
+    }
     [ContextMenu("Random Color")]
     void RandomHole()
     {
         schemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
+
+        //Applying
+        RandomRotation();
         Coloring();
+
+        //Reset system
         swirlSystem.Clear();
         swirlSystem.Play();
     }
-
+    void RandomRotation()
+    {
+        distortionQuad.rotation = Quaternion.Euler(UnityEngine.Random.Range(-45, 45), UnityEngine.Random.Range(-45, 45), 0);
+    }
     void Coloring()
     {
+        //Clamping index
         schemeIndex = Mathf.Clamp(schemeIndex, 0, schemePool.Length-1);
 
-        if(sphereBlock == null) { sphereBlock = new MaterialPropertyBlock(); }
-        sphereBlock.SetColor("_MainColor", Color.black);
+        //Sphere fresnel
+        Color mainColor = whiteHole ? Color.white : Color.black;
+        sphereBlock.SetColor("_MainColor", mainColor);
         sphereBlock.SetColor("_FresnelColor", (schemePool[schemeIndex].fresnel));
         sphereRenderer.SetPropertyBlock(sphereBlock);
 
+        //White hole vs black hole twirl direction
+        int mult = whiteHole ? 1 : -1;
+        distortBlock.SetFloat("_Speed", Mathf.Abs(distortMat.GetFloat("_Speed")) * mult);
+        distortRenderer.SetPropertyBlock(distortBlock);
+        ParticleSystem.RotationOverLifetimeModule rotModule = swirlSystem.rotationOverLifetime;
+        rotModule.z =  new ParticleSystem.MinMaxCurve(systemRotSpeed * mult);
+
+        //Particle system colors
         ParticleSystem.MainModule module = swirlSystem.main;
         Gradient grad = new Gradient();
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[schemeIndex].lightColor, 0.0f), new GradientColorKey(schemePool[schemeIndex].darkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
@@ -61,6 +108,20 @@ public class BlackHoleGenerator : MonoBehaviour
     void NullChecks()
     {
         if (sphereRenderer == null) { sphereRenderer = GetComponent<MeshRenderer>(); }
+        if (distortRenderer == null) { distortRenderer = transform.GetChild(0).GetComponent<MeshRenderer>(); }
+        if (distortMat == null) { distortMat = distortRenderer.sharedMaterial; }
         if (swirlSystem == null) { swirlSystem = GetComponentInChildren<ParticleSystem>(); }
+        if (sphereBlock == null) { sphereBlock = new MaterialPropertyBlock(); }
+        if (distortBlock == null) { distortBlock = new MaterialPropertyBlock(); }
+        if (distortionQuad == null) { distortionQuad = transform.GetChild(0); }
+    }
+    private void OnTriggerEnter(Collider collision)
+    {
+        if(whiteHole || correspondent == null) { return; }
+        if (collision.gameObject.tag == "Player" || collision.gameObject.layer == 7) //Player or simulated player
+        {
+            collision.attachedRigidbody.position = correspondent.position + new Vector3(0.1f,0,0);
+            //collision.attachedRigidbody.velocity *= -1;
+        }
     }
 }

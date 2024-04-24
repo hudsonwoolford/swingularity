@@ -34,7 +34,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     Vector2 regionExtension; //how much region is extended
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, audioSrcPrefab; //Needed prefabs
+    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, blackHolePrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
     float planetScale; //Scale of planets multiplier
     [SerializeField]
@@ -275,6 +275,7 @@ public class LevelGenerator : MonoBehaviour
             //print(forcefield.transform.localScale.x);
         }
         Destroy(generator.gameObject);
+        GenerateBlackHoles();
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
 
@@ -325,6 +326,29 @@ public class LevelGenerator : MonoBehaviour
         ff.enabled = true;
         ff.Init(planet.planet.transform);
         return forcefield;
+    }
+    List<Planet> cachedBlackHoles = new List<Planet>();
+    void CacheBlackHole(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    {
+        Transform blackHole = Instantiate(blackHolePrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
+        blackHole.localScale = Vector3.one * size * planetScale * 0.2f;
+        blackHole.parent = GameObject.FindGameObjectWithTag("Environment").transform;
+
+        planet.planet = blackHole.gameObject;
+        planet.planetType = ColorSchemeStaticReference.PlanetType.special;
+        planet.forceField = null;
+        cachedBlackHoles.Add(planet);
+    }
+    void GenerateBlackHoles()
+    {
+        print(cachedBlackHoles.Count);
+        for (int i = 0; i < cachedBlackHoles.Count; i+=2)
+        {
+            print(i);
+            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(false, cachedBlackHoles[i + 1].planet.transform, seed, cachedBlackHoles[i].planetType);
+            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed, cachedBlackHoles[i+1].planetType);
+        }
+        cachedBlackHoles.Clear();
     }
     void GenerateStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
@@ -404,7 +428,7 @@ public class LevelGenerator : MonoBehaviour
                     specialObjects[i].generation = GenerateStar;
                     break;
                 case SpecialType.BlackHole:
-                    specialObjects[i].generation = GenerateStar;
+                    specialObjects[i].generation = CacheBlackHole;
                     break;
                 case SpecialType.Moon:
                     break;
