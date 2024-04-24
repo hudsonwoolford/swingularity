@@ -28,6 +28,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] float animLength; //Length of animation when hit the hole
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
+    [SerializeField] float animScale; //Scale of animation when hit the hole
 
     Scene simulationScene;
     PhysicsScene physicsScene;
@@ -534,10 +535,10 @@ public class ShootBall : MonoBehaviour
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             if(clockwise){
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress) * distance, ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
             }
             else{
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress) * distance, ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
             }
             
             mat.SetFloat("_Cutoff", 1 - progress);
