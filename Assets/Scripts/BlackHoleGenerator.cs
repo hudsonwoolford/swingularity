@@ -27,6 +27,7 @@ public class BlackHoleGenerator : MonoBehaviour
     Transform distortionQuad;
     MaterialPropertyBlock sphereBlock, distortBlock;
     Material distortMat;
+    CelestialMass cMass;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,7 @@ public class BlackHoleGenerator : MonoBehaviour
     }
     public void InitRandom(bool white, Transform corresponding, int seed, ColorSchemeStaticReference.PlanetType planetType)
     {
+        NullChecks();
         whiteHole = white;
         correspondent = corresponding;
         UnityEngine.Random.InitState(seed);
@@ -54,6 +56,7 @@ public class BlackHoleGenerator : MonoBehaviour
                 typeSchemeIndices.Add(i);
             }
         }
+        if(typeSchemeIndices.Count == 0) { return; }
         schemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
 
         //Applying
@@ -83,6 +86,7 @@ public class BlackHoleGenerator : MonoBehaviour
     }
     void Coloring()
     {
+        cMass.mass = whiteHole ? Mathf.Abs(cMass.mass) * -1 : Mathf.Abs(cMass.mass); 
         //Clamping index
         schemeIndex = Mathf.Clamp(schemeIndex, 0, schemePool.Length-1);
 
@@ -90,6 +94,8 @@ public class BlackHoleGenerator : MonoBehaviour
         Color mainColor = whiteHole ? Color.white : Color.black;
         sphereBlock.SetColor("_MainColor", mainColor);
         sphereBlock.SetColor("_FresnelColor", (schemePool[schemeIndex].fresnel));
+        float fresStrength = whiteHole ? 1.25f : 2.5f;
+        sphereBlock.SetFloat("_FresnelStrength", fresStrength);
         sphereRenderer.SetPropertyBlock(sphereBlock);
 
         //White hole vs black hole twirl direction
@@ -114,6 +120,7 @@ public class BlackHoleGenerator : MonoBehaviour
         if (sphereBlock == null) { sphereBlock = new MaterialPropertyBlock(); }
         if (distortBlock == null) { distortBlock = new MaterialPropertyBlock(); }
         if (distortionQuad == null) { distortionQuad = transform.GetChild(0); }
+        if(cMass == null) { cMass = GetComponent<CelestialMass>(); }
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -121,7 +128,7 @@ public class BlackHoleGenerator : MonoBehaviour
         if (collision.gameObject.tag == "Player" || collision.gameObject.layer == 7) //Player or simulated player
         {
             collision.attachedRigidbody.position = correspondent.position + new Vector3(0.1f,0,0);
-            //collision.attachedRigidbody.velocity *= -1;
+            collision.attachedRigidbody.velocity *= -1;
         }
     }
 }

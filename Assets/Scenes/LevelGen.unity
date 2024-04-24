@@ -271,7 +271,7 @@ MonoBehaviour:
   randomSeed: 1
   canSpawnOffPlanet: 0
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}
-  seed: 3306
+  seed: 658733
   minPlanets: 39
   maxPlanets: 40
   minSize: 3
@@ -280,19 +280,25 @@ MonoBehaviour:
   sizeScale: 1
   samplesBeforeRejection: 21
   offsetScale: 59.5
-  regionExtension: {x: 20, y: 20}
+  regionExtension: {x: 30, y: 30}
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
     type: 3}
   starPrefab: {fileID: 5706988348064744954, guid: 3742d9f3e0baa7941871dd063e9973cb,
     type: 3}
-  blackHolePrefab: {fileID: 0}
+  blackHolePrefab: {fileID: 4677109255420733005, guid: f28d77dc6fbaa94458bf8c19cea3dfbc,
+    type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
   planetScale: 0.55
-  possiblePlanetTypes: 00000000010000000200000003000000040000000500000006000000
-  specialObjects: []
+  possiblePlanetTypes: 0200000003000000
+  specialObjects:
+  - type: 1
+    amount: 1
+  - type: 0
+    amount: 1
+  resolution: 1024
 --- !u!4 &866247461
 Transform:
   m_ObjectHideFlags: 0
@@ -717,6 +723,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731953131121079687, guid: 6b22623ac2a29f848a8c3902dfd352e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

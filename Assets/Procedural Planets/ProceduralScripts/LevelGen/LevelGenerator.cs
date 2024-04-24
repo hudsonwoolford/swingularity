@@ -85,15 +85,17 @@ public class LevelGenerator : MonoBehaviour
     public static LevelInit levelInit;
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
+    [SerializeField] int resolution;
+
 
     #endregion
     void Start()
     {
         levelInit?.Invoke(); //Initiation Delegate
         Camera mainCam = Camera.main; //Cache camera
-        frontTexture = new RenderTexture(1024, 1024, 0);
-        backTexture = new RenderTexture(1024, 1024, 0);
-        planetTexture = new Texture2D(1024, 1024, TextureFormat.RGBA32, false);
+        frontTexture = new RenderTexture(resolution, resolution, 0);
+        backTexture = new RenderTexture(resolution, resolution, 0);
+        planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
 
         SetSpecialDelegates();
         //Randomising or keeping seed
@@ -331,13 +333,15 @@ public class LevelGenerator : MonoBehaviour
     void CacheBlackHole(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         Transform blackHole = Instantiate(blackHolePrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
-        blackHole.localScale = Vector3.one * size * planetScale * 0.2f;
+        blackHole.localScale = Vector3.one * size * planetScale * 0.5f;
         blackHole.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         planet.planet = blackHole.gameObject;
-        planet.planetType = ColorSchemeStaticReference.PlanetType.special;
-        planet.forceField = null;
+        planet.planetType = planetType;
         cachedBlackHoles.Add(planet);
+        planet.planetType = ColorSchemeStaticReference.PlanetType.special;
+
+        planet.forceField = null;
     }
     void GenerateBlackHoles()
     {
@@ -346,7 +350,7 @@ public class LevelGenerator : MonoBehaviour
         {
             print(i);
             cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(false, cachedBlackHoles[i + 1].planet.transform, seed, cachedBlackHoles[i].planetType);
-            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed, cachedBlackHoles[i+1].planetType);
+            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed, cachedBlackHoles[i].planetType);
         }
         cachedBlackHoles.Clear();
     }
@@ -497,7 +501,7 @@ public class LevelGenerator : MonoBehaviour
         //Front sprite
         GameObject frontObject = new GameObject("frontObject");
         frontObject.transform.parent = planetParent.transform;
-        frontObject.transform.localScale = Vector3.one;
+        frontObject.transform.localScale = Vector3.one * (1024 / resolution);
         SpriteRenderer frontSR = frontObject.AddComponent<SpriteRenderer>();
         frontSR.sprite = frontSprite;
         frontSR.sortingOrder = 1;
@@ -506,7 +510,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject backObject = new GameObject("backObject");
         backObject.transform.parent = planetParent.transform;
         backObject.transform.position += new Vector3(0, 0, 2);
-        backObject.transform.localScale = Vector3.one;
+        backObject.transform.localScale = Vector3.one * (1024 / resolution);
         SpriteRenderer backSR = backObject.AddComponent<SpriteRenderer>();
         backSR.sprite = backSprite;
 
