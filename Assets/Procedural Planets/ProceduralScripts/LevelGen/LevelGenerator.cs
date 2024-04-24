@@ -222,7 +222,7 @@ public class LevelGenerator : MonoBehaviour
             SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
 
             //if enough space is left for black hole to spawn
-            if(chosenObject.type == SpecialType.BlackHole && numSpecial - 1 - i <= 2)
+            if(chosenObject.type == SpecialType.BlackHole && numSpecial - 2 - i <= 2)
             {
                 replaceObjects.Remove((randomSpecial, chosenObject));
                 if(replaceObjects.Count == 0) { break; } //no more objects to choose from
@@ -296,11 +296,9 @@ public class LevelGenerator : MonoBehaviour
             planetList[i].planet.transform.parent = allPlanetParent;
             planetList[i].forceField.transform.parent = env;
 
-
             //print(forcefield.transform.localScale.x);
         }
         Destroy(generator.gameObject);
-        GenerateBlackHoles();
 
         ////Additional special objects
         //SpecialObject[] addObjects = CalculateAddObjects();
@@ -323,6 +321,8 @@ public class LevelGenerator : MonoBehaviour
         }
         SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
+
+        GenerateBlackHoles(flag.position);
         return planetList;
     }
 
@@ -380,14 +380,13 @@ public class LevelGenerator : MonoBehaviour
 
         planet.forceField = null;
     }
-    void GenerateBlackHoles()
+    void GenerateBlackHoles(Vector3 flagPos)
     {
-        print(cachedBlackHoles.Count);
         for (int i = 0; i < cachedBlackHoles.Count; i+=2)
         {
-            print(i);
-            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(false, cachedBlackHoles[i + 1].planet.transform, seed + i, cachedBlackHoles[i].planetType);
-            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(true, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
+            bool firstWhite = (cachedBlackHoles[i].planet.transform.position - flagPos).magnitude < (cachedBlackHoles[i+1].planet.transform.position - flagPos).magnitude ? true : false;
+            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(firstWhite, cachedBlackHoles[i + 1].planet.transform, seed + i, cachedBlackHoles[i].planetType);
+            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(!firstWhite, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
         }
         cachedBlackHoles.Clear();
     }

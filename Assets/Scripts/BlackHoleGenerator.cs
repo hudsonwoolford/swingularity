@@ -127,7 +127,7 @@ public class BlackHoleGenerator : MonoBehaviour
         if(whiteHole || correspondent == null) { return; }
         if (collision.gameObject.tag == "Player" || collision.gameObject.layer == 7) //Player or simulated player
         {
-            collision.attachedRigidbody.velocity *= -1;
+            //collision.attachedRigidbody.velocity *= -1;
             collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
     }
