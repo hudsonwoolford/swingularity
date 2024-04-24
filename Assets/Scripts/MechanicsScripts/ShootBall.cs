@@ -525,6 +525,7 @@ public class ShootBall : MonoBehaviour
         Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
         bool clockwise = false;
+        float distance = Vector3.Distance(transform.position, hole.position);
         if(transform.position.y > hole.position.y){
             clockwise = true;
         }
@@ -532,10 +533,10 @@ public class ShootBall : MonoBehaviour
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             if(clockwise){
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress), ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress) * distance, ref velocity, animSmoothing);
             }
             else{
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress), ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress) * distance, ref velocity, animSmoothing);
             }
             
             mat.SetFloat("_Cutoff", 1 - progress);
