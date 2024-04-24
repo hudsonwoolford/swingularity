@@ -76,7 +76,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: e13427b2e2936c14eafcfc2cf2f66ec5, type: 2}
       polarColorSchemes: []
     - name: Red Primordial + Ice
-      planetType: 6
+      planetType: 3
       oPrimary: 1
       aPrimary: 1
       singleBiome: 0
@@ -88,19 +88,30 @@ MonoBehaviour:
       - {fileID: 11400000, guid: f798f0e93dde4c04fa8883eb36685761, type: 2}
       polarColorSchemes: []
     - name: Goop
-      planetType: 3
-      oPrimary: 1
-      aPrimary: 1
+      planetType: 4
+      oPrimary: 0
+      aPrimary: 0
       singleBiome: 0
-      primaryBiome: {fileID: 11400000, guid: 89b70facc28f7954585546a0f83ffa28, type: 2}
+      primaryBiome: {fileID: 0}
       planetColorSchemes:
-      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
       - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
-      - {fileID: 11400000, guid: ad13e009da0759548a487aec091326cd, type: 2}
+      - {fileID: 11400000, guid: c9b3dd5f613ba9744a1c80783eff5616, type: 2}
+      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
+      - {fileID: 11400000, guid: c2576fe0e4f554c49ae4b0e8290f4c5c, type: 2}
+      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      - {fileID: 11400000, guid: a5bee57723f8aa04699ac5e7c0e311f7, type: 2}
+      - {fileID: 11400000, guid: 872f3768ef4476144b2d83fd8f741f05, type: 2}
+      - {fileID: 11400000, guid: 872f3768ef4476144b2d83fd8f741f05, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      - {fileID: 11400000, guid: e75ddc8750de47545901f65b89d1ee97, type: 2}
+      - {fileID: 11400000, guid: 130e103288635904eb77a69dde64d78b, type: 2}
+      - {fileID: 11400000, guid: 130e103288635904eb77a69dde64d78b, type: 2}
+      - {fileID: 11400000, guid: f93cee500fbe23c49bfb5f89c9945c72, type: 2}
+      - {fileID: 11400000, guid: f93cee500fbe23c49bfb5f89c9945c72, type: 2}
       polarColorSchemes: []
   generalSettings:
     subdivisions: 8
-    seed: 383
+    seed: 217
     ocean: 1
     atmosphere: 1
     _SeaLevel: 1.04
@@ -124,9 +135,9 @@ MonoBehaviour:
     multiplier: 0.97
     gain: 0.82
     offset:
-    - 265.50433
-    - 519.17224
-    - 1142.5691
+    - 174.87747
+    - 219.50148
+    - 232.75381
     elevation: 0.48
   detailNoiseSettings:
     applyNoise: 1
@@ -137,9 +148,9 @@ MonoBehaviour:
     multiplier: 0.43
     gain: 1.04
     offset:
-    - 199.19704
-    - 382.00848
-    - 1001.07556
+    - 144.23863
+    - 149.20848
+    - 408.91458
     elevation: 0.07
   ridgeNoiseSettings:
     applyNoise: 1
@@ -151,9 +162,9 @@ MonoBehaviour:
     gain: 2.58
     power: 15.31
     offset:
-    - 231.11783
-    - 472.4196
-    - 854.2409
+    - 182.26045
+    - 222.00024
+    - 221.2515
     elevation: 3.35
     smoothing: 15.62
   warpedNoiseSettings:
@@ -165,9 +176,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 258.03394
-    - 561.3155
-    - 832.94763
+    - 179.47673
+    - 162.91931
+    - 345.94244
     strength: 1
   continentNoiseSettings:
     applyNoise: 1
@@ -178,9 +189,9 @@ MonoBehaviour:
     multiplier: 1
     gain: 1
     offset:
-    - 233.40805
-    - 421.52164
-    - 1057.6213
+    - 125.09143
+    - 224.09
+    - 369.23798
     depthMultiplier: 0.9
     oceanFloorDepth: 13.89
     oceanFloorSmoothing: 15.31
@@ -193,9 +204,9 @@ MonoBehaviour:
     multiplier: 2.63
     gain: 2.69
     offset:
-    - 383.76648
-    - 496.48715
-    - 784.53864
+    - 199.03873
+    - 201.79245
+    - 363.2569
     strength: 1.42
     maskBlend: 4.4
     maskVerticalShift: -2.22
