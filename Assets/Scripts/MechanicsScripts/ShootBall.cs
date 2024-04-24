@@ -33,6 +33,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] float animLength; //Length of animation when hit the hole
+    [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
 
     Scene simulationScene;
     PhysicsScene physicsScene;
@@ -566,7 +567,7 @@ public class ShootBall : MonoBehaviour
         {
             other.enabled = false;
             StartCoroutine(FinishedLevel());
-            rb.constraints = RigidbodyConstraints.FreezePosition;
+            
         }
 
     }
@@ -579,13 +580,14 @@ public class ShootBall : MonoBehaviour
     IEnumerator StartAnimation(){
         float timeCounter = 0;
         holeAnim?.Invoke();
-        Transform hole = GameObject.FindGameObjectWithTag("Hole").transform;
-        Vector3 startPos = transform.position;
         Material mat = GetComponent<MeshRenderer>().material;
+        Transform hole = GameObject.FindGameObjectWithTag("Hole").GetComponent<Transform>();
+        Vector3 velocity = rb.velocity;
+        rb.constraints = RigidbodyConstraints.FreezePosition;
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
-            transform.position = Vector3.Lerp(transform.position, hole.position, 0.01f);
+            transform.position = Vector3.SmoothDamp(transform.position, hole.position, ref velocity, animSmoothing);
             mat.SetFloat("_Cutoff", 1 - progress);
             yield return null;
         }

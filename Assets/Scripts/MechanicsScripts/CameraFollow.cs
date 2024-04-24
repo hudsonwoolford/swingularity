@@ -24,6 +24,7 @@ public class CameraFollow : MonoBehaviour
     float targetCameraSize;
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
+    bool finalZoom = false;
 
     public void InitPositions(Vector2 startPosSent, Vector2 endPosSent, float maxSizeSent){
         startPos = startPosSent;
@@ -86,7 +87,7 @@ public class CameraFollow : MonoBehaviour
         if (panning) { return; }
         if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
         Vector3 targetPos = Vector3.zero;
-        if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y))) //out of boundaries
+        if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
         {
             Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
             targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
@@ -170,6 +171,7 @@ public class CameraFollow : MonoBehaviour
     }
     void ZoomIn(){
         targetCameraSize = cameraMinMax.x;
+        finalZoom = true;
     }
     private void OnEnable()
     {
