@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 
 
@@ -567,7 +568,6 @@ public class ShootBall : MonoBehaviour
         {
             other.enabled = false;
             StartCoroutine(FinishedLevel());
-            
         }
 
     }
@@ -584,10 +584,20 @@ public class ShootBall : MonoBehaviour
         Transform hole = GameObject.FindGameObjectWithTag("Hole").GetComponent<Transform>();
         Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
+        bool clockwise = false;
+        if(transform.position.y > hole.position.y){
+            clockwise = true;
+        }
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
-            transform.position = Vector3.SmoothDamp(transform.position, hole.position, ref velocity, animSmoothing);
+            if(clockwise){
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress), ref velocity, animSmoothing);
+            }
+            else{
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress), ref velocity, animSmoothing);
+            }
+            
             mat.SetFloat("_Cutoff", 1 - progress);
             yield return null;
         }
