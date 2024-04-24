@@ -194,7 +194,7 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
         {
             //Filters on whether they are replace objects or not
-            if (specialObjects[i].type == (SpecialType.Star | SpecialType.Moon))
+            if (specialObjects[i].type == (SpecialType.Star) || specialObjects[i].type == (SpecialType.Moon))
             {
                 numSpecial += specialObjects[i].amount;
                 replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
