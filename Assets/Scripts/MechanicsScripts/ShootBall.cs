@@ -1,14 +1,8 @@
 using System;
-using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
-using UnityEngine.UIElements;
 
 
 public class ShootBall : MonoBehaviour
@@ -598,7 +592,7 @@ public class ShootBall : MonoBehaviour
             }
             
             mat.SetFloat("_Cutoff", 1 - progress);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     } 
     private void OnCollisionEnter(Collision collision)
