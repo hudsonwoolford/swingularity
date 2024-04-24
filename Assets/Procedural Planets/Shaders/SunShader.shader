@@ -65,12 +65,9 @@ Shader "Custom/SunShader"
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
 
-            //float angle = snoise((500+_Time) * 0.1 * (1+snoise(v.normal))); // You can adjust _Frequency to control the speed of oscillation
-            //float sinValue = sin(angle);
+            float displacement = SimpleNoise(v.normal, 3, 1, 2, 0.5, 0.005, 1, float3(_Time.y,_Time.y,_Time.y)) ;
 
-            //float3 displacement = v.normal * (0.05 * (sinValue + 1) / 2) ;
-
-            //v.vertex = float4(v.vertex.xyz + displacement, 1);
+            v.vertex.xyz = v.vertex.xyz + v.normal * displacement;
 
             o.vertPos = normalize(v.vertex);
         }

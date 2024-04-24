@@ -18,7 +18,6 @@ Properties
 
     SubShader
     {
-        ZTest Always
         Tags 
         {
             "Queue" = "Transparent"

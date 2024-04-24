@@ -31,6 +31,7 @@ Properties
             #pragma fragment frag
             #include "UnityCG.cginc"
             #include "Includes/SimplexNoise.cginc"
+            #include "Includes/ShaderGraphNodes.cginc"
 
 
             // Properties
@@ -41,49 +42,38 @@ Properties
             float     _Speed;
             float     _Scale;
 
-            struct vertexInput
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float3 texCoord : TEXCOORD0;
             };
 
-            struct vertexOutput
+            struct v2f
             {
                 float4 pos : SV_POSITION;
                 float4 grabPos : TEXCOORD0;
                 float3 uv : TEXCOORD1;
             };
 
-            vertexOutput vert(vertexInput input)
+            v2f vert (appdata v)
             {
-                vertexOutput output;
-                
-                // billboard to camera
-                float4 pos = input.vertex;
-                pos = mul(UNITY_MATRIX_P, 
-                      mul(UNITY_MATRIX_MV, float4(0, 0, 0, 1))
-                          + float4(pos.x, pos.z, 0, 0) * _Scale);
-                output.pos = pos;                
-
-                // use ComputeGrabScreenPos function from UnityCG.cginc
-                // to get the correct texture coordinate
-                output.grabPos = ComputeGrabScreenPos(output.pos);
-
-                // distort based on noise & strength filter
-                float noise = snoise(input.vertex * _Time.y * _Speed);
-                float3 filt = tex2Dlod(_StrengthFilter, float4(input.texCoord, 0)).rgb;
-                output.grabPos.x += sin(noise) * filt * _Strength / 10;
-                output.grabPos.y += cos(noise) * filt * _Strength / 10;
-
-                output.uv = input.texCoord;
-                return output;
+                v2f o;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.uv = v.texCoord;
+                o.grabPos = ComputeGrabScreenPos(o.pos);
+                return o;
             }
-
-            float4 frag(vertexOutput input) : COLOR
+ 
+            half4 frag (v2f i) : SV_Target
             {
-                //return tex2D(_StrengthFilter, input.uv) * tex2Dproj(_BackgroundTexture, input.grabPos);
-                //return float4(1,1,1,1); // billboard test
-                return tex2Dproj(_BackgroundTexture, input.grabPos);
+ 
+                float2 grabUV = i.grabPos.xy / i.grabPos.w;
+
+                float filt = tex2D(_StrengthFilter, i.uv).r;
+                grabUV = grabUV;
+ 
+                half4 col = tex2D(_BackgroundTexture, grabUV);
+                return col;
             }
 
             ENDCG
