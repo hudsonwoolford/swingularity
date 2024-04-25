@@ -78,13 +78,12 @@ Properties
  
             half4 frag (v2f i) : SV_Target
             {
-                float2 rotateduvs = Unity_Rotate_Radians_float(i.uv, float2(0.5, 0.5), _Time.y * _Speed);
-                float4 distortionPos = float4(Twirl(rotateduvs, float2(0.5, 0.5), _TwirlStrength, float2(0, 0)).xy - 0.5, 0.0, 1.0);
-                float noise = UnitySimpleNoise(distortionPos, _Scale);
-                float filt = tex2D(_StrengthFilter, i.uv).r * noise;
-                filt = pow(filt, _Power);
-
-                float4 clipSpaceDistortion = UnityObjectToClipPos(distortionPos);
+                float2 rotateduvs = Unity_Rotate_Radians_float(i.uv, float2(0.5, 0.5), _Time.y * _Speed); //spinning uvs
+                float4 distortionPos = float4(Twirl(rotateduvs, float2(0.5, 0.5), _TwirlStrength, float2(0, 0)).xy - 0.5, 0.0, 1.0); //twirling uvs
+                float noise = UnitySimpleNoise(distortionPos, _Scale); //noise with twirled uvs
+                float filt = tex2D(_StrengthFilter, i.uv).r * noise; //twirled noised passed through filter
+                filt = pow(filt, _Power); //powering noise
+                float4 clipSpaceDistortion = UnityObjectToClipPos(distortionPos); 
                 float4 grabDistortion = ComputeGrabScreenPos(clipSpaceDistortion) + filt;
                 grabDistortion.xy /= grabDistortion.w;
                 

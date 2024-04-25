@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -508,27 +509,28 @@ public class ShootBall : MonoBehaviour
          if(other.gameObject.tag == "Hole")
         {
             other.enabled = false;
-            StartCoroutine(FinishedLevel());
+            StartCoroutine(FinishedLevel(other.transform));
         }
 
     }
-    IEnumerator FinishedLevel(){
-        StartCoroutine(StartAnimation());
+    IEnumerator FinishedLevel(Transform hole)
+    {
+        StartCoroutine(StartAnimation(hole));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(){
-        float timeCounter = 0;
+    IEnumerator StartAnimation(Transform hole){
         holeAnim?.Invoke();
-        Material mat = GetComponent<MeshRenderer>().material;
-        Transform hole = GameObject.FindGameObjectWithTag("Hole").GetComponent<Transform>();
         Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
+
+        float timeCounter = 0;
+        Material mat = GetComponent<MeshRenderer>().material;
         bool clockwise = false;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        if(CheckSpiralDir(hole)){
+        if(CheckSpiralDir(velocity, hole)){
             clockwise = true;
         }
         while (timeCounter < animLength){
@@ -545,14 +547,22 @@ public class ShootBall : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     } 
-    private bool CheckSpiralDir(Transform hole){
-        float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, hole.rotation * Vector3.up);
-        if(dotProduct > 0){
-            return true;
-        }
-        else{
-            return false;
-        }
+    private bool CheckSpiralDir(Vector3 velocity, Transform hole){
+        float angle = (Mathf.Atan2(velocity.y, velocity.x) - hole.eulerAngles.z) * Mathf.Rad2Deg % 360;
+
+        return (angle >= 45 && angle <= 90) ||
+        (angle >= 135 && angle <= 180) ||
+        (angle >= 225 && angle <= 270) ||
+        (angle >= 315 && angle <= 360);
+        //float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, hole.rotation * Vector3.up);
+        //if(dotProduct > 0){
+        //    print("True");
+        //    return true;
+        //}
+        //else{
+        //    print("False");
+        //    return false;
+        //}
     }
     private void OnCollisionEnter(Collision collision)
     {

@@ -82,7 +82,9 @@ public class BlackHoleGenerator : MonoBehaviour
     }
     void RandomRotation()
     {
-        distortionQuad.rotation = Quaternion.Euler(UnityEngine.Random.Range(-45, 45), UnityEngine.Random.Range(-45, 45), 0);
+        int mult1 = UnityEngine.Random.Range(0, 1) == 0 ? -1 : 1;
+        int mult2 = UnityEngine.Random.Range(0, 1) == 0 ? -1 : 1;
+        distortionQuad.rotation = Quaternion.Euler(UnityEngine.Random.Range(40, 70) * mult1, UnityEngine.Random.Range(40, 70) * mult2, 0);
     }
     void Coloring()
     {

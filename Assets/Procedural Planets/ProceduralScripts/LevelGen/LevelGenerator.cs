@@ -217,14 +217,16 @@ public class LevelGenerator : MonoBehaviour
         //Setting the return array
         for (int i = 0; i < numSpecial; i++)
         {
+            if (replaceObjects.Count == 0) { break; } //no more objects to choose from
+
             //Choosing random special object
             int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
             SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
 
             //if enough space is left for black hole to spawn
-            if(chosenObject.type == SpecialType.BlackHole && numSpecial - 2 - i <= 2)
+            if(chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
             {
-                replaceObjects.Remove((randomSpecial, chosenObject));
+                replaceObjects.Remove(replaceObjects[randomSpecial]);
                 if(replaceObjects.Count == 0) { break; } //no more objects to choose from
                 randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
                 chosenObject = replaceObjects[randomSpecial].Item2;
