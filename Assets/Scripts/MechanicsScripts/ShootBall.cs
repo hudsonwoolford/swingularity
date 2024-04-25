@@ -171,11 +171,17 @@ public class ShootBall : MonoBehaviour
             {
                 Vector2 normal = (transform.position - hit.transform.position).normalized;
                 Vector2 mouseNormal = (mousePos - (transform.position- (new Vector3(normal.x, normal.y) * 0.22f))).normalized;
-                if (Vector2.Dot(mouseNormal, normal) > 0&& HitsPlanet(rb.position, force, rb.velocity, hit.collider))
+                if (Vector2.Dot(mouseNormal, normal) > -0.1f&& HitsPlanet(rb.position, force, rb.velocity, hit.collider))
                 {
                     mouseNormal = (mousePos - hit.transform.position).normalized;
                     dir = new Vector2(-normal.y, normal.x + 0.1f);
                     dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
+                    float dotPower = Mathf.Clamp01(1-Vector3.Dot(mouseNormal.normalized, normal.normalized) + 0.5f);
+                    if(dotPower < 1)
+                    {
+                        dotPower = (dotPower - 0.5f) * 2;
+                    }
+                    dist *= dotPower;
 
                 }
 
@@ -257,7 +263,7 @@ public class ShootBall : MonoBehaviour
         }
         SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
         Physics.simulationMode = SimulationMode.Script;
-        float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
+        float rad = GetComponent<SphereCollider>().radius * transform.localScale.x + 0.01f;
         for (int i = 0; i < maxstep; i++)
         {
             if (velocity.magnitude < 0.1f)
@@ -273,7 +279,7 @@ public class ShootBall : MonoBehaviour
             //physics update
             trackPos += velocity * Time.fixedDeltaTime;
             RaycastHit raycastHit;
-            if (Physics.Raycast(prevPos, (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+            if (Physics.Raycast(prevPos -new Vector3(), (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
             {
                 if(raycastHit.collider == currentPlanet)
                 {
