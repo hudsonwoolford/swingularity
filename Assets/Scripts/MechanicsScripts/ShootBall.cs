@@ -587,6 +587,8 @@ public class ShootBall : MonoBehaviour
         Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
+        GetComponent<TrailRenderer>().enabled = false;
+
         float timeCounter = 0;
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);

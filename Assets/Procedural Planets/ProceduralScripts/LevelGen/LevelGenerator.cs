@@ -447,7 +447,7 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
         float smallSplit = UnityEngine.Random.Range(0.1f, moonSplitScale);
-        float smallMoonSize = size * planetScale / 3f;
+        float smallMoonSize = size * planetScale / 2.5f;
         float apoapsis = size * planetScale - smallMoonSize;
 
         
@@ -467,6 +467,7 @@ public class LevelGenerator : MonoBehaviour
         
         float semiMajorAxis = apoapsis/(1 - eccentricity);
         float speed = UnityEngine.Random.Range(0.025f, 0.1f);
+        float rotation = UnityEngine.Random.Range(0,360);
         moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.transform, bigPlanet.forceField.transform, moonLine);
 
         bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
