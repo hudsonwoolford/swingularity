@@ -360,7 +360,7 @@ public class LevelGenerator : MonoBehaviour
         SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
 
-        GenerateBlackHoles(flag.position);
+        GenerateBlackHoles(player.transform.position);
         return planetList;
     }
 
@@ -418,13 +418,13 @@ public class LevelGenerator : MonoBehaviour
 
         planet.forceField = null;
     }
-    void GenerateBlackHoles(Vector3 flagPos)
+    void GenerateBlackHoles(Vector3 ballPos)
     {
         for (int i = 0; i < cachedBlackHoles.Count; i+=2)
         {
-            bool firstWhite = (cachedBlackHoles[i].planet.transform.position - flagPos).magnitude < (cachedBlackHoles[i+1].planet.transform.position - flagPos).magnitude ? true : false;
-            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(firstWhite, cachedBlackHoles[i + 1].planet.transform, seed + i, cachedBlackHoles[i].planetType);
-            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(!firstWhite, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
+            bool firstBlack = (cachedBlackHoles[i].planet.transform.position - ballPos).magnitude < (cachedBlackHoles[i+1].planet.transform.position - ballPos).magnitude ? false : true;
+            cachedBlackHoles[i].planet.GetComponent<BlackHoleGenerator>().InitRandom(firstBlack, cachedBlackHoles[i + 1].planet.transform, seed + i, cachedBlackHoles[i].planetType);
+            cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(!firstBlack, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
         }
         cachedBlackHoles.Clear();
     }
