@@ -527,12 +527,9 @@ public class ShootBall : MonoBehaviour
 
         float timeCounter = 0;
         Material mat = GetComponent<MeshRenderer>().material;
-        bool clockwise = false;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        if(CheckSpiralDir(velocity, hole)){
-            clockwise = true;
-        }
+        bool clockwise = CheckSpiralDir(velocity, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
@@ -548,22 +545,30 @@ public class ShootBall : MonoBehaviour
         }
     } 
     private bool CheckSpiralDir(Vector3 velocity, Transform hole){
-        float angle = (Mathf.Atan2(velocity.y, velocity.x) - hole.eulerAngles.z) * Mathf.Rad2Deg % 360;
-        angle += 180;
 
-        return (angle >= 45 && angle <= 90) ||
-        (angle >= 135 && angle <= 180) ||
-        (angle >= 225 && angle <= 270) ||
-        (angle >= 315 && angle <= 360);
-        //float dotProduct = Vector3.Dot((hole.position - transform.position).normalized, hole.rotation * Vector3.up);
-        //if(dotProduct > 0){
-        //    print("True");
-        //    return true;
-        //}
-        //else{
-        //    print("False");
-        //    return false;
-        //}
+        Vector2 dif = (transform.position - hole.position).normalized;
+        float angle = Vector3.Angle(dif, hole.up);
+        if(Vector3.Dot(hole.right, dif.normalized) < 0) { angle = -angle; }
+        float quadrant = 1;
+        if(angle < 0 && angle > -90)
+        {
+            quadrant = -1;
+        }
+        else if(angle > 90 && angle < 180)
+        {
+            quadrant = -1;
+        }
+        float dotProduct = Mathf.Abs(Vector3.Dot(velocity.normalized, hole.up));
+        bool dir = false;
+        if(dotProduct > 0.5)
+        {
+            dir = quadrant < 0 ? false : true;
+        }
+        else if(dotProduct < 0.5)
+        {
+            dir = quadrant < 0 ? true : false;
+        }
+        return dir;
     }
     private void OnCollisionEnter(Collision collision)
     {

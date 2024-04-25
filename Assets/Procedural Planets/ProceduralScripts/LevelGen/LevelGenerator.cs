@@ -191,11 +191,18 @@ public class LevelGenerator : MonoBehaviour
     {
         List<(int, SpecialObject)> replaceObjects = new List<(int, SpecialObject)>(); //Takes all the special object that replace a planet
         int numSpecial = 0; //number of objects
+        int moonIndex = -1;
         for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
         {
             //Filters on whether they are replace objects or not
-            if (specialObjects[i].type == (SpecialType.Star) || specialObjects[i].type == (SpecialType.Moon))
+            if (specialObjects[i].type == (SpecialType.Star))
             {
+                numSpecial += specialObjects[i].amount;
+                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
+            }
+            else if (specialObjects[i].type == (SpecialType.Moon))
+            {
+                moonIndex = i;
                 numSpecial += specialObjects[i].amount;
                 replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
             }
@@ -213,6 +220,35 @@ public class LevelGenerator : MonoBehaviour
         {
             availableIndices.Add(i);
         }
+
+        //Moon priority to bigger planets
+        if(moonIndex >= 0)
+        {
+            int moonAmount = 0;
+            List<int> removeIndices = new List<int>();
+            for (int u = 0; u < availableIndices.Count && u < numSpecial; u++)
+            {
+                if (level.planetSizes[availableIndices[u]] > moonCutoffSize)
+                {
+                    replacers.Add((availableIndices[u], replaceObjects[moonIndex].Item2));
+                    replaceObjects[moonIndex] = (replaceObjects[moonIndex].Item1 - 1, replaceObjects[moonIndex].Item2);
+                    removeIndices.Add(availableIndices[u]);
+                    moonAmount++;
+                    if (replaceObjects[moonIndex].Item1 <= 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            numSpecial -= moonAmount;
+            replaceObjects.Remove(replaceObjects[moonIndex]);
+            for (int i = 0; i < removeIndices.Count; i++)
+            {
+                availableIndices.Remove(removeIndices[i]);
+            }
+        }
+        
+
 
         //Setting the return array
         for (int i = 0; i < numSpecial; i++)
@@ -232,17 +268,17 @@ public class LevelGenerator : MonoBehaviour
                 chosenObject = replaceObjects[randomSpecial].Item2;
             }
 
+            //Determining replacement index and adding object
+            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+            availableIndices.Remove(index);
+            replacers.Add((index, chosenObject));
+
             //Subtracting from amount on that object
             replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1-1, replaceObjects[randomSpecial].Item2);
             if (replaceObjects[randomSpecial].Item1 <=0)
             {
                 replaceObjects.Remove(replaceObjects[randomSpecial]);
             }
-
-            //Determining replacement index and adding element
-            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
-            availableIndices.Remove(index);
-            replacers.Add((index, chosenObject));
 
             //Doubling with black holes
             if(chosenObject.type == SpecialType.BlackHole)
@@ -478,7 +514,7 @@ public class LevelGenerator : MonoBehaviour
                     specialObjects[i].replaceGeneration = CacheBlackHole;
                     break;
                 case SpecialType.Moon:
-                    specialObjects[i].addGeneration = GenerateMoon;
+                    specialObjects[i].replaceGeneration = GenerateStar;
                     break;
                 default:
                     break;
