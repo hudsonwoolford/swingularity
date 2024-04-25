@@ -38,7 +38,7 @@ public class ShootBall : MonoBehaviour
     List<CelestialMass> planets = new List<CelestialMass>();
     Vector3 mousePos;
     Vector3 origin;
-    Vector3 previousDir;
+    Vector3 posLastFrame;
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
@@ -110,7 +110,7 @@ public class ShootBall : MonoBehaviour
             }
         }
         mousePos = Input.mousePosition; //screen position of mouse
-        mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, main.nearClipPlane)); //world position, z value is camera near clip plane
+        mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0)); //world position, z value is camera near clip plane
         if (rb.velocity.magnitude <0.1f){
             if(!ballStill){
                 ballStill = true;   
@@ -135,6 +135,8 @@ public class ShootBall : MonoBehaviour
     }
     void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
+        posLastFrame = transform.position;
+
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -170,19 +172,23 @@ public class ShootBall : MonoBehaviour
             if (Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass), out hit, 1f, obstacles)) //this happens if the player is about to shoot directly onto a planet
             {
                 Vector2 normal = (transform.position - hit.transform.position).normalized;
-                Vector2 mouseNormal = (mousePos - (transform.position- (new Vector3(normal.x, normal.y) * 0.22f))).normalized;
-                if (Vector2.Dot(mouseNormal, normal) > -0.1f&& HitsPlanet(rb.position, force, rb.velocity, hit.collider))
+                Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
+                if(Vector3.Dot(mouseNormal, normal) > 0)
                 {
-                    mouseNormal = (mousePos - hit.transform.position).normalized;
-                    dir = new Vector2(-normal.y, normal.x + 0.1f);
-                    dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
-                    float dotPower = Mathf.Clamp01(1-Vector3.Dot(mouseNormal.normalized, normal.normalized) + 0.5f);
-                    if(dotPower < 1)
-                    {
-                        dotPower = (dotPower - 0.5f) * 2;
-                    }
-                    dist *= dotPower;
+                    float right = -Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)) / Mathf.Abs(Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)));
+                    Vector3[] tangentVectors = CalculateTangentVector(hit.transform.GetComponent<SphereCollider>(), rb.position);
+                    Vector3 chosenVector = right > 0 ? tangentVectors[0] : tangentVectors[1];
 
+                    float minDot = Vector3.Dot(-chosenVector, normal);
+                    if (Vector3.Dot(mouseNormal.normalized, normal) > minDot)
+                    {
+                        print("activated");
+                        dir = chosenVector;
+
+                        float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
+                        dist *= dotPower;
+
+                    }
                 }
 
             }
@@ -248,6 +254,36 @@ public class ShootBall : MonoBehaviour
         SceneManager.UnloadSceneAsync(simulationScene);
     }
     #region Performant Simulation
+    Vector3[] CalculateTangentVector(SphereCollider sphere, Vector3 point)
+    {
+        Vector3 circle1Centre = sphere.transform.position;
+        Vector3 circle2Centre = (circle1Centre + point) / 2;
+
+        float circle1Radius = sphere.radius * sphere.transform.localScale.x + 0.22f;
+        float circle2Radius = (point - circle1Centre).magnitude / 2;
+
+        float distance = Vector2.Distance(circle1Centre, circle2Centre);
+        float radiusSum = circle1Radius + circle2Radius;
+        float radiusDiff = Mathf.Abs(circle1Radius - circle2Radius);
+
+        // No intersection if the circles are too far apart or contained within each other
+        if (distance > radiusSum || distance < radiusDiff)
+        {
+            return new Vector3[0];
+        }
+
+        // Calculate intersection points
+        float a = (circle1Radius * circle1Radius - circle2Radius * circle2Radius + distance * distance) / (2 * distance);
+        float h = Mathf.Sqrt(circle1Radius * circle1Radius - a * a);
+        Vector3 intersectionPoint1 = circle1Centre + a * (circle2Centre - circle1Centre) / distance + h * new Vector3(-(circle2Centre.y - circle1Centre.y), circle2Centre.x - circle1Centre.x) / distance;
+        Vector3 intersectionPoint2 = circle1Centre + a * (circle2Centre - circle1Centre) / distance - h * new Vector3(-(circle2Centre.y - circle1Centre.y), circle2Centre.x - circle1Centre.x) / distance;
+
+        //Debug.DrawLine(intersectionPoint1, intersectionPoint2);
+        //Debug.DrawLine(intersectionPoint1, point);
+        //Debug.DrawLine(intersectionPoint2, point);
+
+        return new Vector3[] { (intersectionPoint1 - point).normalized, (intersectionPoint2 - point).normalized };
+    }
     bool HitsPlanet(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity, Collider currentPlanet)
     {
         Vector3 trackPos = startPos;
@@ -277,15 +313,27 @@ public class ShootBall : MonoBehaviour
 
 
             //physics update
-            trackPos += velocity * Time.fixedDeltaTime;
-            RaycastHit raycastHit;
-            if (Physics.Raycast(prevPos -new Vector3(), (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
-            {
-                if(raycastHit.collider == currentPlanet)
-                {
-                    Physics.simulationMode = SimulationMode.FixedUpdate;
+            //trackPos += velocity * Time.fixedDeltaTime;
+            //RaycastHit raycastHit;
+            //if (Physics.Raycast(prevPos -new Vector3(), (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
+            //{
+            //    if(raycastHit.collider == currentPlanet)
+            //    {
+            //        Physics.simulationMode = SimulationMode.FixedUpdate;
 
-                    return true;
+            //        return true;
+            //    }
+            //}
+            foreach (CelestialMass r in planets)
+            {
+                if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x) //may cause issues with scale not matching collider scale
+                {
+                    srb.position = prevPos;
+                    srb.velocity = velocity;
+                    physicsScene.Simulate(Time.fixedDeltaTime);
+                    trackPos = srb.position;
+                    velocity = srb.velocity;
+                    //print("Simulation at step #" + i + " | Total Simulations: " + simCounter);
                 }
             }
 
@@ -515,18 +563,26 @@ public class ShootBall : MonoBehaviour
          if(other.gameObject.tag == "Hole")
         {
             other.enabled = false;
-            StartCoroutine(FinishedLevel(other.transform));
+            RaycastHit hit;
+            if (Physics.Raycast(posLastFrame, (transform.position - posLastFrame), out hit))
+            {
+                StartCoroutine(FinishedLevel(other.transform, hit.point));
+            }
+            else
+            {
+                StartCoroutine(FinishedLevel(other.transform, transform.position));
+            }
         }
 
     }
-    IEnumerator FinishedLevel(Transform hole)
+    IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint)
     {
-        StartCoroutine(StartAnimation(hole));
+        StartCoroutine(StartAnimation(hole, hitPoint));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(Transform hole){
+    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint){
         holeAnim?.Invoke();
         Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
@@ -535,7 +591,7 @@ public class ShootBall : MonoBehaviour
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        bool clockwise = CheckSpiralDir(velocity, hole);
+        bool clockwise = CheckSpiralDir(velocity, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
@@ -550,9 +606,9 @@ public class ShootBall : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     } 
-    private bool CheckSpiralDir(Vector3 velocity, Transform hole){
+    private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
 
-        Vector2 dif = (transform.position - hole.position).normalized;
+        Vector2 dif = (hitPoint - hole.position).normalized;
         float angle = Vector3.Angle(dif, hole.up);
         if(Vector3.Dot(hole.right, dif.normalized) < 0) { angle = -angle; }
         float quadrant = 1;
