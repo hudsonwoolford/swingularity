@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof (Rigidbody), typeof(LineRenderer))]
+[RequireComponent(typeof(LineRenderer))]
 [ExecuteInEditMode()]
 public class MoonManager : MonoBehaviour
 {
@@ -17,30 +17,49 @@ public class MoonManager : MonoBehaviour
     [SerializeField] float width = 0.1f;
     [SerializeField] Color lrColor = new Color(1,1,1,0.1f);
     [SerializeField] Material mat;
-    float orbitRadius;
     LineRenderer lr;
 
     float periapsis, apoapsis, semiMinorAxis, currentAnomaly;
     Vector2 centre;
+
+    float bigMass, moonMass;
+
+    public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, Transform associatedPlanet, Transform orbitPlanet, Material moonLine){
+        this.semiMajorAxis = semiMajorAxis;
+        this.gravitationalConstant = gravitationalConstant;
+        this.eccentricity = eccentricity;
+        this.speed = speed;
+        this.associatedPlanet = associatedPlanet;
+        this.orbitPlanet = orbitPlanet;
+        this.mat = moonLine;
+        Start();
+    }
 
     void Start(){
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
         semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
         centre = orbitPlanet.position;
+        bigMass = orbitPlanet.GetComponent<CelestialMass>().mass;
+        moonMass = associatedPlanet.GetComponent<CelestialMass>().mass;
+        periapsis = semiMajorAxis * (1 - eccentricity);
+        apoapsis = semiMajorAxis * (1 + eccentricity);
+        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
+        float centerDistance = semiMajorAxis * eccentricity;
+        Vector2 focus1 = orbitPlanet.position;
+        Vector2 focus2 = focus1 + new Vector2 (centerDistance * 2, 0f);
+        centre = (focus1 + focus2)/2f;
+        DrawOrbit();
     }
     // Update is called once per frame
     void Update()
     {
-        periapsis = semiMajorAxis * (1 - eccentricity);
-        apoapsis = semiMajorAxis * (1 + eccentricity);
-        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
-        centre = orbitPlanet.position;
+
         if (orbitPlanet == null)
         {
             return;
         }
-        DrawOrbit();
+        
         if(Application.isPlaying)
         {
             MoveMoon();
@@ -51,7 +70,7 @@ public class MoonManager : MonoBehaviour
         Vector3 dir = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(currentAnomaly), centre.y + semiMinorAxis * Mathf.Sin(currentAnomaly));
 
         transform.position = dir;
-        float gravitationalParameter = gravitationalConstant * (associatedPlanet.GetComponent<Rigidbody>().mass + orbitPlanet.GetComponent<Rigidbody>().mass);
+        float gravitationalParameter = gravitationalConstant * (moonMass + bigMass);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
 
         float angularVelocity = velocity/currentDistance;
