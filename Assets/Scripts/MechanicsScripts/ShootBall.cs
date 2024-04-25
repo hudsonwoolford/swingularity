@@ -549,6 +549,7 @@ public class ShootBall : MonoBehaviour
     } 
     private bool CheckSpiralDir(Vector3 velocity, Transform hole){
         float angle = (Mathf.Atan2(velocity.y, velocity.x) - hole.eulerAngles.z) * Mathf.Rad2Deg % 360;
+        angle += 180;
 
         return (angle >= 45 && angle <= 90) ||
         (angle >= 135 && angle <= 180) ||
