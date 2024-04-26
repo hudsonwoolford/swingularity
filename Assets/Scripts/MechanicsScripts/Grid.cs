@@ -92,6 +92,20 @@ public static class ArtificialGravity
 
             return force; //returning force
     }
+    public static Vector3 AttractForce(float bigMass, float smallMass, Transform big, Transform small, float gConstant) //brackeys gravity tutorial
+    {
+        Vector3 direction = big.position - small.position; //direction vector
+        float distance = direction.magnitude; //distance
+        if (distance == 0)
+        {
+            distance = 0.00001f;
+        }
+
+        float forceMagnitude = gConstant * (smallMass * bigMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        Vector3 force = direction.normalized * forceMagnitude; //storing force
+
+        return force; //returning force
+    }
     public static Vector2 GravityForceAtPoint(Vector3 worldPos, CelestialMass[] attractors, float objMass)
     {
         Vector2 totalForce = Vector2.zero;

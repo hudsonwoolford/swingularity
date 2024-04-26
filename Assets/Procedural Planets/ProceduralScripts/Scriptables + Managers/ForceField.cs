@@ -44,7 +44,7 @@ public class ForceField : MonoBehaviour
     {
         planet = p;
         planet.GetComponentInChildren<AtmosphereHandler>(true).ScaleAtmosphere();
-
+        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 100; }
         if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true);}
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range + rangeOffset) * 1.075f / 2;
@@ -56,12 +56,14 @@ public class ForceField : MonoBehaviour
         {
             interactableObject.Add(GameObject.FindGameObjectWithTag("Player").transform);
         }
+
         src = GameObject.FindGameObjectWithTag("SRC").GetComponent<AudioSource>();
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         forceMat = meshRenderer.sharedMaterial;
         pBlock = new MaterialPropertyBlock();
         cMass = GetComponent<CelestialMass>();
+        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 100; }
     }
     void Start()
     {
