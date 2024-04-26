@@ -31,8 +31,9 @@ public class LevelGenerator : MonoBehaviour
     public int seed; //The seed for the level
 
     //Level gen params
+    float minPlanets, maxPlanets;
     [SerializeField]
-    float minPlanets, maxPlanets, minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
+    float minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
     [SerializeField]
     Vector2 regionExtension; //how much region is extended
     [SerializeField]

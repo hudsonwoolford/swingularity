@@ -93,8 +93,6 @@ public class ShootBall : MonoBehaviour
     {
         main = Camera.main;
 
-        rb.constraints = RigidbodyConstraints.FreezeAll; //stops any movement
-
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
 
@@ -177,6 +175,9 @@ public class ShootBall : MonoBehaviour
                 {
                     float right = -Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)) / Mathf.Abs(Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)));
                     Vector3[] tangentVectors = CalculateTangentVector(hit.transform.GetComponent<SphereCollider>(), rb.position);
+                    if(tangentVectors.Length == 0){
+                        tangentVectors = new Vector3[2]{new Vector3(-normal.y, normal.x, 0), new Vector3(normal.y, -normal.x, 0)};
+                    }
                     Vector3 chosenVector = right > 0 ? tangentVectors[0] : tangentVectors[1];
 
                     float minDot = Vector3.Dot(-chosenVector, normal);
@@ -258,7 +259,7 @@ public class ShootBall : MonoBehaviour
         Vector3 circle1Centre = sphere.transform.position;
         Vector3 circle2Centre = (circle1Centre + point) / 2;
 
-        float circle1Radius = sphere.radius * sphere.transform.localScale.x + 0.19f;
+        float circle1Radius = sphere.radius * sphere.transform.localScale.x + 0.22f;
         float circle2Radius = (point - circle1Centre).magnitude / 2;
 
         float distance = Vector2.Distance(circle1Centre, circle2Centre);
