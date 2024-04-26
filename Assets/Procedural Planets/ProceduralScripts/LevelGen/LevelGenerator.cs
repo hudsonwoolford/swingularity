@@ -232,7 +232,7 @@ public class LevelGenerator : MonoBehaviour
         {
             int moonAmount = 0;
             List<int> removeIndices = new List<int>();
-            for (int u = 0; u < availableIndices.Count && u < numSpecial; u++)
+            for (int u = 0; u < availableIndices.Count && u < level.numPlanets - 2; u++)
             {
                 if (level.planetSizes[availableIndices[u]] > moonCutoffSize)
                 {
