@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,6 +57,8 @@ public class ShootBall : MonoBehaviour
     public static TriggerReset triggerReset;
     public delegate void BoundsReset();
     public static BoundsReset boundsReset;
+    public delegate void StopGravity();
+    public static StopGravity stopGravity;
 
     public void Init(Transform env, Vector3 originPos){
         planetTransform = env;
@@ -149,6 +152,7 @@ public class ShootBall : MonoBehaviour
         Vector3 force = Vector3.zero;
         while(Input.GetMouseButton(0)) 
         {
+            stopGravity?.Invoke();
             dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
             
@@ -593,6 +597,7 @@ public class ShootBall : MonoBehaviour
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
+        mat.SetColor("_EdgeColor", hole.gameObject.GetComponent<PortalColor>().ballColor);
         bool clockwise = CheckSpiralDir(velocity, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;

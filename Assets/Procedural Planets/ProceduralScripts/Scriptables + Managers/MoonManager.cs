@@ -20,7 +20,6 @@ public class MoonManager : MonoBehaviour
     float periapsis, apoapsis, semiMinorAxis, currentAnomaly, rotation;
     Vector2 centre;
     Rigidbody rb;
-
     bool moonEnabled = false;
 
     public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation){

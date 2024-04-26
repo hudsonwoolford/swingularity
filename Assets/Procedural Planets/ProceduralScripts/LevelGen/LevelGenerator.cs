@@ -52,8 +52,7 @@ public class LevelGenerator : MonoBehaviour
     [Header("Random References and Stuff")]
     [SerializeField] PhysicMaterial superBouncyMoon;
     [SerializeField] Material moonLine;
-    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f, moonSplitScale = 0.4f;
-
+    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f;
     [Serializable]
     public struct SpecialObject
     {
@@ -451,7 +450,6 @@ public class LevelGenerator : MonoBehaviour
     {   
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
-        float smallSplit = UnityEngine.Random.Range(0.1f, moonSplitScale);
         float smallMoonSize = size * planetScale / 2f;
         float apoapsis = size * planetScale - smallMoonSize + 1.5f;
 
