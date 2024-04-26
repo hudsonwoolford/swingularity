@@ -40,8 +40,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     float planetScale; //Scale of planets multiplier
     [SerializeField] int resolution;
-    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f, moonSplitScale = 0.4f;
-    [SerializeField] Material moonLine;
+
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
     [SerializeField]
@@ -49,6 +48,10 @@ public class LevelGenerator : MonoBehaviour
     Vector2 regionSize;
     public delegate void GenerateSpecialPlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index);
     public delegate void GenerateSpecialObject(Planet[] planets);
+    [Header("Random References and Stuff")]
+    [SerializeField] PhysicMaterial superBouncyMoon;
+    [SerializeField] Material moonLine;
+    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f, moonSplitScale = 0.4f;
 
     [Serializable]
     public struct SpecialObject
@@ -99,6 +102,7 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
+
         levelInit?.Invoke(); //Initiation Delegate
         Camera mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
@@ -447,8 +451,8 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
         float smallSplit = UnityEngine.Random.Range(0.1f, moonSplitScale);
-        float smallMoonSize = size * planetScale / 2.5f;
-        float apoapsis = size * planetScale - smallMoonSize;
+        float smallMoonSize = size * planetScale / 2f;
+        float apoapsis = size * planetScale - smallMoonSize + 1.5f;
 
         
         float bigPlanetDecreasedSize = apoapsis * moonDstScale - smallMoonSize;
@@ -468,6 +472,7 @@ public class LevelGenerator : MonoBehaviour
         float speed = UnityEngine.Random.Range(0.025f, 0.1f);
         float rotation = UnityEngine.Random.Range(0,360);
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
+        smallMoon.forceField.GetComponent<Collider>().material = superBouncyMoon;
         bigPlanet.forceField.GetComponent<ForceField>().AutoMass();
         moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), moonLine, rotation);
 
