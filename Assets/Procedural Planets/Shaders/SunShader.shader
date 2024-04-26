@@ -48,6 +48,7 @@ Shader "Custom/SunShader"
             float3 vertPos;
         };
         float4 _Color1, _Color2;
+        float3 _HeatOffset;
         int _Octaves;
         float3 _Offset;
         float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
@@ -65,7 +66,7 @@ Shader "Custom/SunShader"
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
 
-            float displacement = SimpleNoise(v.normal, 3, 1, 2, 0.5, 0.005, 1, float3(_Time.y,_Time.y,_Time.y)) ;
+            float displacement = SimpleNoise(v.normal, 3, 1, 2, 0.5, 0.005, 1, float3(_Time.y,_Time.y,_Time.y) + _HeatOffset) ;
 
             v.vertex.xyz = v.vertex.xyz + v.normal * displacement;
 

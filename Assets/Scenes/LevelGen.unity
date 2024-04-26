@@ -297,9 +297,11 @@ MonoBehaviour:
   moonDstScale: 2.2
   moonSplitScale: 0.2
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
-  possiblePlanetTypes: 00000000010000000200000003000000040000000500000006000000
+  possiblePlanetTypes: 03000000
   specialObjects:
-  - type: 2
+  - type: 0
+    amount: 1
+  - type: 1
     amount: 1
 --- !u!4 &866247461
 Transform:
@@ -402,16 +404,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2176539221053807426, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2279775559892632993, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -5
-      objectReference: {fileID: 0}
     - target: {fileID: 3169579409820135831, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: m_Camera
@@ -471,11 +463,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6727739680240835024, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 9048760814423628004, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
@@ -798,6 +785,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327033127518341599, guid: 93aed6f7bf9366e429975372dd1e7233,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxGradient.key1.b
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327033127518341599, guid: 93aed6f7bf9366e429975372dd1e7233,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxGradient.key1.g
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327033127518341599, guid: 93aed6f7bf9366e429975372dd1e7233,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxGradient.key1.r
+      value: 0.33
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

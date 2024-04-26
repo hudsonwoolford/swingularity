@@ -170,7 +170,8 @@ public class CameraFollow : MonoBehaviour
         panning = false;
     }
     void ZoomIn(){
-        targetCameraSize = cameraMinMax.x;
+        lockCamera = false;
+        targetCameraSize = Mathf.Clamp(targetCameraSize - 5, cameraMinMax.x, cameraMinMax.y);
         finalZoom = true;
     }
     private void OnEnable()

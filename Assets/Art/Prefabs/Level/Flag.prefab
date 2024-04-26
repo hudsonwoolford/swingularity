@@ -304,13 +304,13 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 2
+      minMaxState: 1
       minColor: {r: 0.41117832, g: 0.67359537, b: 0.9339623, a: 1}
       maxColor: {r: 0.4554408, g: 0.9528302, b: 0.93165624, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.3, g: 1, b: 1, a: 1}
+        key1: {r: 0.22500001, g: 0.75, b: 0.75, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4921,6 +4921,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1472040763093170986}
   - component: {fileID: 5842862808899430545}
+  - component: {fileID: 5019472080366608035}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Hole
@@ -4966,3 +4967,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5019472080366608035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5419254315037307910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac15991e67bef5d42ae8488b71bd3d26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portalColor: {r: 0.3, g: 1, b: 1, a: 1}
+  portalRenderer: {fileID: 273002200933865431}
+  portalSystem: {fileID: 8327033127518341599}

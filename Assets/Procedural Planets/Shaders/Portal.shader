@@ -34,7 +34,7 @@ Shader "Custom/Portal"
 
         half _Glossiness;
         half _Metallic;
-        fixed4 _Color;
+        float4 _Color;
         float3 _Centre;
         float _Strength;
         float _Power;

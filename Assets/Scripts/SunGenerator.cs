@@ -47,6 +47,7 @@ public class SunGenerator : MonoBehaviour
         sunBlock.SetColor("_Color1", schemePool[starSchemeIndex].sunDarkColor);
         sunBlock.SetColor("_Color2", schemePool[starSchemeIndex].sunColor);
         sunBlock.SetFloat("_BigNoise", bigNoiseOffset);
+        sunBlock.SetVector("_HeatOffset", new Vector3(bigNoiseOffset, bigNoiseOffset, bigNoiseOffset));
         meshRenderer.SetPropertyBlock(sunBlock);
 
         //Material property block for heat distortion
