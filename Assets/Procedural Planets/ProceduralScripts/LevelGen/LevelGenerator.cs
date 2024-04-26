@@ -444,33 +444,35 @@ public class LevelGenerator : MonoBehaviour
     }
     void GenerateMoon(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {   
-        //UnityEngine.Random.InitState((int)(seed.y + index));
-        //float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
-        //float smallSplit = UnityEngine.Random.Range(0.1f, moonSplitScale);
-        //float smallMoonSize = size * planetScale / 2.5f;
-        //float apoapsis = size * planetScale - smallMoonSize;
+        UnityEngine.Random.InitState((int)(seed.y + index));
+        float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
+        float smallSplit = UnityEngine.Random.Range(0.1f, moonSplitScale);
+        float smallMoonSize = size * planetScale / 2.5f;
+        float apoapsis = size * planetScale - smallMoonSize;
 
         
-        //float bigPlanetDecreasedSize = apoapsis * moonDstScale - smallMoonSize;
-        ////Generate orbitee planet
-        //Planet bigPlanet = GeneratePlanet(generator, bigPlanetDecreasedSize, index, position, seed, planetType);
-        //bigPlanet.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
-        //bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
+        float bigPlanetDecreasedSize = apoapsis * moonDstScale - smallMoonSize;
+        //Generate orbitee planet
+        Planet bigPlanet = GeneratePlanet(generator, bigPlanetDecreasedSize, index, position, seed, planetType);
+        bigPlanet.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
+        bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
-        ////Generate orbiter planet
-        //Planet smallMoon = GeneratePlanet(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
-        //smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
-        //smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
+        //Generate orbiter planet
+        Planet smallMoon = GeneratePlanet(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
+        smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
+        smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
-        //MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
+        MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
         
-        //float semiMajorAxis = apoapsis/(1 - eccentricity);
-        //float speed = UnityEngine.Random.Range(0.025f, 0.1f);
-        //float rotation = UnityEngine.Random.Range(0,360);
-        //moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.transform, bigPlanet.forceField.transform, moonLine);
+        float semiMajorAxis = apoapsis/(1 - eccentricity);
+        float speed = UnityEngine.Random.Range(0.025f, 0.1f);
+        float rotation = UnityEngine.Random.Range(0,360);
+        smallMoon.forceField.GetComponent<ForceField>().AutoMass();
+        bigPlanet.forceField.GetComponent<ForceField>().AutoMass();
+        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), moonLine, rotation);
 
-        //bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
-        //planet = bigPlanet;
+        bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
+        planet = bigPlanet;
 
     }
     #endregion

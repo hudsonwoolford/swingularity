@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -16,13 +17,13 @@ public class MoonManager : MonoBehaviour
     [SerializeField] Material mat;
     LineRenderer lr;
 
-    float periapsis, apoapsis, semiMinorAxis, currentAnomaly;
+    float periapsis, apoapsis, semiMinorAxis, currentAnomaly, rotation;
     Vector2 centre;
     Rigidbody rb;
 
     bool moonEnabled = false;
 
-    public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine){
+    public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation){
         this.semiMajorAxis = semiMajorAxis;
         this.gravitationalConstant = gravitationalConstant;
         this.eccentricity = eccentricity;
@@ -30,6 +31,7 @@ public class MoonManager : MonoBehaviour
         this.associatedPlanet = associatedPlanet;
         this.orbitPlanet = orbitPlanet;
         this.mat = moonLine;
+        this.rotation = rotation;
         
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
@@ -48,27 +50,36 @@ public class MoonManager : MonoBehaviour
         Vector2 focus1 = orbitPlanet.transform.position;
         Vector2 focus2 = focus1 + new Vector2 (centerDistance * 2, 0f);
         centre = (focus1 + focus2)/2f;
-        print(associatedPlanet.mass + " | " + orbitPlanet.mass);
         float gravitationalParameter = gravitationalConstant * (orbitPlanet.mass);
-        rb.position = focus1 + new Vector2(apoapsis, 0f);
-
+        rb.position = RotateAround(rotation, focus1 + new Vector2(apoapsis, 0f), focus1);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
-        rb.AddForce(transform.up * velocity, ForceMode.VelocityChange);
+        rb.AddForce(Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity, ForceMode.VelocityChange);
         rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass);
 
         DrawOrbit();
         moonEnabled = true;
     }
 
+    static Vector3 RotateAround(float angleDegrees, Vector3 pointA, Vector3 pointB){
+        float angleRadians = angleDegrees * Mathf.Deg2Rad;
+
+        // Calculate the new position of the point after rotation
+        float rotatedX = Mathf.Cos(angleRadians) * (pointA.x - pointB.x) - Mathf.Sin(angleRadians) * (pointA.y - pointB.y) + pointB.x;
+        float rotatedY = Mathf.Sin(angleRadians) * (pointA.x - pointB.x) + Mathf.Cos(angleRadians) * (pointA.y - pointB.y) + pointB.y;
+
+        // Update the position of the rotated point
+        pointA = new Vector3(rotatedX, rotatedY, pointA.z);
+        return pointA;
+    }
+
     void Start(){
 
         if(moonEnabled){return;}
-        Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat);
+        Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation);
     }
 
     void FixedUpdate()
     {
-        print(rb.velocity);
         if (!moonEnabled){return;}
 
         if (orbitPlanet == null)
@@ -114,7 +125,7 @@ public class MoonManager : MonoBehaviour
         for (int i = 0; i < points; i++)
         {
             mockProgress += Mathf.PI * 2 / points;
-            Vector3 dir = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(mockProgress), centre.y + semiMinorAxis * Mathf.Sin(mockProgress));
+            Vector3 dir = RotateAround(rotation, new Vector3(centre.x + semiMajorAxis * Mathf.Cos(mockProgress), centre.y + semiMinorAxis * Mathf.Sin(mockProgress)), orbitPlanet.transform.position);
             lr.SetPosition(i, dir);
         }
     }
