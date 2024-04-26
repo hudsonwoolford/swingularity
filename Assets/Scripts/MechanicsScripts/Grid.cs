@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
@@ -78,12 +79,15 @@ public static class ArtificialGravity
 {
     public static float G = 1f;
 
-    public static Vector3 AttractForce(CelestialMass attractor, Rigidbody rbAttracting) //brackeys gravity tutorial
+    public static Vector3 AttractForce(float bigMass, float smallMass, Transform big, Transform small) //brackeys gravity tutorial
     {
-        Vector3 direction = rbAttracting.position - attractor.transform.position; //direction vector
+        Vector3 direction = big.position - small.position; //direction vector
         float distance = direction.magnitude; //distance
+        if(distance == 0){
+            distance = 0.00001f;
+        }
 
-        float forceMagnitude = ArtificialGravity.G * (rbAttracting.mass * attractor.mass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = ArtificialGravity.G * (smallMass * bigMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
             return force; //returning force

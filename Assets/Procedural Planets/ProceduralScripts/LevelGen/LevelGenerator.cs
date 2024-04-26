@@ -461,8 +461,7 @@ public class LevelGenerator : MonoBehaviour
         Planet smallMoon = GeneratePlanet(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
-        smallMoon.forceField.GetComponent<ForceField>().autoMass = false;
-        smallMoon.forceField.GetComponent<CelestialMass>().mass = 0;
+
         MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
         
         float semiMajorAxis = apoapsis/(1 - eccentricity);

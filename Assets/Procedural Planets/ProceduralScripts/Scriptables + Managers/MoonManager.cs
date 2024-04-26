@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(LineRenderer))]
-[ExecuteInEditMode()]
 public class MoonManager : MonoBehaviour
 {
     [SerializeField] Transform orbitPlanet;
@@ -21,8 +18,10 @@ public class MoonManager : MonoBehaviour
 
     float periapsis, apoapsis, semiMinorAxis, currentAnomaly;
     Vector2 centre;
+    Rigidbody rb;
 
     float bigMass, moonMass;
+    bool moonEnabled = false;
 
     public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, Transform associatedPlanet, Transform orbitPlanet, Material moonLine){
         this.semiMajorAxis = semiMajorAxis;
@@ -32,46 +31,59 @@ public class MoonManager : MonoBehaviour
         this.associatedPlanet = associatedPlanet;
         this.orbitPlanet = orbitPlanet;
         this.mat = moonLine;
-        Start();
-    }
-
-    void Start(){
+        
         periapsis = semiMajorAxis * (1 - eccentricity);
         apoapsis = semiMajorAxis * (1 + eccentricity);
         semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
         centre = orbitPlanet.position;
         bigMass = orbitPlanet.GetComponent<CelestialMass>().mass;
         moonMass = associatedPlanet.GetComponent<CelestialMass>().mass;
-        periapsis = semiMajorAxis * (1 - eccentricity);
-        apoapsis = semiMajorAxis * (1 + eccentricity);
+        if(rb == null){
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+        rb.drag = 0;
+        rb.angularDrag = 0;
+        rb.useGravity = false;
         semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
         float centerDistance = semiMajorAxis * eccentricity;
         Vector2 focus1 = orbitPlanet.position;
         Vector2 focus2 = focus1 + new Vector2 (centerDistance * 2, 0f);
         centre = (focus1 + focus2)/2f;
+        float gravitationalParameter = gravitationalConstant * (moonMass + bigMass);
+        rb.position = focus1 + new Vector2(apoapsis, 0f);
+
+        float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
+        rb.velocity = transform.up * velocity * 10f;
         DrawOrbit();
+        moonEnabled = true;
     }
-    // Update is called once per frame
-    void Update()
+
+    void Start(){
+        if(!moonEnabled){return;}
+
+        // Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat);
+    }
+
+    void FixedUpdate()
     {
+        if(!moonEnabled){return;}
 
         if (orbitPlanet == null)
         {
             return;
         }
         
-        if(Application.isPlaying)
-        {
-            MoveMoon();
-        }
+        MoveMoon();
     }
     private void MoveMoon(){
+        transform.position = centre + new Vector2(semiMajorAxis, 0f);
+
         float currentDistance = semiMajorAxis * (1 - eccentricity * eccentricity) / (1 + eccentricity * -Mathf.Cos(currentAnomaly));
         Vector3 dir = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(currentAnomaly), centre.y + semiMinorAxis * Mathf.Sin(currentAnomaly));
 
-        transform.position = dir;
         float gravitationalParameter = gravitationalConstant * (moonMass + bigMass);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
+        rb.AddForce(ArtificialGravity.AttractForce(bigMass / 100f, moonMass / 100f, orbitPlanet, associatedPlanet));
 
         float angularVelocity = velocity/currentDistance;
         currentAnomaly += angularVelocity * Time.deltaTime * speed;

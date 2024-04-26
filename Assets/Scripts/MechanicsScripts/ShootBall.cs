@@ -182,7 +182,6 @@ public class ShootBall : MonoBehaviour
                     float minDot = Vector3.Dot(-chosenVector, normal);
                     if (Vector3.Dot(mouseNormal.normalized, normal) > minDot)
                     {
-                        print("activated");
                         dir = chosenVector;
 
                         float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
