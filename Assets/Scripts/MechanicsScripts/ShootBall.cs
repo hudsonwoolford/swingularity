@@ -258,7 +258,7 @@ public class ShootBall : MonoBehaviour
         Vector3 circle1Centre = sphere.transform.position;
         Vector3 circle2Centre = (circle1Centre + point) / 2;
 
-        float circle1Radius = sphere.radius * sphere.transform.localScale.x + 0.22f;
+        float circle1Radius = sphere.radius * sphere.transform.localScale.x + 0.19f;
         float circle2Radius = (point - circle1Centre).magnitude / 2;
 
         float distance = Vector2.Distance(circle1Centre, circle2Centre);
