@@ -46,7 +46,6 @@ public class MoonManager : MonoBehaviour
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
         rb.AddForce(Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity, ForceMode.VelocityChange);
-        rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass);
 
         DrawOrbit();
         moonEnabled = true;
@@ -84,7 +83,6 @@ public class MoonManager : MonoBehaviour
     private void Update()
     {
         if (orbitPlanet == null || associatedPlanet == null) { return; }
-        if (!moonEnabled) { Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); }
 
         if (!Application.isPlaying)
         {

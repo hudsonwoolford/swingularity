@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 public class ShootBall : MonoBehaviour
@@ -24,6 +25,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] bool colIcons = true, showBallPos = false;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
     [SerializeField] LayerMask simulationLayer;
+    [SerializeField] LayerMask excludeLayer;
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
@@ -224,7 +226,7 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
        
-        if(force.magnitude < 0.2f)
+        if(force.magnitude < 1f)
         {
             yield break;
         }
@@ -248,6 +250,7 @@ public class ShootBall : MonoBehaviour
         transform.position = origin; //back to start
         tr?.Clear();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
@@ -287,72 +290,6 @@ public class ShootBall : MonoBehaviour
 
         return new Vector3[] { (intersectionPoint1 - point).normalized, (intersectionPoint2 - point).normalized };
     }
-    bool HitsPlanet(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity, Collider currentPlanet)
-    {
-        Vector3 trackPos = startPos;
-        Vector3 prevPos = startPos;
-        Vector3 velocity = forceVar / rb.mass + currentVelocity;
-        Vector3 gravForce = Vector3.zero;
-        float dist = 0;
-        if (simulatedObj == null) //instantiate new ball if it doesn't exist
-        {
-            simulatedObj = Instantiate(simulationBall, transform.position, transform.rotation);
-            srb = simulatedObj.GetComponent<Rigidbody>();
-            srb.GetComponent<SimulationBall>().Init(this);
-        }
-        SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
-        Physics.simulationMode = SimulationMode.Script;
-        float rad = GetComponent<SphereCollider>().radius * transform.localScale.x + 0.01f;
-        for (int i = 0; i < maxstep; i++)
-        {
-            if (velocity.magnitude < 0.1f)
-            {
-                break;
-            }
-
-            //fixed update
-            gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
-            velocity += gravForce * Time.fixedDeltaTime / rb.mass;
-
-
-            //physics update
-            //trackPos += velocity * Time.fixedDeltaTime;
-            //RaycastHit raycastHit;
-            //if (Physics.Raycast(prevPos -new Vector3(), (trackPos - prevPos).normalized, out raycastHit, (trackPos - prevPos).magnitude))
-            //{
-            //    if(raycastHit.collider == currentPlanet)
-            //    {
-            //        Physics.simulationMode = SimulationMode.FixedUpdate;
-
-            //        return true;
-            //    }
-            //}
-            foreach (CelestialMass r in planets)
-            {
-                if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x) //may cause issues with scale not matching collider scale
-                {
-                    srb.position = prevPos;
-                    srb.velocity = velocity;
-                    physicsScene.Simulate(Time.fixedDeltaTime);
-                    trackPos = srb.position;
-                    velocity = srb.velocity;
-                    //print("Simulation at step #" + i + " | Total Simulations: " + simCounter);
-                }
-            }
-
-            //end physics update
-            if (dist + (trackPos - prevPos).magnitude > maxLengthSim)
-            {
-                float distDifference = maxLengthSim - dist;
-                Vector3 finalPos = prevPos + (trackPos - prevPos).normalized * distDifference;
-                break;
-            }
-            dist += (trackPos - prevPos).magnitude;
-            prevPos = trackPos;
-        }
-        Physics.simulationMode = SimulationMode.FixedUpdate;
-        return false;
-    }
     void PerformSimulation(Vector3 startPos, Vector3 forceVar, Vector3 currentVelocity)
     {
         bool respawn = false;
@@ -389,15 +326,16 @@ public class ShootBall : MonoBehaviour
 
 
             //physics update
-            bool blackHole = false;
+            //bool blackHole = false;
             trackPos += velocity * Time.fixedDeltaTime;
             foreach (CelestialMass r in planets)
             {
+                if(excludeLayer == (excludeLayer | (1 << r.gameObject.layer))) { continue; }
                 if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x) //may cause issues with scale not matching collider scale
                 {
                     if(r.gameObject.GetComponent<BlackHoleGenerator>() != null)
                     {
-                        blackHole = true;
+                        //blackHole = true;
                     }
                     if (r.gameObject.tag == "Respawn")
                     {
@@ -446,7 +384,10 @@ public class ShootBall : MonoBehaviour
         {
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
             obj.GetComponent<Renderer>().enabled = false; //hides it
-            obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
+            //if(obj.layer != 12)
+            //{
+                obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
+            //}
             SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
         }
     }

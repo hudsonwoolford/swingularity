@@ -13,7 +13,7 @@ public class CameraFollow : MonoBehaviour
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
-    [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
+    [SerializeField] float sizeScalar = 1, smoothness = 0.3f;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball;                            //ball transform
@@ -32,30 +32,15 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-
-        transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
         innerShape.points = PolygonPositions(startPos, endPos, 2f, 10); //to scale version
-        if (cameraPath == null)
-        {
-            cameraPath = new GameObject("Camera Bounds")
-            {
-                tag = "CameraBounds"
-            }.AddComponent<PolygonCollider2D>();
-        }
-        if(panningPath == null)
-        {
-            panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
-            
-        }
-        panningPath.points = PolygonPositions(startPos, endPos, 1, 5);
-        cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
-        CalculateNebulaSize(innerShape.points);
+
+        MasterStart();
     }   
     private void Awake()
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, 2f, 10); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, 2f * sizeScalar, 10); //to scale version
     }
     // Start is called before the first frame update
     void Start()
@@ -63,63 +48,28 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) + 0.5f;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-
+        MasterStart();
+    }
+    void MasterStart()
+    {
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
-       
-        if(cameraPath == null)
+
+        if (cameraPath == null)
         {
-            cameraPath = new GameObject("Camera Bounds"){
+            cameraPath = new GameObject("Camera Bounds")
+            {
                 tag = "CameraBounds"
             }.AddComponent<PolygonCollider2D>();
 
-            cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
         }
         if (panningPath == null)
         {
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
-        panningPath.points = PolygonPositions(startPos, endPos, 1, 5);
+        cameraPath.points = PolygonPositions(startPos, endPos, 0.5f * sizeScalar, 0); //scaled down version of inner shape
+        panningPath.points = PolygonPositions(startPos, endPos, 1 * sizeScalar, 5);
         CalculateNebulaSize(innerShape.points);
     }
-    void CalculateNebulaSize(Vector2[] points){
-        Vector3[] vertices = new Vector3[12]; //6 * 2 points
-        for (int i = 0; i < points.Length; i++){
-            vertices[i] = new Vector3(points[i].x, points[i].y, 0.5f);
-            vertices[i+points.Length] = new Vector3(points[i].x, points[i].y, -0.5f);
-        }
-        int[] tris = new int[12*3]{
-            0, 6, 1,
-            6, 7, 1,
-            1, 7, 2,
-            7, 8, 2,
-            2, 8, 3,
-            8, 9, 3,
-            3, 9, 4,
-            9, 10, 4,
-            4, 10, 5,
-            10, 11, 5,
-            5, 11, 0,
-            11, 6, 0
-        };
-
-        Mesh nebulaMesh = new Mesh();
-        nebulaMesh.vertices = vertices;
-        nebulaMesh.triangles = tris;
-        Transform nebulaParent = GameObject.FindGameObjectWithTag("OutOfBounds").transform;
-        ParticleSystem nebula1 = nebulaParent.GetChild(0).GetComponent<ParticleSystem>();
-        ParticleSystem nebula2 = nebulaParent.GetChild(1).GetComponent<ParticleSystem>();
-        var shape1 = nebula1.shape;
-        shape1.mesh = nebulaMesh;
-        shape1.meshShapeType = ParticleSystemMeshShapeType.Edge;
-        var shape2 = nebula2.shape;
-        shape2.mesh = nebulaMesh;
-        shape2.meshShapeType = ParticleSystemMeshShapeType.Edge;
-        nebula1.Clear();
-        nebula1.Play();
-        nebula2.Clear();
-        nebula2.Play();
-        nebulaParent.position = Vector3.zero;
-    }   
 
     // Update is called once per frame
     public void LateUpdate()
@@ -232,6 +182,45 @@ public class CameraFollow : MonoBehaviour
 
         return finalPoints; //final points
     }
+    void CalculateNebulaSize(Vector2[] points){
+        Vector3[] vertices = new Vector3[12]; //6 * 2 points
+        for (int i = 0; i < points.Length; i++){
+            vertices[i] = new Vector3(points[i].x, points[i].y, 0.5f);
+            vertices[i+points.Length] = new Vector3(points[i].x, points[i].y, -0.5f);
+        }
+        int[] tris = new int[12*3]{
+            0, 6, 1,
+            6, 7, 1,
+            1, 7, 2,
+            7, 8, 2,
+            2, 8, 3,
+            8, 9, 3,
+            3, 9, 4,
+            9, 10, 4,
+            4, 10, 5,
+            10, 11, 5,
+            5, 11, 0,
+            11, 6, 0
+        };
+
+        Mesh nebulaMesh = new Mesh();
+        nebulaMesh.vertices = vertices;
+        nebulaMesh.triangles = tris;
+        Transform nebulaParent = GameObject.FindGameObjectWithTag("OutOfBounds").transform;
+        ParticleSystem nebula1 = nebulaParent.GetChild(0).GetComponent<ParticleSystem>();
+        ParticleSystem nebula2 = nebulaParent.GetChild(1).GetComponent<ParticleSystem>();
+        var shape1 = nebula1.shape;
+        shape1.mesh = nebulaMesh;
+        shape1.meshShapeType = ParticleSystemMeshShapeType.Edge;
+        var shape2 = nebula2.shape;
+        shape2.mesh = nebulaMesh;
+        shape2.meshShapeType = ParticleSystemMeshShapeType.Edge;
+        nebula1.Clear();
+        nebula1.Play();
+        nebula2.Clear();
+        nebula2.Play();
+        nebulaParent.position = Vector3.zero;
+    }   
     void OnReset()
     {
         panning = false;
@@ -257,7 +246,7 @@ public class CameraFollow : MonoBehaviour
     {
         //scene view visuals
         Gizmos.color = Color.green;
-        Vector2[] polygon = PolygonPositions(startPos, endPos, 1, 0);
+        Vector2[] polygon = PolygonPositions(startPos, endPos, 1 * sizeScalar, 0);
         for (int i = 0; i < polygon.Length-1; i++)
         {
             Gizmos.DrawLine(polygon[i], polygon[i + 1]);

@@ -5,6 +5,7 @@ Shader "Unlit/GravityMap"
         _MainTex ("Texture", 2D) = "white" {}
         _HeatColor("Heat Color", color) = (0,1,1,1)
         _MaxForce("Max Force", float) = 10
+        _ForcePower("Force Power", float) = 2
     }
     SubShader
     {
@@ -14,6 +15,7 @@ Shader "Unlit/GravityMap"
             "IgnoreProjector"="True"
         }
         LOD 100
+        ZTest Off
         Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
@@ -42,6 +44,7 @@ Shader "Unlit/GravityMap"
             uint _PlanetCount;
             float4 _HeatColor;
             float _MaxForce;
+            float _ForcePower;
 
             float GravityForceAtPoint(float3 worldPos, float objMass)
             {
@@ -62,9 +65,7 @@ Shader "Unlit/GravityMap"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                float4 vert = float4(o.vertex.xy, 0, 1);
-                float3 objW = mul(unity_ObjectToWorld, vert).xyz;
-                //o.worldPos = (float3(objW.x * (8 / 2), objW.y * -(8 / 2), 0));
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.worldPos.z = 0;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
@@ -74,8 +75,16 @@ Shader "Unlit/GravityMap"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                float force = GravityForceAtPoint(i.worldPos, 1);
-                float4 lerpCol = lerp(0, _HeatColor, force/_MaxForce);
+                float force = pow(GravityForceAtPoint(i.worldPos, 1), _ForcePower);
+                //if(length(i.worldPos)<=_MaxForce)
+                //{
+                //    return 1;
+                //}
+                //else
+                //{
+                //    return 0;
+                //}
+                float4 lerpCol = lerp(0, _HeatColor, saturate(force/_MaxForce));
                 return lerpCol;
             }
             ENDCG
