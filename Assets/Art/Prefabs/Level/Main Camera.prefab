@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 3245928208868472892}
   - component: {fileID: 783334164229528547}
   - component: {fileID: 5501677863905141298}
+  - component: {fileID: 7872389725519538855}
+  - component: {fileID: 4593267182899726486}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -123,13 +125,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   env: {fileID: 0}
-  showInEditor: 0
   updateInPlaymode: 1
   width: 44
   height: 26
   cellSize: 1
-  maxMult: 2.7
-  divisor: 14.8
   gridColor: {r: 0, g: 1, b: 0, a: 1}
   origin: {x: 0, y: 0, z: 0}
   blitInEditor: 0
@@ -143,7 +142,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5368257114206789907}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 995be2cafc946a54181f9016d351eb65, type: 3}
   m_Name: 
@@ -384,3 +383,53 @@ PolygonCollider2D:
     m_Paths:
     - []
   m_UseDelaunayMesh: 0
+--- !u!33 &7872389725519538855
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368257114206789907}
+  m_Mesh: {fileID: 0}
+--- !u!23 &4593267182899726486
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368257114206789907}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}

@@ -313,6 +313,7 @@ public class LevelGenerator : MonoBehaviour
     /// Generates the planets off of the level parameters
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level){
+        Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
@@ -335,7 +336,7 @@ public class LevelGenerator : MonoBehaviour
             }
 
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
-
+            yield return new WaitForSecondsRealtime(0.05f);
             planetList[i].planet.transform.parent = allPlanetParent;
             planetList[i].forceField.transform.parent = env;
 
@@ -366,6 +367,7 @@ public class LevelGenerator : MonoBehaviour
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
 
         SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
+        Physics.SyncTransforms();
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
 
         GenerateBlackHoles(player.transform.position);
@@ -377,7 +379,7 @@ public class LevelGenerator : MonoBehaviour
         float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
 
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
-        yield return new WaitForEndOfFrame();
+        Time.timeScale = 1;
     }
 
     /// <summary>
@@ -456,6 +458,7 @@ public class LevelGenerator : MonoBehaviour
 
             Vector3 dirTemp = planets[i].planet.transform.position - planets[index1].planet.transform.position;
             float distanceTemp = dirTemp.magnitude;
+            if(distanceTemp < 6) { continue; }
             dirTemp = dirTemp.normalized;
             Physics.SyncTransforms();
 
@@ -573,7 +576,9 @@ public class LevelGenerator : MonoBehaviour
         }
         float flagAng = Mathf.Atan2((candidates[farthestIndex].planet.transform.position - flag.position).normalized.y, (candidates[farthestIndex].planet.transform.position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x + (ball.transform.localScale.x * ball.GetComponent<SphereCollider>().radius)); 
+        Vector3 initBallPos = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
+        Vector3 closestPoint = candidates[farthestIndex].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
+        ball.GetComponent<Rigidbody>().position =  closestPoint + (closestPoint - candidates[farthestIndex].planet.transform.position).normalized * (0.22f);
     }
     #endregion
     #region Utility
@@ -616,7 +621,7 @@ public class LevelGenerator : MonoBehaviour
         oceanRend.sharedMaterial = cullMat;
 
         Camera cam = new GameObject().AddComponent<Camera>();
-        cam.transform.position = Camera.main.transform.position;
+        cam.transform.position = new Vector3(0,0,-10);
         cam.orthographic = true;
         cam.orthographicSize = 1.5f;
         cam.clearFlags = CameraClearFlags.SolidColor;

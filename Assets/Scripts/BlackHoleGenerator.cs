@@ -102,6 +102,7 @@ public class BlackHoleGenerator : MonoBehaviour
 
         //White hole vs black hole twirl direction
         int mult = whiteHole ? 1 : -1;
+        distortMat.SetFloat("_CameraOrthoSize", Camera.main.orthographicSize);
         distortBlock.SetFloat("_Speed", Mathf.Abs(distortMat.GetFloat("_Speed")) * mult);
         distortRenderer.SetPropertyBlock(distortBlock);
         ParticleSystem.RotationOverLifetimeModule rotModule = swirlSystem.rotationOverLifetime;

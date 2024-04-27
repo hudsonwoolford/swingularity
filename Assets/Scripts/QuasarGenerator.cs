@@ -31,12 +31,12 @@ public class QuasarGenerator : MonoBehaviour
     [Header("Local Variables")]
     [SerializeField] Transform upperBeamParent;
     [SerializeField] Transform lowerBeamParent;
-    [SerializeField] Transform upperEnd;
-    [SerializeField] Transform lowerEnd;
     [Space()]
     [SerializeField] ParticleSystem swirlSystem;
     [SerializeField] ParticleSystem upperSparks;
     [SerializeField] ParticleSystem lowerSparks;
+    [SerializeField] ParticleSystem upperEnd;
+    [SerializeField] ParticleSystem lowerEnd;
     [Space()] //Mesh Renderers
     [SerializeField] MeshRenderer sphereRenderer;
     [SerializeField] MeshRenderer distortRenderer;
@@ -82,8 +82,8 @@ public class QuasarGenerator : MonoBehaviour
     public void InitRandom(int seed, ColorSchemeStaticReference.PlanetType planetType, Vector3 pos, float ang, float rad, ForceField startFF, ForceField endFF)
     {
         NullChecks();
-        startFF.AddInteractable(lowerEnd);
-        endFF.AddInteractable(upperEnd);
+        startFF.AddInteractable(lowerEnd.transform);
+        endFF.AddInteractable(upperEnd.transform);
 
         maxRadius = rad;
         radius = rad;
@@ -147,10 +147,14 @@ public class QuasarGenerator : MonoBehaviour
 
         //Transformations
         transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, angle);
-        lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - (0.3f), 0), lowerBeamParent.localScale.z);
+        lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - (0.4f), 0), lowerBeamParent.localScale.z);
         upperBeamParent.localScale = new Vector3(upperBeamParent.localScale.x, radius, upperBeamParent.localScale.z);
         bCollider.size = new Vector3(1, radius * 8.25f, 1);
         bCollider.enabled = radius == 0 ? false : true;
+        bool shrinking = maxRadius <= radius ? false : true;
+        upperEnd.gameObject.SetActive(!shrinking);
+        lowerEnd.gameObject.SetActive(!shrinking);
+        
 
         //Property blocks
         //Sphere fresnel
@@ -197,10 +201,17 @@ public class QuasarGenerator : MonoBehaviour
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[schemeIndex].lightColor, 0.0f), new GradientColorKey(schemePool[schemeIndex].darkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
         module.startColor = grad;
 
+        //End colors
+        module = upperEnd.main;
+        module.startColor = schemePool[schemeIndex].sparkColor;
+        module = lowerEnd.main;
+        module.startColor = schemePool[schemeIndex].sparkColor;
+        
         //Upper beam color
         module = upperSparks.main;
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[schemeIndex].sparkColor, 0.0f), new GradientColorKey(schemePool[schemeIndex].sparkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
         module.startColor = grad;
+
 
         //Lower beam color
         module = lowerSparks.main;

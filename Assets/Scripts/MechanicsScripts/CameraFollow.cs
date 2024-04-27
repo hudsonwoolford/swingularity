@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
     [SerializeField] float smoothness = 0.3f;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
-    PolygonCollider2D cameraPath;              //inner boundaries
+    PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
@@ -42,6 +42,12 @@ public class CameraFollow : MonoBehaviour
                 tag = "CameraBounds"
             }.AddComponent<PolygonCollider2D>();
         }
+        if(panningPath == null)
+        {
+            panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
+            
+        }
+        panningPath.points = PolygonPositions(startPos, endPos, 1, 5);
         cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
         CalculateNebulaSize(innerShape.points);
     }   
@@ -65,8 +71,14 @@ public class CameraFollow : MonoBehaviour
             cameraPath = new GameObject("Camera Bounds"){
                 tag = "CameraBounds"
             }.AddComponent<PolygonCollider2D>();
+
             cameraPath.points = PolygonPositions(startPos, endPos, 0.5f, 0); //scaled down version of inner shape
         }
+        if (panningPath == null)
+        {
+            panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
+        }
+        panningPath.points = PolygonPositions(startPos, endPos, 1, 5);
         CalculateNebulaSize(innerShape.points);
     }
     void CalculateNebulaSize(Vector2[] points){
@@ -126,7 +138,11 @@ public class CameraFollow : MonoBehaviour
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
         cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
-        if (panning) { return; }
+        if (panning) {
+            return;
+        }
+
+        //Following ball and zooming
         if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
         Vector3 targetPos = Vector3.zero;
         if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
@@ -155,7 +171,16 @@ public class CameraFollow : MonoBehaviour
             Vector2 mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousPos - startMousePos;
 
-            transform.position += -new Vector3(difference.x, difference.y);
+            Vector3 nextPos = transform.position + -new Vector3(difference.x, difference.y);
+            if(panningPath.OverlapPoint(new Vector2(nextPos.x, nextPos.y)))
+            {
+                transform.position = nextPos;
+            }
+            //else
+            //{
+            //    panning = false;
+            //    yield break;
+            //}
             yield return null;
         }
         panning = false;

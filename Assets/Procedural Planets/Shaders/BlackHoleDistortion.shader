@@ -20,7 +20,9 @@ Properties
     {
         Tags 
         {
+            "RenderType" = "Transparent"
             "Queue" = "Transparent"
+            "IgnoreProjector" = "True"
             "DisableBatching" = "True"
         }
 
@@ -29,7 +31,7 @@ Properties
         {
             "_BackgroundTexture"
         }
-
+        Cull Off
         // Render the object with the texture generated above, and invert the colors
         Pass
         {
