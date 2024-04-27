@@ -572,7 +572,8 @@ public class LevelGenerator : MonoBehaviour
         }
         float flagAng = Mathf.Atan2((candidates[farthestIndex].planet.transform.position - flag.position).normalized.y, (candidates[farthestIndex].planet.transform.position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
+        Vector3 initBallPos = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x); 
+        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.GetComponent<Collider>().ClosestPoint(initBallPos) + (candidates[farthestIndex].forceField.transform.position - initBallPos) * (ball.transform.localScale.x * ball.GetComponent<SphereCollider>().radius);
     }
     #endregion
     #region Utility
