@@ -247,8 +247,7 @@ public class ShootBall : MonoBehaviour
 
         transform.position = origin; //back to start
         tr?.Clear();
-        rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
-
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
