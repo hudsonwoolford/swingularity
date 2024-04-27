@@ -41,6 +41,7 @@ Shader "Unlit/LaserBeam"
 
             sampler2D _MainTex;
             sampler2D _Mask;
+            sampler2D _Mask_ST;
             float4 _MainTex_ST;
             fixed4 _Color;
             float2 _Speed;
@@ -54,6 +55,13 @@ Shader "Unlit/LaserBeam"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.stillUV = v.uv;
+
+                float3 worldScale = float3(
+                length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x)), // scale x axis
+                length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)), // scale y axis
+                length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z))  // scale z axis
+                );
+                _MainTex_ST.z = worldScale.y / 2;
 
                 float2 noiseScroll = float2(_Time.y * _DistortionSpeed.x, _Time.y * _DistortionSpeed.y);
                 float noiseOffset = UnitySimpleNoise(noiseScroll, _DistortionScale);

@@ -77,7 +77,7 @@ Shader "Custom/ForceField"
         float _FresnelStrengthNear;
         float _FresnelStrengthFar;
 
-        float3 _ObjPos[3];
+        float3 _ObjPos[10];
         float _InteractiveDistance;
         float _InteractiveMultiplier;
         float _FalloffIntensity;

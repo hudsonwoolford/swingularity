@@ -10,7 +10,7 @@ public class ForceField : MonoBehaviour
     static float intensityMult = 1.5f;
     [Header("Script Variables")]
     [SerializeField] Transform planet;
-    [SerializeField] List<Transform> interactableObject = new List<Transform>(3);
+    [SerializeField] List<Transform> interactableObject = new List<Transform>(10);
     [Range(-1f, 1f)]
     [SerializeField] float rangeOffset = 0;
     [SerializeField] float meshChangeThreshold = 2;
@@ -48,6 +48,10 @@ public class ForceField : MonoBehaviour
         if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true);}
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range + rangeOffset) * 1.075f / 2;
+    }
+    public void AddInteractable(Transform interact)
+    {
+        interactableObject.Add(interact);
     }
     public void AutoMass(){
         cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 100;
@@ -106,9 +110,13 @@ public class ForceField : MonoBehaviour
         pBlock.SetColor("_FrontColor", frontColor);
         pBlock.SetColor("_FresnelColor", fresnelColor);
         interactableObject.RemoveAll(Transform => Transform == null);
+        Vector4[] ioVectors = new Vector4[10];
         if (interactableObject.Count > 0)
         {
-            Vector4[] ioVectors = Array.ConvertAll<Transform, Vector4>(interactableObject.ToArray(), t => t.position);
+            for (int i = 0; i < interactableObject.Count; i++)
+            {
+                ioVectors[i] = interactableObject[i].transform.position;
+            }
             pBlock.SetVectorArray("_ObjPos", ioVectors);
         }
         pBlock.SetFloat("_Scale", transform.localScale.x);

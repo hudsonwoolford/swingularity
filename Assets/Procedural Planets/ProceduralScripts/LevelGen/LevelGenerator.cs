@@ -37,7 +37,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     Vector2 regionExtension; //how much region is extended
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, blackHolePrefab, audioSrcPrefab; //Needed prefabs
+    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, blackHolePrefab, quasarPrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
     float planetScale; //Scale of planets multiplier
     [SerializeField] int resolution;
@@ -48,7 +48,7 @@ public class LevelGenerator : MonoBehaviour
     SpecialObject[] specialObjects;
     Vector2 regionSize;
     public delegate void GenerateSpecialPlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index);
-    public delegate void GenerateSpecialObject(Planet[] planets);
+    public delegate void GenerateSpecialObject(Planet[] planets, Vector3 seed, int index);
     [Header("Random References and Stuff")]
     [SerializeField] PhysicMaterial superBouncyMoon;
     [SerializeField] Material moonLine;
@@ -73,6 +73,7 @@ public class LevelGenerator : MonoBehaviour
     { 
         Star,
         BlackHole,
+        Quasar,
         Moon
     }
     [Serializable]
@@ -306,7 +307,7 @@ public class LevelGenerator : MonoBehaviour
         List<SpecialObject> list = new List<SpecialObject>();
         for (int i = 0; i < specialObjects.Length; i++)
         {
-            if (specialObjects[i].type != (SpecialType.Star | SpecialType.BlackHole | SpecialType.Moon))
+            if (specialObjects[i].type == SpecialType.Quasar)
             {
                 list.Add(specialObjects[i]);
             }
@@ -346,17 +347,6 @@ public class LevelGenerator : MonoBehaviour
         }
         Destroy(generator.gameObject);
 
-        ////Additional special objects
-        //SpecialObject[] addObjects = CalculateAddObjects();
-        //for (int i = 0; i < addObjects.Length; i++)
-        //{
-        //    addObjects[i].addGeneration(planetList);
-        //}
-
-        //Ball and flag positions
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
-
         List<Planet> normPlanets = new List<Planet>();
         for (int i = 0; i < planetList.Length; i++)
         {
@@ -365,6 +355,18 @@ public class LevelGenerator : MonoBehaviour
                 normPlanets.Add(planetList[i]);
             }
         }
+        //Additional special objects
+        SpecialObject[] addObjects = CalculateAddObjects();
+        print(addObjects.Length);
+        for (int i = 0; i < addObjects.Length; i++)
+        {
+            addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], i);
+        }
+
+        //Ball and flag positions
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
+
         SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
 
@@ -435,6 +437,39 @@ public class LevelGenerator : MonoBehaviour
             cachedBlackHoles[i+1].planet.GetComponent<BlackHoleGenerator>().InitRandom(!firstBlack, cachedBlackHoles[i].planet.transform, seed + i, cachedBlackHoles[i].planetType);
         }
         cachedBlackHoles.Clear();
+    }
+    void GenerateQuasar(Planet[] planets, Vector3 seed, int index)
+    {
+        UnityEngine.Random.InitState((int)seed.y + index);
+        int index1 = UnityEngine.Random.Range(0, planets.Length);
+
+        List<int> possibleCandidates = new List<int>();
+        for (int i = 0; i < planets.Length; i++)
+        {
+            if(i == index1) { continue; }
+
+            Vector3 dirTemp = planets[i].planet.transform.position - planets[index1].planet.transform.position;
+            float distanceTemp = dirTemp.magnitude;
+            dirTemp = dirTemp.normalized;
+
+            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, 1f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
+            {
+                possibleCandidates.Add(i);
+            }
+        }
+        if(possibleCandidates.Count == 0) { print("No Quasar Eligible Planets"); return; }
+        int index2 = possibleCandidates[UnityEngine.Random.Range(0, possibleCandidates.Count)];
+
+        Vector3 dir = planets[index2].planet.transform.position - planets[index1].planet.transform.position;
+        float distance = dir.magnitude - (planets[index2].forceField.transform.localScale.x + planets[index1].forceField.transform.localScale.x);
+        dir = dir.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+        print(angle);
+        Vector3 midPoint = ((planets[index1].planet.transform.position + planets[index1].forceField.transform.localScale.x * dir) + (planets[index2].planet.transform.position - planets[index2].forceField.transform.localScale.x * dir)) / 2;
+
+        QuasarGenerator quasar = Instantiate(quasarPrefab).GetComponent<QuasarGenerator>();
+        quasar.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
+        quasar.InitRandom((int)seed.x + index, planets[index1].planetType, midPoint, angle, distance/4 + distance/64, planets[index1].forceField.GetComponent<ForceField>(), planets[index2].forceField.GetComponent<ForceField>());
     }
     void GenerateStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
@@ -549,6 +584,9 @@ public class LevelGenerator : MonoBehaviour
                     break;
                 case SpecialType.BlackHole:
                     specialObjects[i].replaceGeneration = CacheBlackHole;
+                    break;
+                case SpecialType.Quasar:
+                    specialObjects[i].addGeneration = GenerateQuasar;
                     break;
                 case SpecialType.Moon:
                     specialObjects[i].replaceGeneration = GenerateMoon;
