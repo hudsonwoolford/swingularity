@@ -105,6 +105,7 @@ public class QuasarGenerator : MonoBehaviour
 
         //Applying
         RandomRotation();
+        RandomInterval();
         ApplyingVariables();
 
         //Reset system
@@ -127,6 +128,16 @@ public class QuasarGenerator : MonoBehaviour
     void RandomRotation()
     {
         //maybe changes plane a bit
+    }
+    void RandomInterval()
+    {
+        bool stop = false;
+        intervals.Clear();
+        for (int i = 0; i < 5 && !stop; i++)
+        {
+            intervals.Add(UnityEngine.Random.Range(0.5f, 1.5f));
+            stop = (UnityEngine.Random.value+1)/2 > 0.7f ? true : false;
+        }
     }
     //Master function
     void ApplyingVariables()

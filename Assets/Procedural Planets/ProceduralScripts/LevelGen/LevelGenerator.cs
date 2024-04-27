@@ -452,7 +452,7 @@ public class LevelGenerator : MonoBehaviour
             float distanceTemp = dirTemp.magnitude;
             dirTemp = dirTemp.normalized;
 
-            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, 1f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
+            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
             {
                 possibleCandidates.Add(i);
             }
@@ -464,7 +464,6 @@ public class LevelGenerator : MonoBehaviour
         float distance = dir.magnitude - (planets[index2].forceField.transform.localScale.x + planets[index1].forceField.transform.localScale.x);
         dir = dir.normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
-        print(angle);
         Vector3 midPoint = ((planets[index1].planet.transform.position + planets[index1].forceField.transform.localScale.x * dir) + (planets[index2].planet.transform.position - planets[index2].forceField.transform.localScale.x * dir)) / 2;
 
         QuasarGenerator quasar = Instantiate(quasarPrefab).GetComponent<QuasarGenerator>();
