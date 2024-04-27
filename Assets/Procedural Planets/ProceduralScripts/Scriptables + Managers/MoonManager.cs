@@ -5,11 +5,12 @@ using System.Collections.Specialized;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
+[ExecuteInEditMode()]
 public class MoonManager : MonoBehaviour
 {
     [SerializeField] CelestialMass orbitPlanet;
     [SerializeField] CelestialMass associatedPlanet;
-    [SerializeField] float semiMajorAxis, gravitationalConstant, eccentricity, speed;
+    [SerializeField] float semiMajorAxis = 5, gravitationalConstant = 1, eccentricity = 0, speed = 1;
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
     [SerializeField] float width = 0.1f;
@@ -31,11 +32,6 @@ public class MoonManager : MonoBehaviour
         this.orbitPlanet = orbitPlanet;
         this.mat = moonLine;
         this.rotation = rotation;
-        
-        periapsis = semiMajorAxis * (1 - eccentricity);
-        apoapsis = semiMajorAxis * (1 + eccentricity);
-        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1-Mathf.Pow(eccentricity, 2));
-        centre = orbitPlanet.transform.position;
 
         rb = GetComponent<Rigidbody>();
         if(rb == null){
@@ -44,13 +40,10 @@ public class MoonManager : MonoBehaviour
         rb.drag = 0;
         rb.angularDrag = 0;
         rb.useGravity = false;
-        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
-        float centerDistance = semiMajorAxis * eccentricity;
-        Vector2 focus1 = orbitPlanet.transform.position;
-        Vector2 focus2 = focus1 + new Vector2 (centerDistance * 2, 0f);
-        centre = (focus1 + focus2)/2f;
+
+        CalculateVariables();
         float gravitationalParameter = gravitationalConstant * (orbitPlanet.mass);
-        rb.position = RotateAround(rotation, focus1 + new Vector2(apoapsis, 0f), focus1);
+        rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
         rb.AddForce(Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity, ForceMode.VelocityChange);
         rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass);
@@ -58,7 +51,18 @@ public class MoonManager : MonoBehaviour
         DrawOrbit();
         moonEnabled = true;
     }
-
+    void CalculateVariables()
+    {
+        periapsis = semiMajorAxis * (1 - eccentricity);
+        apoapsis = semiMajorAxis * (1 + eccentricity);
+        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
+        centre = orbitPlanet.transform.position;
+        semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
+        float centerDistance = semiMajorAxis * eccentricity;
+        Vector2 focus1 = orbitPlanet.transform.position;
+        Vector2 focus2 = focus1 + new Vector2(centerDistance * 2, 0f);
+        centre = (focus1 + focus2) / 2f;
+    }
     static Vector3 RotateAround(float angleDegrees, Vector3 pointA, Vector3 pointB){
         float angleRadians = angleDegrees * Mathf.Deg2Rad;
 
@@ -74,20 +78,32 @@ public class MoonManager : MonoBehaviour
     void Start(){
 
         if(moonEnabled){return;}
+        if (orbitPlanet == null || associatedPlanet == null) { return; }
         Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation);
     }
-
-    void FixedUpdate()
+    private void Update()
     {
-        if (!moonEnabled){return;}
+        if (orbitPlanet == null || associatedPlanet == null) { return; }
+        if (!moonEnabled) { Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); }
 
-        if (orbitPlanet == null)
+        if (!Application.isPlaying)
         {
+            CalculateVariables();
+            EditModeUpdate();
             return;
         }
+    }
+    void FixedUpdate()
+    {
+        if (orbitPlanet == null || associatedPlanet == null) { return; }
+        if (!moonEnabled){ Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); }
 
         MoveMoon();
-
+    }
+    private void EditModeUpdate()
+    {
+        transform.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0), orbitPlanet.transform.position);
+        DrawOrbit();
     }
     private void MoveMoon(){
         rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass);

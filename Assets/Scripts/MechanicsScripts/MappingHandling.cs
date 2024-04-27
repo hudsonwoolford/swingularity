@@ -9,7 +9,6 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] BoxCollider2D camArea;
     [Range(0, 2)]
     [SerializeField] float smallerBounds = 0.9f;
-    [Min(0)]
     [SerializeField] TextMeshProUGUI distText;
     [SerializeField] Transform ball;
     [SerializeField] Transform arrow;
@@ -73,7 +72,6 @@ public class MappingHandling : MonoBehaviour
                         Transform dt = distText.gameObject.transform;
                         if ((-arrow.transform.up).y > 0)
                         {
-
                             dt.localRotation = Quaternion.Euler(180, 180, 0);
                             distText.alignment = TextAlignmentOptions.Left;
                         }
