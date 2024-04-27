@@ -452,7 +452,7 @@ public class LevelGenerator : MonoBehaviour
             float distanceTemp = dirTemp.magnitude;
             dirTemp = dirTemp.normalized;
 
-            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
+            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, 1f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
             {
                 possibleCandidates.Add(i);
             }
