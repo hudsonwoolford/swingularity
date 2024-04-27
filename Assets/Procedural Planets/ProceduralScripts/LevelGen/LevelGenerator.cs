@@ -360,7 +360,10 @@ public class LevelGenerator : MonoBehaviour
         print(addObjects.Length);
         for (int i = 0; i < addObjects.Length; i++)
         {
-            addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], i);
+            for (int u = 0; u < addObjects[i].amount; u++)
+            {
+                addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
+            }
         }
 
         //Ball and flag positions
@@ -451,8 +454,13 @@ public class LevelGenerator : MonoBehaviour
             Vector3 dirTemp = planets[i].planet.transform.position - planets[index1].planet.transform.position;
             float distanceTemp = dirTemp.magnitude;
             dirTemp = dirTemp.normalized;
+            //IF BETTER WAY USE IT, THIS COULD CAUSE FUTURE ISSUES
+            Physics.SyncTransforms();
 
-            if (!Physics.BoxCast(planets[index1].forceField.transform.position + dirTemp * planets[index1].forceField.transform.localScale.x, new Vector3(1f, 1f, 1f), dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp - 0.1f))
+            Debug.DrawRay(planets[index1].planet.transform.position, dirTemp * distanceTemp, Color.red, 20, false);
+            RaycastHit[] allHits = Physics.RaycastAll(planets[index1].planet.transform.position, dirTemp, distanceTemp);
+            print(allHits.Length);
+            if (allHits.Length <= 1)
             {
                 possibleCandidates.Add(i);
             }
