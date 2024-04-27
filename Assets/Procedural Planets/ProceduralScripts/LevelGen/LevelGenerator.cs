@@ -98,14 +98,17 @@ public class LevelGenerator : MonoBehaviour
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
 
-
+    Camera mainCam;
+    Vector2 camSize;
+    bool xOry;
+    float extensionAmount;
 
     #endregion
     void Start()
     {
 
         levelInit?.Invoke(); //Initiation Delegate
-        Camera mainCam = Camera.main; //Cache camera
+        mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
@@ -119,9 +122,9 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState(seed);
 
         //Region size calculation
-        Vector2 camSize = CamSize(mainCam);                             //1. Calculates camera size
-        bool xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
-        float extensionAmount = UnityEngine.Random.value;               //3. Randomizes extension amount. 
+        camSize = CamSize(mainCam);                             //1. Calculates camera size
+        xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
+        extensionAmount = UnityEngine.Random.value;               //3. Randomizes extension amount. 
         regionSize = CalculateBounds(camSize, extensionAmount, xOry);   //4. Calculating bounds based off previous variables
 
         //Sets the level generation settings
@@ -149,15 +152,7 @@ public class LevelGenerator : MonoBehaviour
         }
         
         //Generates level based of calculation
-        Planet[] planets = Generatelevel(level);
-
-        //Camera start and end positions
-        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planets, camSize, extensionAmount, xOry);
-        Vector2 startPos = startEndPos.Item1;
-        Vector2 endPos = startEndPos.Item2;
-        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
-
-        mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
+        StartCoroutine(Generatelevel(level));
     }
     #region Level Calculation
     /// <summary>
@@ -317,7 +312,7 @@ public class LevelGenerator : MonoBehaviour
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
-    Planet[] Generatelevel(ProceduralLevelGeneration.Level level){
+    IEnumerator Generatelevel(ProceduralLevelGeneration.Level level){
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
@@ -340,6 +335,7 @@ public class LevelGenerator : MonoBehaviour
             }
 
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+            yield return new WaitForFlow();
             planetList[i].planet.transform.parent = allPlanetParent;
             planetList[i].forceField.transform.parent = env;
 
@@ -373,7 +369,14 @@ public class LevelGenerator : MonoBehaviour
         player.GetComponent<ShootBall>().Init(env, player.GetComponent<Rigidbody>().position);
 
         GenerateBlackHoles(player.transform.position);
-        return planetList;
+        
+        //Camera start and end positions
+        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, camSize, extensionAmount, xOry);
+        Vector2 startPos = startEndPos.Item1;
+        Vector2 endPos = startEndPos.Item2;
+        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
+
+        mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
     }
 
     /// <summary>
@@ -453,10 +456,8 @@ public class LevelGenerator : MonoBehaviour
             Vector3 dirTemp = planets[i].planet.transform.position - planets[index1].planet.transform.position;
             float distanceTemp = dirTemp.magnitude;
             dirTemp = dirTemp.normalized;
-            //IF BETTER WAY USE IT, THIS COULD CAUSE FUTURE ISSUES
             Physics.SyncTransforms();
 
-            Debug.DrawRay(planets[index1].planet.transform.position, dirTemp * distanceTemp, Color.red, 20, false);
             RaycastHit[] allHits = Physics.RaycastAll(planets[index1].planet.transform.position, dirTemp, distanceTemp);
             if (allHits.Length <= 1)
             {
@@ -571,7 +572,7 @@ public class LevelGenerator : MonoBehaviour
         }
         float flagAng = Mathf.Atan2((candidates[farthestIndex].planet.transform.position - flag.position).normalized.y, (candidates[farthestIndex].planet.transform.position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x + (ball.localScale.x * ball.GetComponent<SphereCollider>().radius));
+        ball.GetComponent<Rigidbody>().position = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
     }
     #endregion
     #region Utility
