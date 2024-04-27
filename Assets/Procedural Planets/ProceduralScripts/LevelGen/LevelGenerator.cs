@@ -357,7 +357,6 @@ public class LevelGenerator : MonoBehaviour
         }
         //Additional special objects
         SpecialObject[] addObjects = CalculateAddObjects();
-        print(addObjects.Length);
         for (int i = 0; i < addObjects.Length; i++)
         {
             for (int u = 0; u < addObjects[i].amount; u++)
@@ -459,7 +458,6 @@ public class LevelGenerator : MonoBehaviour
 
             Debug.DrawRay(planets[index1].planet.transform.position, dirTemp * distanceTemp, Color.red, 20, false);
             RaycastHit[] allHits = Physics.RaycastAll(planets[index1].planet.transform.position, dirTemp, distanceTemp);
-            print(allHits.Length);
             if (allHits.Length <= 1)
             {
                 possibleCandidates.Add(i);
