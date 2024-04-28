@@ -20,8 +20,8 @@ public class CameraFollow : MonoBehaviour
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
     float cameraSize;
-    public float defaultCameraSize;
     float targetCameraSize;
+    public float defaultCameraSize { get; private set; }
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
@@ -32,7 +32,7 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-        innerShape.points = PolygonPositions(startPos, endPos, 2f, 10); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, 2f * sizeScalar, 10, 10); //to scale version
 
         MasterStart();
     }   
@@ -40,7 +40,7 @@ public class CameraFollow : MonoBehaviour
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, 2f * sizeScalar, 10); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, 2f * sizeScalar, 10, 10); //to scale version
     }
     // Start is called before the first frame update
     void Start()
@@ -66,14 +66,16 @@ public class CameraFollow : MonoBehaviour
         {
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
-        cameraPath.points = PolygonPositions(startPos, endPos, 0.5f * sizeScalar, 0); //scaled down version of inner shape
+        cameraPath.points = PolygonPositions(startPos, endPos, 0.5f * sizeScalar, 0, 0); //scaled down version of inner shape
         CalculateNebulaSize(innerShape.points);
     }
 
     // Update is called once per frame
     public void LateUpdate()
     {
-        panningPath.points = PolygonPositions(startPos, endPos, 1f * sizeScalar, 0);
+        float height = defaultCameraSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        panningPath.points = PolygonPositions(startPos, endPos, (defaultCameraSize/cameraSize), 10-width, 10-height);
 
         if (Input.GetMouseButtonDown(2))
         {
@@ -148,7 +150,7 @@ public class CameraFollow : MonoBehaviour
         panning = false;
     }
     //Returns array of positions that makes up a polygon for the boundaries
-    Vector2[] PolygonPositions(Vector2 start, Vector2 end, float scale, float feather)
+    Vector2[] PolygonPositions(Vector2 start, Vector2 end, float scale, float featherX, float featherY)
     {
         if(start.x == end.x || start.y == end.y)
         {
@@ -156,8 +158,8 @@ public class CameraFollow : MonoBehaviour
         }
         float height = Camera.main.orthographicSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
-        height += feather;
-        width += feather;
+        height += featherY;
+        width += featherX;
         Vector3 camSize = new Vector3(width, height);
         camSize *= scale; //scaling
         Vector2 dir = (end - start).normalized; //direction from start to end
@@ -258,7 +260,7 @@ public class CameraFollow : MonoBehaviour
     {
         //scene view visuals
         Gizmos.color = Color.green;
-        Vector2[] polygon = PolygonPositions(startPos, endPos, 1 * sizeScalar, 0);
+        Vector2[] polygon = PolygonPositions(startPos, endPos, 1 * sizeScalar, 0, 0);
         for (int i = 0; i < polygon.Length-1; i++)
         {
             Gizmos.DrawLine(polygon[i], polygon[i + 1]);
