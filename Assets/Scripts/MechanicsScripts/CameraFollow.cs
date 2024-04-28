@@ -67,13 +67,14 @@ public class CameraFollow : MonoBehaviour
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
         cameraPath.points = PolygonPositions(startPos, endPos, 0.5f * sizeScalar, 0); //scaled down version of inner shape
-        panningPath.points = PolygonPositions(startPos, endPos, 1 * sizeScalar, 5);
         CalculateNebulaSize(innerShape.points);
     }
 
     // Update is called once per frame
     public void LateUpdate()
     {
+        panningPath.points = PolygonPositions(startPos, endPos, 1 * sizeScalar, 5);
+
         if (Input.GetMouseButtonDown(2))
         {
             StartCoroutine(Panning());
@@ -121,16 +122,27 @@ public class CameraFollow : MonoBehaviour
             Vector2 mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousPos - startMousePos;
 
-            Vector3 nextPos = transform.position + -new Vector3(difference.x, difference.y);
-            if(panningPath.OverlapPoint(new Vector2(nextPos.x, nextPos.y)))
+            Vector2 nextPosX = transform.position + -new Vector3(difference.x, 0);
+            Vector2 nextPosY = transform.position + -new Vector3(0, difference.y);
+            bool outX = !panningPath.OverlapPoint(nextPosX);
+            bool outY = !panningPath.OverlapPoint(nextPosY);
+            Vector3 closestPoint = panningPath.ClosestPoint(new Vector3(transform.position.x, transform.position.y, 0));
+            Vector3 finalPos = new Vector3(0, 0, -10);
+            if(outX)
             {
-                transform.position = nextPos;
+                finalPos = new Vector3(closestPoint.x, transform.position.y, -10);
+                startMousePos = mousPos;
             }
-            //else
-            //{
-            //    panning = false;
-            //    yield break;
-            //}
+            if(outY)
+            {
+                finalPos = new Vector3(transform.position.x,  closestPoint.y, -10);
+                startMousePos = mousPos;
+            }
+            if (!outX && !outY)
+            {
+                finalPos = new Vector3(nextPosX.x, nextPosY.y, -10);
+            }
+            transform.position = finalPos;
             yield return null;
         }
         panning = false;
