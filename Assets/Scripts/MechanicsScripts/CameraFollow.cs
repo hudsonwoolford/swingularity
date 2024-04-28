@@ -21,7 +21,7 @@ public class CameraFollow : MonoBehaviour
     float sizeVelocity;                              //camera velocity
     float cameraSize;
     float targetCameraSize;
-    public float defaultCameraSize { get; private set; }
+    public float defaultCameraSize;
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
