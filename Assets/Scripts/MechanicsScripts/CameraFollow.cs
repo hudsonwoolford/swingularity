@@ -73,7 +73,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
-        panningPath.points = PolygonPositions(startPos, endPos, 1 * sizeScalar, 5);
+        panningPath.points = PolygonPositions(startPos, endPos, 1f * sizeScalar, 0);
 
         if (Input.GetMouseButtonDown(2))
         {

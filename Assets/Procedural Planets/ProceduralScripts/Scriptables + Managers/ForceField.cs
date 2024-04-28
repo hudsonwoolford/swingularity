@@ -92,6 +92,10 @@ public class ForceField : MonoBehaviour
         if (planet == null) {Debug.LogWarning("Set planet object in inspector"); return; }
         if (pOuterAtmosphere == null) { pOuterAtmosphere = planet.GetComponentInChildren<Light>(true); if (pOuterAtmosphere == null) { return; } }
         if (pData == null) { pData = planet.GetComponent<PlanetDataHolder>(); }
+        if(gameObject.name !=  pData.gameObject.name + "Field")
+        {
+            gameObject.name = pData.gameObject.name + "Field";
+        }
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) * 1.075f / 2;
         if (pData == null) {Debug.LogWarning("Planet Object does not contain: Planet Data Holder component"); return; }

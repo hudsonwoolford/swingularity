@@ -66,7 +66,7 @@ Shader "Custom/DarkMatter"
                 fixed4 texColor = tex2D(_MainTex, i.uv_MainTex) * i.startColor * _Color;
 
                 // Apply noise effect
-                float noise = UnitySimpleNoise(i.vertPos + i.vertPos * _Time.y * _NoiseSpeed, _NoiseScale);
+                float noise = UnitySimpleNoise(i.vertPos + i.vertPos *_Time.y * _NoiseSpeed + float2(500, 500), _NoiseScale);
                 texColor.a *= pow(noise, _NoisePower);
 
                 // Apply alpha clipping
