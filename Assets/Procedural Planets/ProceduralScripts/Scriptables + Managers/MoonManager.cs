@@ -10,7 +10,9 @@ public class MoonManager : MonoBehaviour
 {
     [SerializeField] CelestialMass orbitPlanet;
     [SerializeField] CelestialMass associatedPlanet;
-    [SerializeField] float semiMajorAxis = 5, gravitationalConstant = 1, eccentricity = 0, speed = 1;
+    [SerializeField] float semiMajorAxis = 5, gravitationalConstant = 1, speed = 1;
+    [Range(0, 1)]
+    [SerializeField] float eccentricity = 0;
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
     [SerializeField] float width = 0.1f;
