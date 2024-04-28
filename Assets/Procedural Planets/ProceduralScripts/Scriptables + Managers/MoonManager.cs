@@ -35,6 +35,7 @@ public class MoonManager : MonoBehaviour
         this.mat = moonLine;
         this.rotation = rotation;
 
+        associatedPlanet.gameObject.layer = LayerMask.NameToLayer("IgnoreSimulation");
         rb = GetComponent<Rigidbody>();
         if(rb == null){
             rb = gameObject.AddComponent<Rigidbody>();

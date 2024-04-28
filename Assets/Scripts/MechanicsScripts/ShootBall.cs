@@ -321,7 +321,7 @@ public class ShootBall : MonoBehaviour
             }
             
             //fixed update
-            gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass);
+            gravForce = ArtificialGravity.GravityForceAtPoint(trackPos, planets.ToArray(), rb.mass, true);
             velocity += gravForce * Time.fixedDeltaTime / rb.mass;
 
 
@@ -330,7 +330,7 @@ public class ShootBall : MonoBehaviour
             trackPos += velocity * Time.fixedDeltaTime;
             foreach (CelestialMass r in planets)
             {
-                if(excludeLayer == (excludeLayer | (1 << r.gameObject.layer))) { continue; }
+                if((excludeLayer & (1 << r.gameObject.layer)) != 0) { continue; }
                 if (Vector3.Distance(r.transform.position, trackPos) <= rad + r.transform.localScale.x) //may cause issues with scale not matching collider scale
                 {
                     if(r.gameObject.GetComponent<BlackHoleGenerator>() != null)

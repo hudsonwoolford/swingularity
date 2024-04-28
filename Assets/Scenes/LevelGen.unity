@@ -366,11 +366,13 @@ MonoBehaviour:
     type: 3}
   planetScale: 0.55
   resolution: 1024
-  possiblePlanetTypes: 0300000006000000
+  possiblePlanetTypes: 030000000600000005000000
   specialObjects:
-  - type: 0
+  - type: 3
     amount: 1
   - type: 2
+    amount: 1
+  - type: 0
     amount: 1
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
@@ -391,62 +393,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &995932801 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1108948784652166674}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &995932811
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 995932801}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &995932812
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 995932801}
-  m_Mesh: {fileID: 0}
 --- !u!1001 &1108948784652166674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -460,16 +406,6 @@ PrefabInstance:
       propertyPath: env
       value: 
       objectReference: {fileID: 261201272}
-    - target: {fileID: 3267537133639875823, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-        type: 3}
-      propertyPath: gravityGrid
-      value: 
-      objectReference: {fileID: 2100000, guid: d2e48b1223fa6034ebc7bc670b803401, type: 2}
-    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-        type: 3}
-      propertyPath: nebulaMesh
-      value: 
-      objectReference: {fileID: 4300000, guid: b9633a742401dba40b03443cc313de38, type: 2}
     - target: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
       propertyPath: m_Name
@@ -530,23 +466,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7903172103305781744, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 995932812}
-    - targetCorrespondingSourceObject: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 995932811}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e30e1e1df6617740b4dc94b8466e88d, type: 3}
 --- !u!1001 &1307322071089290433
 PrefabInstance:
