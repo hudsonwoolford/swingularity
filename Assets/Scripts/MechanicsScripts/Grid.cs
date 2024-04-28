@@ -123,6 +123,24 @@ public static class ArtificialGravity
             return totalForce;
 
     }
+    public static Vector2 GravityForceAtPoint(Vector3 worldPos, CelestialMass[] attractors, float objMass, bool ignoreSimulation)
+    {
+        Vector2 totalForce = Vector2.zero;
+        Vector2 totalForceNormalized= Vector2.zero;
+        foreach (CelestialMass rbAttracting in attractors)
+        {   
+            if (ignoreSimulation && ((1 << rbAttracting.gameObject.layer) & LayerMask.GetMask("IgnoreSimulation")) != 0){continue;}
+            Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
+            float distance = direction.magnitude; //distance
+
+            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            Vector3 force = direction.normalized * forceMagnitude ; //storing force
+            totalForce += new Vector2(force.x, force.y);
+            totalForceNormalized += new Vector2(force.x, force.y).normalized;
+        }
+            return totalForce;
+
+    }
     public static Vector2 CalculateDisplacement(Vector2 vertexPosition, CelestialMass[] attractors, float max, float divisor)
     {
         float deltaZ = 0;
