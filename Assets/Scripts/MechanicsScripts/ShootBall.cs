@@ -537,7 +537,7 @@ public class ShootBall : MonoBehaviour
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        mat.SetColor("_EdgeColor", hole.gameObject.GetComponent<PortalColor>().ballColor);
+        mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
         bool clockwise = CheckSpiralDir(velocityDir, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;

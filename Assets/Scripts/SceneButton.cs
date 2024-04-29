@@ -21,14 +21,14 @@ public class SceneButton : MonoBehaviour
     TextMeshProUGUI nameText;
     private void Awake()
     {
-        if(!unlocked && Application.isPlaying)
-        {
-            unlocked = GameManager.LevelManager.LevelCompleted(requiredScene);
-        }
     }
     // Start is called before the first frame update
     void Start()
     {
+        if(!unlocked && Application.isPlaying)
+        {
+            unlocked = GameManager.LevelManager.LevelCompleted(requiredScene); //Setting unlocked boolean
+        }
         nameText = GetComponentInChildren<TextMeshProUGUI>(true);
         image = GetComponentInChildren<Image>(true);
         button = GetComponent<Button>();

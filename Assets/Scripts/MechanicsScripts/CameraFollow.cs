@@ -67,7 +67,6 @@ public class CameraFollow : MonoBehaviour
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
         cameraPath.points = PolygonPositions(startPos, endPos, 0.5f * sizeScalar, 0, 0); //scaled down version of inner shape
-        CalculateNebulaSize(innerShape.points);
     }
 
     // Update is called once per frame
@@ -243,50 +242,7 @@ public class CameraFollow : MonoBehaviour
 
         return finalPoints; //final points
     }
-    void CalculateNebulaSize(Vector2[] points){
-        Vector3[] vertices = new Vector3[12]; //6 * 2 points
-        for (int i = 0; i < points.Length; i++){
-            vertices[i] = new Vector3(points[i].x, points[i].y, 0.5f);
-            vertices[i+points.Length] = new Vector3(points[i].x, points[i].y, -0.5f);
-        }
-        int[] tris = new int[12*3]{
-            0, 6, 1,
-            6, 7, 1,
-            1, 7, 2,
-            7, 8, 2,
-            2, 8, 3,
-            8, 9, 3,
-            3, 9, 4,
-            9, 10, 4,
-            4, 10, 5,
-            10, 11, 5,
-            5, 11, 0,
-            11, 6, 0
-        };
-
-        Mesh nebulaMesh = new Mesh();
-        nebulaMesh.vertices = vertices;
-        nebulaMesh.triangles = tris;
-        Transform nebulaParent = GameObject.FindGameObjectWithTag("OutOfBounds").transform;
-        ParticleSystem nebula1 = nebulaParent.GetChild(0).GetComponent<ParticleSystem>();
-        ParticleSystem nebula2 = nebulaParent.GetChild(1).GetComponent<ParticleSystem>();
-        var shape1 = nebula1.shape;
-        shape1.mesh = nebulaMesh;
-        shape1.meshShapeType = ParticleSystemMeshShapeType.Edge;
-        var shape2 = nebula2.shape;
-        shape2.mesh = nebulaMesh;
-        shape2.meshShapeType = ParticleSystemMeshShapeType.Edge;
-        ParticleSystem.MainModule main1 = nebula1.main;
-        ParticleSystem.MainModule main2 = nebula2.main;
-        GalaxyData theme = GameManager.LevelManager.currentTheme;
-        main1.startColor = new ParticleSystem.MinMaxGradient(theme.nebulaColors[0], theme.nebulaColors[1]);
-        main2.startColor = new ParticleSystem.MinMaxGradient(theme.nebulaColors[2], theme.nebulaColors[3]);
-        nebula1.Clear();
-        nebula1.Play();
-        nebula2.Clear();
-        nebula2.Play();
-        nebulaParent.position = Vector3.zero;
-    }   
+    
     #endregion
     void OnReset()
     {

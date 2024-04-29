@@ -19,8 +19,9 @@ public class GalaxyLevels : MonoBehaviour
     [SerializeField] float lineDist = 1f;
     [SerializeField] float circleRad = 1f;
     [SerializeField] Material lineMat;
+    [SerializeField] GalaxyData galaxyTheme;
     LineRenderer[] lr = new LineRenderer[5];
-    public delegate void InitGalaxy(string[] galaxyLevels);
+    public delegate void InitGalaxy(string[] galaxyLevels, GalaxyData theme);
     public static InitGalaxy initGalaxy;
     private void Awake()
     {
@@ -31,7 +32,7 @@ public class GalaxyLevels : MonoBehaviour
     {
         if(!Application.isPlaying) { return; } //only do function in game
         if (buttonsCanvas == null) { return; } //crucial variable
-        initGalaxy?.Invoke(System.Array.ConvertAll(systemButtons, s => s.sceneName));
+        initGalaxy?.Invoke(System.Array.ConvertAll(systemButtons, s => s.sceneName), galaxyTheme);
         //calling functions
         SystemPositions();
         Linerendering();

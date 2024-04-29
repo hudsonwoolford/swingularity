@@ -7,15 +7,15 @@ public class PortalColor : MonoBehaviour
 {
     [ColorUsage(true, true)]
     [SerializeField] Color portalColor = new Color(0.3f, 1, 1, 1);
-    [ColorUsage(true, true)]
-    [SerializeField] public Color ballColor = new Color(0.3f, 1, 1, 1);
     [SerializeField] MeshRenderer portalRenderer;
     [SerializeField] ParticleSystem portalSystem;
     MaterialPropertyBlock portalBlock;
 
-    public void Init(){
-        portalColor = GameManager.LevelManager.currentTheme.portalColor;
-        ballColor = GameManager.LevelManager.currentTheme.ballColor;
+    void Start(){
+        if(GameManager.LevelManager.currentTheme != null)
+        {
+            portalColor = GameManager.LevelManager.currentTheme.portalColor;
+        }
     }
     // Update is called once per frame
     void Update()
@@ -27,9 +27,25 @@ public class PortalColor : MonoBehaviour
         portalRenderer.SetPropertyBlock(portalBlock);
 
         if(portalSystem == null) { return; }
-        ParticleSystem.MainModule main = portalSystem.main;
-        Gradient particleGradient = new Gradient();
-        particleGradient.SetKeys(new GradientColorKey[] { new GradientColorKey(portalColor, 0.0f), new GradientColorKey(portalColor * 1.1f, 1) }, new GradientAlphaKey[] {new GradientAlphaKey(1.0f,0.0f), new GradientAlphaKey(1.0f, 1.0f)});
-        main.startColor = particleGradient;
+        ParticleSystem.MinMaxGradient grad = new ParticleSystem.MinMaxGradient(portalColor, portalColor*1.1f);
+        if(grad.gradient != portalSystem.main.startColor.gradient)
+        {
+            ParticleSystem.MainModule main = portalSystem.main;
+            main.startColor = grad;
+            portalSystem.Clear();
+            portalSystem.Play();
+        }
+    }
+    void ProceduralInit(GalaxyData theme)
+    {
+        portalColor = theme.portalColor;
+    }
+    private void OnEnable()
+    {
+        LevelGenerator.levelInit += ProceduralInit;
+    }
+    private void OnDisable()
+    {
+        LevelGenerator.levelInit -= ProceduralInit;
     }
 }

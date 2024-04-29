@@ -97,8 +97,10 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    public delegate void LevelInit(); //Delegate called in initiation of procedural level, this coccurs before the level is actually generated
+    public delegate void LevelInit(GalaxyData theme); //Delegate called in initiation of procedural level, this coccurs before the level is actually generated
     public static LevelInit levelInit;
+    public delegate void LevelGenerated();
+    public static LevelGenerated levelGenerated; //Delegate called in the final generation of the level, this occurs after the level is actually generated
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
 
@@ -111,8 +113,9 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
+        int galaxyIndex = UnityEngine.Random.Range(0, possibleGalaxySchemes.Length);
+        levelInit?.Invoke(possibleGalaxySchemes[galaxyIndex]); //Initiation Delegate
 
-        levelInit?.Invoke(); //Initiation Delegate
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
@@ -338,8 +341,6 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level){
         Time.timeScale = 0; 
-        int galaxyIndex  = UnityEngine.Random.Range(0, possibleGalaxySchemes.Length);
-        GameManager.LevelManager.currentTheme = possibleGalaxySchemes[galaxyIndex];
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
@@ -408,6 +409,7 @@ public class LevelGenerator : MonoBehaviour
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
 
         Time.timeScale = 1;
+        levelGenerated?.Invoke();
     }
 
     /// <summary>
@@ -651,7 +653,6 @@ public class LevelGenerator : MonoBehaviour
         Vector3 initBallPos = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
         Vector3 closestPoint = candidates[farthestIndex].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
         ball.GetComponent<Rigidbody>().position =  closestPoint + (closestPoint - candidates[farthestIndex].planet.transform.position).normalized * (0.22f);
-        flag.gameObject.GetComponent<PortalColor>().Init();
     }
     #endregion
     #region Utility

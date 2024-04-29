@@ -4837,11 +4837,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2082595353398409754}
+  - component: {fileID: 1060479134254093305}
   - component: {fileID: 5060654051014353461}
   - component: {fileID: 8108457234818874754}
   m_Layer: 0
   m_Name: Nebula
-  m_TagString: OutOfBounds
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4861,8 +4862,22 @@ Transform:
   - {fileID: 3161816638324793570}
   - {fileID: 6372502946409590604}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1060479134254093305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5613913381470811449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9769fc10aae77c44c9e69542f19fde9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nebula1: {fileID: 1102600433763911879}
+  nebula2: {fileID: 3666264865265138115}
 --- !u!198 &5060654051014353461
 ParticleSystem:
   m_ObjectHideFlags: 0

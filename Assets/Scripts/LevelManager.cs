@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField] public GalaxyData currentTheme { get; private set; }
     [Header("Parameters")]
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
     [Space()]
@@ -16,7 +17,6 @@ public class LevelManager : MonoBehaviour
     [Header("Serialized Variables")]
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
     [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
-    [SerializeField] public GalaxyData currentTheme;
     [SerializeField] bool procedural = false; //Whether you are currently in a procedural level or not
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
@@ -87,13 +87,15 @@ public class LevelManager : MonoBehaviour
 
         StartCoroutine(NextLevelUI());
     }
-    void SetGalaxyLevels(string[] galaxy) //Sets the current galaxy levels, we also know it cannot be procedural
+    void SetGalaxyLevels(string[] galaxy, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
+        currentTheme = theme;
         procedural = false;
         currentGalaxy = galaxy;
     }
-    void ProceduralInitiation() //Sets procedural to true
+    void ProceduralInitiation(GalaxyData theme) //Sets procedural to true
     {
+        currentTheme = theme;
         procedural = true;
     }
     void OnScore(string score, int scoreRelToPar, int totalShots) //Updates score text to the score invoked in the event by LevelScoring
