@@ -99,6 +99,7 @@ public class ForceField : MonoBehaviour
         transform.position = planet.position;
         transform.localScale = Vector3.one * (pOuterAtmosphere.range+rangeOffset) * 1.075f / 2;
         if (pData == null) {Debug.LogWarning("Planet Object does not contain: Planet Data Holder component"); return; }
+        pData.forceField = pData.forceField == this ? pData.forceField : this;
         Color c = pData.forceFieldColor;
         frontColor = new Color(c.r, c.g, c.b, 0);
         fresnelColor = c * intensityMult;
