@@ -171,7 +171,7 @@ PrefabInstance:
     - target: {fileID: 3768365032482033525, guid: 478e5fb52039c6947bf0a098d4413d68,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3768365032482033525, guid: 478e5fb52039c6947bf0a098d4413d68,
         type: 3}
@@ -244,7 +244,7 @@ PrefabInstance:
     - target: {fileID: 2082595353398409754, guid: c01f59bf67e25b34ebfb8b1fe0711981,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2082595353398409754, guid: c01f59bf67e25b34ebfb8b1fe0711981,
         type: 3}
@@ -344,7 +344,7 @@ MonoBehaviour:
   randomSeed: 1
   canSpawnOffPlanet: 0
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}
-  seed: -5073005
+  seed: -1640657
   minSize: 3
   maxSize: 9
   sizeBias: 0.02
@@ -362,12 +362,21 @@ MonoBehaviour:
     type: 3}
   quasarPrefab: {fileID: 6403930998751558614, guid: 1523bf6eab86c7f4bba707e4d0d4076f,
     type: 3}
+  darkMatterPrefab: {fileID: 2633137533013544427, guid: 5513f8874e4460f42a8c1b70b5e996aa,
+    type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
   planetScale: 0.55
   resolution: 1024
   possiblePlanetTypes: 030000000600000005000000
-  specialObjects: []
+  specialObjects:
+  - type: 3
+    amount: 20
+  - type: 1
+    amount: 1
+  - type: 0
+    amount: 1
+  specialObjectsParent: {fileID: 1819307222}
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
   moonCutoffSize: 7
@@ -386,6 +395,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1819307221
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1819307222}
+  m_Layer: 0
+  m_Name: Special Objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1819307222
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819307221}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1108948784652166674
 PrefabInstance:

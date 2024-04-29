@@ -510,35 +510,35 @@ public class ShootBall : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(posLastFrame, (transform.position - posLastFrame), out hit))
             {
-                StartCoroutine(FinishedLevel(other.transform, hit.point));
+                StartCoroutine(FinishedLevel(other.transform, hit.point, hit.point - posLastFrame));
             }
             else
             {
-                StartCoroutine(FinishedLevel(other.transform, transform.position));
+                StartCoroutine(FinishedLevel(other.transform, transform.position, transform.position - posLastFrame));
             }
         }
 
     }
-    IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint)
+    IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
-        StartCoroutine(StartAnimation(hole, hitPoint));
+        StartCoroutine(StartAnimation(hole, hitPoint, velocityDir));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint){
+    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir){
         holeAnim?.Invoke();
-        Vector3 velocity = rb.velocity;
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
         GetComponent<TrailRenderer>().enabled = false;
 
+        Vector3 velocity = rb.velocity;
         float timeCounter = 0;
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         mat.SetColor("_EdgeColor", hole.gameObject.GetComponent<PortalColor>().ballColor);
-        bool clockwise = CheckSpiralDir(velocity, hitPoint, hole);
+        bool clockwise = CheckSpiralDir(velocityDir, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
@@ -567,6 +567,9 @@ public class ShootBall : MonoBehaviour
         {
             quadrant = -1;
         }
+        print(quadrant);
+
+
         float dotProduct = Mathf.Abs(Vector3.Dot(velocity.normalized, hole.up));
         bool dir = false;
         if(dotProduct > 0.5)
