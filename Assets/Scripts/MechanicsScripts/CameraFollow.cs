@@ -84,7 +84,7 @@ public class CameraFollow : MonoBehaviour
         //{
         //    targetCameraSize = defaultCameraSize;
         //}
-        if (!Input.GetMouseButton(0)){
+        if (!Input.GetMouseButton(0) && Time.timeScale != 0){
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
