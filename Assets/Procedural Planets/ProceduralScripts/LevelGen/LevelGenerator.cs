@@ -44,6 +44,7 @@ public class LevelGenerator : MonoBehaviour
 
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
+    GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
     [SerializeField]
     SpecialObject[] specialObjects;
     Vector2 regionSize;
