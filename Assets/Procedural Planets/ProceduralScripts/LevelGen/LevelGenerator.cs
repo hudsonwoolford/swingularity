@@ -336,7 +336,7 @@ public class LevelGenerator : MonoBehaviour
             }
 
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
-            yield return new WaitForSecondsRealtime(0.05f);
+            yield return new WaitForSecondsRealtime(0.1f);
             planetList[i].planet.transform.parent = allPlanetParent;
             planetList[i].forceField.transform.parent = env;
 
@@ -350,6 +350,16 @@ public class LevelGenerator : MonoBehaviour
             if (planetList[i].planetType != ColorSchemeStaticReference.PlanetType.special)
             {
                 normPlanets.Add(planetList[i]);
+            }
+        }
+        //Additional special objects
+        SpecialObject[] addObjects = CalculateAddObjects();
+        for (int i = 0; i < addObjects.Length; i++)
+        {
+            for (int u = 0; u < addObjects[i].amount; u++)
+            {
+                addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
+                yield return new WaitForSecondsRealtime(0.1f);
             }
         }
 
@@ -371,15 +381,6 @@ public class LevelGenerator : MonoBehaviour
 
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
 
-        //Additional special objects
-        SpecialObject[] addObjects = CalculateAddObjects();
-        for (int i = 0; i < addObjects.Length; i++)
-        {
-            for (int u = 0; u < addObjects[i].amount; u++)
-            {
-                addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
-            }
-        }
         Time.timeScale = 1;
     }
 
@@ -450,27 +451,49 @@ public class LevelGenerator : MonoBehaviour
     void GenerateQuasar(Planet[] planets, Vector3 seed, int index)
     {
         UnityEngine.Random.InitState((int)seed.y + index);
-        int index1 = UnityEngine.Random.Range(0, planets.Length);
+        Physics.SyncTransforms();
 
-        List<int> possibleCandidates = new List<int>();
+        //shuffle planet array
+        int planetLength = planets.Length;
+        while (planetLength > 1)
+        {
+            planetLength--;
+            int k = UnityEngine.Random.Range(0, planetLength + 1);
+            Planet pSwap = planets[k];
+            planets[k] = planets[planetLength];
+            planets[planetLength] = pSwap;
+        }
+
+        int index1 = 0;
+        int index2 = 0;
+        bool foundPlanet = false;
         for (int i = 0; i < planets.Length; i++)
         {
-            if(i == index1) { continue; }
-
-            Vector3 dirTemp = planets[i].planet.transform.position - planets[index1].planet.transform.position;
-            float distanceTemp = dirTemp.magnitude;
-            if(distanceTemp < 6) { continue; }
-            dirTemp = dirTemp.normalized;
-            Physics.SyncTransforms();
-
-            RaycastHit[] allHits = Physics.BoxCastAll(planets[index1].planet.transform.position, Vector3.one, dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp);
-            if (allHits.Length <= 2)
+            for (int u = 0; u < planets.Length; u++)
             {
-                possibleCandidates.Add(i);
+                if(u == i) { continue; }
+
+                Vector3 dirTemp = planets[u].planet.transform.position - planets[i].planet.transform.position;
+                float distanceTemp = dirTemp.magnitude;
+                if (distanceTemp < 6) { continue; }
+                dirTemp = dirTemp.normalized;
+
+                RaycastHit[] allHits = Physics.BoxCastAll(planets[i].planet.transform.position, Vector3.one, dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp);
+                if(allHits.Length <= 2)
+                {
+                    foundPlanet = true;
+                    index1 = i;
+                    index2 = u;
+                    break;
+                }
             }
+            if(foundPlanet)
+            {
+                break;
+            }
+
         }
-        if(possibleCandidates.Count == 0) { print("No Quasar Eligible Planets"); return; }
-        int index2 = possibleCandidates[UnityEngine.Random.Range(0, possibleCandidates.Count)];
+        if(!foundPlanet) { print("No Quasar Eligible Planets"); return; }
 
         Vector3 dir = planets[index2].planet.transform.position - planets[index1].planet.transform.position;
         float distance = dir.magnitude - (planets[index2].forceField.transform.localScale.x + planets[index1].forceField.transform.localScale.x);
@@ -531,17 +554,29 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
     {
+        Physics.SyncTransforms();
         if(candidates.Length == 0) { return; }
         int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
 
         int rot = UnityEngine.Random.Range(0, 360);
-        flag.eulerAngles = new Vector3(flag.eulerAngles.z, flag.eulerAngles.y, rot);
+        Vector3 predictedFlagPos = Vector3.zero;
+        for (int u = 0; u < 12; u++)
+        {
+            flag.eulerAngles = new Vector3(0, 0, rot);
+            predictedFlagPos = candidates[candidateIndex].forceField.transform.position + flag.up * (candidates[candidateIndex].forceField.transform.localScale.x + 1.2f); //maybe scale with radius
+            if (!Physics.CheckSphere(predictedFlagPos, 1.15f))
+            {
+                break;
+            }
+            rot += 360 / 24;
+        }
+
         bool planetOrRandom = true;
         if(canSpawnOffPlanet){
             planetOrRandom = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
         }
         if(planetOrRandom){
-            flag.position = candidates[candidateIndex].forceField.transform.position + flag.up * (candidates[candidateIndex].forceField.transform.localScale.x + 1f);
+            flag.position = predictedFlagPos;
         }
         else{
             bool intersecting = true;
