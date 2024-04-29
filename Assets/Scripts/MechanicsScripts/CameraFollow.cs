@@ -276,6 +276,11 @@ public class CameraFollow : MonoBehaviour
         var shape2 = nebula2.shape;
         shape2.mesh = nebulaMesh;
         shape2.meshShapeType = ParticleSystemMeshShapeType.Edge;
+        ParticleSystem.MainModule main1 = nebula1.main;
+        ParticleSystem.MainModule main2 = nebula2.main;
+        GalaxyData theme = GameManager.LevelManager.currentTheme;
+        main1.startColor = new ParticleSystem.MinMaxGradient(theme.nebulaColors[0], theme.nebulaColors[1]);
+        main2.startColor = new ParticleSystem.MinMaxGradient(theme.nebulaColors[2], theme.nebulaColors[3]);
         nebula1.Clear();
         nebula1.Play();
         nebula2.Clear();

@@ -12,6 +12,11 @@ public class PortalColor : MonoBehaviour
     [SerializeField] MeshRenderer portalRenderer;
     [SerializeField] ParticleSystem portalSystem;
     MaterialPropertyBlock portalBlock;
+
+    public void Init(){
+        portalColor = GameManager.LevelManager.currentTheme.portalColor;
+        ballColor = GameManager.LevelManager.currentTheme.ballColor;
+    }
     // Update is called once per frame
     void Update()
     {

@@ -44,6 +44,7 @@ public class LevelGenerator : MonoBehaviour
 
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
+    [SerializeField]
     GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
     [SerializeField]
     SpecialObject[] specialObjects;
@@ -336,7 +337,9 @@ public class LevelGenerator : MonoBehaviour
     /// Generates the planets off of the level parameters
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level){
-        Time.timeScale = 0;
+        Time.timeScale = 0; 
+        int galaxyIndex  = UnityEngine.Random.Range(0, possibleGalaxySchemes.Length);
+        GameManager.LevelManager.currentTheme = possibleGalaxySchemes[galaxyIndex];
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
@@ -394,7 +397,8 @@ public class LevelGenerator : MonoBehaviour
         player.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
 
         GenerateBlackHoles(player.transform.position);
-        
+
+
         //Camera start and end positions
         (Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, camSize, extensionAmount, xOry);
         Vector2 startPos = startEndPos.Item1;
@@ -647,6 +651,7 @@ public class LevelGenerator : MonoBehaviour
         Vector3 initBallPos = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
         Vector3 closestPoint = candidates[farthestIndex].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
         ball.GetComponent<Rigidbody>().position =  closestPoint + (closestPoint - candidates[farthestIndex].planet.transform.position).normalized * (0.22f);
+        flag.gameObject.GetComponent<PortalColor>().Init();
     }
     #endregion
     #region Utility
