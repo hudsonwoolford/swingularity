@@ -352,15 +352,6 @@ public class LevelGenerator : MonoBehaviour
                 normPlanets.Add(planetList[i]);
             }
         }
-        //Additional special objects
-        SpecialObject[] addObjects = CalculateAddObjects();
-        for (int i = 0; i < addObjects.Length; i++)
-        {
-            for (int u = 0; u < addObjects[i].amount; u++)
-            {
-                addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
-            }
-        }
 
         //Ball and flag positions
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -379,6 +370,16 @@ public class LevelGenerator : MonoBehaviour
         float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
 
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
+
+        //Additional special objects
+        SpecialObject[] addObjects = CalculateAddObjects();
+        for (int i = 0; i < addObjects.Length; i++)
+        {
+            for (int u = 0; u < addObjects[i].amount; u++)
+            {
+                addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
+            }
+        }
         Time.timeScale = 1;
     }
 
@@ -462,8 +463,8 @@ public class LevelGenerator : MonoBehaviour
             dirTemp = dirTemp.normalized;
             Physics.SyncTransforms();
 
-            RaycastHit[] allHits = Physics.RaycastAll(planets[index1].planet.transform.position, dirTemp, distanceTemp);
-            if (allHits.Length <= 1)
+            RaycastHit[] allHits = Physics.BoxCastAll(planets[index1].planet.transform.position, Vector3.one, dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp);
+            if (allHits.Length <= 2)
             {
                 possibleCandidates.Add(i);
             }
