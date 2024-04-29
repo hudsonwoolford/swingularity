@@ -49,12 +49,9 @@ public class QuasarGenerator : MonoBehaviour
     //Property Blocks
     MaterialPropertyBlock sphereBlock;
     MaterialPropertyBlock distortBlock;
-    MaterialPropertyBlock upperBlock;
-    MaterialPropertyBlock upperElectroBlock;
-    MaterialPropertyBlock upperDarkBlock;
-    MaterialPropertyBlock lowerBlock;
-    MaterialPropertyBlock lowerElectroBlock;
-    MaterialPropertyBlock lowerDarkBlock;
+    MaterialPropertyBlock beamBlock;
+    MaterialPropertyBlock electroBlock;
+    MaterialPropertyBlock darkBlock;
     //Miscellaneous
     Transform distortionQuad;
     Material distortMat;
@@ -149,7 +146,7 @@ public class QuasarGenerator : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, angle);
         lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - (0.4f), 0), lowerBeamParent.localScale.z);
         upperBeamParent.localScale = new Vector3(upperBeamParent.localScale.x, radius, upperBeamParent.localScale.z);
-        bCollider.size = new Vector3(1, radius * 8.25f, 1);
+        bCollider.size = new Vector3(1, Mathf.Max(radius * 8.25f, 0.1f), 1);
         bCollider.enabled = radius == 0 ? false : true;
         bool shrinking = maxRadius <= radius ? false : true;
         upperEnd.gameObject.SetActive(!shrinking);
@@ -170,27 +167,19 @@ public class QuasarGenerator : MonoBehaviour
         ParticleSystem.RotationOverLifetimeModule rotModule = swirlSystem.rotationOverLifetime;
         rotModule.z = new ParticleSystem.MinMaxCurve(systemRotSpeed);
 
-        //Upper beam
-        upperBlock.SetColor("_Color", schemePool[schemeIndex].beamColor);
-        upperRenderer.SetPropertyBlock(upperBlock);
+        //beam
+        beamBlock.SetColor("_Color", schemePool[schemeIndex].beamColor);
+        upperRenderer.SetPropertyBlock(beamBlock);
+        lowerRenderer.SetPropertyBlock(beamBlock);
 
-        upperElectroBlock.SetColor("_Color", schemePool[schemeIndex].electroColor);
-        //upperElectroBlock.SetVector("_MainTex_ST", new Vector4(upperRenderer.transform.lossyScale.y / 1.6f, 1, 0, 0));
-        upperElectroRenderer.SetPropertyBlock(upperElectroBlock);
+        electroBlock.SetColor("_Color", schemePool[schemeIndex].electroColor);
+        //electroBlock.SetVector("_MainTex_ST", new Vector4(upperRenderer.transform.lossyScale.y / 1.6f, 1, 0, 0));
+        upperElectroRenderer.SetPropertyBlock(electroBlock);
+        lowerElectroRenderer.SetPropertyBlock(electroBlock);
 
-        upperDarkBlock.SetColor("_Color", schemePool[schemeIndex].darkColor);
-        upperDarkRenderer.SetPropertyBlock(upperDarkBlock);
-
-        //Lower beam
-        lowerBlock.SetColor("_Color", schemePool[schemeIndex].beamColor);
-        lowerRenderer.SetPropertyBlock(lowerBlock);
-
-        lowerElectroBlock.SetColor("_Color", schemePool[schemeIndex].electroColor);
-        //lowerElectroBlock.SetVector("_MainTex_ST", new Vector4(lowerRenderer.transform.lossyScale.y / 1.6f, 1, 0, 0));
-        lowerElectroRenderer.SetPropertyBlock(lowerElectroBlock);
-
-        lowerDarkBlock.SetColor("_Color", schemePool[schemeIndex].darkColor);
-        lowerDarkRenderer.SetPropertyBlock(lowerDarkBlock);
+        darkBlock.SetColor("_Color", schemePool[schemeIndex].darkColor);
+        upperDarkRenderer.SetPropertyBlock(darkBlock);
+        lowerDarkRenderer.SetPropertyBlock(darkBlock);
 
         //Particle system colors
         ParticleSystem.MainModule module;
@@ -207,13 +196,10 @@ public class QuasarGenerator : MonoBehaviour
         module = lowerEnd.main;
         module.startColor = schemePool[schemeIndex].sparkColor;
         
-        //Upper beam color
+        //beam colors
         module = upperSparks.main;
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[schemeIndex].sparkColor, 0.0f), new GradientColorKey(schemePool[schemeIndex].sparkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
         module.startColor = grad;
-
-
-        //Lower beam color
         module = lowerSparks.main;
         module.startColor = grad; //same color as upper beam
 
@@ -248,7 +234,7 @@ public class QuasarGenerator : MonoBehaviour
         float progress = 0;
         float target = enable ? maxRadius : 0;
         float start = radius;
-        while(radius != target)
+        while(progress < 1)
         {
             progress = Mathf.MoveTowards(progress, 1, enableSpeed * Time.deltaTime);
             radius = Mathf.Lerp(start, target, enableCurve.Evaluate(progress));
@@ -264,12 +250,9 @@ public class QuasarGenerator : MonoBehaviour
         //Property block null checks
         if (sphereBlock == null) { sphereBlock = new MaterialPropertyBlock(); }
         if (distortBlock == null) { distortBlock = new MaterialPropertyBlock(); }
-        if (lowerBlock == null) { lowerBlock = new MaterialPropertyBlock(); }
-        if (lowerDarkBlock == null) { lowerDarkBlock = new MaterialPropertyBlock(); }
-        if (lowerElectroBlock == null) { lowerElectroBlock = new MaterialPropertyBlock(); }
-        if (upperBlock == null) { upperBlock = new MaterialPropertyBlock(); }
-        if (upperDarkBlock == null) { upperDarkBlock = new MaterialPropertyBlock(); }
-        if (upperElectroBlock == null) { upperElectroBlock = new MaterialPropertyBlock(); }
+        if (beamBlock == null) { beamBlock = new MaterialPropertyBlock(); }
+        if (darkBlock == null) { darkBlock = new MaterialPropertyBlock(); }
+        if (electroBlock == null) { electroBlock = new MaterialPropertyBlock(); }
     }
     private void OnTriggerEnter(Collider collision)
     {

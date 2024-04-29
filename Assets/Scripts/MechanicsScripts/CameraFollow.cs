@@ -81,10 +81,10 @@ public class CameraFollow : MonoBehaviour
         {
             StartCoroutine(Panning());
         }
-        if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
-        {
-            targetCameraSize = defaultCameraSize;
-        }
+        //if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
+        //{
+        //    targetCameraSize = defaultCameraSize;
+        //}
         if (!Input.GetMouseButton(0)){
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
@@ -107,7 +107,7 @@ public class CameraFollow : MonoBehaviour
         {
             targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
         }
-        bool focusingBall = focusBall == true ? Input.GetMouseButton(0) : false;       
+        bool focusingBall = false;       
         if (cameraSize > defaultCameraSize && !focusingBall){
             float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
             Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
@@ -292,14 +292,22 @@ public class CameraFollow : MonoBehaviour
         targetCameraSize = Mathf.Clamp(targetCameraSize - 5, cameraMinMax.x, cameraMinMax.y);
         finalZoom = true;
     }
+    void FocusBall()
+    {
+        if(!focusBall) { return; } 
+        targetCameraSize = defaultCameraSize;
+    }
+
     private void OnEnable()
     {
+        ShootBall.onShoot += FocusBall;
         ShootBall.triggerReset += OnReset;
         ShootBall.onHole += OnReset;
         ShootBall.holeAnim += ZoomIn;
     }
     private void OnDisable()
     {
+        ShootBall.onShoot -= FocusBall;
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;
         ShootBall.holeAnim += ZoomIn;
