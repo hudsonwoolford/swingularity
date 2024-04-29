@@ -73,9 +73,9 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
-        float height = defaultCameraSize * 2; //camera height in units
+        float height = Camera.main.orthographicSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
-        panningPath.points = PolygonPositions(startPos, endPos, (defaultCameraSize/cameraSize), 10-width, 10-height);
+        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, 2f * sizeScalar, 10 - width/2, 10 - height/2);
 
         if (Input.GetMouseButtonDown(2))
         {
@@ -149,6 +149,7 @@ public class CameraFollow : MonoBehaviour
         }
         panning = false;
     }
+    #region Polygon Stuff
     //Returns array of positions that makes up a polygon for the boundaries
     Vector2[] PolygonPositions(Vector2 start, Vector2 end, float scale, float featherX, float featherY)
     {
@@ -166,7 +167,53 @@ public class CameraFollow : MonoBehaviour
 
         Vector2[] startCorners = { start + new Vector2(camSize.x / 2, camSize.y / 2), start + new Vector2(camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, camSize.y / 2) }; //start pos camera square vertices
         Vector2[] endCorners   = { end + new Vector2(camSize.x / 2, camSize.y / 2), end + new Vector2(camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, camSize.y / 2) }; //end pos camera square vertices
+        
+        Vector2[] finalPoints = new Vector2[6]; //returning 6 pointed polygon
 
+        int i = 0; //i is chosen depending on the direction of the end square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.
+        if (dir.x > 0 && dir.y > 0) { i=1; }
+        if (dir.x > 0 && dir.y < 0) { i=2; }
+        if (dir.x < 0 && dir.y < 0) { i=3; }
+        if (dir.x < 0 && dir.y > 0) { i=0; }
+        for (int u = 0; u < 3; u++)
+        {
+            finalPoints[u] = startCorners[i];
+            i++;
+            if (i > 3) { i = 0; }
+        }
+
+        i = 0;//i is chosen depending on the direction of the start square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.                                   
+        dir = (start - end).normalized;
+        if (dir.x > 0 && dir.y > 0) { i = 1; }
+        if (dir.x > 0 && dir.y < 0) { i = 2; }
+        if (dir.x < 0 && dir.y < 0) { i = 3; }
+        if (dir.x < 0 && dir.y > 0) { i = 0; }
+        for (int u = 3; u < 6; u++)
+        {
+            finalPoints[u] = endCorners[i];
+            i++;
+            if (i > 3) { i = 0; }
+        }
+
+        return finalPoints; //final points
+    }
+        Vector2[] InnerPolygonPositions(Vector2 start, Vector2 end, float camSizeVar, float scale, float featherX, float featherY)
+    {
+        if(start.x == end.x || start.y == end.y)
+        {
+            end += Vector2.one * 0.001f;
+        }
+        float height = camSizeVar * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        height += featherY;
+        width += featherX;
+        Vector3 camSize = new Vector3(width, height);
+        camSize *= scale; //scaling
+        Vector2 dir = (end - start).normalized; //direction from start to end
+
+        Vector2[] startCorners = { start + new Vector2(camSize.x / 2, camSize.y / 2), start + new Vector2(camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, camSize.y / 2) }; //start pos camera square vertices
+        Vector2[] endCorners   = { end + new Vector2(camSize.x / 2, camSize.y / 2), end + new Vector2(camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, camSize.y / 2) }; //end pos camera square vertices
+        
         Vector2[] finalPoints = new Vector2[6]; //returning 6 pointed polygon
 
         int i = 0; //i is chosen depending on the direction of the end square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.
@@ -235,6 +282,7 @@ public class CameraFollow : MonoBehaviour
         nebula2.Play();
         nebulaParent.position = Vector3.zero;
     }   
+    #endregion
     void OnReset()
     {
         panning = false;
