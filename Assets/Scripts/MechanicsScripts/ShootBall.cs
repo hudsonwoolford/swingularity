@@ -200,7 +200,7 @@ public class ShootBall : MonoBehaviour
             }
             force = dist * dir.normalized;
 
-            if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f)
+            if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f && simulationScene != null)
             {
                 PerformSimulation(rb.position, force, rb.velocity);
                 //SimulateScene(dir.normalized * dist);   

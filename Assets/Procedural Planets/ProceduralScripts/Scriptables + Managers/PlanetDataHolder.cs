@@ -3,6 +3,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class PlanetDataHolder : MonoBehaviour
 {
+    public ForceField forceField;
     public PlanetColorScheme biomeA, biomeB;
     [ColorUsage(true, true)]
     public Color forceFieldColor;
