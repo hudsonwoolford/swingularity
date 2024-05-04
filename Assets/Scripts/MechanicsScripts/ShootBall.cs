@@ -247,7 +247,8 @@ public class ShootBall : MonoBehaviour
     {
         GetComponent<MeshRenderer>().enabled = true;
 
-        transform.position = origin; //back to start
+        rb.position = origin;
+        transform.position = origin;
         tr?.Clear();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.velocity = Vector3.zero;
@@ -537,7 +538,10 @@ public class ShootBall : MonoBehaviour
         Material mat = GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
-        mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
+        if(GameManager.LevelManager.currentTheme != null)
+        {
+            mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
+        }
         bool clockwise = CheckSpiralDir(velocityDir, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
