@@ -26,8 +26,6 @@ public class SunGenerator : MonoBehaviour
     ParticleSystem system;
     void Awake(){
         starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
-
-        GetComponent<Light>().color = schemePool[starSchemeIndex].sunColor;
     }
     // Start is called before the first frame update
     void Start()
@@ -116,6 +114,9 @@ public class SunGenerator : MonoBehaviour
 
 
         starSchemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
+        GetComponent<Light>().color = schemePool[starSchemeIndex].sunColor;
+        GetComponent<Light>().intensity = transform.localScale.x * 0.5f;
+
         bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
 
         //Reset atmosphere particles
