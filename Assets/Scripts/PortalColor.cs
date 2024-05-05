@@ -6,6 +6,8 @@ public class PortalColor : MonoBehaviour
 {
     [ColorUsage(true, true)]
     [SerializeField] Color portalColor = new Color(0.3f, 1, 1, 1);
+    [ColorUsage(true, true)]
+    [SerializeField] Color portalParticleColor = new Color(0.3f, 1, 1, 1);
     [SerializeField] MeshRenderer portalRenderer;
     [SerializeField] ParticleSystem portalSystem;
     MaterialPropertyBlock portalBlock;
@@ -26,7 +28,7 @@ public class PortalColor : MonoBehaviour
         portalRenderer.SetPropertyBlock(portalBlock);
 
         if(portalSystem == null) { return; }
-        ParticleSystem.MinMaxGradient grad = new ParticleSystem.MinMaxGradient(portalColor, portalColor*1.1f);
+        ParticleSystem.MinMaxGradient grad = new ParticleSystem.MinMaxGradient(portalParticleColor, portalParticleColor*1.1f);
         if(grad.gradient != portalSystem.main.startColor.gradient)
         {
             ParticleSystem.MainModule main = portalSystem.main;
@@ -38,6 +40,7 @@ public class PortalColor : MonoBehaviour
     void ProceduralInit(GalaxyData theme)
     {
         portalColor = theme.portalColor;
+        portalParticleColor = theme.portalParticleColor;
     }
     private void OnEnable()
     {

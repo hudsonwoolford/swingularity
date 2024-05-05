@@ -8,6 +8,7 @@ Shader "Custom/Portal"
 		_Strength ("Strength", float) = 1
 		_Power ("Power", float) = 1
 		_Speed ("Speed", float) = 1
+		_AngleOffset ("Angle Offset", float) = 1
 		_Centre ("Centre", vector) = (0, 0, 0)
     }
     SubShader
@@ -35,6 +36,7 @@ Shader "Custom/Portal"
         float _Power;
         float _Speed;
         float _Scale;
+        float _AngleOffset;
         sampler2D _MaskTex;
         float4 _MaskTex_ST;
 
@@ -43,7 +45,7 @@ Shader "Custom/Portal"
             float timeVal = _Time.y * _Speed;
             float2 voronoiUV = Twirl(IN.uv_MainTex, _Centre.xy, _Strength, float2(timeVal, timeVal));
             float voronoi;
-            Unity_Voronoi_float(voronoiUV, 0, _Scale, voronoi);
+            Unity_Voronoi_float(voronoiUV, _AngleOffset, _Scale, voronoi);
             float poweredVoronoi = pow(voronoi, _Power);
             
             o.Albedo = poweredVoronoi * tex2D(_MaskTex, IN.uv_MainTex) * _Color;

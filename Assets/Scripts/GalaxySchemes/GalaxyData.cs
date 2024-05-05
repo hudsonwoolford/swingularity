@@ -7,6 +7,7 @@ public class GalaxyData : ScriptableObject
 {
     [ColorUsage(true, true)]
     [SerializeField] public Color portalColor = new Color(0.3f, 1, 1, 1);
+    [SerializeField] public Color portalParticleColor = new Color(0.3f, 1, 1, 1);
     [ColorUsage(true, true)]
     [SerializeField] public Color ballColor = new Color(0.3f, 1, 1, 1);
     [SerializeField] public Color[] nebulaColors = new Color[4]{
