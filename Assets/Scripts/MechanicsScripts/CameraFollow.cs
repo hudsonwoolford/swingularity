@@ -128,15 +128,15 @@ public class CameraFollow : MonoBehaviour
             bool outX = !panningPath.OverlapPoint(nextPosX);
             bool outY = !panningPath.OverlapPoint(nextPosY);
             Vector3 closestPoint = panningPath.ClosestPoint(new Vector3(transform.position.x, transform.position.y, 0));
-            Vector3 finalPos = new Vector3(0, 0, -10);
+            Vector3 finalPos = new Vector3(transform.position.x, transform.position.y, -10);
             if(outX)
             {
-                finalPos = new Vector3(closestPoint.x, transform.position.y, -10);
+                finalPos.x = closestPoint.x;
                 startMousePos = mousPos;
             }
             if(outY)
             {
-                finalPos = new Vector3(transform.position.x,  closestPoint.y, -10);
+                finalPos.y = closestPoint.y;
                 startMousePos = mousPos;
             }
             if (!outX && !outY)
