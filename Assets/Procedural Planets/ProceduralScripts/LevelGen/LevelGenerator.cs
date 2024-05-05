@@ -777,10 +777,12 @@ public class LevelGenerator : MonoBehaviour
             float depth = i == 2 ? 0 : 2;
             instaAtmosphere.transform.localScale = Vector3.one;
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);
+            instaAtmosphere.layer = LayerMask.NameToLayer("Default");
         }
 
         oceanRend.sharedMaterial = oceanMat;
         oceanRend.gameObject.SetActive(true);
+        oceanRend.gameObject.layer = LayerMask.NameToLayer("Default");
 
         Destroy(cam.gameObject);
         planetParent.SetActive(false);
