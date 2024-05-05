@@ -782,7 +782,7 @@ public class LevelGenerator : MonoBehaviour
 
         oceanRend.sharedMaterial = oceanMat;
         oceanRend.gameObject.SetActive(true);
-        oceanRend.gameObject.layer = LayerMask.NameToLayer("Default");
+        ocean.gameObject.layer = LayerMask.NameToLayer("Default");
 
         Destroy(cam.gameObject);
         planetParent.SetActive(false);
