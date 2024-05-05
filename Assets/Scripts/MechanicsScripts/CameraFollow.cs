@@ -120,30 +120,42 @@ public class CameraFollow : MonoBehaviour
         Vector2 startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         while (Input.GetMouseButton(2) && panning)
         {
-            Vector2 mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 difference = mousPos - startMousePos;
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 difference = mousePos - startMousePos;
 
-            Vector2 nextPosX = transform.position + -new Vector3(difference.x, 0);
-            Vector2 nextPosY = transform.position + -new Vector3(0, difference.y);
-            bool outX = !panningPath.OverlapPoint(nextPosX);
-            bool outY = !panningPath.OverlapPoint(nextPosY);
-            Vector3 closestPoint = panningPath.ClosestPoint(new Vector3(transform.position.x, transform.position.y, 0));
-            Vector3 finalPos = new Vector3(transform.position.x, transform.position.y, -10);
-            if(outX)
+            Vector2 nextPos = new Vector2(transform.position.x - difference.x, transform.position.y - difference.y);
+
+
+            float buffer = 0.1f;
+            Vector2 bufferedNextPos = Vector2.zero;
+            if (nextPos.x < panningPath.bounds.min.x + buffer)
             {
-                finalPos.x = closestPoint.x;
-                startMousePos = mousPos;
+                bufferedNextPos.x = panningPath.bounds.min.x + buffer;
             }
-            if(outY)
+            else if (nextPos.x > panningPath.bounds.max.x - buffer)
             {
-                finalPos.y = closestPoint.y;
-                startMousePos = mousPos;
+                bufferedNextPos.x = panningPath.bounds.max.x - buffer;
             }
-            if (!outX && !outY)
+            else
             {
-                finalPos = new Vector3(nextPosX.x, nextPosY.y, -10);
+                bufferedNextPos.x = nextPos.x;
             }
-            transform.position = finalPos;
+
+            if (nextPos.y < panningPath.bounds.min.y + buffer)
+            {
+                bufferedNextPos.y = panningPath.bounds.min.y + buffer;
+            }
+            else if (nextPos.y > panningPath.bounds.max.y - buffer)
+            {
+                bufferedNextPos.y = panningPath.bounds.max.y - buffer;
+            }
+            else
+            {
+                bufferedNextPos.y = nextPos.y;
+            }
+
+            transform.position = new Vector3(bufferedNextPos.x, bufferedNextPos.y, transform.position.z);
+            startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             yield return null;
         }
         panning = false;

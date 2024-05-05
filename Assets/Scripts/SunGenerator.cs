@@ -24,6 +24,11 @@ public class SunGenerator : MonoBehaviour
     AudioSource source;
     MeshRenderer meshRenderer, heatMeshRenderer;
     ParticleSystem system;
+    void Awake(){
+        starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
+
+        GetComponent<Light>().color = schemePool[starSchemeIndex].sunColor;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +39,6 @@ public class SunGenerator : MonoBehaviour
     void Update()
     {
         if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
-
 
         //Null checks because this script works in edit mode
         NullChecks();

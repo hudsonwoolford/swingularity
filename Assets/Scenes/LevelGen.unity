@@ -356,7 +356,7 @@ MonoBehaviour:
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
     type: 3}
-  starPrefab: {fileID: 7963969169248124363, guid: 38306ce029458b14db691a438e48e37a,
+  starPrefab: {fileID: 5706988348064744954, guid: 3742d9f3e0baa7941871dd063e9973cb,
     type: 3}
   blackHolePrefab: {fileID: 282796961084695870, guid: f28d77dc6fbaa94458bf8c19cea3dfbc,
     type: 3}
@@ -375,8 +375,8 @@ MonoBehaviour:
   specialObjects:
   - type: 4
     amount: 1
-  - type: 2
-    amount: 1
+  - type: 0
+    amount: 3
   specialObjectsParent: {fileID: 1819307222}
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
@@ -813,6 +813,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
+    - target: {fileID: 5017218576461982148, guid: 6b22623ac2a29f848a8c3902dfd352e5,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2858155536907836559, guid: 0ace8e274d63c1547bc989c1810026b2,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -903,6 +909,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level Lighting
+      objectReference: {fileID: 0}
+    - target: {fileID: 5520863525393845915, guid: cbbff23d151b5954d8d7caadbf64bd27,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6109706942738609134, guid: cbbff23d151b5954d8d7caadbf64bd27,
         type: 3}

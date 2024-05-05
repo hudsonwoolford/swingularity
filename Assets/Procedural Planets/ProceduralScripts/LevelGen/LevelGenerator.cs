@@ -361,12 +361,12 @@ public class LevelGenerator : MonoBehaviour
                 replacers[Array.IndexOf(replaceIndices, i)].Item2.replaceGeneration(ref planetList[i], level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], generator, i);
                 continue;
             }
-
+        }
+        for (int i = 0; i < level.numPlanets; i++){
+            if(replaceIndices.Contains(i)){continue;}
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
             
             yield return new WaitForSecondsRealtime(0.1f);
-
-            //print(forcefield.transform.localScale.x);
         }
         Destroy(generator.gameObject);
 
@@ -427,7 +427,7 @@ public class LevelGenerator : MonoBehaviour
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
-        GameObject newPlanet = ConvertToImage(generator.gameObject);
+        GameObject newPlanet = ConvertToImage(generator.gameObject, position, size);
         frontTexture.Release(); //Memory
         backTexture.Release();  //Memory
         newPlanet.SetActive(true);
@@ -688,17 +688,20 @@ public class LevelGenerator : MonoBehaviour
     /// <summary>
     /// Takes an image of the camera render texture and creates a planet object with sprites
     /// </summary>
-    GameObject ConvertToImage(GameObject selectedObj)
+    GameObject ConvertToImage(GameObject selectedObj, Vector3 position, float size)
     {
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
         bool activeOcean = oceanRend.gameObject.activeInHierarchy;
+        
+        selectedObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
 
         Material oceanMat = oceanRend.material;
         Material cullMat = invisOcean;
         oceanRend.sharedMaterial = cullMat;
 
         Camera cam = new GameObject().AddComponent<Camera>();
-        cam.transform.position = new Vector3(0,0,-10);
+        cam.transform.parent = selectedObj.transform;
+        cam.transform.localPosition = new Vector3(0,0,-10);
         cam.orthographic = true;
         cam.orthographicSize = 1.5f;
         cam.clearFlags = CameraClearFlags.SolidColor;
