@@ -29,7 +29,6 @@ float Voronoi(float2 UV, float AngleOffset, float CellDensity)
 	return 0;
 }
 
-
 float2 Twirl(float2 UV, float2 Center, float Strength, float2 Offset)
 {
 	float2 delta = UV - Center;

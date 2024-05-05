@@ -144,7 +144,7 @@ public class QuasarGenerator : MonoBehaviour
 
         //Transformations
         transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, angle);
-        lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - (0.4f), 0), lowerBeamParent.localScale.z);
+        lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - 0.255f, 0), lowerBeamParent.localScale.z);
         upperBeamParent.localScale = new Vector3(upperBeamParent.localScale.x, radius, upperBeamParent.localScale.z);
         bCollider.size = new Vector3(1, Mathf.Max(radius * 8.25f, 0.1f), 1);
         bCollider.enabled = radius == 0 ? false : true;
