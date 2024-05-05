@@ -69,10 +69,11 @@ Shader "Unlit/DarkMatterOrb"
                 // sample the texture
                 float2 scrolledUV = i.uv + _ScrollSpeed * (_Time.y + 200);
 
-                fixed4 col = pow(tex2D(_MainTex, scrolledUV), _VoronoiPower);
                 float randomNoise = UnitySimpleNoise(i.uv, 1);
-                col.a = col.r;
-                clip(col.a - _AlphaClip);
+                float voronoi;
+                Unity_Voronoi_float(scrolledUV, _AngleOffset, _CellDensity, voronoi);
+                voronoi = pow(voronoi, _VoronoiPower) * randomNoise;
+                clip(voronoi - _AlphaClip);
 
 
                 //Coloring back and front
@@ -89,10 +90,10 @@ Shader "Unlit/DarkMatterOrb"
                 }
                 else
                 {
-                    clip(col.a - 1);
+                    clip(voronoi - 1);
                 }
 
-                return col * finalCol;
+                return voronoi * finalCol;
             }
             ENDCG
         }

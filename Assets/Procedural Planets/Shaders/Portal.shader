@@ -42,7 +42,8 @@ Shader "Custom/Portal"
         {   
             float timeVal = _Time.y * _Speed;
             float2 voronoiUV = Twirl(IN.uv_MainTex, _Centre.xy, _Strength, float2(timeVal, timeVal));
-            float voronoi = Voronoi(voronoiUV, 0, _Scale);
+            float voronoi;
+            Unity_Voronoi_float(voronoiUV, 0, _Scale, voronoi);
             float poweredVoronoi = pow(voronoi, _Power);
             
             o.Albedo = poweredVoronoi * tex2D(_MaskTex, IN.uv_MainTex) * _Color;

@@ -5,7 +5,7 @@ inline float2 unity_voronoi_noise_randomVector (float2 UV, float offset)
     return float2(sin(UV.y*+offset)*0.5+0.5, cos(UV.x*offset)*0.5+0.5);
 }
 
-float Voronoi(float2 UV, float AngleOffset, float CellDensity)
+void Unity_Voronoi_float(float2 UV, float AngleOffset, float CellDensity, out float Out)
 {
     float2 g = floor(UV * CellDensity);
     float2 f = frac(UV * CellDensity);
@@ -22,13 +22,11 @@ float Voronoi(float2 UV, float AngleOffset, float CellDensity)
             if(d < res.x)
             {
                 res = float3(d, offset.x, offset.y);
-                return res.x;
-			}
+                Out = res.x;
+            }
         }
     }
-	return 0;
 }
-
 float2 Twirl(float2 UV, float2 Center, float Strength, float2 Offset)
 {
 	float2 delta = UV - Center;
