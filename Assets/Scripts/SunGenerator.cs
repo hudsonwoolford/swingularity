@@ -16,13 +16,15 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] StarColorScheme[] schemePool;
     [SerializeField] int starSchemeIndex;
     [SerializeField] float bigNoiseOffset;
+    [SerializeField] float lightRangeMult = 1;
     [SerializeField] GameObject collisionParticles;
     [SerializeField] AudioClip collisionClip;
     [SerializeField] bool autoMass = true;
+    Light lightSource;
     SphereCollider col;
     CelestialMass cMass;
     AudioSource source;
-    MeshRenderer meshRenderer, heatMeshRenderer;
+    MeshRenderer meshRenderer;
     ParticleSystem system;
     void Awake(){
         starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
@@ -34,7 +36,7 @@ public class SunGenerator : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
 
@@ -43,6 +45,9 @@ public class SunGenerator : MonoBehaviour
 
         //No index out of range errors
         starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
+        
+        //Lights
+        lightSource.range = transform.localScale.x * lightRangeMult;
 
         //Material property block for the sun sphere
         MaterialPropertyBlock sunBlock = new MaterialPropertyBlock();
@@ -51,11 +56,6 @@ public class SunGenerator : MonoBehaviour
         sunBlock.SetFloat("_BigNoise", bigNoiseOffset);
         sunBlock.SetVector("_HeatOffset", new Vector3(bigNoiseOffset, bigNoiseOffset, bigNoiseOffset));
         meshRenderer.SetPropertyBlock(sunBlock);
-
-        //Material property block for heat distortion
-        MaterialPropertyBlock heatBlock = new MaterialPropertyBlock();
-        heatBlock.SetFloat("_Scale", transform.localScale.x * 0.45f);
-        heatMeshRenderer.SetPropertyBlock(heatBlock);
 
         //Setting atmosphere particle colours
         Gradient grad = new Gradient();
@@ -114,8 +114,8 @@ public class SunGenerator : MonoBehaviour
 
 
         starSchemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
-        GetComponent<Light>().color = schemePool[starSchemeIndex].sunColor;
-        GetComponent<Light>().intensity = transform.localScale.x * 0.5f;
+        lightSource.color = schemePool[starSchemeIndex].sunColor;
+        lightSource.intensity = 3;
 
         bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
 
@@ -129,11 +129,11 @@ public class SunGenerator : MonoBehaviour
     void NullChecks()
     {
         if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
-        if (heatMeshRenderer == null) { heatMeshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>(); }
         if (system == null) { system = GetComponentInChildren<ParticleSystem>(); }
         if (source == null) { source = GetComponent<AudioSource>(); }
         if (col == null) { col = GetComponent<SphereCollider>(); }
         if (cMass == null) { cMass = GetComponent<CelestialMass>(); }
+        if (lightSource == null) { lightSource = GetComponent<Light>(); }
     }
     /// <summary>
     /// Sets the particle colours based off of Sun Colours
