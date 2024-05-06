@@ -596,7 +596,7 @@ public class LevelGenerator : MonoBehaviour
         Destroy(generator);
 
         genObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
-        genObj.transform.localScale = Vector3.one * size * planetScale;
+        genObj.transform.localScale = Vector3.one * size * planetScale * 0.6f;
         GameObject forceField = GenerateForcefield(genObj.transform);
         return new Planet(genObj, planetType, biomes.Item1, biomes.Item2, forceField);
     }
