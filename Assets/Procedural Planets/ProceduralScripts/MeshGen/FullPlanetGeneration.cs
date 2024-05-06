@@ -304,7 +304,7 @@ public class FullPlanetGeneration : MonoBehaviour
         {
             int objIndex = Random.Range(0, biome.treeVariables._TreeObjects.Length); //random prefab from tree
             TreeObject selectedTreeObj = biome.treeVariables._TreeObjects[objIndex];
-            GameObject tree = Instantiate(selectedTreeObj.treePrefab);
+            GameObject tree = Instantiate(selectedTreeObj.treePrefab, treeParent);
 
             Random.InitState(biome.treeVariables._NumTrees + trees.Count); //setting random seed
 
@@ -315,7 +315,6 @@ public class FullPlanetGeneration : MonoBehaviour
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
             tree.transform.GetChild(0).Rotate(0,0,Random.Range(0, 359)); //tree normal = vertex normal
             ; //tree normal = vertex normal
-            tree.transform.parent = treeParent; //parent tree to gameObject
 
             MeshRenderer treeMeshRenderer = tree.GetComponentInChildren<MeshRenderer>(); // Renderer on tree object
             Material[] rendererMaterials = treeMeshRenderer.sharedMaterials; // All materials on tree array
