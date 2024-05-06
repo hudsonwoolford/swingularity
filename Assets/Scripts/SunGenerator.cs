@@ -115,7 +115,7 @@ public class SunGenerator : MonoBehaviour
 
         starSchemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
         lightSource.color = schemePool[starSchemeIndex].sunColor;
-        lightSource.intensity = 3;
+        lightSource.intensity = 3f;
 
         bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
 
