@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
 using UnityEngine.EventSystems;
+using TreeEditor;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -568,7 +569,7 @@ public class LevelGenerator : MonoBehaviour
         bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         //Generate orbiter planet
-        Planet smallMoon = GeneratePlanet(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
+        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
@@ -585,6 +586,19 @@ public class LevelGenerator : MonoBehaviour
         bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet = bigPlanet;
 
+    }
+    Planet CreateMoonMesh(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType){
+        generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1);
+        generator.ClearAllTrees();
+        generator.UpdateAndApplyAll();
+        GameObject genObj = generator.gameObject;
+        Destroy(generator);
+
+        genObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
+        genObj.transform.localScale = Vector3.one * size * planetScale;
+        GameObject forceField = GenerateForcefield(genObj.transform);
+        return new Planet(genObj, planetType, biomes.Item1, biomes.Item2, forceField);
     }
     #endregion
     /// <summary>
