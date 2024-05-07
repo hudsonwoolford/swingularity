@@ -51,6 +51,8 @@ public class MoonManager : MonoBehaviour
         rb.AddForce(Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity, ForceMode.VelocityChange);
 
         DrawOrbit();
+    }
+    void LevelGenerated(){
         moonEnabled = true;
     }
     void CalculateVariables()
@@ -144,5 +146,11 @@ public class MoonManager : MonoBehaviour
             Vector3 dir = RotateAround(rotation, new Vector3(centre.x + semiMajorAxis * Mathf.Cos(mockProgress), centre.y + semiMinorAxis * Mathf.Sin(mockProgress)), orbitPlanet.transform.position);
             lr.SetPosition(i, dir);
         }
+    }
+    void OnEnable(){
+        LevelGenerator.levelGenerated += LevelGenerated;
+    }
+    void OnDisable(){
+        LevelGenerator.levelGenerated -= LevelGenerated;
     }
 }
