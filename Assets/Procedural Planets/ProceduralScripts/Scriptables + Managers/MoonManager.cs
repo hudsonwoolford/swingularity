@@ -43,6 +43,7 @@ public class MoonManager : MonoBehaviour
         }
         rb.drag = 0;
         rb.angularDrag = 0;
+        rb.velocity = Vector3.zero;
         rb.useGravity = false;
 
         CalculateVariables();
@@ -50,17 +51,19 @@ public class MoonManager : MonoBehaviour
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
         startingVelocity = Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity;
-
+        
         DrawOrbit();
-    }
-    void LevelGenerated(){
-        StartingForce();
     }
     void StartingForce()
     {
+        StartCoroutine(StartingDelay());
+    }
+    IEnumerator StartingDelay()
+    {
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
-        rb.AddForce(startingVelocity, ForceMode.VelocityChange);
-        rb.angularVelocity = new Vector3 (0f, 2.5f, 0f);
+        rb.velocity = startingVelocity;
+        rb.angularVelocity = new Vector3(0f, 2f, 1f);
+        yield return new WaitForFixedUpdate();
         moonEnabled = true;
     }
     void CalculateVariables()
@@ -107,7 +110,6 @@ public class MoonManager : MonoBehaviour
     void FixedUpdate()
     {
         if (orbitPlanet == null || associatedPlanet == null) { return; }
-        if (!moonEnabled){ Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); StartingForce(); }
 
         MoveMoon();
     }
@@ -117,7 +119,7 @@ public class MoonManager : MonoBehaviour
         DrawOrbit();
     }
     private void MoveMoon(){
-        rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass);
+        rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass, ForceMode.Force);
 
 
         float currentDistance = semiMajorAxis * (1 - eccentricity * eccentricity) / (1 + eccentricity * -Mathf.Cos(currentAnomaly));
@@ -156,9 +158,9 @@ public class MoonManager : MonoBehaviour
         }
     }
     void OnEnable(){
-        LevelGenerator.levelGenerated += LevelGenerated;
+        LevelGenerator.levelGenerated += StartingForce;
     }
     void OnDisable(){
-        LevelGenerator.levelGenerated -= LevelGenerated;
+        LevelGenerator.levelGenerated -= StartingForce;
     }
 }
