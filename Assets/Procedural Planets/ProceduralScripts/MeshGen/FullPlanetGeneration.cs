@@ -320,6 +320,7 @@ public class FullPlanetGeneration : MonoBehaviour
             Material[] rendererMaterials = treeMeshRenderer.sharedMaterials; // All materials on tree array
 
             TreeColourManager trm = tree.transform.GetChild(0).AddComponent<TreeColourManager>();
+            
             trm.Initialize();
             // Apply the MaterialPropertyBlock to each material in the renderer's materials array
             for (int i = 0; i < rendererMaterials.Length; i++)
@@ -340,6 +341,8 @@ public class FullPlanetGeneration : MonoBehaviour
                     trm.pBlocks[i]._Smoothness = biome.treeVariables._TreeSmoothness;
                 }
             }
+
+            trm.ApplyPBlocks();
 
             tree.SetActive(true); //make sure tree is active
 

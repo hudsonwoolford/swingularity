@@ -26,17 +26,13 @@ public class TreeColourManager : MonoBehaviour
             pBlocks.Add(new PropertyBlock());
         }
     }
-    private void Start()
-    {
-        ApplyPBlocks();
-    }
     // Update is called once per frame
     void Update()
     {
         if (!mr.HasPropertyBlock()) { return; }
         ApplyPBlocks();
     }
-    void ApplyPBlocks()
+    public void ApplyPBlocks()
     {
         if (mr == null) { mr = GetComponent<MeshRenderer>(); }
 
