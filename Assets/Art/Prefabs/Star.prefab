@@ -4960,7 +4960,8 @@ MonoBehaviour:
     atmosphereColor: {r: 0.5, g: 0.12971699, b: 0.37841102, a: 1}
   starSchemeIndex: 6
   bigNoiseOffset: -1674.8701
-  lightRangeMult: 6
+  lightRangeMult: 20
+  lightIntensityMult: 0.18
   collisionParticles: {fileID: 5146723426314538478, guid: 9d97daab121cf8d4c85728f46ca2e5c1,
     type: 3}
   collisionClip: {fileID: 8300000, guid: 62dbbdb9096dfa44c9c395d0dcd224b2, type: 3}
@@ -5019,13 +5020,13 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 3.1209924, g: 0.9569081, b: 1.6519426, a: 1}
-  m_Intensity: 5
-  m_Range: 19.400002
+  m_Intensity: 0.485
+  m_Range: 38.800003
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -5056,7 +5057,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 7492
+    m_Bits: 15684
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0

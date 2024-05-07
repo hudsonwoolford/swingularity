@@ -354,14 +354,9 @@ public class LevelGenerator : MonoBehaviour
         //Replacement special objects
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level);
         int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
-        for (int i = 0; i < level.numPlanets; i++){
-
-            if(replaceIndices.Contains(i))
-            {
-                //Generation delegate
-                replacers[Array.IndexOf(replaceIndices, i)].Item2.replaceGeneration(ref planetList[i], level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i], generator, i);
-                continue;
-            }
+        for (int i = replacers.Length-1; i >= 0; i--)
+        {
+            replacers[i].Item2.replaceGeneration(ref planetList[replaceIndices[i]], level.planetSizes[replaceIndices[i]], level.planetPoints[replaceIndices[i]], level.planetSeeds[replaceIndices[i]], level.planetTypes[replaceIndices[i]], generator, i);
         }
         for (int i = 0; i < level.numPlanets; i++){
             if(replaceIndices.Contains(i)){continue;}
@@ -418,6 +413,7 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
+        UnityEngine.Random.InitState((int)seed.z + index * 100);
         //(PlanetColorScheme, PlanetColorScheme)[] previousBiomes = new (PlanetColorScheme, PlanetColorScheme)[planetList.Length];
         //for (int i = 0; i < planetList.Length; i++)
         //{
@@ -425,8 +421,17 @@ public class LevelGenerator : MonoBehaviour
         //    previousBiomes[i].Item2 = planetList[i].biomeB;
         //}
         (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1);
-        generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
+        generator.ClearAllTrees();
+        if(generator.biomeP == null)
+        {
+            generator.transform.rotation = Quaternion.Euler(0,0,UnityEngine.Random.Range(-180, 180));
+        }
+        else
+        {
+            generator.transform.rotation = Quaternion.identity;
+        }
+
 
         GameObject newPlanet = ConvertToImage(generator.gameObject, position, size);
         frontTexture.Release(); //Memory
@@ -439,6 +444,7 @@ public class LevelGenerator : MonoBehaviour
 
         newPlanet.transform.parent = allPlanetParent;
         forceField.transform.parent = environment;
+
 
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);
     }

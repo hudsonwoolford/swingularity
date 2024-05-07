@@ -16,7 +16,7 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] StarColorScheme[] schemePool;
     [SerializeField] int starSchemeIndex;
     [SerializeField] float bigNoiseOffset;
-    [SerializeField] float lightRangeMult = 1;
+    [SerializeField] float lightRangeMult = 1, lightIntensityMult = 1;
     [SerializeField] GameObject collisionParticles;
     [SerializeField] AudioClip collisionClip;
     [SerializeField] bool autoMass = true;
@@ -48,6 +48,7 @@ public class SunGenerator : MonoBehaviour
         
         //Lights
         lightSource.range = transform.localScale.x * lightRangeMult;
+        lightSource.intensity = transform.localScale.x * lightIntensityMult;
 
         //Material property block for the sun sphere
         MaterialPropertyBlock sunBlock = new MaterialPropertyBlock();
@@ -115,7 +116,6 @@ public class SunGenerator : MonoBehaviour
 
         starSchemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
         lightSource.color = schemePool[starSchemeIndex].sunColor;
-        lightSource.intensity = 3f;
 
         bigNoiseOffset = UnityEngine.Random.Range(-10000f, 10000f);
 
