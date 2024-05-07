@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00091242965, g: 0.0007269998, b: 0.00091242965, a: 1}
+  m_IndirectSpecularColor: {r: 0.0007526484, g: 0.0007269121, b: 0.0007526484, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -341,10 +341,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293daa8024f40f241aba01d0268cb405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomSeed: 1
+  randomSeed: 0
   canSpawnOffPlanet: 0
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}
-  seed: -7713316
+  seed: -196819
   minSize: 3
   maxSize: 9
   sizeBias: 0.02
@@ -374,8 +374,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8af5211c2bafe244ad601cde008e828, type: 2}
   specialObjects:
   - type: 4
-    amount: 1
-  - type: 0
     amount: 1
   specialObjectsParent: {fileID: 1819307222}
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}

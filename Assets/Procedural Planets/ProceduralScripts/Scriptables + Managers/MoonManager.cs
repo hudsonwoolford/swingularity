@@ -21,6 +21,7 @@ public class MoonManager : MonoBehaviour
     LineRenderer lr;
 
     float periapsis, apoapsis, semiMinorAxis, currentAnomaly, rotation;
+    Vector3 startingVelocity = Vector3.zero;
     Vector2 centre;
     Rigidbody rb;
     bool moonEnabled = false;
@@ -48,11 +49,18 @@ public class MoonManager : MonoBehaviour
         float gravitationalParameter = gravitationalConstant * (orbitPlanet.mass);
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         float velocity = Mathf.Sqrt(gravitationalParameter * ((2/apoapsis) - (1/semiMajorAxis)));
-        rb.AddForce(Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity, ForceMode.VelocityChange);
+        startingVelocity = Quaternion.Euler(new Vector3(0, 0, rotation)) * transform.up * velocity;
 
         DrawOrbit();
     }
     void LevelGenerated(){
+        StartingForce();
+    }
+    void StartingForce()
+    {
+        rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
+        rb.AddForce(startingVelocity, ForceMode.VelocityChange);
+        rb.angularVelocity = new Vector3 (0f, 2.5f, 0f);
         moonEnabled = true;
     }
     void CalculateVariables()
@@ -99,7 +107,7 @@ public class MoonManager : MonoBehaviour
     void FixedUpdate()
     {
         if (orbitPlanet == null || associatedPlanet == null) { return; }
-        if (!moonEnabled){ Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); }
+        if (!moonEnabled){ Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation); StartingForce(); }
 
         MoveMoon();
     }
