@@ -45,6 +45,7 @@ public class FullPlanetEditor : Editor
                 enumArray[i] = (ColorSchemeStaticReference.PlanetType)planetFilter.GetArrayElementAtIndex(i).enumValueIndex;
             }
             if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond); }
+            planetGeneration.UpdateAndApplyAll();
             planetGeneration.ClearAllTrees();
 
         }
