@@ -420,9 +420,9 @@ public class LevelGenerator : MonoBehaviour
         //    previousBiomes[i].Item1 = planetList[i].biomeA;
         //    previousBiomes[i].Item2 = planetList[i].biomeB;
         //}
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1);
-        generator.UpdateAndApplyAll();
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, false);
         generator.ClearAllTrees();
+        generator.UpdateAndApplyAll();
         if(generator.biomeP == null)
         {
             generator.transform.rotation = Quaternion.Euler(0,0,UnityEngine.Random.Range(-180, 180));
@@ -575,7 +575,7 @@ public class LevelGenerator : MonoBehaviour
         bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         //Generate orbiter planet
-        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, ColorSchemeStaticReference.PlanetType.special);
+        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, planetType);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
@@ -595,9 +595,9 @@ public class LevelGenerator : MonoBehaviour
     }
     Planet CreateMoonMesh(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType){
         generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1);
-        generator.ClearAllTrees();
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, true);
         generator.UpdateAndApplyAll();
+        generator.ClearAllTrees();
         GameObject genObj = generator.gameObject;
         Destroy(generator);
 

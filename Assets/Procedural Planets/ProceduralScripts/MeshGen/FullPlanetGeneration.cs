@@ -492,7 +492,7 @@ public class FullPlanetGeneration : MonoBehaviour
         planet.terrainVar = terrainVarPool[index];
         RandomizeOffset(offsetSeed, 0);
     }
-    public (PlanetColorScheme, PlanetColorScheme) RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType, int planetI)
+    public (PlanetColorScheme, PlanetColorScheme) RandomizeColorScheme(Vector3 offsetSeed, ColorSchemeStaticReference.PlanetType planetType, int planetI, bool isMoon)
     {
         ClearAllTrees();
         List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)> uneditedPool = new List<(ColorSchemeStaticReference.ColorSchemePool, TerrainVar)>();
@@ -500,6 +500,8 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < terrainVarPool.Length; i++){
             TerrainVar currentTerrain = terrainVarPool[i];
             for (int u = 0; u < currentTerrain.colorSchemePools.colorSchemePools.Length; u++){
+                if (!currentTerrain.generalSettings.atmosphere && !isMoon) continue;
+                if (currentTerrain.generalSettings.atmosphere && isMoon) continue;
                 if (planetType == currentTerrain.colorSchemePools.colorSchemePools[u].planetType){
                     uneditedPool.Add((currentTerrain.colorSchemePools.colorSchemePools[u], currentTerrain)); 
                 }

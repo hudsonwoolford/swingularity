@@ -44,7 +44,8 @@ public class FullPlanetEditor : Editor
             {
                 enumArray[i] = (ColorSchemeStaticReference.PlanetType)planetFilter.GetArrayElementAtIndex(i).enumValueIndex;
             }
-            if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond); }
+            bool moon = UnityEngine.Random.Range(0,5) == 4;
+            if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond, moon); }
             planetGeneration.ClearAllTrees();
 
         }
