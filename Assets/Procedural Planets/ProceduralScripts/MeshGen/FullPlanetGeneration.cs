@@ -28,6 +28,8 @@ public class FullPlanetGeneration : MonoBehaviour
     [SerializeField] TerrainVar[] terrainVarPool; //terrain variables pool
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] planetFilter;
+    [SerializeField]
+    bool moonOnly = false;
     [HideInInspector]
     [SerializeField] public PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
     [HideInInspector]

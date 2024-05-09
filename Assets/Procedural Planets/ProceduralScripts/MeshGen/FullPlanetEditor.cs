@@ -27,6 +27,7 @@ public class FullPlanetEditor : Editor
 
     SerializedProperty biomeA, biomeB, biomeP; //serialized properties for defining biome a and biome b color schemes
     SerializedProperty oBiomeA, oBiomeB, aBiomeA, aBiomeB; //serialized properties for defining biome a and biome b color schemes
+    SerializedProperty moonOnly; //serialized properties for defining biome a and biome b color schemes
     SerializedProperty planetFilter;
     #endregion
 
@@ -44,8 +45,7 @@ public class FullPlanetEditor : Editor
             {
                 enumArray[i] = (ColorSchemeStaticReference.PlanetType)planetFilter.GetArrayElementAtIndex(i).enumValueIndex;
             }
-            bool moon = UnityEngine.Random.Range(0,5) == 4;
-            if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond, moon); }
+            if (colorSchemes) { planetGeneration.RandomizeColorScheme(seed, enumArray[UnityEngine.Random.Range(0, planetFilter.arraySize)], System.DateTime.Now.Millisecond, moonOnly.boolValue); }
             planetGeneration.ClearAllTrees();
 
         }
@@ -190,6 +190,7 @@ public class FullPlanetEditor : Editor
         oBiomeB = serializedObject.FindProperty("oBiomeB");
         aBiomeA = serializedObject.FindProperty("aBiomeA");
         aBiomeB = serializedObject.FindProperty("aBiomeB");
+        moonOnly = serializedObject.FindProperty("moonOnly");
         planetFilter = serializedObject.FindProperty("planetFilter");
         #endregion
         planetGeneration = (FullPlanetGeneration)target;

@@ -13,34 +13,34 @@ MonoBehaviour:
   m_Name: TestPlanet
   m_EditorClassIdentifier: 
   planetMaterial: {fileID: 2100000, guid: b3f3545bc608e79468d7c6576815210e, type: 2}
-  terrainVar: {fileID: 11400000, guid: a4092fc740d084240ac416e19aae3975, type: 2}
+  terrainVar: {fileID: 11400000, guid: 3afca7a1027d45144a6ec5b03266fdb8, type: 2}
   oceanVariables:
-    _OceanBlendEnd: 0.038
+    _OceanBlendEnd: 0.04
     _OceanBlendIntensity: 0.82
-    _BeachBlendEnd: 0.022
-    _BeachBlendIntensity: 0.9
-    _SeabedColor: {r: 0, g: 0.683905, b: 0.8490566, a: 1}
-    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _BeachBlendEnd: 0.042
+    _BeachBlendIntensity: 0.58
+    _SeabedColor: {r: 0, g: 0, b: 0, a: 1}
+    _OceanColor: {r: 0.24646167, g: 0.24646167, b: 0.24646167, a: 0.14901961}
     _OceanNormal: {fileID: 2800000, guid: ca2018cce4b3041ca94fe509b701bce5, type: 3}
-    _OceanMetallic: 0
-    _OceanSmoothness: 0.811
+    _OceanMetallic: 0.188
+    _OceanSmoothness: 0.552
   atmosphereVariables:
-    _ForceFieldColor: {r: 0.14562768, g: 0.5230708, b: 0.71625036, a: 1}
-    _OuterBandColor: {r: 0.19215685, g: 0.84782094, b: 0.94509804, a: 1}
+    _ForceFieldColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
+    _OuterBandColor: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
     _OuterBandRange: 2.5
     _OuterBandIntensity: 0.44
-    _InnerBandColor: {r: 0, g: 0.8151577, b: 0.90588236, a: 1}
+    _InnerBandColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     _InnerBandRange: 2.3
     _InnerBandIntensity: 0.97
-    _FrontColor: {r: 0.40784314, g: 0.60653526, b: 0.7921569, a: 1}
+    _FrontColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
     _FrontRange: 2.2
     _FrontIntensity: 0.07
   fresnelVariables:
-    _UseFresnel: 0
-    _FresnelColor: {r: 0, g: 0.44887233, b: 0.8207547, a: 1}
-    _FresnelStrengthNear: 1.92
+    _UseFresnel: 1
+    _FresnelColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
+    _FresnelStrengthNear: 2
     _FresnelStrengthFar: 5
-    _FresnelPower: 6.85
+    _FresnelPower: 8
   treeVariables:
     _UseTrees: 0
     _TreeObjects: []
