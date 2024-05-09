@@ -565,7 +565,7 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
         float smallMoonSize = size * planetScale / 2f;
-        float apoapsis = size * planetScale - smallMoonSize + 1.5f;
+        float apoapsis = size * planetScale - smallMoonSize + 1.2f;
 
         
         float bigPlanetDecreasedSize = apoapsis * moonDstScale - smallMoonSize;
@@ -582,7 +582,7 @@ public class LevelGenerator : MonoBehaviour
         MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
         
         float semiMajorAxis = apoapsis/(1 - eccentricity);
-        float speed = UnityEngine.Random.Range(0.2f, 1f);
+        float speed = UnityEngine.Random.Range(0.5f, 1.2f);
         float rotation = UnityEngine.Random.Range(0,360);
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
         smallMoon.forceField.GetComponent<Collider>().material = superBouncyMoon;
