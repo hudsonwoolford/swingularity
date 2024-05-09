@@ -575,14 +575,14 @@ public class LevelGenerator : MonoBehaviour
         bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         //Generate orbiter planet
-        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale, offsetScale, offsetScale) + Vector3.one, planetType);
+        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale * 2, offsetScale * 2, offsetScale * 2) + Vector3.one, planetType);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
         
         float semiMajorAxis = apoapsis/(1 - eccentricity);
-        float speed = UnityEngine.Random.Range(0.025f, 0.1f);
+        float speed = UnityEngine.Random.Range(0.2f, 1f);
         float rotation = UnityEngine.Random.Range(0,360);
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
         smallMoon.forceField.GetComponent<Collider>().material = superBouncyMoon;
@@ -594,18 +594,19 @@ public class LevelGenerator : MonoBehaviour
 
     }
     Planet CreateMoonMesh(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType){
-        generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, true);
+        
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1495, true);
         generator.UpdateAndApplyAll();
         generator.ClearAllTrees();
-        GameObject genObj = generator.gameObject;
-        Destroy(generator);
+        GameObject genObj = Instantiate(generator.gameObject);
 
+        Destroy(genObj.GetComponent<FullPlanetGeneration>());
         genObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
         genObj.transform.localScale = Vector3.one * size * planetScale * 0.6f;
         GameObject forceField = GenerateForcefield(genObj.transform);
-        return new Planet(genObj, planetType, biomes.Item1, biomes.Item2, forceField);
+        return new Planet(genObj, ColorSchemeStaticReference.PlanetType.special, biomes.Item1, biomes.Item2, forceField);
     }
+
     #endregion
     /// <summary>
     /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
@@ -798,6 +799,7 @@ public class LevelGenerator : MonoBehaviour
             instaAtmosphere.transform.localScale = Vector3.one;
             instaAtmosphere.transform.position += new Vector3(0, 0, depth);
             instaAtmosphere.layer = LayerMask.NameToLayer("Default");
+            instaAtmosphere.SetActive(true);
         }
 
         oceanRend.sharedMaterial = oceanMat;

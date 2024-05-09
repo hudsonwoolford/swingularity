@@ -500,8 +500,8 @@ public class FullPlanetGeneration : MonoBehaviour
         for (int i = 0; i < terrainVarPool.Length; i++){
             TerrainVar currentTerrain = terrainVarPool[i];
             for (int u = 0; u < currentTerrain.colorSchemePools.colorSchemePools.Length; u++){
-                if (!currentTerrain.generalSettings.atmosphere && !isMoon) continue;
-                if (currentTerrain.generalSettings.atmosphere && isMoon) continue;
+                if (!currentTerrain.generalSettings.atmosphere && !isMoon) {break;}
+                if (currentTerrain.generalSettings.atmosphere && isMoon) {break;}
                 if (planetType == currentTerrain.colorSchemePools.colorSchemePools[u].planetType){
                     uneditedPool.Add((currentTerrain.colorSchemePools.colorSchemePools[u], currentTerrain)); 
                 }

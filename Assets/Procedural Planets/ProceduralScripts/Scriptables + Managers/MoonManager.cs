@@ -29,7 +29,7 @@ public class MoonManager : MonoBehaviour
     public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation){
         this.semiMajorAxis = semiMajorAxis;
         this.gravitationalConstant = gravitationalConstant;
-        this.eccentricity = eccentricity;
+        this.eccentricity = 0;
         this.speed = speed;
         this.associatedPlanet = associatedPlanet;
         this.orbitPlanet = orbitPlanet;
@@ -61,7 +61,6 @@ public class MoonManager : MonoBehaviour
     IEnumerator StartingDelay()
     {
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
-        rb.velocity = startingVelocity;
         rb.angularVelocity = new Vector3(0f, 2f, 1f);
         yield return new WaitForFixedUpdate();
         moonEnabled = true;
@@ -119,7 +118,7 @@ public class MoonManager : MonoBehaviour
         DrawOrbit();
     }
     private void MoveMoon(){
-        rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass, ForceMode.Force);
+        // rb.AddForce(ArtificialGravity.AttractForce(orbitPlanet.mass, associatedPlanet.mass, orbitPlanet.transform, associatedPlanet.transform, gravitationalConstant) / associatedPlanet.mass, ForceMode.Force);
 
 
         float currentDistance = semiMajorAxis * (1 - eccentricity * eccentricity) / (1 + eccentricity * -Mathf.Cos(currentAnomaly));
@@ -135,6 +134,8 @@ public class MoonManager : MonoBehaviour
         {
             currentAnomaly -= Mathf.PI * 2;
         }
+
+        rb.position = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(currentAnomaly), centre.y + semiMinorAxis * Mathf.Sin(currentAnomaly));
     }
 
     private void DrawOrbit()
