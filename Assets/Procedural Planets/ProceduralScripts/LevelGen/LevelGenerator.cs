@@ -599,8 +599,15 @@ public class LevelGenerator : MonoBehaviour
         generator.UpdateAndApplyAll();
         generator.ClearAllTrees();
         GameObject genObj = Instantiate(generator.gameObject);
+        MeshRenderer genRenderer = genObj.GetComponent<MeshRenderer>();
+        Material customMoonMat = new Material(genRenderer.material);
+        genRenderer.material = customMoonMat;
 
         Destroy(genObj.GetComponent<FullPlanetGeneration>());
+        if(genObj.GetComponentInChildren<Camera>() != null)
+        {
+            Destroy(genObj.GetComponentInChildren<Camera>().gameObject); //camera on moon generator
+        }
         genObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
         genObj.transform.localScale = Vector3.one * size * planetScale * 0.6f;
         GameObject forceField = GenerateForcefield(genObj.transform);
