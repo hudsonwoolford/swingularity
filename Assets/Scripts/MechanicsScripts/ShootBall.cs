@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -45,7 +46,12 @@ public class ShootBall : MonoBehaviour
     Camera main;
     TrailRenderer tr;
     bool liningUpShot;
-    bool ballStill;
+    bool ballStill = false;
+    float ballStillTimer = 0f;
+    float ballStillTime = 0.25f;
+    GameObject childObj;
+
+    int collidersTouching = 1;
     public delegate void OnShoot();
     public static OnShoot onShoot;
     public delegate void OnStill();
@@ -99,6 +105,10 @@ public class ShootBall : MonoBehaviour
 
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
+        childObj = transform.GetChild(2).gameObject;
+        onStill?.Invoke();
+        ballStillTimer = 0f;
+        StartCoroutine(BallStillTiming());
 
     }
     // Update is called once per frame
@@ -113,14 +123,12 @@ public class ShootBall : MonoBehaviour
         }
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0)); //world position, z value is camera near clip plane
-        if (rb.velocity.magnitude <0.1f){
-            if(!ballStill){
-                ballStill = true;   
-                onStill?.Invoke();
-            }
+
+        if (ballStill){
+            rb.constraints = RigidbodyConstraints.FreezeAll;
             if(Input.GetMouseButtonDown(0))
             {
-            
+                StopCoroutine(BallStillTiming());
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
                     StartCoroutine(LineUpShot());
@@ -129,8 +137,19 @@ public class ShootBall : MonoBehaviour
                 }
             }
         }
+        if (rb.velocity.magnitude < 0.1f && collidersTouching > 0){
+            if(!ballStill){
+                onStill?.Invoke();
+                ballStillTimer = 0f;
+                StartCoroutine(BallStillTiming());
+            }
+        }
         else{
             ballStill = false;
+            childObj.transform.up =
+            Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f);
+            childObj.transform.forward =
+            Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
         if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
@@ -139,6 +158,20 @@ public class ShootBall : MonoBehaviour
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
         posLastFrame = transform.position;
 
+    }
+    IEnumerator BallStillTiming(){
+        while(ballStillTimer <= ballStillTime){
+            ballStillTimer += Time.deltaTime;
+            if(rb.velocity.magnitude >= 0.1f || collidersTouching < 1){
+                ballStill = false;
+                yield break;
+            }
+            else{
+                yield return null;
+            }
+        }
+            ballStill = true;
+            yield break;
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -230,8 +263,10 @@ public class ShootBall : MonoBehaviour
         {
             yield break;
         }
+        StopCoroutine(BallStillTiming());
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        ballStill = false;
 
         onShoot?.Invoke(); //invoke shoot event
         rb.AddForce(force, ForceMode.Impulse); //adding force
@@ -245,8 +280,9 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
-        GetComponent<MeshRenderer>().enabled = true;
+        childObj.GetComponent<MeshRenderer>().enabled = true;
 
+        collidersTouching = 1;
         rb.position = origin;
         transform.position = origin;
         tr?.Clear();
@@ -255,6 +291,10 @@ public class ShootBall : MonoBehaviour
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
+        ballStill = false;
+        onStill?.Invoke();
+        ballStillTimer = 0f;
+        StartCoroutine(BallStillTiming());
     }
     void DeleteSimulation()
     {
@@ -535,7 +575,7 @@ public class ShootBall : MonoBehaviour
 
         Vector3 velocity = rb.velocity;
         float timeCounter = 0;
-        Material mat = GetComponent<MeshRenderer>().material;
+        Material mat = childObj.GetComponent<MeshRenderer>().material;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         if(GameManager.LevelManager.currentTheme != null)
@@ -588,16 +628,21 @@ public class ShootBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        collidersTouching++;
         if (collision.gameObject.tag == "Respawn")
         {
+            collidersTouching--;
             StartCoroutine(ResetDelay(0.3f));
 
         }
     }
+    private void OnCollisionExit(Collision collision){
+        collidersTouching--;
+    }
     IEnumerator ResetDelay(float delay)
     {
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
-        GetComponent<MeshRenderer>().enabled = false;
+        childObj.GetComponent<MeshRenderer>().enabled = false;
         yield return new WaitForSeconds(delay);
         rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
 

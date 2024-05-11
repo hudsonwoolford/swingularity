@@ -37,7 +37,7 @@ public class MoonManager : MonoBehaviour
         this.mat = moonLine;
         this.rotation = rotation;
 
-        SpriteRenderer[] planetSprites = GetComponentsInChildren<SpriteRenderer>();
+        MeshRenderer[] planetSprites = GetComponentsInChildren<MeshRenderer>();
         for (int i = 0; i < planetSprites.Length; i++)
         {
             planetSprites[i].enabled = false;
@@ -66,7 +66,7 @@ public class MoonManager : MonoBehaviour
     }
     IEnumerator StartingDelay()
     {
-        SpriteRenderer[] planetSprites = GetComponentsInChildren<SpriteRenderer>();
+        MeshRenderer[] planetSprites = GetComponentsInChildren<MeshRenderer>();
         for (int i = 0; i < planetSprites.Length; i++)
         {
             planetSprites[i].enabled = true;
