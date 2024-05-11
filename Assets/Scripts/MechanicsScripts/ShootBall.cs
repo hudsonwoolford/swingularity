@@ -48,7 +48,7 @@ public class ShootBall : MonoBehaviour
     bool liningUpShot;
     bool ballStill = false;
     float ballStillTimer = 0f;
-    float ballStillTimeVal = 0.25f;
+    float ballStillTimeVal = 0.2f;
     GameObject childObj;
 
     int collidersTouching = 1;
@@ -610,8 +610,6 @@ public class ShootBall : MonoBehaviour
         {
             quadrant = -1;
         }
-        print(quadrant);
-
 
         float dotProduct = Mathf.Abs(Vector3.Dot(velocity.normalized, hole.up));
         bool dir = false;
@@ -627,16 +625,20 @@ public class ShootBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        collidersTouching++;
+        if(!(collision.gameObject.layer == LayerMask.NameToLayer("IgnoreSimulation"))){
+            collidersTouching++;
+        }
         if (collision.gameObject.tag == "Respawn")
         {
-            collidersTouching--;
+            collidersTouching = 0;
             StartCoroutine(ResetDelay(0.3f));
 
         }
     }
     private void OnCollisionExit(Collision collision){
-        collidersTouching--;
+        if(!(collision.gameObject.layer == LayerMask.NameToLayer("IgnoreSimulation"))){
+            collidersTouching--;
+        }
     }
     IEnumerator ResetDelay(float delay)
     {
