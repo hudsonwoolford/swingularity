@@ -48,7 +48,7 @@ public class ShootBall : MonoBehaviour
     bool liningUpShot;
     bool ballStill = false;
     float ballStillTimer = 0f;
-    float ballStillTime = 0.25f;
+    float ballStillTimeVal = 0.25f;
     GameObject childObj;
 
     int collidersTouching = 1;
@@ -108,7 +108,7 @@ public class ShootBall : MonoBehaviour
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
         ballStillTimer = 0f;
-        StartCoroutine(BallStillTiming());
+        StartCoroutine(BallStillTiming(0.5f));
 
     }
     // Update is called once per frame
@@ -128,7 +128,6 @@ public class ShootBall : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeAll;
             if(Input.GetMouseButtonDown(0))
             {
-                StopCoroutine(BallStillTiming());
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
                     StartCoroutine(LineUpShot());
@@ -141,7 +140,7 @@ public class ShootBall : MonoBehaviour
             if(!ballStill){
                 onStill?.Invoke();
                 ballStillTimer = 0f;
-                StartCoroutine(BallStillTiming());
+                StartCoroutine(BallStillTiming(ballStillTimeVal));
             }
         }
         else{
@@ -159,7 +158,7 @@ public class ShootBall : MonoBehaviour
         posLastFrame = transform.position;
 
     }
-    IEnumerator BallStillTiming(){
+    IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
             ballStillTimer += Time.deltaTime;
             if(rb.velocity.magnitude >= 0.1f || collidersTouching < 1){
@@ -263,7 +262,7 @@ public class ShootBall : MonoBehaviour
         {
             yield break;
         }
-        StopCoroutine(BallStillTiming());
+        StopCoroutine(BallStillTiming(ballStillTimeVal));
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;
@@ -294,7 +293,7 @@ public class ShootBall : MonoBehaviour
         ballStill = false;
         onStill?.Invoke();
         ballStillTimer = 0f;
-        StartCoroutine(BallStillTiming());
+        StartCoroutine(BallStillTiming(0.5f));
     }
     void DeleteSimulation()
     {
