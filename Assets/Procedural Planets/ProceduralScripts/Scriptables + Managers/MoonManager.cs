@@ -16,7 +16,7 @@ public class MoonManager : MonoBehaviour
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
     [SerializeField] float width = 0.1f;
-    [SerializeField] Color lrColor = new Color(1,1,1,0.1f);
+    [SerializeField] Color lrColor = new Color(1,1,1,1f);
     [SerializeField] Material mat;
     LineRenderer lr;
 
@@ -36,6 +36,8 @@ public class MoonManager : MonoBehaviour
         this.orbitPlanet = orbitPlanet;
         this.mat = moonLine;
         this.rotation = rotation;
+
+
 
         GetComponent<MeshRenderer>().enabled = false; //prevent shadows on planets
         associatedPlanet.gameObject.layer = LayerMask.NameToLayer("IgnoreSimulation");
@@ -139,7 +141,7 @@ public class MoonManager : MonoBehaviour
             currentAnomaly -= Mathf.PI * 2;
         }
 
-        rb.position = new Vector3(centre.x + semiMajorAxis * Mathf.Cos(currentAnomaly), centre.y + semiMinorAxis * Mathf.Sin(currentAnomaly));
+        rb.position =  RotateAround(rotation, dir, orbitPlanet.transform.position);;
     }
 
     private void DrawOrbit()
