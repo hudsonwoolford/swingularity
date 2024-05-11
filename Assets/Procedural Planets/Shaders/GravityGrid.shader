@@ -11,6 +11,8 @@ Shader "Unlit/GravityGrid"
 
         _MaxForce ("Max Force", float) = 5
         _ForcePower ("Force Power", float) = 1
+
+        _GravPower ("Gravity Power", float) = 1
     }
     SubShader
     {
@@ -50,6 +52,8 @@ Shader "Unlit/GravityGrid"
 
             float _GConstant;
 
+            float _GravPower;
+
             float2 GravityForceAtPoint(float3 worldPos, float objMass)
             {
                 float2 displacement = float2(0,0);
@@ -57,7 +61,9 @@ Shader "Unlit/GravityGrid"
                 {
                     float2 relPos = (worldPos.xy - _Planets[u].xy);
                     float dispMag = pow((relPos.x * relPos.x + relPos.y * relPos.y),_Strength) / _Divisor;
-                    displacement+=float3((-_Planets[u].z/max(dispMag,_Planets[u].z)) * relPos.xy,0);
+                    float sqrDispMag = pow(dispMag, _GravPower);
+                    float sqrMass = pow(_Planets[u].z, _GravPower);
+                    displacement+=float3((-sqrMass/max(sqrDispMag,sqrMass)) * relPos.xy,0);
                 
                 }
                 return displacement;
