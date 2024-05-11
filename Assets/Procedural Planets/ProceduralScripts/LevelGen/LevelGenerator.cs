@@ -562,7 +562,7 @@ public class LevelGenerator : MonoBehaviour
     {   
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
-        float smallMoonSize = size * planetScale / 2f;
+        float smallMoonSize = size * planetScale / 1.75f;
         float apoapsis = size * planetScale - smallMoonSize + 1.2f;
 
         

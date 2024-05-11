@@ -30,7 +30,7 @@ public class MoonManager : MonoBehaviour
     public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation){
         this.semiMajorAxis = semiMajorAxis;
         this.gravitationalConstant = gravitationalConstant;
-        this.eccentricity = 0;
+        this.eccentricity = eccentricity;
         this.speed = speed;
         this.associatedPlanet = associatedPlanet;
         this.orbitPlanet = orbitPlanet;
