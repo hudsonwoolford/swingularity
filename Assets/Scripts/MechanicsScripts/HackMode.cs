@@ -43,6 +43,10 @@ public class HackMode : MonoBehaviour
         RegenFabric();
         EnableFabric(false);
     }
+    void LevelGenerated(){
+        if(GameManager.LevelManager.currentTheme == null || edgeEffect == null){return;}
+        edgeEffect.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.hackModeColor);
+    }
     private void Update()
     {
         if(env==null) { return; }
@@ -154,6 +158,12 @@ public class HackMode : MonoBehaviour
         gridMesh.SetIndices(indices, MeshTopology.Lines, 0);
         gridMeshFilter.mesh = gridMesh;
         gridMeshRend.material = gravityGrid == null ? new Material(Shader.Find("Sprites/Default")) { color = Color.magenta } : gravityGrid;
+    }
+    void OnEnable(){
+        LevelGenerator.levelGenerated += LevelGenerated;
+    }   
+    void OnDisable(){
+        LevelGenerator.levelGenerated -= LevelGenerated;
     }
 
     #endregion
