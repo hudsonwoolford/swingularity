@@ -55,6 +55,7 @@ public class HackMode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             hackMode = !hackMode;
+            onHackMode?.Invoke(hackMode, whiteMat);
             RegenFabric();
         }
         EnableFabric(hackMode);
@@ -71,8 +72,8 @@ public class HackMode : MonoBehaviour
     }
     void EnableFabric(bool enable)
     {
-        onHackMode?.Invoke(enable, whiteMat);
         gridMeshRend.enabled = enable;
+        Time.timeScale = enable ? 0.4f : 1.0f;
     }                       
     void UpdateFabric(Rigidbody[] planets)
     {
