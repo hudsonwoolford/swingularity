@@ -83,6 +83,7 @@ public class HackMode : MonoBehaviour
 
         }
         gravityGrid.SetInt("_PlanetCount", realPlanets.Length);
+        gravityGrid.SetFloat("_GConstant", ArtificialGravity.G);
     }
     void RegenFabric()
     {

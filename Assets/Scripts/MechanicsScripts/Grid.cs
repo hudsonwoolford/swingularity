@@ -78,6 +78,7 @@ public class Grid
 public static class ArtificialGravity
 {
     public static float G = 1f;
+    public static float Power = 2f;
 
     public static Vector3 AttractForce(float bigMass, float smallMass, Transform big, Transform small) //brackeys gravity tutorial
     {
@@ -87,10 +88,10 @@ public static class ArtificialGravity
             distance = 0.00001f;
         }
 
-        float forceMagnitude = ArtificialGravity.G * (smallMass * bigMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = ArtificialGravity.G * (smallMass * bigMass) / Mathf.Pow(distance, Power); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
-            return force; //returning force
+        return force; //returning force
     }
     public static Vector3 AttractForce(float bigMass, float smallMass, Transform big, Transform small, float gConstant) //brackeys gravity tutorial
     {
@@ -101,7 +102,7 @@ public static class ArtificialGravity
             distance = 0.00001f;
         }
 
-        float forceMagnitude = gConstant * (smallMass * bigMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+        float forceMagnitude = gConstant * (smallMass * bigMass) / Mathf.Pow(distance, Power); //newton equation, uses mass from rigid bodies
         Vector3 force = direction.normalized * forceMagnitude; //storing force
 
         return force; //returning force
@@ -115,7 +116,7 @@ public static class ArtificialGravity
             Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance
 
-            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, Power); //newton equation, uses mass from rigid bodies
             Vector3 force = direction.normalized * forceMagnitude ; //storing force
             totalForce += new Vector2(force.x, force.y);
             totalForceNormalized += new Vector2(force.x, force.y).normalized;
@@ -133,7 +134,7 @@ public static class ArtificialGravity
             Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance
 
-            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            float forceMagnitude = G * (rbAttracting.mass * objMass) / Mathf.Pow(distance, Power); //newton equation, uses mass from rigid bodies
             Vector3 force = direction.normalized * forceMagnitude ; //storing force
             totalForce += new Vector2(force.x, force.y);
             totalForceNormalized += new Vector2(force.x, force.y).normalized;
@@ -149,7 +150,7 @@ public static class ArtificialGravity
             Vector2 direction = new Vector2(attractor.transform.position.x, attractor.transform.position.y) - vertexPosition; //direction vector
             float distance = direction.magnitude; //distance
 
-            deltaZ = G * (attractor.mass * 1) / Mathf.Pow(distance, 2); //newton equation, uses mass from rigid bodies
+            deltaZ = G * (attractor.mass * 1) / Mathf.Pow(distance, Power); //newton equation, uses mass from rigid bodies
         }
         divisor = divisor == 0 ? 1 : divisor;
         deltaZ = deltaZ == 0 ? 1 : deltaZ;

@@ -54,7 +54,7 @@ public class DarkMatterGenerator : MonoBehaviour
         module.startColor = grad;
 
         module = glowParticles.main;
-        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
+        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(planetData.forceFieldColor, 0.0f), new GradientColorKey(planetData.forceFieldColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
         module.startColor = grad;
     }
     void NullChecks()

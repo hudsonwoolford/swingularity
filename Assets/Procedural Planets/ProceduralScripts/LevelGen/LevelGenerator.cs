@@ -8,8 +8,6 @@ using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
 using UnityEngine.EventSystems;
-using TreeEditor;
-
 public class LevelGenerator : MonoBehaviour
 {
     #region Variables

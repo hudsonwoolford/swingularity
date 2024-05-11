@@ -7,9 +7,10 @@ Shader "Unlit/GravityGrid"
         _Divisor ("Divisor", float) = 1
         _MinOffset ("Min Offset", float) = 1
         _MaxOffset ("Max Offset", float) = 1
-        _Thickness ("Thickness", float) = 0
         _Strength ("Strength", float) = 0
 
+        _MaxForce ("Max Force", float) = 5
+        _ForcePower ("Force Power", float) = 1
     }
     SubShader
     {
@@ -33,16 +34,21 @@ Shader "Unlit/GravityGrid"
             struct v2f
             {
                 float4 vertex : SV_POSITION;
+                float3 worldPos : TEXCOORD0;
             };
 
             fixed4 _Color;
-            float _Thickness;
             float3 _Planets[512]; // Specify the size of the array, adjust as needed
             uint _PlanetCount;
             float _MinOffset;
             float _MaxOffset;
             float _Divisor;
             float _Strength;
+
+            float _MaxForce;
+            float _ForcePower;
+
+            float _GConstant;
 
             float2 GravityForceAtPoint(float3 worldPos, float objMass)
             {
@@ -53,7 +59,7 @@ Shader "Unlit/GravityGrid"
                     float distance = length(direction);
                     if (distance == 0) continue; // Avoid division by zero
 
-                    float forceMagnitude = 1 * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force
+                    float forceMagnitude = _GConstant * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force
                     forceMagnitude = clamp(forceMagnitude, _MinOffset,_MaxOffset);
 
                     float2 addForce = (forceMagnitude * normalize(direction).xy) / pow(distance, _Strength);
@@ -61,7 +67,7 @@ Shader "Unlit/GravityGrid"
                     {
                         addForce = (distance * normalize(direction).xy);
                     }
-                    totalForce += addForce; // Add force vector to totalForce
+                    totalForce += addForce / _Divisor; // Add force vector to totalForce
                 }
                 return totalForce;
             }
@@ -70,18 +76,20 @@ Shader "Unlit/GravityGrid"
             {
                 v2f o;
 
-                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                float2 displacement = GravityForceAtPoint(o.worldPos, 1);
+                float3 displacedWorldPos = float3(o.worldPos.xy + displacement,0);
 
-                float2 displacement = GravityForceAtPoint(worldPos, 1);
-                o.vertex.xy += displacement;
+                v.vertex.xyz = UnityObjectToClipPos(mul(unity_WorldToObject, displacedWorldPos)).xyz;
 
+                o.vertex = v.vertex;
                 return o;
             }
             fixed4 frag(v2f i) : SV_Target
             {
-
-                return _Color;
+                float force = pow(length(GravityForceAtPoint(i.worldPos, 1)), _ForcePower);
+                
+                return lerp(0, _Color, saturate(force/_MaxForce));
             }
             ENDCG
         }
