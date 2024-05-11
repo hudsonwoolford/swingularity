@@ -127,7 +127,7 @@ public class BlackHoleGenerator : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
-        if(whiteHole || correspondent == null) { return; }
+        if(correspondent == null) { return; }
         if (collision.gameObject.tag == "Player") //Player or simulated player
         {
             collision.attachedRigidbody.velocity *= -1;
