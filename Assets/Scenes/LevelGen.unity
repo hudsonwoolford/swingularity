@@ -344,7 +344,7 @@ MonoBehaviour:
   randomSeed: 1
   canSpawnOffPlanet: 0
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}
-  seed: -746153
+  seed: 3575510
   minSize: 3
   maxSize: 9
   sizeBias: 0.02
@@ -375,8 +375,6 @@ MonoBehaviour:
   specialObjects:
   - type: 4
     amount: 1
-  - type: 2
-    amount: 1
   - type: 3
     amount: 1
   - type: 0
@@ -384,7 +382,7 @@ MonoBehaviour:
   specialObjectsParent: {fileID: 1819307222}
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
-  moonCutoffSize: 5
+  moonCutoffSize: 7
   moonDstScale: 1.8
 --- !u!4 &866247461
 Transform:
@@ -445,6 +443,11 @@ PrefabInstance:
       propertyPath: env
       value: 
       objectReference: {fileID: 261201272}
+    - target: {fileID: 3267537133639875823, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: cellSize
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
       propertyPath: focusBall

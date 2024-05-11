@@ -95,15 +95,16 @@ public class HackMode : MonoBehaviour
     #region Procedural Grid
     private Vector3[] GenerateVerts(int xSeg, int ySeg, float cellSize, Vector3 centre)
     {
+        int subDivs = 1;
         List<Vector3> verts = new List<Vector3>();
         float xOffset = xSeg * cellSize / 2;
         float yOffset = ySeg * cellSize / 2;
-        for (int y = 0; y <= ySeg; y++)
+        for (float y = 0; y <= ySeg * subDivs; y+=1/subDivs)
         {
-            for (int x = 0; x <= xSeg; x++)
-            {
-                verts.Add(centre + new Vector3(x * cellSize - xOffset, y * cellSize - yOffset));
-            }
+                for (float x = 0; x <= xSeg; x+=1/subDivs)
+                {
+                    verts.Add(centre + new Vector3(x * cellSize - xOffset, y * cellSize - yOffset));
+                }
         }
         return verts.ToArray();
     }

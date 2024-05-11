@@ -2,7 +2,7 @@ Shader "Unlit/GravityGrid"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
+        [HDR]_Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Divisor ("Divisor", float) = 1
         _MinOffset ("Min Offset", float) = 1
@@ -52,24 +52,15 @@ Shader "Unlit/GravityGrid"
 
             float2 GravityForceAtPoint(float3 worldPos, float objMass)
             {
-                float2 totalForce = float2(0, 0);
-                for (uint u = 0; u < min(_PlanetCount, 512); u++)
+                float2 displacement = float2(0,0);
+                for(uint u = 0; u<_PlanetCount; u++)
                 {
-                    float3 direction = float3(_Planets[u].xy, 0) - worldPos;
-                    float distance = length(direction);
-                    if (distance == 0) continue; // Avoid division by zero
-
-                    float forceMagnitude = 1 * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force
-                    forceMagnitude = clamp(forceMagnitude, _MinOffset,_MaxOffset);
-
-                    float2 addForce = (forceMagnitude * normalize(direction).xy) / pow(distance, _Strength);
-                    if(length(addForce) > distance)
-                    {
-                        addForce = (distance * normalize(direction).xy);
-                    }
-                    totalForce += addForce / _Divisor; // Add force vector to totalForce
+                    float2 relPos = (worldPos.xy - _Planets[u].xy);
+                    float dispMag = pow((relPos.x * relPos.x + relPos.y * relPos.y),_Strength) / _Divisor;
+                    displacement+=float3((-_Planets[u].z/max(dispMag,_Planets[u].z)) * relPos.xy,0);
+                
                 }
-                return totalForce;
+                return displacement;
             }
 
             v2f vert(appdata_full v)
@@ -95,7 +86,6 @@ Shader "Unlit/GravityGrid"
                 //        return 1;
                 //    }
                 //}
-                return _Color;
                 return lerp(0, _Color, saturate(force/_MaxForce));
             }
             ENDCG
