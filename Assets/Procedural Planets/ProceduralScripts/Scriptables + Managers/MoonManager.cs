@@ -111,12 +111,12 @@ public class MoonManager : MonoBehaviour
             EditModeUpdate();
             return;
         }
-    }
-    void FixedUpdate()
-    {
-        if (orbitPlanet == null || associatedPlanet == null) { return; }
 
-        MoveMoon();
+    }
+    private void LateUpdate(){
+        if(Application.isPlaying){
+            MoveMoon();
+        }
     }
     private void EditModeUpdate()
     {
@@ -141,7 +141,7 @@ public class MoonManager : MonoBehaviour
             currentAnomaly -= Mathf.PI * 2;
         }
 
-        rb.position =  RotateAround(rotation, dir, orbitPlanet.transform.position);;
+        rb.transform.position =  RotateAround(rotation, dir, orbitPlanet.transform.position);;
     }
 
     private void DrawOrbit()

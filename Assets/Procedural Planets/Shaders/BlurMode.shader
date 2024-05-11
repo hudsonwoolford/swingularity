@@ -45,13 +45,14 @@ Shader "Hidden/BlurMode"
             sampler2D _CameraDepthTexture;
             float2 _MainTex_TexelSize;
             float _Threshold;
+            float _BlurAmount;
 
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 normalCol = col;
                 //offsets of pixel
-                float offsetStep = _MainTex_TexelSize.y;
+                float offsetStep = _MainTex_TexelSize.y * _BlurAmount;
                 float2 offsets[9] = {
                     float2(-offsetStep, offsetStep),
                     float2(0, offsetStep),
