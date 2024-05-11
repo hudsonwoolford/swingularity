@@ -51,7 +51,7 @@ public class ShootBall : MonoBehaviour
     float ballStillTimeVal = 0.2f;
     GameObject childObj;
 
-    int collidersTouching = 1;
+    [SerializeField] int collidersTouching = 0;
     public delegate void OnShoot();
     public static OnShoot onShoot;
     public delegate void OnStill();
@@ -281,7 +281,7 @@ public class ShootBall : MonoBehaviour
     {
         childObj.GetComponent<MeshRenderer>().enabled = true;
 
-        collidersTouching = 1;
+        collidersTouching = 0;
         rb.position = origin;
         transform.position = origin;
         tr?.Clear();
