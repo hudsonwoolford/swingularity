@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -28,6 +29,9 @@ public class BlackHoleGenerator : MonoBehaviour
     MaterialPropertyBlock sphereBlock, distortBlock;
     Material distortMat;
     CelestialMass cMass;
+    
+    public delegate void BlackHoleTravel();
+    public static BlackHoleTravel blackHoleTravel;
     // Start is called before the first frame update
     void Start()
     {
@@ -140,5 +144,7 @@ public class BlackHoleGenerator : MonoBehaviour
             collision.attachedRigidbody.velocity *= -1;
             collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
+    }
+    private void OnEnable(){
     }
 }
