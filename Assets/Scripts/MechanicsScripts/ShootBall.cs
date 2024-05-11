@@ -142,6 +142,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         liningUpShot = true;
         Vector2 startingMousePos = mousePos; //stores the initial mousepos
         //lr setup

@@ -16,7 +16,7 @@ public class MoonManager : MonoBehaviour
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
     [SerializeField] float width = 0.1f;
-    [SerializeField] Color lrColor = new Color(1,1,1,1f);
+    [SerializeField] Color lrColor = new Color(1,1,1,0.5f);
     [SerializeField] Material mat;
     LineRenderer lr;
 
