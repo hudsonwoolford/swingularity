@@ -95,46 +95,51 @@ public class HackMode : MonoBehaviour
     #region Procedural Grid
     private Vector3[] GenerateVerts(int xSeg, int ySeg, float cellSize, Vector3 centre)
     {
-        int subDivs = 1;
         List<Vector3> verts = new List<Vector3>();
         float xOffset = xSeg * cellSize / 2;
         float yOffset = ySeg * cellSize / 2;
-        for (float y = 0; y <= ySeg * subDivs; y+=1/subDivs)
+
+        for (int y = 0; y <= ySeg; y++)
         {
-                for (float x = 0; x <= xSeg; x+=1/subDivs)
-                {
-                    verts.Add(centre + new Vector3(x * cellSize - xOffset, y * cellSize - yOffset));
-                }
+            float yPos = y * cellSize - yOffset;
+            for (int x = 0; x <= xSeg; x++)
+            {
+                float xPos = x * cellSize - xOffset;
+                verts.Add(centre + new Vector3(xPos, yPos));
+            }
         }
+
         return verts.ToArray();
     }
 
     private int[] GenerateIndicies(int xSeg, int ySeg)
     {
         List<int> indicies = new List<int>();
-        for (int vert = 0, y = 0; y < ySeg; y++)
-        {
 
+        for (int y = 0; y < ySeg; y++)
+        {
             for (int x = 0; x < xSeg; x++)
             {
-                indicies.Add(vert + 0);
-                indicies.Add(vert + 1 + xSeg);
+                int topLeft = (y * (xSeg + 1)) + x;
+                int topRight = topLeft + 1;
+                int bottomLeft = topLeft + (xSeg + 1);
+                int bottomRight = bottomLeft + 1;
 
-                indicies.Add(vert + 1 + xSeg);
-                indicies.Add(vert + 2 + xSeg);
+                // Add indices for the top-left triangle
+                indicies.Add(topLeft);
+                indicies.Add(bottomLeft);
+                indicies.Add(topRight);
 
-                indicies.Add(vert + 2 + xSeg);
-                indicies.Add(vert + 1);
-
-                indicies.Add(vert + 1);
-                indicies.Add(vert + 0);
-
-                vert++;
+                // Add indices for the bottom-right triangle
+                indicies.Add(topRight);
+                indicies.Add(bottomLeft);
+                indicies.Add(bottomRight);
             }
-            vert++;
         }
+
         return indicies.ToArray();
     }
+
     void InitialiseMesh()
     {
         GameObject gridObject = new GameObject("Gravity Grid");
@@ -142,15 +147,17 @@ public class HackMode : MonoBehaviour
         gridMeshFilter = gridObject.AddComponent<MeshFilter>();
         gridMeshRend = gridObject.AddComponent<MeshRenderer>();
     }
+
     private void GenerateMesh(Vector3[] verts, int[] indices)
     {
         gridMesh = new Mesh();
         gridMesh.Clear();
         gridMesh.name = "Grid Mesh";
         gridMesh.vertices = verts;
-        gridMesh.SetIndices(indices, MeshTopology.Lines, 0);
+        gridMesh.SetIndices(indices, MeshTopology.Triangles, 0); // Use triangles for smoother appearance
         gridMeshFilter.mesh = gridMesh;
         gridMeshRend.material = gravityGrid == null ? new Material(Shader.Find("Sprites/Default")) { color = Color.magenta } : gravityGrid;
     }
+
     #endregion
 }
