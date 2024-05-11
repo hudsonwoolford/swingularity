@@ -8,6 +8,9 @@ using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
 using UnityEngine.EventSystems;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor;
+
 public class LevelGenerator : MonoBehaviour
 {
     #region Variables
@@ -319,6 +322,25 @@ public class LevelGenerator : MonoBehaviour
 
         return replacers.ToArray();
     }
+    private int CompareEnums((int, SpecialObject) x, (int, SpecialObject) y)
+    {
+        // Specify the enum value you want at the start
+        SpecialType desiredEnum = SpecialType.Star;
+
+        // Check if either x or y is the desired enum
+        if (x.Item2.type == desiredEnum && y.Item2.type != desiredEnum)
+        {
+            return -1; // x comes before y
+        }
+        else if (x.Item2.type != desiredEnum && y.Item2.type == desiredEnum)
+        {
+            return 1; // y comes before x
+        }
+        else
+        {
+            return x.Item2.type.CompareTo(y.Item2.type); // default comparison
+        }
+    }
     /// <summary>
     /// Calculates which objects in special objects array are adding to the level instead of replacing planets
     /// </summary>
@@ -352,7 +374,8 @@ public class LevelGenerator : MonoBehaviour
         //Replacement special objects
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level);
         int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
-        for (int i = replacers.Length-1; i >= 0; i--)
+        Array.Sort(replacers, (x, y) => CompareEnums(x, y));
+        for (int i = 0; i < replacers.Length; i++)
         {
             replacers[i].Item2.replaceGeneration(ref planetList[replaceIndices[i]], level.planetSizes[replaceIndices[i]], level.planetPoints[replaceIndices[i]], level.planetSeeds[replaceIndices[i]], level.planetTypes[replaceIndices[i]], generator, i);
         }
