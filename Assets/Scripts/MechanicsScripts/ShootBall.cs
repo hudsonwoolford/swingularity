@@ -51,7 +51,6 @@ public class ShootBall : MonoBehaviour
     float ballStillTimeVal = 0.2f;
     GameObject childObj;
 
-    [SerializeField] int collidersTouching = 0;
     public delegate void OnShoot();
     public static OnShoot onShoot;
     public delegate void OnStill();
@@ -136,7 +135,7 @@ public class ShootBall : MonoBehaviour
                 }
             }
         }
-        if (rb.velocity.magnitude < 0.1f && collidersTouching > 0){
+        if (rb.velocity.magnitude < 0.1f && Physics.OverlapSphere(rb.position, 0.25f).Length > 1){
             if(!ballStill){
                 onStill?.Invoke();
                 ballStillTimer = 0f;
@@ -161,7 +160,8 @@ public class ShootBall : MonoBehaviour
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
             ballStillTimer += Time.deltaTime;
-            if(rb.velocity.magnitude >= 0.1f || collidersTouching < 1){
+            if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f).Length < 2)
+            {
                 ballStill = false;
                 yield break;
             }
@@ -281,7 +281,6 @@ public class ShootBall : MonoBehaviour
     {
         childObj.GetComponent<MeshRenderer>().enabled = true;
 
-        collidersTouching = 0;
         rb.position = origin;
         transform.position = origin;
         tr?.Clear();
@@ -625,20 +624,13 @@ public class ShootBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(!(collision.gameObject.layer == LayerMask.NameToLayer("IgnoreSimulation"))){
-            collidersTouching++;
-        }
         if (collision.gameObject.tag == "Respawn")
         {
-            collidersTouching = 0;
             StartCoroutine(ResetDelay(0.3f));
 
         }
     }
     private void OnCollisionExit(Collision collision){
-        if(!(collision.gameObject.layer == LayerMask.NameToLayer("IgnoreSimulation"))){
-            collidersTouching--;
-        }
     }
     IEnumerator ResetDelay(float delay)
     {

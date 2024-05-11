@@ -22,6 +22,8 @@ public class HackMode : MonoBehaviour
     [SerializeField] Material gravityGrid;
     bool hackMode = false;
     Rigidbody ball;
+    public delegate void OnHackMode(bool enable);
+    public static OnHackMode onHackMode;
 
     private Mesh gridMesh;
     private MeshFilter gridMeshFilter;
@@ -64,6 +66,7 @@ public class HackMode : MonoBehaviour
     }
     void EnableFabric(bool enable)
     {
+        onHackMode?.Invoke(enable);
         gridMeshRend.enabled = enable;
     }                       
     void UpdateFabric(Rigidbody[] planets)
