@@ -37,9 +37,11 @@ public class MoonManager : MonoBehaviour
         this.mat = moonLine;
         this.rotation = rotation;
 
-
-
-        GetComponent<MeshRenderer>().enabled = false; //prevent shadows on planets
+        SpriteRenderer[] planetSprites = GetComponentsInChildren<SpriteRenderer>();
+        for (int i = 0; i < planetSprites.Length; i++)
+        {
+            planetSprites[i].enabled = false;
+        }
         associatedPlanet.gameObject.layer = LayerMask.NameToLayer("IgnoreSimulation");
         rb = GetComponent<Rigidbody>();
         if(rb == null){
@@ -64,7 +66,11 @@ public class MoonManager : MonoBehaviour
     }
     IEnumerator StartingDelay()
     {
-        GetComponent<MeshRenderer>().enabled = true;
+        SpriteRenderer[] planetSprites = GetComponentsInChildren<SpriteRenderer>();
+        for (int i = 0; i < planetSprites.Length; i++)
+        {
+            planetSprites[i].enabled = true;
+        }
 
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         rb.angularVelocity = new Vector3(0f, 2f, 1f);

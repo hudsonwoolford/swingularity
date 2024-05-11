@@ -11,13 +11,23 @@ public class DarkMatterGenerator : MonoBehaviour
     [Space()]
     [SerializeField] PhysicMaterial goop;
     [Space()]
-    [SerializeField] ParticleSystem darkParticles;
+    [SerializeField] ParticleSystem circleParticles;
+    [SerializeField] ParticleSystem smokeParticles;
     [SerializeField] ParticleSystem glowParticles;
+    [SerializeField] ParticleSystem trailParticles;
     SphereCollider ffCollider;
     // Start is called before the first frame update
     void Start()
     {
-        
+        ApplyingVariables();
+        glowParticles.Clear();
+        circleParticles.Clear();
+        smokeParticles.Clear();
+        trailParticles.Clear();
+        glowParticles.Play();
+        circleParticles.Play();
+        smokeParticles.Play();
+        trailParticles.Play();
     }
 
     // Update is called once per frame
@@ -33,11 +43,15 @@ public class DarkMatterGenerator : MonoBehaviour
         planetData = pData;
         NullChecks();
 
-        darkParticles.Clear();
-        glowParticles.Clear();
         ApplyingVariables();
-        darkParticles.Play();
+        glowParticles.Clear();
+        circleParticles.Clear();
+        smokeParticles.Clear();
+        trailParticles.Clear();
         glowParticles.Play();
+        circleParticles.Play();
+        smokeParticles.Play();
+        trailParticles.Play();
     }
     void ApplyingVariables()
     {
@@ -48,13 +62,19 @@ public class DarkMatterGenerator : MonoBehaviour
         PlanetColorScheme primaryOceanBiome = planetData.oBiomeB ? planetData.biomeB : planetData.biomeA;
         PlanetColorScheme primaryAtmosphereBiome = planetData.aBiomeB ? planetData.biomeB : planetData.biomeA;
         Gradient grad = new Gradient();
-        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(Color.black, 0.0f), new GradientColorKey(Color.gray, 0.6f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
+        //grad.SetKeys(new GradientColorKey[] { new GradientColorKey(Color.black, 0.0f), new GradientColorKey(Color.gray, 0.6f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
+        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(planetData.forceFieldColor, 0.0f), new GradientColorKey(planetData.forceFieldColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
 
-        ParticleSystem.MainModule module = darkParticles.main;
+        ParticleSystem.MainModule module = smokeParticles.main;
+        module.startColor = grad;
+
+        module = circleParticles.main;
         module.startColor = grad;
 
         module = glowParticles.main;
-        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(planetData.forceFieldColor, 0.0f), new GradientColorKey(planetData.forceFieldColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1) });
+        module.startColor = grad;
+
+        module = trailParticles.main;
         module.startColor = grad;
     }
     void NullChecks()

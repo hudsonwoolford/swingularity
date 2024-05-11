@@ -67,7 +67,7 @@ Shader "Unlit/GravityGrid"
                     {
                         addForce = (distance * normalize(direction).xy);
                     }
-                    totalForce += addForce / _Divisor; // Add force vector to totalForce
+                    totalForce += addForce; // Add force vector to totalForce
                 }
                 return totalForce;
             }
@@ -89,6 +89,7 @@ Shader "Unlit/GravityGrid"
             {
                 float force = pow(length(GravityForceAtPoint(i.worldPos, 1)), _ForcePower);
                 
+                return _Color;
                 return lerp(0, _Color, saturate(force/_MaxForce));
             }
             ENDCG
