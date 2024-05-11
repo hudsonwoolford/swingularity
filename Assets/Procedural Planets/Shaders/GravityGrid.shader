@@ -59,7 +59,7 @@ Shader "Unlit/GravityGrid"
                     float distance = length(direction);
                     if (distance == 0) continue; // Avoid division by zero
 
-                    float forceMagnitude = _GConstant * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force
+                    float forceMagnitude = 1 * (_Planets[u].z * objMass) / (distance * distance); // Magnitude of the force
                     forceMagnitude = clamp(forceMagnitude, _MinOffset,_MaxOffset);
 
                     float2 addForce = (forceMagnitude * normalize(direction).xy) / pow(distance, _Strength);
@@ -67,7 +67,7 @@ Shader "Unlit/GravityGrid"
                     {
                         addForce = (distance * normalize(direction).xy);
                     }
-                    totalForce += addForce; // Add force vector to totalForce
+                    totalForce += addForce / _Divisor; // Add force vector to totalForce
                 }
                 return totalForce;
             }
@@ -88,7 +88,13 @@ Shader "Unlit/GravityGrid"
             fixed4 frag(v2f i) : SV_Target
             {
                 float force = pow(length(GravityForceAtPoint(i.worldPos, 1)), _ForcePower);
-                
+                //for(uint u = 0; u<_PlanetCount; u++)
+                //{
+                //    if(length(i.worldPos.xy - _Planets[u].xy) < 5)
+                //    {
+                //        return 1;
+                //    }
+                //}
                 return _Color;
                 return lerp(0, _Color, saturate(force/_MaxForce));
             }
