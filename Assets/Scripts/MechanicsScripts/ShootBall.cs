@@ -610,8 +610,6 @@ public class ShootBall : MonoBehaviour
         {
             quadrant = -1;
         }
-        print(quadrant);
-
 
         float dotProduct = Mathf.Abs(Vector3.Dot(velocity.normalized, hole.up));
         bool dir = false;

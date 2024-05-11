@@ -22,6 +22,7 @@ public class BlackHoleGenerator : MonoBehaviour
     [SerializeField] SpaceHoleColorScheme[] schemePool;
     [SerializeField] int schemeIndex;
     [SerializeField] float systemRotSpeed = 8;
+    [SerializeField] float blackHoleTimer;
 
     MeshRenderer sphereRenderer, distortRenderer;
     ParticleSystem swirlSystem;
@@ -29,12 +30,14 @@ public class BlackHoleGenerator : MonoBehaviour
     MaterialPropertyBlock sphereBlock, distortBlock;
     Material distortMat;
     CelestialMass cMass;
+    bool canTravel = true;
     
     public delegate void BlackHoleTravel();
     public static BlackHoleTravel blackHoleTravel;
     // Start is called before the first frame update
     void Start()
     {
+        canTravel = true;
         NullChecks();
     }
 
@@ -132,19 +135,32 @@ public class BlackHoleGenerator : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if(correspondent == null) { return; }
-        if (collision.gameObject.tag == "Player") //Player or simulated player
+        if (collision.gameObject.tag == "Player" && canTravel) //Player or simulated player
         {
             collision.attachedRigidbody.velocity *= -1;
             TrailRenderer trailRenderer = collision.gameObject.GetComponent<TrailRenderer>();
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
             trailRenderer.Clear();
+            blackHoleTravel?.Invoke();
         }
         if(collision.gameObject.layer == 7){
             collision.attachedRigidbody.velocity *= -1;
             collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
     }
+    private void BlackHoleTravelTimer(){
+        canTravel = false; 
+        StartCoroutine(ResetBlackHoleTravel());
+    }
+    IEnumerator ResetBlackHoleTravel(){
+        yield return new WaitForSeconds(blackHoleTimer);
+        canTravel = true;
+    }
     private void OnEnable(){
+        blackHoleTravel += BlackHoleTravelTimer;
+    }
+    private void OnDisable(){
+        blackHoleTravel -= BlackHoleTravelTimer;
     }
 }
