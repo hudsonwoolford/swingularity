@@ -16,6 +16,8 @@ public class DarkMatterGenerator : MonoBehaviour
     [SerializeField] ParticleSystem glowParticles;
     [SerializeField] ParticleSystem trailParticles;
     SphereCollider ffCollider;
+    ParticleSystemRenderer circleRenderer;
+    Color defaultCircleColor = Color.red;
     // Start is called before the first frame update
     void Start()
     {
@@ -81,5 +83,20 @@ public class DarkMatterGenerator : MonoBehaviour
     {
         if (planetData == null) { return; }
         if (ffCollider == null && planetData.forceField != null) { ffCollider = planetData.forceField.gameObject.GetComponent<SphereCollider>(); }
+        if (circleRenderer == null) { circleRenderer = circleParticles.GetComponent<ParticleSystemRenderer>(); }
+        if (defaultCircleColor == Color.red) { defaultCircleColor = circleRenderer.material.GetColor("_Color"); }
+    }
+    void HackModeColors(bool enable, Material whiteMat)
+    {
+        Color circleColor = enable ? Color.white : defaultCircleColor;
+        circleRenderer.material.SetColor("_Color", circleColor);
+    }
+    private void OnEnable()
+    {
+        HackMode.onHackMode += HackModeColors;
+    }
+    private void OnDisable()
+    {
+        HackMode.onHackMode -= HackModeColors;
     }
 }

@@ -73,7 +73,6 @@ public class HackMode : MonoBehaviour
     void EnableFabric(bool enable)
     {
         gridMeshRend.enabled = enable;
-        Time.timeScale = enable ? 0.4f : 1.0f;
     }                       
     void UpdateFabric(Rigidbody[] planets)
     {
