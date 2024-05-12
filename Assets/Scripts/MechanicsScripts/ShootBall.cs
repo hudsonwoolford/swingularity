@@ -34,6 +34,8 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
     [SerializeField] float animScale; //Scale of animation when hit the hole
 
+    [SerializeField] LayerMask ignoreStill;
+
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -135,7 +137,7 @@ public class ShootBall : MonoBehaviour
                 }
             }
         }
-        if (rb.velocity.magnitude < 0.1f && Physics.OverlapSphere(rb.position, 0.25f).Length > 1){
+        if (rb.velocity.magnitude < 0.1f && Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length > 1){
             if(!ballStill){
                 onStill?.Invoke();
                 ballStillTimer = 0f;
@@ -160,7 +162,7 @@ public class ShootBall : MonoBehaviour
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
             ballStillTimer += Time.deltaTime;
-            if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f).Length < 2)
+            if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length < 2)
             {
                 ballStill = false;
                 yield break;
