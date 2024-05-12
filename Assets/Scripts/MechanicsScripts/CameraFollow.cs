@@ -76,7 +76,7 @@ public class CameraFollow : MonoBehaviour
         float width = height * Camera.main.aspect;       //camera width in units
         panningPath.points = InnerPolygonPositions(startPos, endPos, 8, 2f * sizeScalar, 10 - width/2, 10 - height/2);
 
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(1))
         {
             StartCoroutine(Panning());
         }
@@ -118,7 +118,7 @@ public class CameraFollow : MonoBehaviour
     {
         panning = true;
         Vector2 startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        while (Input.GetMouseButton(2) && panning)
+        while (Input.GetMouseButton(1) && panning)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousePos - startMousePos;
