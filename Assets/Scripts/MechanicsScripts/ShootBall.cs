@@ -424,12 +424,23 @@ public class ShootBall : MonoBehaviour
         foreach (Transform tr in planetTransform) //children of environment
         {
             GameObject obj = Instantiate(tr.gameObject, tr.position, tr.rotation); //instantiates a clone
-            obj.GetComponent<Renderer>().enabled = false; //hides it
+            if(obj.GetComponent<Renderer>() != null)
+            {
+                obj.GetComponent<Renderer>().enabled = false; //hides it
+            }
             //if(obj.layer != 12)
             //{
-                obj.layer = LayerMask.NameToLayer("Simulation"); //sets layer to simulation
+            RecursiveLayer(obj.transform, LayerMask.NameToLayer("Simulation"));
             //}
             SceneManager.MoveGameObjectToScene(obj, simulationScene); //moves the object to simulation scene
+        }
+    }
+    void RecursiveLayer(Transform searchChildren, int layer)
+    {
+        searchChildren.gameObject.layer = layer;
+        foreach (Transform t in searchChildren)
+        {
+            RecursiveLayer(t, layer);
         }
     }
     void SimulateScene(Vector3 forceVar)

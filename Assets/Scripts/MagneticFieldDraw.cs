@@ -16,6 +16,7 @@ public class MagneticFieldDraw : MonoBehaviour
     [SerializeField] float lineLength = 1;
     [SerializeField] ParticleSystem particles1, particles2;
     [SerializeField] float particleSpeed;
+    [SerializeField] bool invertPolarity = false;
     ParticleSystem.Particle[] allParticles1, allParticles2;
 
     // Start is called before the first frame update
@@ -29,21 +30,22 @@ public class MagneticFieldDraw : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(gameObject.layer == 12) { Destroy(gameObject); }
         UpdateParticleSystem(particles1, ref allParticles1);
         UpdateParticleSystem(particles2, ref allParticles2);
     }
     void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
     {
         int numAlive = particles.GetParticles(allP);
-
+        int polarity = !invertPolarity ? 1 : -1;
         for (int i = 0; i < numAlive; i++)
         {
-            //Vector2 pos = allP[i].position;
-            //Vector2 wSum = WeightedSum(pos, pole1, pole2);
-            //float distance = wSum.magnitude;
-            //Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
-            //allP[i].velocity = -nextPoint * Time.fixedDeltaTime * particleSpeed;
-            allP[i].velocity = Vector3.one * 10;
+            Vector2 pos = allP[i].position;
+            Vector2 wSum = WeightedSum(pos, pole1, pole2);
+            float distance = wSum.magnitude;
+            Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
+            allP[i].velocity =  polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
+            //allP[i].velocity = Vector3.one * 10;
         }
 
         particles.SetParticles(allP);

@@ -62,8 +62,9 @@ Shader "Unlit/GravityGrid"
                     float2 relPos = (worldPos.xy - _Planets[u].xy);
                     float dispMag = pow((relPos.x * relPos.x + relPos.y * relPos.y),_Strength) / _Divisor;
                     float sqrDispMag = pow(dispMag, _GravPower);
-                    float sqrMass = pow(_Planets[u].z, _GravPower);
-                    displacement+=float3((-sqrMass/max(sqrDispMag,sqrMass)) * relPos.xy,0);
+                    float sqrMass = pow(abs(_Planets[u].z), _GravPower);
+                    int dirMult = _Planets[u].z >= 0 ? -1 : 1;
+                    displacement+=float3((dirMult * sqrMass/max(sqrDispMag,sqrMass)) * relPos.xy,0);
                 
                 }
                 return displacement;
