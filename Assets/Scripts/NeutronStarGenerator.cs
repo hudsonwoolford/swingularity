@@ -1,0 +1,119 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+
+public class NeutronStarGenerator : SunGenerator
+{
+    const double boltzmannConstant = 1.38064852e-23;
+    [Header("Neutron Variables")]
+    [Space()]
+    [Header("Poles")]
+    [SerializeField] float poleAngle = 0;
+    [SerializeField] float pole1Charge = 1;
+    [SerializeField] float pole2Charge = -1;
+    [Header("Particle Visualisation")]
+    [SerializeField] Transform particleParent;
+    [SerializeField] ParticleSystem particles1;
+    [SerializeField] ParticleSystem particles2;
+    [SerializeField] float particleSpeed = 1100;
+    [SerializeField] bool invertPolarity = false;
+    [Header("Magnetic Field Grid")]
+    [SerializeField] uint xSeg = 50;
+    [SerializeField] uint ySeg = 50;
+    [SerializeField] float cellSize = 0.2f;
+    [SerializeField] float lineLength = 0.1f;
+    ParticleSystem.Particle[] allParticles1, allParticles2;
+
+    [HideInInspector][SerializeField]Vector2 pole1;
+    [HideInInspector][SerializeField] Vector2 pole2;
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        base.Start();
+        InitializeParticles();
+        DrawMagneticField();
+    }
+    // Update is called once per frame
+    private void Update()
+    {
+        Vector2 angleVector = new Vector2(Mathf.Cos(poleAngle * Mathf.Deg2Rad), Mathf.Sin(poleAngle * Mathf.Deg2Rad));
+        pole1 = -angleVector * transform.localScale.x + new Vector2(transform.position.x, transform.position.y);
+        pole2 = angleVector * transform.localScale.x + new Vector2(transform.position.x, transform.position.y);
+        particleParent.eulerAngles = new Vector3(0, 0, poleAngle);
+    }
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if (gameObject.layer == 12) { Destroy(gameObject); }
+        UpdateParticleSystem(particles1, ref allParticles1);
+        UpdateParticleSystem(particles2, ref allParticles2);
+    }
+    #region Field Visualisations
+    void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
+    {
+        int numAlive = particles.GetParticles(allP);
+        int polarity = !invertPolarity ? 1 : -1;
+        for (int i = 0; i < numAlive; i++)
+        {
+            Vector2 pos = allP[i].position;
+            Vector2 wSum = WeightedSum(pos, pole1, pole2);
+            float distance = wSum.magnitude;
+            Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
+            allP[i].velocity = polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
+            //allP[i].velocity = Vector3.one * 10;
+        }
+
+        particles.SetParticles(allP);
+    }
+    void InitializeParticles()
+    {
+        allParticles1 = new ParticleSystem.Particle[particles1.main.maxParticles];
+        allParticles2 = new ParticleSystem.Particle[particles2.main.maxParticles];
+    }
+    void DrawMagneticField()
+    {
+        Vector2 offset = new Vector2(-xSeg / 2 * cellSize, -ySeg / 2 * cellSize);
+        for (int y = 0; y < ySeg; y++)
+        {
+            for (int x = 0; x < xSeg; x++)
+            {
+                Vector2 trackPoint = new Vector2(x * cellSize, y * cellSize) + offset + new Vector2(transform.position.x, transform.position.y);
+                float t = -lineLength;
+                Vector2 wSum = WeightedSum(trackPoint, pole1, pole2);
+                float distance = wSum.magnitude;
+
+                Vector2 point1 = new Vector2(wSum.x * t / distance + trackPoint.x, wSum.y * t / distance + trackPoint.y);
+
+                t = lineLength;
+                Vector2 point2 = new Vector2(wSum.x * t / distance + trackPoint.x, wSum.y * t / distance + trackPoint.y);
+
+                Debug.DrawLine(point1, point2, Color.red, 50, false);
+            }
+        }
+    }
+    #endregion
+    #region Field Calculations
+    float FieldMagnitude(Vector2 point, Vector2 polePoint, float charge)
+    {
+        return (charge * (float)boltzmannConstant) / Mathf.Pow((Vector2.Distance(point, polePoint)), 3);
+    }
+    Vector2 WeightedSum(Vector2 point, Vector2 pole1Point, Vector2 pole2Point)
+    {
+
+        float dY =  (point.x - pole1Point.x) * FieldMagnitude(point, pole1Point, pole1Charge) + (point.x - pole2Point.x) * FieldMagnitude(point, pole2Point, pole2Charge);
+        float dX = -(point.y - pole1Point.y) * FieldMagnitude(point, pole1Point, pole1Charge) - (point.y - pole2Point.y) * FieldMagnitude(point, pole2Point, pole2Charge);
+        return new Vector2(dX, dY);
+    }
+    #endregion
+    private void OnDrawGizmosSelected() //Helpful gizmos in menu
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(pole1, 0.1f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(pole2, 0.1f);
+
+    }
+}

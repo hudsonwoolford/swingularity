@@ -7,38 +7,41 @@ using UnityEngine;
 public class SunGenerator : MonoBehaviour
 {
     [Serializable]
-    struct StarColorScheme {
+    protected struct StarColorScheme {
         public string name;
         public ColorSchemeStaticReference.PlanetType planetType;
         [ColorUsage(true, true)]
         public Color sunColor, sunDarkColor, atmosphereColor;
     }
-    [SerializeField] StarColorScheme[] schemePool;
-    [SerializeField] int starSchemeIndex;
-    [SerializeField] float bigNoiseOffset;
-    [SerializeField] float lightRangeMult = 1, lightIntensityMult = 1;
-    [SerializeField] GameObject collisionParticles;
-    [SerializeField] AudioClip collisionClip;
-    [SerializeField] bool autoMass = true;
-    Light lightSource;
-    SphereCollider col;
-    CelestialMass cMass;
-    AudioSource source;
-    MeshRenderer meshRenderer;
-    ParticleSystem system;
+    [SerializeField] protected StarColorScheme[] schemePool = new StarColorScheme[0];
+    [SerializeField] protected int starSchemeIndex;
+    [SerializeField] protected float bigNoiseOffset;
+    [SerializeField] protected float lightRangeMult = 1, lightIntensityMult = 1;
+    [SerializeField] protected GameObject collisionParticles;
+    [SerializeField] protected AudioClip collisionClip;
+    [SerializeField] protected bool autoMass = true;
+    protected Light lightSource;
+    protected SphereCollider col;
+    protected CelestialMass cMass;
+    protected AudioSource source;
+    protected MeshRenderer meshRenderer;
+    protected ParticleSystem system;
     void Awake(){
-        starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
+        if(schemePool.Length > 0)
+        {
+            starSchemeIndex = Mathf.Clamp(starSchemeIndex, 0, schemePool.Length - 1); 
+        }
     }
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         NullChecks();
+        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
 
         //Null checks because this script works in edit mode
         NullChecks();
@@ -64,7 +67,7 @@ public class SunGenerator : MonoBehaviour
         ParticleSystem.ColorOverLifetimeModule colorModule = system.colorOverLifetime;
         colorModule.color = grad;
     }
-    private void OnCollisionEnter(Collision c)
+    protected virtual void OnCollisionEnter(Collision c)
     {
         if(c.gameObject.layer == 7) { return; } //Simulation layer
         source.PlayOneShot(collisionClip, 0.6f);
@@ -126,7 +129,7 @@ public class SunGenerator : MonoBehaviour
     /// <summary>
     /// Checks if variables are null and sets them correctly
     /// </summary>
-    void NullChecks()
+    protected virtual void NullChecks()
     {
         if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
         if (system == null) { system = GetComponentInChildren<ParticleSystem>(); }
@@ -138,7 +141,7 @@ public class SunGenerator : MonoBehaviour
     /// <summary>
     /// Sets the particle colours based off of Sun Colours
     /// </summary>
-    void SetParticleColours(ParticleSystem[] particleSystems)
+    protected virtual void SetParticleColours(ParticleSystem[] particleSystems)
     {
         Gradient normalGrad = new Gradient();
         normalGrad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[starSchemeIndex].sunColor, 0.33f), new GradientColorKey(schemePool[starSchemeIndex].sunDarkColor, 0.66f) }, new GradientAlphaKey[] { new GradientAlphaKey(0.0f, 0f), new GradientAlphaKey(1.0f, 0.5f), new GradientAlphaKey(0.0f, 1f) });
