@@ -7,9 +7,6 @@ using System;
 using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
-using UnityEngine.EventSystems;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor;
 
 public class LevelGenerator : MonoBehaviour
 {
