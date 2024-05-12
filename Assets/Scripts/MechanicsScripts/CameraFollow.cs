@@ -148,13 +148,20 @@ public class CameraFollow : MonoBehaviour
 
         //Following ball and zooming
         if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
-        Vector3 targetPos;
-        Vector3 mousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-
-        targetPos = transform.position;
-        if (cameraSize > defaultCameraSize){
+        Vector3 targetPos = Vector3.zero;
+        if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
+        {
+            Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
+            targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
+        }
+        else
+        {
+            targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
+        }
+        bool focusingBall = false;       
+        if (cameraSize > defaultCameraSize && !focusingBall){
             float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-            Vector2 pos = Vector2.Lerp(mousePos, (endPos + startPos)/2, camLerpVal);
+            Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
             targetPos = new Vector3(pos.x, pos.y, -10);
         }                   
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
