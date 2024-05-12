@@ -30,6 +30,7 @@ public class DarkMatterGenerator : MonoBehaviour
         circleParticles.Play();
         smokeParticles.Play();
         trailParticles.Play();
+        circleRenderer = circleParticles.GetComponent<ParticleSystemRenderer>();
     }
 
     // Update is called once per frame
@@ -84,7 +85,10 @@ public class DarkMatterGenerator : MonoBehaviour
         if (planetData == null) { return; }
         if (ffCollider == null && planetData.forceField != null) { ffCollider = planetData.forceField.gameObject.GetComponent<SphereCollider>(); }
         if (circleRenderer == null) { circleRenderer = circleParticles.GetComponent<ParticleSystemRenderer>(); }
-        if (defaultCircleColor == Color.red) { defaultCircleColor = circleRenderer.material.GetColor("_Color"); }
+        if(Application.isPlaying)
+        {
+            if (defaultCircleColor == Color.red) { defaultCircleColor = circleRenderer.material.GetColor("_Color"); }
+        }
     }
     void HackModeColors(bool enable, Material whiteMat)
     {
