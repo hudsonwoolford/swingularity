@@ -25,6 +25,7 @@ public class CameraFollow : MonoBehaviour
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
+    bool hackMode = false;
 
     public void InitPositions(Vector2 startPosSent, Vector2 endPosSent, float maxSizeSent){
         startPos = startPosSent;
@@ -72,6 +73,14 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
+        if(!hackMode){
+            CamBehaviour();
+        }
+        else{
+            HackModeCamBehaviour();
+        }
+    }
+    void CamBehaviour(){
         float height = Camera.main.orthographicSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
         panningPath.points = InnerPolygonPositions(startPos, endPos, 8, 2f * sizeScalar, 10 - width/2, 10 - height/2);
@@ -110,6 +119,42 @@ public class CameraFollow : MonoBehaviour
         if (cameraSize > defaultCameraSize && !focusingBall){
             float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
             Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
+            targetPos = new Vector3(pos.x, pos.y, -10);
+        }                   
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
+    }
+    void HackModeCamBehaviour(){
+        float height = Camera.main.orthographicSize * 2; //camera height in units
+        float width = height * Camera.main.aspect;       //camera width in units
+        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, 2f * sizeScalar, 10 - width/2, 10 - height/2);
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            StartCoroutine(Panning());
+        }
+        //if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
+        //{
+        //    targetCameraSize = defaultCameraSize;
+        //}
+        if (!Input.GetMouseButton(0) && Time.timeScale != 0){
+            targetCameraSize -= Input.mouseScrollDelta.y;
+        }
+        targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
+        Camera.main.orthographicSize = cameraSize;
+        cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
+        if (panning) {
+            return;
+        }
+
+        //Following ball and zooming
+        if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
+        Vector3 targetPos;
+        Vector3 mousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+
+        targetPos = transform.position;
+        if (cameraSize > defaultCameraSize){
+            float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
+            Vector2 pos = Vector2.Lerp(mousePos, (endPos + startPos)/2, camLerpVal);
             targetPos = new Vector3(pos.x, pos.y, -10);
         }                   
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
@@ -270,6 +315,9 @@ public class CameraFollow : MonoBehaviour
         if(!focusBall) { return; } 
         targetCameraSize = defaultCameraSize;
     }
+    void HackModeSet(bool enable, Material whiteMat){
+        hackMode = enable;
+    }
 
     private void OnEnable()
     {
@@ -277,13 +325,15 @@ public class CameraFollow : MonoBehaviour
         ShootBall.triggerReset += OnReset;
         ShootBall.onHole += OnReset;
         ShootBall.holeAnim += ZoomIn;
+        HackMode.onHackMode += HackModeSet;
     }
     private void OnDisable()
     {
         ShootBall.onShoot -= FocusBall;
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;
-        ShootBall.holeAnim += ZoomIn;
+        ShootBall.holeAnim -= ZoomIn;
+        HackMode.onHackMode -= HackModeSet;
     }
     private void OnDrawGizmos()
     {
@@ -333,6 +383,5 @@ public class CameraFollowEditor : Editor
         startPos = serializedObject.FindProperty("startPos");
         endPos = serializedObject.FindProperty("endPos");
     }
-    
 }
 #endif
