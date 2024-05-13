@@ -210,7 +210,6 @@ public class CameraFollow : MonoBehaviour
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             yield return null;
         }
-        panning = false;
     }
     #region Polygon Stuff
     //Returns array of positions that makes up a polygon for the boundaries
@@ -319,8 +318,7 @@ public class CameraFollow : MonoBehaviour
     }
     void FocusBall()
     {
-        if(!focusBall) { return; } 
-        targetCameraSize = defaultCameraSize;
+        panning = false;
     }
     void HackModeSet(bool enable, Material whiteMat){
         hackMode = enable;
