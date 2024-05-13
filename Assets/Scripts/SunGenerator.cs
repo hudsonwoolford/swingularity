@@ -98,7 +98,7 @@ public class SunGenerator : MonoBehaviour
     /// <summary>
     /// Randomly chooses fromt sun colour scheme array based on seed
     /// </summary>
-    public void RandomSun(int seed, ColorSchemeStaticReference.PlanetType type)
+    public virtual void RandomSun(int seed, ColorSchemeStaticReference.PlanetType type)
     {
         //Prevent errors
         if (schemePool.Length == 0) { return; }

@@ -36,7 +36,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     Vector2 regionExtension; //how much region is extended
     [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
+    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
     float planetScale; //Scale of planets multiplier
     [SerializeField] int resolution;
@@ -74,6 +74,7 @@ public class LevelGenerator : MonoBehaviour
     public enum SpecialType
     { 
         Star,
+        NeutronStar,
         BlackHole,
         Quasar,
         DarkMatter,
@@ -204,7 +205,7 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
         {
             //Filters on whether they are replace objects or not
-            if (specialObjects[i].type == (SpecialType.Star))
+            if (specialObjects[i].type == (SpecialType.Star) || specialObjects[i].type == (SpecialType.NeutronStar))
             {
                 numSpecial += specialObjects[i].amount;
                 replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
@@ -578,6 +579,16 @@ public class LevelGenerator : MonoBehaviour
         planet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet.forceField = null;
     }
+    void GenerateNeutronStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
+    {
+        Transform star = Instantiate(neutronStarPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
+        star.transform.localScale = Vector3.one * size * planetScale * 0.33f;
+        star.parent = environment;
+        star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z + index * 1000), planetType);
+        planet.planet = star.gameObject;
+        planet.planetType = ColorSchemeStaticReference.PlanetType.special;
+        planet.forceField = null;
+    }
     void GenerateMoon(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {   
         UnityEngine.Random.InitState((int)(seed.y + index));
@@ -713,6 +724,9 @@ public class LevelGenerator : MonoBehaviour
             {
                 case SpecialType.Star:
                     specialObjects[i].replaceGeneration = GenerateStar;
+                    break;
+                case SpecialType.NeutronStar:
+                    specialObjects[i].replaceGeneration = GenerateNeutronStar;
                     break;
                 case SpecialType.BlackHole:
                     specialObjects[i].replaceGeneration = CacheBlackHole;

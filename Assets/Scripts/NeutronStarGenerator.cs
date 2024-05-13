@@ -16,6 +16,7 @@ public class NeutronStarGenerator : SunGenerator
     [Header("Particle Visualisation")]
     [SerializeField] Transform particleParent;
     [SerializeField] ParticleSystem[] particleSystems;
+    [SerializeField]ParticleSystem atmosphericParticles;
     [SerializeField] float particleSpeed = 1100;
     [SerializeField] bool invertPolarity = false;
     [Header("Magnetic Field Grid")]
@@ -31,7 +32,8 @@ public class NeutronStarGenerator : SunGenerator
     protected override void Start()
     {
         base.Start();
-        base.cMass.mass *= -1;
+        cMass.mass = Mathf.Abs(cMass.mass) * -1.5f;
+        InitializeParticleArrays();
         InitializeParticles();
         //DrawMagneticField();
     }
@@ -53,7 +55,30 @@ public class NeutronStarGenerator : SunGenerator
             UpdateParticleSystem(particleSystems[i], ref allParticles[i]);
         }
     }
+    public override void RandomSun(int seed, ColorSchemeStaticReference.PlanetType type)
+    {
+        base.RandomSun(seed, type);
+
+        UnityEngine.Random.InitState(seed);
+        poleAngle = UnityEngine.Random.value * 180;
+        cMass.mass = Mathf.Abs(cMass.mass) * -1.5f;
+        InitializeParticleArrays();
+        InitializeParticles();
+    }
     #region Field Visualisations
+    void InitializeParticles()
+    {
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 0), new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 0) }, new GradientAlphaKey[] { new GradientAlphaKey(1, 1), new GradientAlphaKey(1, 1) });
+        ParticleSystem.MainModule main = atmosphericParticles.main;
+        main.startColor = gradient;
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            main = particleSystems[i].main;
+            main.startColor = gradient;
+            main.startLifetime = transform.localScale.x * 2;
+        }
+    }
     void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
     {
         int numAlive = particles.GetParticles(allP);
@@ -70,7 +95,7 @@ public class NeutronStarGenerator : SunGenerator
 
         particles.SetParticles(allP);
     }
-    void InitializeParticles()
+    void InitializeParticleArrays()
     {
         allParticles = new ParticleSystem.Particle[particleSystems.Length][];
         for (int i = 0; i < particleSystems.Length; i++)
