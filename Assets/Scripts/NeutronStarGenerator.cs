@@ -15,8 +15,7 @@ public class NeutronStarGenerator : SunGenerator
     [SerializeField] float pole2Charge = -1;
     [Header("Particle Visualisation")]
     [SerializeField] Transform particleParent;
-    [SerializeField] ParticleSystem particles1;
-    [SerializeField] ParticleSystem particles2;
+    [SerializeField] ParticleSystem[] particleSystems;
     [SerializeField] float particleSpeed = 1100;
     [SerializeField] bool invertPolarity = false;
     [Header("Magnetic Field Grid")]
@@ -24,7 +23,7 @@ public class NeutronStarGenerator : SunGenerator
     [SerializeField] uint ySeg = 50;
     [SerializeField] float cellSize = 0.2f;
     [SerializeField] float lineLength = 0.1f;
-    ParticleSystem.Particle[] allParticles1, allParticles2;
+    ParticleSystem.Particle[][] allParticles;
 
     [HideInInspector][SerializeField]Vector2 pole1;
     [HideInInspector][SerializeField] Vector2 pole2;
@@ -32,8 +31,9 @@ public class NeutronStarGenerator : SunGenerator
     protected override void Start()
     {
         base.Start();
+        base.cMass.mass *= -1;
         InitializeParticles();
-        DrawMagneticField();
+        //DrawMagneticField();
     }
     // Update is called once per frame
     private void Update()
@@ -48,8 +48,10 @@ public class NeutronStarGenerator : SunGenerator
         base.FixedUpdate();
 
         if (gameObject.layer == 12) { Destroy(gameObject); }
-        UpdateParticleSystem(particles1, ref allParticles1);
-        UpdateParticleSystem(particles2, ref allParticles2);
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            UpdateParticleSystem(particleSystems[i], ref allParticles[i]);
+        }
     }
     #region Field Visualisations
     void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
@@ -70,8 +72,11 @@ public class NeutronStarGenerator : SunGenerator
     }
     void InitializeParticles()
     {
-        allParticles1 = new ParticleSystem.Particle[particles1.main.maxParticles];
-        allParticles2 = new ParticleSystem.Particle[particles2.main.maxParticles];
+        allParticles = new ParticleSystem.Particle[particleSystems.Length][];
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            allParticles[i] = new ParticleSystem.Particle[particleSystems[i].main.maxParticles];
+        }
     }
     void DrawMagneticField()
     {
