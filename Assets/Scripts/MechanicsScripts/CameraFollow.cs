@@ -13,7 +13,7 @@ public class CameraFollow : MonoBehaviour
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
-    [SerializeField] float sizeScalar = 1, smoothness = 0.3f;  //smoothness of camera movement
+    [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
     [SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball;                            //ball transform
@@ -73,12 +73,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
-        if(!hackMode){
-            CamBehaviour();
-        }
-        else{
-            HackModeCamBehaviour();
-        }
+        CamBehaviour();
     }
     void CamBehaviour(){
         float height = Camera.main.orthographicSize * 2; //camera height in units
@@ -96,6 +91,8 @@ public class CameraFollow : MonoBehaviour
         if (!Input.GetMouseButton(0) && Time.timeScale != 0){
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
+        Vector3 mouseWorldPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
         cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
@@ -122,6 +119,15 @@ public class CameraFollow : MonoBehaviour
             targetPos = new Vector3(pos.x, pos.y, -10);
         }                   
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
+    }
+    Vector3 ZoomPos(Vector3 startMousePos){
+        if(Input.mouseScrollDelta.y > 0){
+            Vector3 dir = Vector3.Lerp(transform.position, GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition), Time.deltaTime * lerpSpeed);
+            return new Vector3 (dir.x, dir.y, -10);
+        }
+        else{
+            return Vector3.zero;
+        }
     }
     void HackModeCamBehaviour(){
         float height = Camera.main.orthographicSize * 2; //camera height in units
