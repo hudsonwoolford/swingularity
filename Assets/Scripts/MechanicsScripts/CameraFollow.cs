@@ -84,6 +84,9 @@ public class CameraFollow : MonoBehaviour
         {
             StartCoroutine(Panning());
         }
+        if(Input.GetMouseButton(2)){
+            panning = false;
+        }
         //if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
         //{
         //    targetCameraSize = defaultCameraSize;
@@ -92,39 +95,57 @@ public class CameraFollow : MonoBehaviour
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
         Vector3 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        Vector3 oldBallPos = new Vector3(ball.position.x, ball.position.y, -10);
         float oldZoom = Camera.main.orthographicSize;
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
         cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
-        if (panning) {
-            return;
-        }
 
-        //Following ball and zooming
-        if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
-        Vector3 targetPos = Vector3.zero;
-        if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
-        {
-            Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
-            targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
+        Vector2 zoomDir = ZoomPos(oldMousePos, transform.position, oldZoom);
+        Vector2 closestZoomPos = panningPath.ClosestPoint(new Vector2(transform.position.x + zoomDir.x, transform.position.y + zoomDir.y));
+
+        if (panning) {
+            transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, transform.position.z);
         }
-        else
-        {
-            targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
+        else{
+            //Following ball and zooming
+            if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
+            Vector3 targetPos = Vector3.zero;
+            if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
+            {
+                Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
+                targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
+            }
+            else
+            {
+                targetPos = new Vector3(ball.position.x, ball.position.y, transform.position.z); //ball position in camera z
+            }   
+
+            float camLerpVal = 0;
+            if (cameraSize > defaultCameraSize){
+                camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
+            }  
+            Vector3 levelMiddle = (startPos + endPos)/2;
+            Vector3 ballOrMiddle = Vector3.Lerp(oldBallPos, new Vector3(levelMiddle.x, levelMiddle.y, transform.position.z), camLerpVal);
+
+            Vector3 zoomPos = ZoomPos(ballOrMiddle, transform.position, oldZoom); 
+
+
+            transform.position += zoomPos;
+            Vector2 transformClamped = cameraPath.ClosestPoint(new Vector2 (transform.position.x, transform.position.y));
+            transform.position = new Vector3 (transformClamped.x, transformClamped.y, transform.position.z);
+
+            targetPos += zoomPos;
+            Vector2 targetClamped = cameraPath.ClosestPoint(new Vector2(targetPos.x, targetPos.y));
+            targetPos = new Vector3 (targetClamped.x, targetClamped.y, transform.position.z);
+
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
         }
-        bool focusingBall = false;       
-        if (cameraSize > defaultCameraSize && !focusingBall){
-            float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-            Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
-            targetPos = new Vector3(pos.x, pos.y, -10);
-        }                   
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness) - ZoomPos(oldMousePos, transform.position, oldZoom);//smoothdamp function for smoothness
     }
     Vector3 ZoomPos(Vector3 oldMousePos, Vector3 oldCamPos, float oldZoom){
             Vector3 length = oldMousePos - transform.position;
             float zoomScaleFactor = oldZoom / GetComponent<Camera>().orthographicSize;
             Vector3 scaledLength = length / zoomScaleFactor;
-            print(zoomScaleFactor);
             Vector3 deltaLength = length - scaledLength;
             return deltaLength;
     }
