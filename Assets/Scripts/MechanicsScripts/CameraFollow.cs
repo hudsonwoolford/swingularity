@@ -91,8 +91,8 @@ public class CameraFollow : MonoBehaviour
         if (!Input.GetMouseButton(0) && Time.timeScale != 0){
             targetCameraSize -= Input.mouseScrollDelta.y;
         }
-        Vector3 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-        float oldZoom = Camera.main.orthographicSize;
+        Vector3 mouseWorldPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
         cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
@@ -118,15 +118,16 @@ public class CameraFollow : MonoBehaviour
             Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
             targetPos = new Vector3(pos.x, pos.y, -10);
         }                   
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness) - ZoomPos(oldMousePos, transform.position, oldZoom);//smoothdamp function for smoothness
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
     }
-    Vector3 ZoomPos(Vector3 oldMousePos, Vector3 oldCamPos, float oldZoom){
-            Vector3 length = oldMousePos - transform.position;
-            float zoomScaleFactor = oldZoom / GetComponent<Camera>().orthographicSize;
-            Vector3 scaledLength = length / zoomScaleFactor;
-            print(zoomScaleFactor);
-            Vector3 deltaLength = length - scaledLength;
-            return deltaLength;
+    Vector3 ZoomPos(Vector3 startMousePos){
+        if(Input.mouseScrollDelta.y > 0){
+            Vector3 dir = Vector3.Lerp(transform.position, GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition), Time.deltaTime * lerpSpeed);
+            return new Vector3 (dir.x, dir.y, -10);
+        }
+        else{
+            return Vector3.zero;
+        }
     }
     void HackModeCamBehaviour(){
         float height = Camera.main.orthographicSize * 2; //camera height in units
