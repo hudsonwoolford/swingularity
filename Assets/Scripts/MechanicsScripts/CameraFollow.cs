@@ -119,8 +119,6 @@ public class CameraFollow : MonoBehaviour
             // Vector3 levelMiddle = (startPos + endPos)/2;
             // Vector3 ballOrMiddle = Vector3.Lerp(oldBallPos, new Vector3(levelMiddle.x, levelMiddle.y, transform.position.z), camLerpVal);
 
-            Vector3 zoomPos = ZoomPos(oldBallPos, transform.position, oldZoom); 
-
 
             if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
             if (!cameraPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
@@ -158,7 +156,7 @@ public class CameraFollow : MonoBehaviour
                 targetPos = new Vector3(pos.x, pos.y, -10);
             }                   
 
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness) + zoomPos;//smoothdamp function for smoothness
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
         }
     }
     Vector3 ZoomPos(Vector3 oldMousePos, Vector3 oldCamPos, float oldZoom){
