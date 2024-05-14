@@ -12,6 +12,8 @@ Shader "Unlit/GravityGrid"
         _MaxForce ("Max Force", float) = 5
         _ForcePower ("Force Power", float) = 1
 
+        _NegativeClamp ("Negative Clamp", float) = 1
+
         _GravPower ("Gravity Power", float) = 1
     }
     SubShader
@@ -50,6 +52,8 @@ Shader "Unlit/GravityGrid"
             float _MaxForce;
             float _ForcePower;
 
+            float _NegativeClamp;
+
             float _GConstant;
 
             float _GravPower;
@@ -64,7 +68,18 @@ Shader "Unlit/GravityGrid"
                     float sqrDispMag = pow(dispMag, _GravPower);
                     float sqrMass = pow(abs(_Planets[u].z), _GravPower);
                     int dirMult = _Planets[u].z >= 0 ? -1 : 1;
-                    displacement+=float3((dirMult * sqrMass/max(sqrDispMag,sqrMass)) * relPos.xy,0);
+                    int negMult = _Planets[u].z < 0 ? 0 : 1;
+                    if(negMult == 0)
+                    {
+                        float3 disp = float3((dirMult * sqrMass/sqrDispMag) * relPos.xy,0);
+                        float2 dir = normalize(disp);
+                        float mag = clamp(length(disp), -_NegativeClamp, _NegativeClamp);
+                        displacement += dir * mag;
+                    }
+                    else
+                    {
+                        displacement+=float3((dirMult * sqrMass/max(sqrDispMag,sqrMass)) * relPos.xy,0);
+                    }
                 
                 }
                 return displacement;
