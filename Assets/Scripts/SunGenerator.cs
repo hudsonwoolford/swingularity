@@ -11,7 +11,7 @@ public class SunGenerator : MonoBehaviour
         public string name;
         public ColorSchemeStaticReference.PlanetType planetType;
         [ColorUsage(true, true)]
-        public Color sunColor, sunDarkColor, atmosphereColor;
+        public Color sunColor, sunDarkColor, atmosphereColor, neutronParticleColor;
     }
     [SerializeField] protected StarColorScheme[] schemePool = new StarColorScheme[0];
     [SerializeField] protected int starSchemeIndex;

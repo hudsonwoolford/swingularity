@@ -49,7 +49,7 @@ public class NeutronStarGenerator : SunGenerator
     {
         base.FixedUpdate();
 
-        if (gameObject.layer == 12) { Destroy(gameObject); }
+        if (gameObject.layer == 12) { Destroy(this); }
         for (int i = 0; i < particleSystems.Length; i++)
         {
             UpdateParticleSystem(particleSystems[i], ref allParticles[i]);
@@ -69,7 +69,7 @@ public class NeutronStarGenerator : SunGenerator
     void InitializeParticles()
     {
         Gradient gradient = new Gradient();
-        gradient.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 0), new GradientColorKey(schemePool[starSchemeIndex].atmosphereColor, 0) }, new GradientAlphaKey[] { new GradientAlphaKey(1, 1), new GradientAlphaKey(1, 1) });
+        gradient.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[starSchemeIndex].neutronParticleColor, 0), new GradientColorKey(schemePool[starSchemeIndex].neutronParticleColor, 1) }, new GradientAlphaKey[] { new GradientAlphaKey(1, 1), new GradientAlphaKey(1, 1) });
         ParticleSystem.MainModule main = atmosphericParticles.main;
         main.startColor = gradient;
         for (int i = 0; i < particleSystems.Length; i++)
@@ -78,6 +78,8 @@ public class NeutronStarGenerator : SunGenerator
             main.startColor = gradient;
             main.startLifetime = transform.localScale.x * 2;
         }
+        atmosphericParticles.Clear();
+        atmosphericParticles.Play();
     }
     void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
     {
