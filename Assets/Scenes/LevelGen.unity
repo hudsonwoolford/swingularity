@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007526484, g: 0.0007269121, b: 0.0007526484, a: 1}
+  m_IndirectSpecularColor: {r: 0.00091242965, g: 0.0007269998, b: 0.00091242965, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -370,11 +370,24 @@ MonoBehaviour:
     type: 3}
   planetScale: 0.55
   resolution: 1024
-  possiblePlanetTypes: 02000000
+  possiblePlanetTypes: 03000000
   possibleGalaxySchemes:
   - {fileID: 11400000, guid: c270e7429153a33489b3729fac49cbb1, type: 2}
+  - {fileID: 11400000, guid: 562032449723d844395e1b68ee5def13, type: 2}
+  - {fileID: 11400000, guid: b8af5211c2bafe244ad601cde008e828, type: 2}
+  - {fileID: 11400000, guid: f1c0c5ab6be919c428067c4d5a77c909, type: 2}
   specialObjects:
+  - type: 0
+    amount: 1
   - type: 1
+    amount: 1
+  - type: 2
+    amount: 1
+  - type: 3
+    amount: 1
+  - type: 4
+    amount: 1
+  - type: 5
     amount: 1
   specialObjectsParent: {fileID: 1819307222}
   superBouncyMoon: {fileID: 13400000, guid: 9198c7513baa3de468d3d21c9c884c7a, type: 2}

@@ -17,4 +17,5 @@ public class GalaxyData : ScriptableObject
         new Color (1f, 1f, 1f, 1f),
         new Color (1f, 1f, 1f, 1f),
     };
+    [SerializeField]public ColorSchemeStaticReference.PlanetType type;
 }

@@ -113,9 +113,6 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
-        int galaxyIndex = UnityEngine.Random.Range(0, possibleGalaxySchemes.Length);
-        levelInit?.Invoke(possibleGalaxySchemes[galaxyIndex]); //Initiation Delegate
-
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
@@ -128,6 +125,18 @@ public class LevelGenerator : MonoBehaviour
             seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * UnityEngine.Random.Range(-1000f, 1000f) + UnityEngine.Random.value * Time.time);
         }
         UnityEngine.Random.InitState(seed);
+        int typeIndex = UnityEngine.Random.Range(0, possiblePlanetTypes.Length);
+        bool init = false;
+        for (int i = 0; i < possibleGalaxySchemes.Length; i++)
+        {
+            if(possibleGalaxySchemes[i].type == possiblePlanetTypes[typeIndex])
+            {
+                init = true;
+                levelInit?.Invoke(possibleGalaxySchemes[i]); //Initiation delegate
+                break;
+            }
+        }
+        if(!init) {levelInit?.Invoke(possibleGalaxySchemes[0]);}  //Initiation failsafe
 
         //Region size calculation
         camSize = CamSize(mainCam);                             //1. Calculates camera size
