@@ -11,50 +11,7 @@ using static ProceduralLevelGeneration;
 public class LevelGenerator : MonoBehaviour
 {
     #region Variables
-    /*Level Gen settings
-    0: minimum number of planets
-    1: maximum number of planets
-    2: minimum radius for each poisson point
-    3: maximum radius for each poisson point
-    4: bias towards or against planet size
-    5: IGNORE
-    6: x dimension of size of level
-    7: y dimension of size of level
-    8: number of poisson disk samples before rejecting the point as a spawner
-    9: offset scale for determining random values of planet
-    */
-    [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
-    [SerializeField] bool canSpawnOffPlanet = false; //Whether the hole can spawn off a planet 
-    //[SerializeField] bool sameColourPoolTwice = false;
-    [SerializeField] Material invisOcean; //Invisble ocean material used for imaging
-    public int seed; //The seed for the level
-
-    //Level gen params
-    float minPlanets, maxPlanets;
-    [SerializeField]
-    float minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
-    [SerializeField]
-    Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
-    [SerializeField]
-    GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
-    [SerializeField]
-    float planetScale; //Scale of planets multiplier
-    [SerializeField] int resolution;
-
-    [SerializeField]
-    ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
-    [SerializeField]
-    GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
-    [SerializeField]
-    SpecialObject[] specialObjects;
-    Vector2 regionSize;
-    public delegate void GenerateSpecialPlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index);
-    public delegate void GenerateSpecialObject(Planet[] planets, Vector3 seed, int index);
-    [Header("Random References and Stuff")]
-    [SerializeField] Transform specialObjectsParent;
-    [SerializeField] PhysicMaterial superBouncyMoon;
-    [SerializeField] Material moonLine;
-    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f;
+    #region Type Definitions
     [Serializable]
     public struct SpecialObject
     {
@@ -72,7 +29,7 @@ public class LevelGenerator : MonoBehaviour
     }
     [Serializable]
     public enum SpecialType
-    { 
+    {
         Star,
         NeutronStar,
         BlackHole,
@@ -81,14 +38,16 @@ public class LevelGenerator : MonoBehaviour
         Moon
     }
     [Serializable]
-    public struct Planet{
+    public struct Planet
+    {
         public GameObject planet;
         public ColorSchemeStaticReference.PlanetType planetType;
         public PlanetColorScheme biomeA;
         public PlanetColorScheme biomeB;
         public GameObject forceField;
         //Constructor
-        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB, GameObject forceField){
+        public Planet(GameObject planet, ColorSchemeStaticReference.PlanetType planetType, PlanetColorScheme biomeA, PlanetColorScheme biomeB, GameObject forceField)
+        {
             this.planet = planet;
             this.planetType = planetType;
             this.biomeA = biomeA;
@@ -96,16 +55,57 @@ public class LevelGenerator : MonoBehaviour
             this.forceField = forceField;
         }
     }
-
+    public delegate void GenerateSpecialPlanetObject(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index);
+    public delegate void GenerateSpecialObject(Planet[] planets, Vector3 seed, int index);
     public delegate void LevelInit(GalaxyData theme); //Delegate called in initiation of procedural level, this coccurs before the level is actually generated
     public static LevelInit levelInit;
     public delegate void LevelGenerated();
     public static LevelGenerated levelGenerated; //Delegate called in the final generation of the level, this occurs after the level is actually generated
+    #endregion //Includes Delegates
+    /*Level Gen settings
+    0: minimum number of planets
+    1: maximum number of planets
+    2: minimum radius for each poisson point
+    3: maximum radius for each poisson point
+    4: bias towards or against planet size
+    5: IGNORE
+    6: x dimension of size of level
+    7: y dimension of size of level
+    8: number of poisson disk samples before rejecting the point as a spawner
+    9: offset scale for determining random values of planet
+    */
+    [Header("Level Parameters")]
+    public int seed; //The seed for the level
+    [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
+    //Level gen params
+    [SerializeField] float minPlanets, maxPlanets;
+    [SerializeField] Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
+    [SerializeField] int resolution;
+
+    [SerializeField] ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
+    [SerializeField] SpecialObject[] specialObjects;
+
+    [Header("Constant Variables")]
+    [SerializeField] float minSize = 3;
+    [SerializeField] float maxSize = 9;
+    [SerializeField] const float sizeBias = 0.02f, sizeScale = 1, samplesBeforeRejection = 21, offsetScale = 59.5f;
+    [SerializeField] float planetScale; //Scale of planets multiplier
+    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f;
+    [SerializeField] Material moonLine;
+    [SerializeField] Material invisOcean; //Invisble ocean material used for imaging
+    [SerializeField] PhysicMaterial superBouncyMoon;
+    [SerializeField] GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
+    [SerializeField] Transform specialObjectsParent;
+    [Header("Special Prefabs")]
+    [SerializeField] GameObject planetGeneratorPrefab;
+    [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
+
+    //Private variables
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
-
     Transform environment, allPlanetParent;
     Camera mainCam;
+    Vector2 regionSize;
     Vector2 camSize;
     bool xOry;
     float extensionAmount;
@@ -679,30 +679,7 @@ public class LevelGenerator : MonoBehaviour
             }
             rot += 360 / 24;
         }
-
-        bool planetOrRandom = true;
-        if(canSpawnOffPlanet){
-            planetOrRandom = UnityEngine.Random.Range(0, 2) == 1 ? true : false;
-        }
-        if(planetOrRandom){
-            flag.position = predictedFlagPos;
-        }
-        else{
-            bool intersecting = true;
-            for(int u = 0; u < 15 && intersecting; u++){
-                bool currentlyIntersecting = true;
-                Vector3 position = new Vector3(UnityEngine.Random.value * regionSize.x, UnityEngine.Random.value * regionSize.y, candidates[candidateIndex].forceField.transform.position.z);
-                for (int v = 0; v < candidates.Length; v++){
-                    if((candidates[v].forceField.transform.position - position).magnitude < candidates[candidateIndex].forceField.transform.localScale.x + 1f){
-                        intersecting = true;
-                    }
-                }
-                if (!currentlyIntersecting){
-                    intersecting = false;
-                    flag.position = position;
-                }
-            }
-        }
+        flag.position = predictedFlagPos;
         
         // flag.localScale *= Mathf.Clamp(candidates[candidateIndex].forceField.transform.localScale.x *1.5f, 0, 5);
         //farthest planet
