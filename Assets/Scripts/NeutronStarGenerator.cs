@@ -77,12 +77,14 @@ public class NeutronStarGenerator : SunGenerator
             main = particleSystems[i].main;
             main.startColor = gradient;
             main.startLifetime = transform.localScale.x * 2;
+            ParticleSystem.EmissionModule emmitor = particleSystems[i].emission;
         }
         atmosphericParticles.Clear();
         atmosphericParticles.Play();
     }
     void UpdateParticleSystem(ParticleSystem particles, ref ParticleSystem.Particle[] allP)
     {
+        allP =new ParticleSystem.Particle[particles.particleCount];
         int numAlive = particles.GetParticles(allP);
         int polarity = !invertPolarity ? 1 : -1;
         for (int i = 0; i < numAlive; i++)
