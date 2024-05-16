@@ -86,7 +86,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] SpecialObject[] specialObjects;
 
     [Header("Constant Variables")]
-    LevelGenStaticReferences levelStatic;
+    [SerializeField] LevelGenStaticReferences levelStatic;
     Transform specialObjectsParent;
     [Header("Special Prefabs")]
     [SerializeField] GameObject planetGeneratorPrefab;
