@@ -86,19 +86,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] SpecialObject[] specialObjects;
 
     [Header("Constant Variables")]
-    [SerializeField] float minSize = 3;
-    [SerializeField] float maxSize = 9;
-    [SerializeField] const float sizeBias = 0.02f, sizeScale = 1, samplesBeforeRejection = 21, offsetScale = 59.5f;
-    [SerializeField] readonly float[] specialObjectMultipliers = new float[10]{
-        0f, 0.65f, 0.9f, 1.65f, 1.9f, 2.25f, 2.65f, 2.9f, 3.65f, 3.9f, 
-    };
-    [SerializeField] float planetScale; //Scale of planets multiplier
-    [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f;
-    [SerializeField] Material moonLine;
-    [SerializeField] Material invisOcean; //Invisble ocean material used for imaging
-    [SerializeField] PhysicMaterial superBouncyMoon;
-    [SerializeField] GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
-    [SerializeField] Transform specialObjectsParent;
+    LevelGenStaticReferences levelStatic;
+    Transform specialObjectsParent;
     [Header("Special Prefabs")]
     [SerializeField] GameObject planetGeneratorPrefab;
     [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
@@ -130,16 +119,16 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState(seed);
         int typeIndex = UnityEngine.Random.Range(0, possiblePlanetTypes.Length);
         bool init = false;
-        for (int i = 0; i < possibleGalaxySchemes.Length; i++)
+        for (int i = 0; i < levelStatic.possibleGalaxySchemes.Length; i++)
         {
-            if(possibleGalaxySchemes[i].type == possiblePlanetTypes[typeIndex])
+            if(levelStatic.possibleGalaxySchemes[i].type == possiblePlanetTypes[typeIndex])
             {
                 init = true;
-                levelInit?.Invoke(possibleGalaxySchemes[i]); //Initiation delegate
+                levelInit?.Invoke(levelStatic.possibleGalaxySchemes[i]); //Initiation delegate
                 break;
             }
         }
-        if(!init) {levelInit?.Invoke(possibleGalaxySchemes[0]);}  //Initiation failsafe
+        if(!init) {levelInit?.Invoke(levelStatic.possibleGalaxySchemes[0]);}  //Initiation failsafe
 
         //Region size calculation
         camSize = CamSize(mainCam);                             //1. Calculates camera size
@@ -151,14 +140,14 @@ public class LevelGenerator : MonoBehaviour
         float[] levelGenSettings = new float[10]{
             minPlanets,
             maxPlanets,
-            minSize,
-            maxSize,
-            sizeBias,
-            sizeScale,
-            (regionSize.x - maxSize) / 1.25f,
-            (regionSize.y - maxSize) / 1.25f,
-            samplesBeforeRejection,
-            offsetScale
+            levelStatic.minSize,
+            levelStatic.maxSize,
+            LevelGenStaticReferences.sizeBias,
+            LevelGenStaticReferences.sizeScale,
+            (regionSize.x - levelStatic.maxSize) / 1.25f,
+            (regionSize.y - levelStatic.maxSize) / 1.25f,
+            LevelGenStaticReferences.samplesBeforeRejection,
+            LevelGenStaticReferences.offsetScale
         };
 
         //Calculates level based off settings
@@ -179,7 +168,7 @@ public class LevelGenerator : MonoBehaviour
     public void SetLevelParams(LevelManager.LevelParams levelParams){
         UnityEngine.Random.InitState(levelParams.seed);
 
-        float specialObjMultiplier = specialObjectMultipliers[levelParams.difficulty];
+        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty];
 
 
         possiblePlanetTypes = levelParams.themes;
@@ -222,7 +211,7 @@ public class LevelGenerator : MonoBehaviour
         float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x);
         float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y);
 
-        Vector2 regionSize = new Vector3 (camSize.x + maxSize, camSize.y + maxSize, camSize.z);
+        Vector2 regionSize = new Vector3 (camSize.x + levelStatic.maxSize, camSize.y + levelStatic.maxSize, camSize.z);
         if(x){ regionSize += new Vector2(xExtension, 0); }
         else{ regionSize += new Vector2(0, yExtension);}
 
@@ -280,7 +269,7 @@ public class LevelGenerator : MonoBehaviour
             List<int> removeIndices = new List<int>();
             for (int u = 0; u < level.numPlanets - 2; u++)
             {
-                if (level.planetSizes[availableIndices[u]] > moonCutoffSize)
+                if (level.planetSizes[availableIndices[u]] > levelStatic.moonCutoffSize)
                 {
                     replacers.Add((availableIndices[u], replaceObjects[moonIndex].Item2));
                     replaceObjects[moonIndex] = (replaceObjects[moonIndex].Item1 - 1, replaceObjects[moonIndex].Item2);
@@ -494,8 +483,8 @@ public class LevelGenerator : MonoBehaviour
         backTexture.Release();  //Memory
         newPlanet.SetActive(true);
 
-        newPlanet.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
-        newPlanet.transform.localScale = Vector3.one * size * planetScale * 0.2f;
+        newPlanet.transform.position = new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z);
+        newPlanet.transform.localScale = Vector3.one * size * levelStatic.planetScale * 0.2f;
         GameObject forceField = GenerateForcefield(newPlanet.transform);
 
         newPlanet.transform.parent = allPlanetParent;
@@ -521,8 +510,8 @@ public class LevelGenerator : MonoBehaviour
     List<Planet> cachedBlackHoles = new List<Planet>();
     void CacheBlackHole(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
-        Transform blackHole = Instantiate(blackHolePrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
-        blackHole.localScale = Vector3.one * size * planetScale * 0.5f;
+        Transform blackHole = Instantiate(blackHolePrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity).transform;
+        blackHole.localScale = Vector3.one * size * levelStatic.planetScale * 0.5f;
         blackHole.parent = environment;
 
         planet.planet = blackHole.gameObject;
@@ -603,13 +592,13 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)seed.z + index);
         planet = GeneratePlanet(generator, size, index, position, seed, planetType);
 
-        DarkMatterGenerator darkMatter = Instantiate(darkMatterPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity, specialObjectsParent).GetComponent<DarkMatterGenerator>();
+        DarkMatterGenerator darkMatter = Instantiate(darkMatterPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity, specialObjectsParent).GetComponent<DarkMatterGenerator>();
         darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>());
     }
     void GenerateStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
-        Transform star = Instantiate(starPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
-        star.transform.localScale = Vector3.one * size * planetScale * 0.66f;
+        Transform star = Instantiate(starPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity).transform;
+        star.transform.localScale = Vector3.one * size * levelStatic.planetScale * 0.66f;
         star.parent = environment;
         star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z + index * 1000), planetType);
         planet.planet = star.gameObject;
@@ -618,8 +607,8 @@ public class LevelGenerator : MonoBehaviour
     }
     void GenerateNeutronStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
-        Transform star = Instantiate(neutronStarPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
-        star.transform.localScale = Vector3.one * size * planetScale * 0.25f;
+        Transform star = Instantiate(neutronStarPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y +levelStatic. maxSize / 2, position.z), Quaternion.identity).transform;
+        star.transform.localScale = Vector3.one * size * levelStatic.planetScale * 0.25f;
         star.parent = environment;
         star.GetComponent<NeutronStarGenerator>().RandomSun(Mathf.RoundToInt(seed.z + index * 1000), planetType);
         planet.planet = star.gameObject;
@@ -630,18 +619,18 @@ public class LevelGenerator : MonoBehaviour
     {   
         UnityEngine.Random.InitState((int)(seed.y + index));
         float eccentricity = UnityEngine.Random.Range(0f, 0.2f);
-        float smallMoonSize = size * planetScale / 1.75f;
-        float apoapsis = size * planetScale - smallMoonSize + 1.2f;
+        float smallMoonSize = size * levelStatic.planetScale / 1.75f;
+        float apoapsis = size * levelStatic.planetScale - smallMoonSize + 1.2f;
 
         
-        float bigPlanetDecreasedSize = apoapsis * moonDstScale - smallMoonSize;
+        float bigPlanetDecreasedSize = apoapsis * levelStatic.moonDstScale - smallMoonSize;
         //Generate orbitee planet
         Planet bigPlanet = GeneratePlanet(generator, bigPlanetDecreasedSize, index, position, seed, planetType);
         bigPlanet.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         //Generate orbiter planet
-        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (offsetScale * 2, offsetScale * 2, offsetScale * 2) + Vector3.one, planetType);
+        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (LevelGenStaticReferences.offsetScale * 2, LevelGenStaticReferences.offsetScale * 2, LevelGenStaticReferences.offsetScale * 2) + Vector3.one, planetType);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
@@ -651,9 +640,9 @@ public class LevelGenerator : MonoBehaviour
         float speed = UnityEngine.Random.Range(0.5f, 1.2f);
         float rotation = UnityEngine.Random.Range(0,360);
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
-        smallMoon.forceField.GetComponent<Collider>().material = superBouncyMoon;
+        smallMoon.forceField.GetComponent<Collider>().material = levelStatic.superBouncyMoon;
         bigPlanet.forceField.GetComponent<ForceField>().AutoMass();
-        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), moonLine, rotation);
+        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), levelStatic.moonLine, rotation);
 
         bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet = bigPlanet;
@@ -674,8 +663,8 @@ public class LevelGenerator : MonoBehaviour
         {
             Destroy(genObj.GetComponentInChildren<Camera>().gameObject); //camera on moon generator
         }
-        genObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
-        genObj.transform.localScale = Vector3.one * size * planetScale * 0.6f;
+        genObj.transform.position = new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z);
+        genObj.transform.localScale = Vector3.one * size * levelStatic.planetScale * 0.6f;
         GameObject forceField = GenerateForcefield(genObj.transform);
         return new Planet(genObj, ColorSchemeStaticReference.PlanetType.special, biomes.Item1, biomes.Item2, forceField);
     }
@@ -767,10 +756,10 @@ public class LevelGenerator : MonoBehaviour
         MeshRenderer oceanRend = selectedObj.transform.Find("Ocean").GetComponent<MeshRenderer>();
         bool activeOcean = oceanRend.gameObject.activeInHierarchy;
         
-        selectedObj.transform.position = new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z);
+        selectedObj.transform.position = new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z);
 
         Material oceanMat = oceanRend.material;
-        Material cullMat = invisOcean;
+        Material cullMat = levelStatic.invisOcean;
         oceanRend.sharedMaterial = cullMat;
 
         Camera cam = new GameObject().AddComponent<Camera>();
