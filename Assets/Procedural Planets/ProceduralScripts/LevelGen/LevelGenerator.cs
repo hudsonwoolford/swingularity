@@ -34,7 +34,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     float minSize, maxSize, sizeBias, sizeScale, samplesBeforeRejection, offsetScale;
     [SerializeField]
-    Vector2 regionExtension; //how much region is extended
+    Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
     [SerializeField]
     GameObject planetGeneratorPrefab, forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
     [SerializeField]
@@ -184,8 +184,10 @@ public class LevelGenerator : MonoBehaviour
         Vector2 planetsCenter = avg;
         Vector2 startPos = planetsCenter;
         Vector2 endPos = startPos;
-        if (x){endPos += new Vector2(extensionAmount * regionExtension.x, 0); startPos -= new Vector2(extensionAmount * regionExtension.x, 0); }
-        else{endPos += new Vector2(0, extensionAmount * regionExtension.y); startPos -=  new Vector2(0, extensionAmount * regionExtension.y); }
+        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x);
+        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y);
+        if (x){endPos += new Vector2(xExtension, 0); startPos -= new Vector2(xExtension, 0); }
+        else{endPos += new Vector2(0, yExtension); startPos -=  new Vector2(0, yExtension); }
         return (startPos, endPos);
     }
     /// <summary>
@@ -194,9 +196,12 @@ public class LevelGenerator : MonoBehaviour
     Vector2 CalculateBounds(Vector3 camSize, float extensionAmount, bool x){
         //Extend in the x direction maybe?
         
+        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x);
+        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y);
+
         Vector2 regionSize = new Vector3 (camSize.x + maxSize, camSize.y + maxSize, camSize.z);
-        if(x){ regionSize += new Vector2(extensionAmount * regionExtension.x, 0); }
-        else{ regionSize += new Vector2(0, extensionAmount * regionExtension.y);}
+        if(x){ regionSize += new Vector2(xExtension, 0); }
+        else{ regionSize += new Vector2(0, yExtension);}
 
         return regionSize;
     }
