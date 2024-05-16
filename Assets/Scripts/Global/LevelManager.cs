@@ -21,6 +21,13 @@ public class LevelManager : MonoBehaviour
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
 
+    public struct LevelParams{
+        public int seed; //Seed for level planets and stuff
+        public int difficulty; //Range 0-10 determining size of level and number of special objects
+        public ColorSchemeStaticReference.PlanetType[] themes; //Themes/color schemes for level - First scheme in list is primary
+        public LevelGenerator.SpecialType[] specialObjects;
+    }
+
     private void Awake()
     {
         completedLevels = new List<string>();

@@ -89,6 +89,9 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] float minSize = 3;
     [SerializeField] float maxSize = 9;
     [SerializeField] const float sizeBias = 0.02f, sizeScale = 1, samplesBeforeRejection = 21, offsetScale = 59.5f;
+    [SerializeField] readonly float[] specialObjectMultipliers = new float[10]{
+        0f, 0.65f, 0.9f, 1.65f, 1.9f, 2.25f, 2.65f, 2.9f, 3.65f, 3.9f, 
+    };
     [SerializeField] float planetScale; //Scale of planets multiplier
     [SerializeField] float moonCutoffSize = 1, moonDstScale = 0.8f;
     [SerializeField] Material moonLine;
@@ -171,6 +174,26 @@ public class LevelGenerator : MonoBehaviour
         //Generates level based of calculation
         StartCoroutine(Generatelevel(level));
     }
+    #region Variable Setting
+
+    public void SetLevelParams(LevelManager.LevelParams levelParams){
+        UnityEngine.Random.InitState(levelParams.seed);
+
+        float specialObjMultiplier = specialObjectMultipliers[levelParams.difficulty];
+
+
+        possiblePlanetTypes = levelParams.themes;
+
+        specialObjects = new SpecialObject[levelParams.specialObjects.Length];
+
+        for(int i = 0; i < levelParams.specialObjects.Length; i++){
+            int num = Mathf.RoundToInt(UnityEngine.Random.value * specialObjMultiplier);
+            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
+            specialObjects[i] = newSpecialObject;
+        }
+    }
+
+    #endregion
     #region Level Calculation
     /// <summary>
     /// Calculates the start pos and end pos for the camera. Takes an average of planet positions.
