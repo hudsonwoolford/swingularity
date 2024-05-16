@@ -36,6 +36,8 @@ public class ShootBall : MonoBehaviour
 
     [SerializeField] LayerMask ignoreStill;
 
+    MeshRenderer ballRenderer;
+    Material defaultBallMat;
     Scene simulationScene;
     PhysicsScene physicsScene;
     GameObject simulatedObj = null;
@@ -97,13 +99,14 @@ public class ShootBall : MonoBehaviour
         origin = transform.position;
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
+        ballRenderer = GetComponentInChildren<MeshRenderer>(true);
         planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
         if (simulated) { PhysicsScene(); }
     }
     private void Start()
     {
         main = Camera.main;
-
+        defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
         childObj = transform.GetChild(2).gameObject;
@@ -662,16 +665,22 @@ public class ShootBall : MonoBehaviour
     {
     }
     #endregion
+    void OnHackMode(bool enable, Material whiteMat)
+    {
+        ballRenderer.material = enable ? whiteMat : defaultBallMat; 
+    }
     private void OnEnable()
     {
         onHole += DeleteSimulation;
         triggerReset += BallReset;
         boundsReset += BallReset;
+        HackMode.onHackMode += OnHackMode;
     }
     private void OnDisable()
     {
         onHole -= DeleteSimulation;
         triggerReset -= BallReset;
         boundsReset -= BallReset;
+        HackMode.onHackMode -= OnHackMode;
     }
 }
