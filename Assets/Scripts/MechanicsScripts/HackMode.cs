@@ -99,7 +99,13 @@ public class HackMode : MonoBehaviour
         Vector3 centre = CameraFollow.innerShape == null ? Vector3.one : CameraFollow.innerShape.bounds.center;
         GenerateMesh(GenerateVerts(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.y / cellSize), cellSize, centre), GenerateIndicies(Mathf.CeilToInt(size.x / cellSize), Mathf.CeilToInt(size.y / cellSize)));
     }
-
+    void DisableHackModeShoot()
+    {
+        if(!hackMode) { return; }
+        hackMode = false;
+        onHackMode?.Invoke(hackMode, whiteMat);
+    }
+    
     #region Procedural Grid
     private Vector3[] GenerateVerts(int xSeg, int ySeg, float cellSize, Vector3 centre)
     {
@@ -161,9 +167,11 @@ public class HackMode : MonoBehaviour
     }
     void OnEnable(){
         LevelGenerator.levelGenerated += LevelGenerated;
+        ShootBall.onShoot += DisableHackModeShoot;
     }   
     void OnDisable(){
         LevelGenerator.levelGenerated -= LevelGenerated;
+        ShootBall.onShoot -= DisableHackModeShoot;
     }
 
     #endregion

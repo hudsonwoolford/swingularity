@@ -596,9 +596,9 @@ public class LevelGenerator : MonoBehaviour
     void GenerateNeutronStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
         Transform star = Instantiate(neutronStarPrefab, new Vector3(position.x + maxSize / 2, position.y + maxSize / 2, position.z), Quaternion.identity).transform;
-        star.transform.localScale = Vector3.one * size * planetScale * 0.33f;
+        star.transform.localScale = Vector3.one * size * planetScale * 0.25f;
         star.parent = environment;
-        star.GetComponent<SunGenerator>().RandomSun(Mathf.RoundToInt(seed.z + index * 1000), planetType);
+        star.GetComponent<NeutronStarGenerator>().RandomSun(Mathf.RoundToInt(seed.z + index * 1000), planetType);
         planet.planet = star.gameObject;
         planet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet.forceField = null;
