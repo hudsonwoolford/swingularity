@@ -5150,6 +5150,9 @@ MonoBehaviour:
   portalParticleColor: {r: 0.3, g: 1, b: 1, a: 1}
   portalRenderer: {fileID: 273002200933865431}
   portalSystem: {fileID: 8327033127518341599}
+  emissiveMat: {fileID: 2100000, guid: 0ebe1058816f93b42b85bc417e45ba46, type: 2}
+  rotatePiece: {fileID: 4525636001086427980}
+  rotateSpeed: 120
 --- !u!1 &5812594892652983259
 GameObject:
   m_ObjectHideFlags: 0
@@ -5162,7 +5165,7 @@ GameObject:
   - component: {fileID: 3850813606741467302}
   - component: {fileID: 1591563621900205036}
   m_Layer: 10
-  m_Name: Cylinder.005
+  m_Name: GlowBeams
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5199,8 +5202,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5812594892652983259}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -5211,7 +5214,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1bffd42aebd2b243864315521ba1f1b, type: 2}
+  - {fileID: 2100000, guid: 0ebe1058816f93b42b85bc417e45ba46, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5245,7 +5248,7 @@ GameObject:
   - component: {fileID: 706139708874818879}
   - component: {fileID: 1905880740819461439}
   m_Layer: 10
-  m_Name: Cylinder.002
+  m_Name: Inner Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5328,7 +5331,7 @@ GameObject:
   - component: {fileID: 4371477570201425601}
   - component: {fileID: 15164914443342044}
   m_Layer: 10
-  m_Name: Torus.001
+  m_Name: RotatePiece
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5411,7 +5414,7 @@ GameObject:
   - component: {fileID: 291533456241142197}
   - component: {fileID: 6546352551072288525}
   m_Layer: 10
-  m_Name: Torus.002
+  m_Name: MainRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5448,8 +5451,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7244019286293654324}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -5507,8 +5510,8 @@ Transform:
   m_GameObject: {fileID: 8842651369092711573}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3048009828311933941}
   - {fileID: 3167658039017073429}
@@ -5532,7 +5535,7 @@ GameObject:
   - component: {fileID: 6706927072701774151}
   - component: {fileID: 6215848072794231217}
   m_Layer: 10
-  m_Name: Cylinder.004
+  m_Name: InnerRingBulk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

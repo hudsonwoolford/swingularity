@@ -10,6 +10,10 @@ public class PortalColor : MonoBehaviour
     [SerializeField] Color portalParticleColor = new Color(0.3f, 1, 1, 1);
     [SerializeField] MeshRenderer portalRenderer;
     [SerializeField] ParticleSystem portalSystem;
+    [Header("Portal Ring")]
+    [SerializeField] Material emissiveMat;
+    [SerializeField] Transform rotatePiece;
+    [SerializeField] float rotateSpeed;
     MaterialPropertyBlock portalBlock;
 
     void Start(){
@@ -21,9 +25,11 @@ public class PortalColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        rotatePiece.eulerAngles += new Vector3(0, 0, 1) * rotateSpeed * Time.deltaTime;
         if(portalRenderer == null) { return; }
 
         if(portalBlock == null) { portalBlock = new MaterialPropertyBlock(); }
+        emissiveMat.SetColor("_EmissionColor", portalColor * 0.001f);
         portalBlock.SetColor("_Color", portalColor);
         portalRenderer.SetPropertyBlock(portalBlock);
 
