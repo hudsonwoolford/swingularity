@@ -112,14 +112,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 282796961084695870}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.69, y: -2.5, z: 0}
-  m_LocalScale: {x: 3.1, y: 3.1, z: 3.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7790435999624012980}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6893327617684515186
 MeshFilter:
@@ -187,21 +187,21 @@ MonoBehaviour:
   correspondent: {fileID: 0}
   schemePool:
   - planetType: 0
-    darkColor: {r: 0.8962264, g: 0.31142628, b: 0.004227493, a: 1}
-    lightColor: {r: 0.9150943, g: 0.7171186, b: 0.13381095, a: 1}
-    fresnel: {r: 3.4415908, g: 1.9583788, b: 0.25226307, a: 1}
+    darkColor: {r: 0.13333334, g: 0.047058824, b: 0, a: 0.49803922}
+    lightColor: {r: 3.0222895, g: 0.6669438, b: 0, a: 1}
+    fresnel: {r: 5.992157, g: 2.610605, b: 0.15686269, a: 1}
   - planetType: 1
-    darkColor: {r: 1, g: 0.2967346, b: 0.02352941, a: 1}
-    lightColor: {r: 0.93333334, g: 0.76625717, b: 0.2352941, a: 1}
-    fresnel: {r: 1.5932716, g: 0.6629346, b: 0.04170867, a: 1}
-  - planetType: 2
-    darkColor: {r: 0.25792095, g: 0.51172745, b: 0.7924528, a: 1}
-    lightColor: {r: 0.1372549, g: 0.53674424, b: 0.5568628, a: 1}
-    fresnel: {r: 0.04170867, g: 1.38616, b: 1.5932716, a: 1}
+    darkColor: {r: 0.13333334, g: 0.03529412, b: 0, a: 0.49803922}
+    lightColor: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
+    fresnel: {r: 4.237095, g: 1.4585824, b: 0.11091868, a: 1}
   - planetType: 3
-    darkColor: {r: 1, g: 0.02352941, b: 0.23389398, a: 1}
-    lightColor: {r: 0.93333334, g: 0.49767697, b: 0.2352941, a: 1}
-    fresnel: {r: 1.5932716, g: 0.14372903, b: 0.04170867, a: 1}
+    darkColor: {r: 0.13333334, g: 0, b: 0.003921569, a: 0.49803922}
+    lightColor: {r: 3.0222886, g: 0.52197284, b: 0, a: 1}
+    fresnel: {r: 4.237095, g: 1.3980304, b: 0.110918686, a: 1}
+  - planetType: 2
+    darkColor: {r: 0, g: 0.015686275, b: 0.13333334, a: 0.49803922}
+    lightColor: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
+    fresnel: {r: 0.11091868, g: 3.1638327, b: 4.237095, a: 1}
   - planetType: 4
     darkColor: {r: 0.07164473, g: 0.6603774, b: 0.30027878, a: 1}
     lightColor: {r: 0.48774382, g: 0.7830189, b: 0.18836774, a: 1}
@@ -211,11 +211,15 @@ MonoBehaviour:
     lightColor: {r: 0.6415094, g: 0.46855778, b: 0.2269491, a: 1}
     fresnel: {r: 1.1030006, g: 0.6458874, b: 0.09239794, a: 1}
   - planetType: 6
+    darkColor: {r: 0.32156864, g: 0.09019608, b: 0.16862746, a: 1}
+    lightColor: {r: 3.105423, g: 0.4540948, b: 1.3177848, a: 1}
+    fresnel: {r: 4.2370944, g: 0.81943804, b: 1.9327654, a: 1}
+  - planetType: 7
     darkColor: {r: 0.22821617, g: 0, b: 1, a: 1}
     lightColor: {r: 0.3647999, g: 0.054901935, b: 0.7490196, a: 1}
     fresnel: {r: 0.93132585, g: 0.17427474, b: 5.278032, a: 1}
-  schemeIndex: 4
-  systemRotSpeed: 0.2
+  schemeIndex: 1
+  systemRotSpeed: 0.3
   blackHoleTimer: 0.5
 --- !u!114 &4283152528183255313
 MonoBehaviour:
@@ -477,8 +481,8 @@ ParticleSystem:
       maxColor: {r: 0.9367372, g: 0.19339621, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.48774382, g: 0.7830189, b: 0.18836774, a: 1}
-        key1: {r: 0.07164473, g: 0.6603774, b: 0.30027878, a: 1}
+        key0: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
+        key1: {r: 0.13333334, g: 0.03529412, b: 0, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1499,7 +1503,7 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -0.2
+      scalar: -0.3
       minScalar: 0.7853982
       maxCurve:
         serializedVersion: 2

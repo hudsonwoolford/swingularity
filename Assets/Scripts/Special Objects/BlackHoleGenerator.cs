@@ -11,6 +11,7 @@ public class BlackHoleGenerator : MonoBehaviour
     public struct SpaceHoleColorScheme
     {
         public ColorSchemeStaticReference.PlanetType planetType;
+        [ColorUsage(true,true)]
         public Color darkColor, lightColor;
         [ColorUsage(true, true)]
         public Color fresnel;

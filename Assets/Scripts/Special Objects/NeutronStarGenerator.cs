@@ -76,7 +76,8 @@ public class NeutronStarGenerator : SunGenerator
         {
             main = particleSystems[i].main;
             main.startColor = gradient;
-            main.startLifetime = transform.localScale.x * 2;
+            float lifetimeMult = i == 0 || i == 1 ? 1.9f : 2.6f;
+            main.startLifetime = transform.localScale.x * lifetimeMult;
         }
         atmosphericParticles.Clear();
         atmosphericParticles.Play();
