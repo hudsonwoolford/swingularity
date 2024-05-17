@@ -76,7 +76,7 @@ public class NeutronStarGenerator : SunGenerator
         {
             main = particleSystems[i].main;
             main.startColor = gradient;
-            float lifetimeMult = i == 0 || i == 1 ? 1.9f : 2.6f;
+            float lifetimeMult = i == 0 || i == 1 ? 2.2f : 2.8f;
             main.startLifetime = transform.localScale.x * lifetimeMult;
         }
         atmosphericParticles.Clear();
@@ -90,6 +90,11 @@ public class NeutronStarGenerator : SunGenerator
         for (int i = 0; i < numAlive; i++)
         {
             Vector2 pos = allP[i].position;
+            if (allP[i].remainingLifetime < allP[i].startLifetime / 1.5f && Vector2.Distance(pos, transform.position) < transform.localScale.x / 2)
+            {
+                allP[i].velocity = Vector2.zero;
+                continue;
+            }
             Vector2 wSum = WeightedSum(pos, pole1, pole2);
             float distance = wSum.magnitude;
             Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
