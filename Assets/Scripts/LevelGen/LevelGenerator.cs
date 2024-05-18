@@ -78,7 +78,7 @@ public class LevelGenerator : MonoBehaviour
     public int seed; //The seed for the level
     [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
     //Level gen params
-    [SerializeField] float minPlanets, maxPlanets;
+    float minPlanets, maxPlanets;
     [SerializeField] Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
     [SerializeField] int resolution;
 
