@@ -119,7 +119,7 @@ Transform:
   m_Children:
   - {fileID: 7790435999624012980}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6893327617684515186
 MeshFilter:
@@ -207,6 +207,10 @@ MonoBehaviour:
     lightColor: {r: 0.48774382, g: 0.7830189, b: 0.18836774, a: 1}
     fresnel: {r: 0.31942114, g: 1.8632753, b: 0.026367055, a: 1}
   - planetType: 5
+    darkColor: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 0.49803922}
+    lightColor: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
+    fresnel: {r: 4.8029895, g: 4.8029895, b: 4.8029895, a: 1}
+  - planetType: 7
     darkColor: {r: 0.3584906, g: 0.23926608, b: 0.07271271, a: 1}
     lightColor: {r: 0.6415094, g: 0.46855778, b: 0.2269491, a: 1}
     fresnel: {r: 1.1030006, g: 0.6458874, b: 0.09239794, a: 1}
@@ -218,7 +222,7 @@ MonoBehaviour:
     darkColor: {r: 0.22821617, g: 0, b: 1, a: 1}
     lightColor: {r: 0.3647999, g: 0.054901935, b: 0.7490196, a: 1}
     fresnel: {r: 0.93132585, g: 0.17427474, b: 5.278032, a: 1}
-  schemeIndex: 1
+  schemeIndex: 5
   systemRotSpeed: 0.3
   blackHoleTimer: 0.25
 --- !u!114 &4283152528183255313
@@ -481,8 +485,8 @@ ParticleSystem:
       maxColor: {r: 0.9367372, g: 0.19339621, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
-        key1: {r: 0.13333334, g: 0.03529412, b: 0, a: 1}
+        key0: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
+        key1: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}

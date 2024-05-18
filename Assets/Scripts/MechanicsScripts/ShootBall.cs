@@ -589,7 +589,7 @@ public class ShootBall : MonoBehaviour
 
         Vector3 velocity = rb.velocity;
         float timeCounter = 0;
-        Material mat = childObj.GetComponent<MeshRenderer>().material;
+        Material mat = defaultBallMat;
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         if(GameManager.LevelManager.currentTheme != null)
