@@ -49,7 +49,14 @@ public class NeutronStarGenerator : SunGenerator
     {
         base.FixedUpdate();
 
-        if (gameObject.layer == 12) { Destroy(this); }
+        if (gameObject.layer == 7)
+        {
+            for (int i = 0; i < particleSystems.Length; i++)
+            {
+                Destroy(particleSystems[i]);
+            }
+        }
+
         for (int i = 0; i < particleSystems.Length; i++)
         {
             UpdateParticleSystem(particleSystems[i], ref allParticles[i]);

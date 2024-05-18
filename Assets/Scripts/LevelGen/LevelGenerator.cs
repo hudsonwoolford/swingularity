@@ -87,12 +87,12 @@ public class LevelGenerator : MonoBehaviour
 
     [Header("Constant Variables")]
     [SerializeField] LevelGenStaticReferences levelStatic;
-    Transform specialObjectsParent;
     [Header("Special Prefabs")]
     [SerializeField] GameObject planetGeneratorPrefab;
     [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
 
     //Private variables
+    Transform specialObjectsParent;
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
     Transform environment, allPlanetParent;
@@ -390,6 +390,7 @@ public class LevelGenerator : MonoBehaviour
         Planet[] planetList = new Planet[level.numPlanets];
         Instantiate(audioSrcPrefab);
         environment = GameObject.FindGameObjectWithTag("Environment").transform;
+        specialObjectsParent = new GameObject("Special Objects").transform;
         allPlanetParent = new GameObject("Planets"){
             tag = "PlanetParent"
         }.transform;
@@ -434,7 +435,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
 
-        SetBallFlagPosition(flag, player.transform, normPlanets.ToArray());
+        SetBallFlagPositionFarthest(flag, player.transform, normPlanets.ToArray());
         Physics.SyncTransforms();
         player.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
 
@@ -512,7 +513,7 @@ public class LevelGenerator : MonoBehaviour
     {
         Transform blackHole = Instantiate(blackHolePrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity).transform;
         blackHole.localScale = Vector3.one * size * levelStatic.planetScale * 0.5f;
-        blackHole.parent = environment;
+        blackHole.parent = specialObjectsParent;
 
         planet.planet = blackHole.gameObject;
         planet.planetType = planetType;
@@ -584,7 +585,7 @@ public class LevelGenerator : MonoBehaviour
         Vector3 midPoint = ((planets[index1].planet.transform.position + planets[index1].forceField.transform.localScale.x * dir) + (planets[index2].planet.transform.position - planets[index2].forceField.transform.localScale.x * dir)) / 2;
 
         QuasarGenerator quasar = Instantiate(quasarPrefab, specialObjectsParent).GetComponent<QuasarGenerator>();
-        quasar.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
+        quasar.transform.parent = specialObjectsParent;
         quasar.InitRandom((int)seed.x + index, planets[index1].planetType, midPoint, angle, distance/4 + distance/64, planets[index1].forceField.GetComponent<ForceField>(), planets[index2].forceField.GetComponent<ForceField>());
     }
     void GenerateDarkMatter(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
@@ -671,48 +672,49 @@ public class LevelGenerator : MonoBehaviour
 
     #endregion
     /// <summary>
-    /// Sets the position for the flag and ball. Random position for the flag, farthest position from flag for the ball.
+    /// Sets the position for the flag and ball. Farthest position possible for flag and ball.
     /// </summary>
-    void SetBallFlagPosition(Transform flag, Transform ball, Planet[] candidates)
+    void SetBallFlagPositionFarthest(Transform flag, Transform ball, Planet[] candidates)
     {
         Physics.SyncTransforms();
-        if(candidates.Length == 0) { return; }
-        int candidateIndex = UnityEngine.Random.Range(0, Mathf.Max(0,candidates.Length-1));
+        if (candidates.Length == 0) { return; }
+        int[] farthestPlanets = new int[2];
+        float farthestDistance = 0;
+        for (int x = 0; x < candidates.Length; x++)
+        {
+            for (int y = 0; y < candidates.Length; y++)
+            {
+                if(y == x) { continue; }
+                float distance = Vector2.Distance(candidates[x].forceField.transform.position, candidates[y].forceField.transform.position);
+                if  (distance > farthestDistance)
+                {
+                    farthestDistance = distance;
+                    farthestPlanets[0] = x; farthestPlanets[1] = y;
+                }
+            }
+        }
 
+        //Flag position
+        UnityEngine.Random.InitState(seed);
         int rot = UnityEngine.Random.Range(0, 360);
         Vector3 predictedFlagPos = Vector3.zero;
-        for (int u = 0; u < 12; u++)
+        for (int u = 0; u < 6; u++)
         {
             flag.eulerAngles = new Vector3(0, 0, rot);
-            predictedFlagPos = candidates[candidateIndex].forceField.transform.position + flag.up * (candidates[candidateIndex].forceField.transform.localScale.x + 1.2f); //maybe scale with radius
+            predictedFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + flag.up * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + 1.2f); //maybe scale with radius
             if (!Physics.CheckSphere(predictedFlagPos, 1.15f))
             {
                 break;
             }
-            rot += 360 / 24;
+            rot += 360 / 7;
         }
         flag.position = predictedFlagPos;
-        
-        // flag.localScale *= Mathf.Clamp(candidates[candidateIndex].forceField.transform.localScale.x *1.5f, 0, 5);
-        //farthest planet
-        float distTracker = 0;
-        int farthestIndex = 0;
-        int i = 0;
-        foreach (Planet p in candidates)
-        {
-            float dist = (flag.position - p.planet.transform.position).magnitude;
-            if(dist > distTracker)
-            {
-                farthestIndex = i;
-                distTracker = dist;
-            }
-            i++;
-        }
-        float flagAng = Mathf.Atan2((candidates[farthestIndex].planet.transform.position - flag.position).normalized.y, (candidates[farthestIndex].planet.transform.position - flag.position).normalized.x);
+        //Ball position
+        float flagAng = Mathf.Atan2((candidates[farthestPlanets[0]].planet.transform.position - flag.position).normalized.y, (candidates[farthestPlanets[0]].planet.transform.position - flag.position).normalized.x);
         flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
-        Vector3 initBallPos = candidates[farthestIndex].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestIndex].forceField.transform.localScale.x);
-        Vector3 closestPoint = candidates[farthestIndex].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
-        ball.GetComponent<Rigidbody>().position =  closestPoint + (closestPoint - candidates[farthestIndex].planet.transform.position).normalized * (0.22f);
+        Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x);
+        Vector3 closestPoint = candidates[farthestPlanets[1]].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
+        ball.GetComponent<Rigidbody>().position = closestPoint + (closestPoint - candidates[farthestPlanets[1]].planet.transform.position).normalized * (0.22f);
     }
     #endregion
     #region Utility

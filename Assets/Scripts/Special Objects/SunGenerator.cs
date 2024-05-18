@@ -42,6 +42,7 @@ public class SunGenerator : MonoBehaviour
     // Update is called once per frame
     protected virtual void FixedUpdate()
     {
+        if (gameObject.layer == 7) { Destroy(system); enabled =false; }
 
         //Null checks because this script works in edit mode
         NullChecks();
