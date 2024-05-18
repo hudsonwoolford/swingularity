@@ -15,7 +15,8 @@ Shader "Custom/UniverseBubbleWormhole"
     SubShader
     {
         // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        Cull Off 
+        ZTest Always
         // Grab the screen behind the object into _BackgroundTexture
         GrabPass
         {
@@ -112,8 +113,9 @@ Shader "Custom/UniverseBubbleWormhole"
                     //grabDistortion.xy /= grabDistortion.w;
 
                     //return tex2D(_BackgroundTexture, grabDistortion.xy);
-                    return texCUBE(_TestSky, cubeVec);
-                    //return tex2D(_BackgroundTexture, i.grabPos);
+                    //return texCUBE(_TestSky, cubeVec);
+                    i.grabPos.xy /= i.grabPos.w;
+                    return tex2D(_BackgroundTexture, i.grabPos);
                 }
                 else{
                     return texCUBE(_WormholeSky, cubeVec);
