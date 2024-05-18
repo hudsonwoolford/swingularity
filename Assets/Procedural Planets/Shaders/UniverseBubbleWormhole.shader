@@ -6,7 +6,7 @@ Shader "Custom/UniverseBubbleWormhole"
         _Smoothness("Smoothness", Range(0,5)) = 1
         _IntegrationStep("Integration Step", Range(0,5)) = 1
         _MaxSteps("Max Steps", Range(0,5000)) = 100
-        _CamDistance("Camera Distance", Range(0,25)) = 1
+        _CamDistance("Camera Distance", Range(-25,25)) = 1
         _CamZoom("Camera Zoom", Range(0, 15)) = 1
 
         _WormholeSky("Wormhole Sky", Cube) = "" {}
@@ -81,7 +81,7 @@ Shader "Custom/UniverseBubbleWormhole"
             {
                 float2 uv = (i.uv - 0.5) * 2.0;
                 float3 vel = normalize(float3(-_CamZoom, uv.xy));
-                float2 beta = normalize(vel.yz);
+                float2 beta = uv.xy;
                 //Ray tracing general relativity stuff
                 float l = _CamDistance;
                 float r = Wormhole(_CamDistance);
