@@ -152,8 +152,9 @@ public class CameraFollow : MonoBehaviour
 
             if (cameraSize > defaultCameraSize){
                 float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-                Vector2 pos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
-                targetPos = new Vector3(pos.x, pos.y, -10);
+
+                Vector2 alteredTargetpos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
+                targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
             }                   
 
             transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
