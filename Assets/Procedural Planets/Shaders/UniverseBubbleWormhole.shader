@@ -17,8 +17,6 @@ Shader "Custom/UniverseBubbleWormhole"
     SubShader
     {
         // No culling or depth
-        Cull Off 
-        ZTest Always
         // Grab the screen behind the object into _BackgroundTexture
         GrabPass
         {
