@@ -10,7 +10,7 @@ Shader "Custom/UniverseBubbleWormhole"
         _CamZoom("Camera Zoom", Range(0, 15)) = 1
 
         _WormholeSky("Wormhole Sky", Cube) = "" {}
-        _TestSky("Test Sky", Cube) = "" {}
+        _Filt("Filt", 2D) = "white" {}
     }
     SubShader
     {
@@ -54,6 +54,7 @@ Shader "Custom/UniverseBubbleWormhole"
             samplerCUBE _WormholeSky;
             samplerCUBE _TestSky;
             sampler2D _BackgroundTexture;
+            sampler2D _Filt;
             
             static const float PI = 3.14159265f;
 
@@ -105,19 +106,16 @@ Shader "Custom/UniverseBubbleWormhole"
                 float dx = dl * dr * cos(phi) - H/r * sin(phi);
                 float dy = dl * dr * sin(phi) + H/r * cos(phi);
 
-                float3 vec = normalize(float3(dx, dy * beta));
-                float3 cubeVec = normalize(float3(-vec.x, vec.z, -vec.y));
-
                 if(l > 0){
-                    //float4 grabDistortion = ComputeGrabScreenPos(float4(vec,3));
-                    //grabDistortion.xy /= grabDistortion.w;
-
-                    //return tex2D(_BackgroundTexture, grabDistortion.xy);
-                    //return texCUBE(_TestSky, cubeVec);
-                    i.grabPos.xy /= i.grabPos.w;
-                    return tex2D(_BackgroundTexture, i.grabPos);
+                    float4 grabDistortion = i.grabPos + ComputeGrabScreenPos(UnityObjectToClipPos(float4(dx, dy, 0, 1)));
+                    grabDistortion.xy /= grabDistortion.w;
+                    i.grabPos.xy/= i.grabPos.w;
+                    float filt = tex2D(_Filt, i.uv);
+                    return tex2D(_BackgroundTexture, lerp(i.grabPos.xy, grabDistortion.xy, filt));
                 }
                 else{
+                    float3 vec = normalize(float3(dx, dy * beta));
+                    float3 cubeVec = normalize(float3(-vec.x, vec.z, -vec.y));
                     return texCUBE(_WormholeSky, cubeVec);
                 }
             }
