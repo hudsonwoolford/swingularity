@@ -8,6 +8,8 @@ Shader "Custom/UniverseBubbleWormhole"
         _MaxSteps("Max Steps", Range(0,5000)) = 100
         _CamDistance("Camera Distance", Range(-25,25)) = 1
         _CamZoom("Camera Zoom", Range(0, 15)) = 1
+        [HDR]_Emission("Emission", Color) = (1,1,1,1)
+        _EmissionPower("Emission Power", float) = 2
 
         _WormholeSky("Wormhole Sky", Cube) = "" {}
         _Filt("Filt", 2D) = "white" {}
@@ -50,6 +52,8 @@ Shader "Custom/UniverseBubbleWormhole"
 
             float _CamDistance;
             float _CamZoom;
+            float _EmissionPower;
+            fixed4 _Emission;
 
             samplerCUBE _WormholeSky;
             samplerCUBE _TestSky;
@@ -116,7 +120,7 @@ Shader "Custom/UniverseBubbleWormhole"
                 else{
                     float3 vec = normalize(float3(dx, dy * beta));
                     float3 cubeVec = normalize(float3(-vec.x, vec.z, -vec.y));
-                    return texCUBE(_WormholeSky, cubeVec);
+                    return pow(texCUBE(_WormholeSky, cubeVec) * _Emission, _EmissionPower);
                 }
             }
             ENDCG
