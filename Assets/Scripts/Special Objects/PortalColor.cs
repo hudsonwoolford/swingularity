@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PortalColor : MonoBehaviour
 {
+    [System.Serializable]
+    struct RotationPiece
+    {
+        public Transform piece;
+        public float rotationSpeed;
+    }
     [ColorUsage(true, true)]
     [SerializeField] Color portalColor = new Color(0.3f, 1, 1, 1);
     [ColorUsage(true, true)]
@@ -12,7 +18,7 @@ public class PortalColor : MonoBehaviour
     [SerializeField] ParticleSystem portalSystem;
     [Header("Portal Ring")]
     [SerializeField] Material emissiveMat;
-    [SerializeField] Transform rotatePiece;
+    [SerializeField] RotationPiece[] rotatePieces;
     [SerializeField] float rotateSpeed;
     MaterialPropertyBlock portalBlock;
 
@@ -25,7 +31,11 @@ public class PortalColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rotatePiece.eulerAngles += new Vector3(0, 0, 1) * rotateSpeed * Time.deltaTime;
+        for (int i = 0; i < rotatePieces.Length; i++)
+        {
+            rotatePieces[i].piece.eulerAngles += new Vector3(0, 0, 1) * rotatePieces[i].rotationSpeed * Time.deltaTime;
+        }
+
         if(portalRenderer == null) { return; }
 
         if(portalBlock == null) { portalBlock = new MaterialPropertyBlock(); }
