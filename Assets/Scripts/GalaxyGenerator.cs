@@ -12,7 +12,9 @@ public class GalaxyGenerator : MonoBehaviour
         public ColorSchemeStaticReference.PlanetType type;
         public Color primarySpiral, secondarySpiral;
         public Color coreGlow, coreQuasar;
-        public Color primaryTransparent, secondaryTransparent;
+        public Color primaryTransparent, secondaryTransparent; //Obsolete
+        [ColorUsage(true, true)]
+        public Color lightColor, darkColor;
     }
     [SerializeField] GalaxyScheme[] schemes;
     [SerializeField] int schemeIndex;
@@ -27,6 +29,7 @@ public class GalaxyGenerator : MonoBehaviour
     [SerializeField] ParticleSystem coreFlicker;
     [SerializeField] ParticleSystem coreQuasar;
     [SerializeField] ParticleSystem coreTwinkle;
+    [SerializeField] ParticleSystem swirlSystem;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +87,11 @@ public class GalaxyGenerator : MonoBehaviour
         //Core Twinkle
         main = coreTwinkle.main;
         main.startColor = primaryGrad;
+
+        ParticleSystem.MainModule module = swirlSystem.main;
+        Gradient grad = new Gradient();
+        grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemes[schemeIndex].lightColor, 0.0f), new GradientColorKey(schemes[schemeIndex].darkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
+        module.startColor = grad;
         ResetParticles();
     }
     void ResetParticles() //Clears and plays all particle systems
@@ -104,6 +112,8 @@ public class GalaxyGenerator : MonoBehaviour
         coreGlow.Play();
         coreQuasar.Play();
         coreTwinkle.Play();
+        swirlSystem.Clear();
+        swirlSystem.Play();
     }
     // Update is called once per frame
     void Update()
