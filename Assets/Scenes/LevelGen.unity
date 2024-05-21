@@ -156,9 +156,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1214324518}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &418845498
 PrefabInstance:
@@ -171,7 +172,7 @@ PrefabInstance:
     - target: {fileID: 3768365032482033525, guid: 478e5fb52039c6947bf0a098d4413d68,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3768365032482033525, guid: 478e5fb52039c6947bf0a098d4413d68,
         type: 3}
@@ -244,7 +245,7 @@ PrefabInstance:
     - target: {fileID: 2082595353398409754, guid: c01f59bf67e25b34ebfb8b1fe0711981,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2082595353398409754, guid: c01f59bf67e25b34ebfb8b1fe0711981,
         type: 3}
@@ -346,7 +347,7 @@ MonoBehaviour:
   minRegionExtension: {x: 25, y: 10}
   maxRegionExtension: {x: 40, y: 15}
   resolution: 1024
-  possiblePlanetTypes: 02000000
+  possiblePlanetTypes: 03000000
   specialObjects:
   - type: 0
     amount: 1
@@ -388,8 +389,14 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1214324518 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
+    type: 3}
+  m_PrefabInstance: {fileID: 7196318282675151441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &58885943374991095
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -974,7 +981,7 @@ Transform:
   - {fileID: 7536590037822318437}
   - {fileID: 543450653698185068}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1307322071089290433
 PrefabInstance:
@@ -1392,7 +1399,7 @@ PrefabInstance:
     - target: {fileID: 6611025917222310774, guid: c3cbb03f953f6d34ba4b2e7908bf2c9e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6611025917222310774, guid: c3cbb03f953f6d34ba4b2e7908bf2c9e,
         type: 3}
@@ -2448,12 +2455,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 261201272}
     m_Modifications:
+    - target: {fileID: 900903969971099677, guid: 93aed6f7bf9366e429975372dd1e7233,
+        type: 3}
+      propertyPath: mass
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
@@ -2504,11 +2516,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5019472080366608035, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
-      propertyPath: rotatePieces.Array.data[0].rotationSpeed
-      value: -120
       objectReference: {fileID: 0}
     - target: {fileID: 5419254315037307910, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}

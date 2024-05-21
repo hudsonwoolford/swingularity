@@ -38,7 +38,7 @@ public class PortalColor : MonoBehaviour
         if(portalRenderer == null) { return; }
 
         if(portalBlock == null) { portalBlock = new MaterialPropertyBlock(); }
-        emissiveMat.SetColor("_EmissionColor", portalColor * 0.4f);
+        emissiveMat.SetColor("_EmissionColor", portalColor * 0.5f);
         emissiveMat.EnableKeyword("_EMISSION");
         portalBlock.SetColor("_Color", portalColor);
         portalRenderer.SetPropertyBlock(portalBlock);

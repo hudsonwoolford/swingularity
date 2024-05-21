@@ -6745,6 +6745,7 @@ GameObject:
   - component: {fileID: 1472040763093170986}
   - component: {fileID: 5842862808899430545}
   - component: {fileID: 5019472080366608035}
+  - component: {fileID: 900903969971099677}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Hole
@@ -6769,7 +6770,7 @@ Transform:
   - {fileID: 7996386931006208587}
   - {fileID: 3513852321322106057}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &5842862808899430545
 SphereCollider:
@@ -6811,7 +6812,7 @@ MonoBehaviour:
   emissiveMat: {fileID: 2100000, guid: 0ebe1058816f93b42b85bc417e45ba46, type: 2}
   rotatePieces:
   - piece: {fileID: 8773637057649204031}
-    rotationSpeed: -150
+    rotationSpeed: -120
   - piece: {fileID: 3212847726403675521}
     rotationSpeed: 100
   - piece: {fileID: 4813904654557699170}
@@ -6820,6 +6821,19 @@ MonoBehaviour:
     rotationSpeed: -100
   - piece: {fileID: 8929588618596899971}
     rotationSpeed: 150
+--- !u!114 &900903969971099677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5419254315037307910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5cca4f4f122094fb8154517572efff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 50
 --- !u!1 &5812594892652983259
 GameObject:
   m_ObjectHideFlags: 0

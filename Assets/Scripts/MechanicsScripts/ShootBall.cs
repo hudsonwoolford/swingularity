@@ -289,6 +289,7 @@ public class ShootBall : MonoBehaviour
         rb.position = origin;
         transform.position = origin;
         tr?.Clear();
+        tr.emitting = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
@@ -572,7 +573,11 @@ public class ShootBall : MonoBehaviour
                 StartCoroutine(FinishedLevel(other.transform, transform.position, transform.position - posLastFrame));
             }
         }
+        if (other.gameObject.tag == "Respawn")
+        {
+            StartCoroutine(ResetDelay(0.3f, other.gameObject));
 
+        }
     }
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
@@ -642,14 +647,39 @@ public class ShootBall : MonoBehaviour
     {
         if (collision.gameObject.tag == "Respawn")
         {
-            StartCoroutine(ResetDelay(0.3f));
+            StartCoroutine(ResetDelay(0.3f, collision.gameObject));
 
         }
     }
     private void OnCollisionExit(Collision collision){
     }
-    IEnumerator ResetDelay(float delay)
+    IEnumerator ResetDelay(float delay, GameObject objCol)
     {
+        if(objCol.GetComponent<QuasarGenerator>()!=null)
+        {
+            if (GameManager.LevelManager.currentTheme != null)
+            {
+                defaultBallMat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
+            }
+            tr.emitting = false;
+            Vector3 vel = rb.velocity.normalized;
+            rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
+
+            float time = 0;
+            while(time < delay)
+            {
+                transform.position += vel * Time.deltaTime * 3;
+                defaultBallMat.SetFloat("_Cutoff", 1-(time/delay));
+                time += Time.deltaTime;
+                yield return null;
+            }
+            childObj.GetComponent<MeshRenderer>().enabled = false;
+            defaultBallMat.SetFloat("_Cutoff", 1);
+            rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
+
+            BallReset();
+            yield break;
+        }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         childObj.GetComponent<MeshRenderer>().enabled = false;
         yield return new WaitForSeconds(delay);
