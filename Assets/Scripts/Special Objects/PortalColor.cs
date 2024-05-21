@@ -32,7 +32,6 @@ public class PortalColor : MonoBehaviour
     {
         for (int i = 0; i < rotatePieces.Length; i++)
         {
-            print(i);
             rotatePieces[i].piece.RotateAround(transform.position, new Vector3(0, 0, 1), rotatePieces[i].rotationSpeed * Time.deltaTime);
         }
 
