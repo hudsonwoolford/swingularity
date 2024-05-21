@@ -19,7 +19,6 @@ public class PortalColor : MonoBehaviour
     [Header("Portal Ring")]
     [SerializeField] Material emissiveMat;
     [SerializeField] RotationPiece[] rotatePieces;
-    [SerializeField] float rotateSpeed;
     MaterialPropertyBlock portalBlock;
 
     void Start(){
@@ -33,7 +32,8 @@ public class PortalColor : MonoBehaviour
     {
         for (int i = 0; i < rotatePieces.Length; i++)
         {
-            rotatePieces[i].piece.eulerAngles += new Vector3(0, 0, 1) * rotatePieces[i].rotationSpeed * Time.deltaTime;
+            print(i);
+            rotatePieces[i].piece.RotateAround(transform.position, new Vector3(0, 0, 1), rotatePieces[i].rotationSpeed * Time.deltaTime);
         }
 
         if(portalRenderer == null) { return; }
