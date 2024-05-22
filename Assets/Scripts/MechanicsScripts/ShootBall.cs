@@ -54,6 +54,7 @@ public class ShootBall : MonoBehaviour
     TrailRenderer tr;
     bool liningUpShot;
     bool ballStill = false, canShoot = false;
+    bool deathDelay;
     float ballStillTimer = 0f;
     float ballStillTimeVal = 0.2f;
 
@@ -180,11 +181,12 @@ public class ShootBall : MonoBehaviour
                 yield return null;
             }
         }
-        if(!astronautFading){
+        if(!astronautFading && !deathDelay){
             astronautFading = true;
             ballStill = true;   
             canShoot = false;
             StartCoroutine(AstronautFade());
+            print("go");
         }
         yield break;
     }
@@ -353,6 +355,8 @@ public class ShootBall : MonoBehaviour
         ballStill = false;
         canShoot = false;
         astronautFading = false;
+        movedAstronaut = false;
+        StopAllCoroutines();
     }
     void DeleteSimulation()
     {
@@ -709,6 +713,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
+        deathDelay = true;
         if(objCol.GetComponent<QuasarGenerator>()!=null)
         {
             if (GameManager.LevelManager.currentTheme != null)
@@ -732,13 +737,14 @@ public class ShootBall : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
 
             BallReset();
+            deathDelay = false;
             yield break;
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         childObj.GetComponent<MeshRenderer>().enabled = false;
         yield return new WaitForSeconds(delay);
         rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
-
+        deathDelay = false;
         BallReset();
 
     }

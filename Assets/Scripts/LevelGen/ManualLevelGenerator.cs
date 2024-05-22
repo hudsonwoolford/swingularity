@@ -27,6 +27,7 @@ public class ManualLevelGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        levelInit?.Invoke(levelStatic.possibleGalaxySchemes[0]);  //Initiation failsafe
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
@@ -34,6 +35,7 @@ public class ManualLevelGenerator : MonoBehaviour
         ProceduralLevelGeneration.Level level = ManualLevelGeneration.CreateLevel(aestheticSeed, mockPlanets, levelStatic);
         StartCoroutine(Generatelevel(level));
         mockPlanetsParent.gameObject.SetActive(false);
+
     }
 
     // Update is called once per frame
