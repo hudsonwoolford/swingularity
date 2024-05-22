@@ -79,7 +79,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 8055
+    m_Bits: 24439
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -105,10 +105,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
-  lockCamera: 0
+  lockCamera: 1
   cameraMinMax: {x: 5, y: 15}
   sizeScalar: 1
   smoothness: 0.25
+  lerpSpeed: 0
   focusBall: 0
   defaultCameraSize: 8
 --- !u!114 &3267537133639875823

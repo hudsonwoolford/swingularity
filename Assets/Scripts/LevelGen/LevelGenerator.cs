@@ -142,12 +142,12 @@ public class LevelGenerator : MonoBehaviour
             maxPlanets,
             levelStatic.minSize,
             levelStatic.maxSize,
-            LevelGenStaticReferences.sizeBias,
-            LevelGenStaticReferences.sizeScale,
+            levelStatic.sizeBias,
+            levelStatic.sizeScale,
             (regionSize.x - levelStatic.maxSize) / 1.25f,
             (regionSize.y - levelStatic.maxSize) / 1.25f,
-            LevelGenStaticReferences.samplesBeforeRejection,
-            LevelGenStaticReferences.offsetScale
+            levelStatic.samplesBeforeRejection,
+            levelStatic.offsetScale
         };
 
         //Calculates level based off settings
@@ -631,7 +631,7 @@ public class LevelGenerator : MonoBehaviour
         bigPlanet.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 
         //Generate orbiter planet
-        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (LevelGenStaticReferences.offsetScale * 2, LevelGenStaticReferences.offsetScale * 2, LevelGenStaticReferences.offsetScale * 2) + Vector3.one, planetType);
+        Planet smallMoon = CreateMoonMesh(generator, smallMoonSize, index, position, seed + (index + 1) * new Vector3 (levelStatic.offsetScale * 2, levelStatic.offsetScale * 2, levelStatic.offsetScale * 2) + Vector3.one, planetType);
         smallMoon.planet.transform.parent = GameObject.FindGameObjectWithTag("PlanetParent").transform;
         smallMoon.forceField.transform.parent = GameObject.FindGameObjectWithTag("Environment").transform;
 

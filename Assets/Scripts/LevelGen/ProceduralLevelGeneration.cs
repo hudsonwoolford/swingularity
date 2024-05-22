@@ -79,7 +79,7 @@ public static class ProceduralLevelGeneration
             float yOffset = UnityEngine.Random.value * offsetScale + 2 * i * offsetScale;
             float zOffset = UnityEngine.Random.value * offsetScale + 3 * i * offsetScale;
             planetSeeds[i] = new Vector3(xOffset, yOffset, zOffset);
-        }
+        }   
 
         ColorSchemeStaticReference.PlanetType[] planetTypes = new ColorSchemeStaticReference.PlanetType[poisson.Length];        
         for (int i = 0; i < poisson.Length; i++){
