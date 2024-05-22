@@ -36,6 +36,8 @@ public class ShootBall : MonoBehaviour
 
     [SerializeField] LayerMask ignoreStill;
 
+    [SerializeField] GameObject astronaut;
+
     MeshRenderer ballRenderer;
     Material defaultBallMat;
     Scene simulationScene;
@@ -175,6 +177,19 @@ public class ShootBall : MonoBehaviour
             }
         }
             ballStill = true;
+            Collider[] currentPlanets = Physics.OverlapSphere(rb.position, 0.25f, ignoreStill);
+            Vector3 planetPos = Vector3.zero;
+            foreach(Collider collider in currentPlanets){
+                ForceField forcefieldScript;
+                collider.gameObject.TryGetComponent<ForceField>(out forcefieldScript);
+                if(forcefieldScript != null){
+                    planetPos = forcefieldScript.gameObject.transform.position;
+                }
+            }
+            print(planetPos);
+            astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, astronaut.transform.position.x);
+            Vector2 dir = planetPos - rb.position;
+            astronaut.transform.rotation = Quaternion.Euler(astronaut.transform.rotation.x, astronaut.transform.rotation.y, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
             yield break;
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s

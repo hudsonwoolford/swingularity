@@ -6,10 +6,11 @@ Shader "Unlit/GolfBallFresnel"
         [HDR]_FresnelColor("Fresnel Color", Color) = (0,0,0)
         _FresnelStrength("Fresnel Strength", float) = 1
         _FresnelMax("Fresnel Maximum", float) = 1
+        _FresnellAlphaFalloff("Fresnel Alpha Falloff", float) = 1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 100
         Pass
         {
@@ -37,6 +38,7 @@ Shader "Unlit/GolfBallFresnel"
             fixed4 _FresnelColor;
             float _FresnelStrength;
             float _FresnelMax;
+            float _FresnellAlphaFalloff;
 
             v2f vert (appdata v)
             {
@@ -50,13 +52,15 @@ Shader "Unlit/GolfBallFresnel"
             fixed4 frag (v2f i) : SV_Target
             {
                 //float fresnel = 1-abs(dot(i.normal, float3(0,0,1));
-
-                float fresnel = (pow((1.0 + _FresnelMax - saturate(abs(dot(i.normal, float3(0,0,-1))))), _FresnelStrength));
+                float fresnelVal = 1 - saturate(abs(dot(i.normal, float3(0,0,-1))));
+                float fresnel = pow(fresnelVal, _FresnelStrength);
                 
                 float4 col = lerp(_MainColor, _FresnelColor, pow(fresnel, _FresnelStrength));
+                col.a = saturate(1 - pow(fresnel, _FresnelMax) * _FresnellAlphaFalloff);
                 return col;
             }
             ENDCG
+            Blend SrcAlpha OneMinusSrcAlpha
         }
     }
 }
