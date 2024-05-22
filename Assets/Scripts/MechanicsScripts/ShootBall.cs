@@ -33,6 +33,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animLength; //Length of animation when hit the hole
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
     [SerializeField] float animScale; //Scale of animation when hit the hole
+    [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
 
     [SerializeField] LayerMask ignoreStill;
 
@@ -52,9 +53,11 @@ public class ShootBall : MonoBehaviour
     Camera main;
     TrailRenderer tr;
     bool liningUpShot;
-    bool ballStill = false;
+    bool ballStill = false, canShoot = false;
     float ballStillTimer = 0f;
     float ballStillTimeVal = 0.2f;
+
+    bool astronautFading = false, movedAstronaut = false;
     GameObject childObj;
 
     public delegate void OnShoot();
@@ -132,7 +135,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(0) && canShoot)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -151,6 +154,7 @@ public class ShootBall : MonoBehaviour
         }
         else{
             ballStill = false;
+            canShoot = false;
             childObj.transform.up =
             Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f);
             childObj.transform.forward =
@@ -176,21 +180,55 @@ public class ShootBall : MonoBehaviour
                 yield return null;
             }
         }
-            ballStill = true;
+        if(!astronautFading){
+            astronautFading = true;
+            ballStill = true;   
+            canShoot = false;
+            StartCoroutine(AstronautFade());
+        }
+        yield break;
+    }
+    IEnumerator AstronautFade(){
+        
+        float timeCounter = 0;
+        Material mat = astronaut.GetComponent<MeshRenderer>().material;
+        mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);
+
+        while(timeCounter <= astronautAnimLength){
+            float progress = timeCounter/astronautAnimLength;
+            mat.SetFloat("_Cutoff", 1 - progress);
+            timeCounter += Time.deltaTime;
+            yield return null;
+        }
+        timeCounter = 0;
+        mat.SetFloat("_Cutoff", 0);
+
+        if(!movedAstronaut){
+            astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, astronaut.transform.position.x);
             Collider[] currentPlanets = Physics.OverlapSphere(rb.position, 0.25f, ignoreStill);
             Vector3 planetPos = Vector3.zero;
             foreach(Collider collider in currentPlanets){
-                ForceField forcefieldScript;
-                collider.gameObject.TryGetComponent<ForceField>(out forcefieldScript);
-                if(forcefieldScript != null){
-                    planetPos = forcefieldScript.gameObject.transform.position;
+                    ForceField forcefieldScript;
+                    collider.gameObject.TryGetComponent<ForceField>(out forcefieldScript);
+                    if(forcefieldScript != null){
+                        planetPos = forcefieldScript.gameObject.transform.position;
+                    }
                 }
-            }
-            print(planetPos);
-            astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, astronaut.transform.position.x);
             Vector2 dir = planetPos - rb.position;
             astronaut.transform.rotation = Quaternion.Euler(astronaut.transform.rotation.x, astronaut.transform.rotation.y, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-            yield break;
+            movedAstronaut = true;
+        }
+
+        while(timeCounter <= astronautAnimLength){
+            float progress = timeCounter/astronautAnimLength;
+            mat.SetFloat("_Cutoff", progress);
+            timeCounter += Time.deltaTime;
+            yield return null;
+        }
+        mat.SetFloat("_Cutoff", 1);
+        canShoot = true;
+        yield break;
+
     }
     IEnumerator LineUpShot() //starts when the player clicks, ends when the unclick. Works in vector 2s
     {
@@ -286,6 +324,8 @@ public class ShootBall : MonoBehaviour
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;
+        astronautFading = false;
+        movedAstronaut = false;
 
         onShoot?.Invoke(); //invoke shoot event
         rb.AddForce(force, ForceMode.Impulse); //adding force
@@ -311,9 +351,8 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
         ballStill = false;
-        onStill?.Invoke();
-        ballStillTimer = 0f;
-        StartCoroutine(BallStillTiming(0.5f));
+        canShoot = false;
+        astronautFading = false;
     }
     void DeleteSimulation()
     {

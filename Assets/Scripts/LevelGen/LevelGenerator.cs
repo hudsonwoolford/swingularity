@@ -562,7 +562,7 @@ public class LevelGenerator : MonoBehaviour
                 if (distanceTemp < 6) { continue; }
                 dirTemp = dirTemp.normalized;
 
-                RaycastHit[] allHits = Physics.BoxCastAll(planets[i].planet.transform.position, Vector3.one, dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp);
+                RaycastHit[] allHits = Physics.BoxCastAll(planets[i].planet.transform.position, Vector3.one * 3, dirTemp, Quaternion.LookRotation(dirTemp), distanceTemp);
                 if(allHits.Length <= 2)
                 {
                     foundPlanet = true;
