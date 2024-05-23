@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static LevelGenerator;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class ManualLevelGenerator : MonoBehaviour
 {
@@ -256,10 +255,10 @@ public static class ManualLevelGeneration
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;
 
-            float rand = mockPlanets[i].specificSeed ? mockPlanets[i].seed : UnityEngine.Random.value;
-            float xOffset = rand * levelStatic.offsetScale + i * levelStatic.offsetScale;
-            float yOffset = rand * levelStatic.offsetScale + 2 * i * levelStatic.offsetScale;
-            float zOffset = rand * levelStatic.offsetScale + 3 * i * levelStatic.offsetScale;
+            Vector3 rand = mockPlanets[i].specificSeed ? new Vector3(Mathf.Sin(mockPlanets[i].seed), Mathf.Cos(mockPlanets[i].seed), Mathf.Sin(mockPlanets[i].seed) * Mathf.Cos(mockPlanets[i].seed)) : new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            float xOffset = rand.x * levelStatic.offsetScale + i * levelStatic.offsetScale;
+            float yOffset = rand.y * levelStatic.offsetScale + 2 * i * levelStatic.offsetScale;
+            float zOffset = rand.z * levelStatic.offsetScale + 3 * i * levelStatic.offsetScale;
             seeds[i] = new Vector3(xOffset, yOffset, zOffset);
         }
         return new ProceduralLevelGeneration.Level(mockPlanets.Length, sizes, points, seeds, types, Vector2.zero);

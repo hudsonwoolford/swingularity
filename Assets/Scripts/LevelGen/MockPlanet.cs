@@ -8,3 +8,4 @@ public class MockPlanet : MonoBehaviour
     public bool specificSeed;
     public int seed;
 }
+
