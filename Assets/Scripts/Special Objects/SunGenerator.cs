@@ -36,6 +36,7 @@ public class SunGenerator : MonoBehaviour
     protected virtual void Start()
     {
         NullChecks();
+        lightSource.color = schemePool[starSchemeIndex].sunColor;
         if (autoMass) { cMass.mass = Mathf.Pow(transform.localScale.x, 2f) * 150; }
     }
 

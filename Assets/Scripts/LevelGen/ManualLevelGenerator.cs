@@ -31,10 +31,17 @@ public class ManualLevelGenerator : MonoBehaviour
         backTexture = new RenderTexture(resolution, resolution, 0);
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
         mockPlanets = mockPlanetsParent.GetComponentsInChildren<MockPlanet>();
-        ProceduralLevelGeneration.Level level = ManualLevelGeneration.CreateLevel(aestheticSeed, mockPlanets, levelStatic);
-        StartCoroutine(Generatelevel(level));
-        mockPlanetsParent.gameObject.SetActive(false);
+        List<int> moons = new List<int>();
+        for (int i = 0; i < mockPlanets.Length; i++)
+        {
+            if (mockPlanets[i] is MockMoon)
+            {
+                moons.Add(i);
+            }
+        }
 
+        ProceduralLevelGeneration.Level level = ManualLevelGeneration.CreateLevel(aestheticSeed, mockPlanets, levelStatic);
+        StartCoroutine(Generatelevel(level, moons.ToArray()));
     }
 
     // Update is called once per frame
@@ -45,7 +52,7 @@ public class ManualLevelGenerator : MonoBehaviour
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
-    IEnumerator Generatelevel(ProceduralLevelGeneration.Level level)
+    IEnumerator Generatelevel(ProceduralLevelGeneration.Level level, int[] moonIndices)
     {
         Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
@@ -57,17 +64,39 @@ public class ManualLevelGenerator : MonoBehaviour
 
         for (int i = 0; i < level.numPlanets; i++)
         {
+            if(moonIndices.Contains(i))
+            {
+                planetList[i] = new Planet();
+                continue;
+            }
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
 
             yield return new WaitForSecondsRealtime(0.1f);
+        }
+        //Moons
+        for (int i = 0; i < moonIndices.Length; i++)
+        {
+            MockMoon mockMoon = (MockMoon)mockPlanets[moonIndices[i]];
+            CelestialMass correspondant = null;
+            //Get celestial mass correspondant
+            for (int x = 0; x < planetList.Length; x++)
+            {
+                if(x == moonIndices[i]) { continue; }
+                if (mockPlanets[x].transform == mockMoon.orbitPlanet)
+                {
+                    correspondant = planetList[x].forceField.GetComponent<CelestialMass>();
+                }
+            }
+            planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, i, mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis);
         }
         Destroy(generator.gameObject);
 
         Time.timeScale = 1;
         levelGenerated?.Invoke();
         player.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
-
+        mockPlanetsParent.gameObject.SetActive(false);
     }
+    #region Generation Functions
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         UnityEngine.Random.InitState((int)seed.z + index * 100);
@@ -90,7 +119,7 @@ public class ManualLevelGenerator : MonoBehaviour
         newPlanet.SetActive(true);
 
         newPlanet.transform.position = new Vector3(position.x, position.y, 0);
-        newPlanet.transform.localScale = Vector3.one * size * levelStatic.planetScale * 0.2f;
+        newPlanet.transform.localScale = Vector3.one * size * levelStatic.planetScale;
         GameObject forceField = GenerateForcefield(newPlanet.transform);
 
         newPlanet.transform.parent = allPlanetParent;
@@ -111,6 +140,47 @@ public class ManualLevelGenerator : MonoBehaviour
         ff.Init(planet);
         return forcefield;
     }
+    Planet GenerateMoon(CelestialMass correspondant, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index, float eccentricity, float speed, float rotation, float apoapsis)
+    {
+        if(correspondant == null) { Debug.LogWarning("Correspondant of moon is null, this could be due to it not being set in inspector."); return new Planet(); }
+        UnityEngine.Random.InitState((int)(seed.y + index));
+
+        //Generate orbiter planet
+        Planet smallMoon = CreateMoonMesh(generator, size, index, position, seed + (index + 1) * new Vector3(levelStatic.offsetScale * 2, levelStatic.offsetScale * 2, levelStatic.offsetScale * 2) + Vector3.one, planetType);
+        smallMoon.planet.transform.parent = allPlanetParent;
+        smallMoon.forceField.transform.parent = environment;
+
+        MoonManager moonScript = smallMoon.planet.AddComponent<MoonManager>();
+
+        float semiMajorAxis = apoapsis / (1 - eccentricity);
+        smallMoon.forceField.GetComponent<ForceField>().AutoMass();
+        smallMoon.forceField.GetComponent<Collider>().material = levelStatic.superBouncyMoon;
+        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), correspondant, levelStatic.moonLine, rotation);
+        moonScript.GetComponent<MeshRenderer>().enabled = true;
+        return smallMoon;
+    }
+    Planet CreateMoonMesh(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    {
+
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1495, true);
+        generator.UpdateAndApplyAll();
+        generator.ClearAllTrees();
+        GameObject genObj = Instantiate(generator.gameObject);
+        MeshRenderer genRenderer = genObj.GetComponent<MeshRenderer>();
+        Material customMoonMat = new Material(genRenderer.material);
+        genRenderer.material = customMoonMat;
+
+        Destroy(genObj.GetComponent<FullPlanetGeneration>());
+        if (genObj.GetComponentInChildren<Camera>() != null)
+        {
+            Destroy(genObj.GetComponentInChildren<Camera>().gameObject); //camera on moon generator
+        }
+        genObj.transform.position = new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z);
+        genObj.transform.localScale = Vector3.one * size * 0.375f;
+        GameObject forceField = GenerateForcefield(genObj.transform);
+        return new Planet(genObj, ColorSchemeStaticReference.PlanetType.special, biomes.Item1, biomes.Item2, forceField);
+    }
+    #endregion
     #region Utility
     /// <summary>
     /// Takes an image of the camera render texture and creates a planet object with sprites
@@ -251,6 +321,8 @@ public static class ManualLevelGeneration
 
         for (int i = 0; i < mockPlanets.Length; i++)
         {
+            if (mockPlanets[i] is MockMoon) 
+            { Debug.Log("Hello"); }
             points[i] = mockPlanets[i].transform.position;
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;
@@ -264,4 +336,3 @@ public static class ManualLevelGeneration
         return new ProceduralLevelGeneration.Level(mockPlanets.Length, sizes, points, seeds, types, Vector2.zero);
     }
 }
-

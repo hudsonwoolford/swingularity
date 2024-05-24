@@ -37,11 +37,8 @@ public class MoonManager : MonoBehaviour
         this.mat = moonLine;
         this.rotation = rotation;
 
-        MeshRenderer[] planetSprites = GetComponentsInChildren<MeshRenderer>();
-        for (int i = 0; i < planetSprites.Length; i++)
-        {
-            planetSprites[i].enabled = false;
-        }
+        GetComponent<MeshRenderer>().enabled = false;
+
         associatedPlanet.gameObject.layer = LayerMask.NameToLayer("IgnoreSimulation");
         rb = GetComponent<Rigidbody>();
         if(rb == null){
@@ -66,11 +63,7 @@ public class MoonManager : MonoBehaviour
     }
     IEnumerator StartingDelay()
     {
-        MeshRenderer[] planetSprites = GetComponentsInChildren<MeshRenderer>();
-        for (int i = 0; i < planetSprites.Length; i++)
-        {
-            planetSprites[i].enabled = true;
-        }
+        GetComponent<MeshRenderer>().enabled = true;
 
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
         rb.angularVelocity = new Vector3(0f, 2f, 1f);
@@ -89,7 +82,7 @@ public class MoonManager : MonoBehaviour
         Vector2 focus2 = focus1 + new Vector2(centerDistance * 2, 0f);
         centre = (focus1 + focus2) / 2f;
     }
-    static Vector3 RotateAround(float angleDegrees, Vector3 pointA, Vector3 pointB){
+    public static Vector3 RotateAround(float angleDegrees, Vector3 pointA, Vector3 pointB){
         float angleRadians = angleDegrees * Mathf.Deg2Rad;
 
         // Calculate the new position of the point after rotation
@@ -105,10 +98,11 @@ public class MoonManager : MonoBehaviour
 
         if(moonEnabled){return;}
         if (orbitPlanet == null || associatedPlanet == null) { return; }
-        Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation);
+        //Init(this.semiMajorAxis, this.gravitationalConstant, this.eccentricity, this.speed, this.associatedPlanet, this.orbitPlanet, this.mat, this.rotation);
     }
     private void Update()
     {
+
         if (orbitPlanet == null || associatedPlanet == null) { return; }
 
         if (!Application.isPlaying)
