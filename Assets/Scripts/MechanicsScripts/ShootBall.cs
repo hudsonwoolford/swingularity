@@ -80,6 +80,7 @@ public class ShootBall : MonoBehaviour
         planetTransform = env;
         transform.position = originPos;
         origin = originPos;
+        StartCoroutine(AstronautFade());
         foreach (Transform t in planetTransform)
         {
             planets.Add(t.gameObject.GetComponent<CelestialMass>());
@@ -186,7 +187,6 @@ public class ShootBall : MonoBehaviour
             ballStill = true;   
             canShoot = false;
             StartCoroutine(AstronautFade());
-            print("go");
         }
         yield break;
     }
