@@ -69,7 +69,7 @@ public class ManualLevelGenerator : MonoBehaviour
                 planetList[i] = new Planet();
                 continue;
             }
-            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
 
             yield return new WaitForSecondsRealtime(0.1f);
         }
@@ -97,12 +97,13 @@ public class ManualLevelGenerator : MonoBehaviour
         mockPlanetsParent.gameObject.SetActive(false);
     }
     #region Generation Functions
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
-        UnityEngine.Random.InitState((int)seed.z + index * 100);
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, false);
+        UnityEngine.Random.InitState((int)seed.z * 100);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1, false);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
+
         if (generator.biomeP == null)
         {
             generator.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-180, 180));
@@ -146,7 +147,7 @@ public class ManualLevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)(seed.y + index));
 
         //Generate orbiter planet
-        Planet smallMoon = CreateMoonMesh(generator, size, index, position, seed + (index + 1) * new Vector3(levelStatic.offsetScale * 2, levelStatic.offsetScale * 2, levelStatic.offsetScale * 2) + Vector3.one, planetType);
+        Planet smallMoon = CreateMoonMesh(generator, size, position, seed + new Vector3(levelStatic.offsetScale * 2, levelStatic.offsetScale * 2, levelStatic.offsetScale * 2) + Vector3.one, planetType);
         smallMoon.planet.transform.parent = allPlanetParent;
         smallMoon.forceField.transform.parent = environment;
 
@@ -159,10 +160,10 @@ public class ManualLevelGenerator : MonoBehaviour
         moonScript.GetComponent<MeshRenderer>().enabled = true;
         return smallMoon;
     }
-    Planet CreateMoonMesh(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    Planet CreateMoonMesh(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
 
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1495, true);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1495, true);
         generator.UpdateAndApplyAll();
         generator.ClearAllTrees();
         GameObject genObj = Instantiate(generator.gameObject);
@@ -327,10 +328,10 @@ public static class ManualLevelGeneration
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;
 
-            Vector3 rand = mockPlanets[i].specificSeed ? new Vector3(Mathf.Sin(mockPlanets[i].seed), Mathf.Cos(mockPlanets[i].seed), Mathf.Sin(mockPlanets[i].seed) * Mathf.Cos(mockPlanets[i].seed)) : new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            float xOffset = rand.x * levelStatic.offsetScale + i * levelStatic.offsetScale;
-            float yOffset = rand.y * levelStatic.offsetScale + 2 * i * levelStatic.offsetScale;
-            float zOffset = rand.z * levelStatic.offsetScale + 3 * i * levelStatic.offsetScale;
+            Vector3 rand = mockPlanets[i].specificSeed ? new Vector3(Mathf.Sin(mockPlanets[i].seed), Mathf.Cos(mockPlanets[i].seed), Mathf.Sin(mockPlanets[i].seed) * Mathf.Cos(mockPlanets[i].seed)) : new Vector3(UnityEngine.Random.value + i, UnityEngine.Random.value + i * 2, UnityEngine.Random.value + i * 3);
+            float xOffset = rand.x * levelStatic.offsetScale * levelStatic.offsetScale;
+            float yOffset = rand.y * levelStatic.offsetScale * levelStatic.offsetScale;
+            float zOffset = rand.z * levelStatic.offsetScale * levelStatic.offsetScale;
             seeds[i] = new Vector3(xOffset, yOffset, zOffset);
         }
         return new ProceduralLevelGeneration.Level(mockPlanets.Length, sizes, points, seeds, types, Vector2.zero);

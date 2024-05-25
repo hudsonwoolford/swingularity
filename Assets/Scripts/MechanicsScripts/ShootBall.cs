@@ -119,6 +119,11 @@ public class ShootBall : MonoBehaviour
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
         ballStillTimer = 0f;
+        if(astronaut == null)
+        {
+            astronaut = new GameObject("AstronautTemp");
+            astronaut.AddComponent<MeshRenderer>().material = defaultBallMat;
+        }
         StartCoroutine(BallStillTiming(0.5f));
 
     }

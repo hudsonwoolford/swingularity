@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
-using static LevelGenerator;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class MockMoon : MockPlanet
 {
@@ -22,6 +20,7 @@ public class MockMoon : MockPlanet
 
     private void OnDrawGizmosSelected()
     {
+        if(orbitPlanet == null) {  return; }
         float semiMajorAxis = apoapsis / (1 - eccentricity);
         float semiMinorAxis = semiMajorAxis * Mathf.Sqrt(1 - Mathf.Pow(eccentricity, 2));
         float centerDistance = semiMajorAxis * eccentricity;
@@ -41,4 +40,20 @@ public class MockMoon : MockPlanet
         }
     }
 }
+#if UNITY_EDITOR
+[CustomEditor(typeof(MockMoon))]
+[CanEditMultipleObjects()]
+public class MockMoonEditor : MockPlanetEditor
+{
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+    }
+}
+#endif
 

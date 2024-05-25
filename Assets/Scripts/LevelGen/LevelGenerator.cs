@@ -61,6 +61,8 @@ public class LevelGenerator : MonoBehaviour
     public static LevelInit levelInit;
     public delegate void LevelGenerated();
     public static LevelGenerated levelGenerated; //Delegate called in the final generation of the level, this occurs after the level is actually generated
+    public delegate void ProceduralInit();
+    public static ProceduralInit proceduralInit;
     #endregion //Includes Delegates
     /*Level Gen settings
     0: minimum number of planets
@@ -105,6 +107,7 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
+        proceduralInit?.Invoke();
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);

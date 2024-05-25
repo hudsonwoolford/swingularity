@@ -100,9 +100,12 @@ public class LevelManager : MonoBehaviour
         procedural = false;
         currentGalaxy = galaxy;
     }
-    void ProceduralInitiation(GalaxyData theme) //Sets procedural to true
+    void LevelInitiation(GalaxyData theme) //Sets procedural to true
     {
         currentTheme = theme;
+    }
+    void ProceduralInitiation()
+    {
         procedural = true;
     }
     void OnScore(string score, int scoreRelToPar, int totalShots) //Updates score text to the score invoked in the event by LevelScoring
@@ -125,14 +128,15 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
-        LevelGenerator.levelInit += ProceduralInitiation;   //Invoked by level generator in start when after generating the level
+        LevelGenerator.levelInit += LevelInitiation;        //Invoked by level generator in start when after generating the level
+        LevelGenerator.proceduralInit += ProceduralInitiation;//Invoked by level generator in start when after generating the level
         GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
         ShootBall.onHole += CompleteCurrentLevel;           //Invoked by shoot ball on collision with the flag
     }
     private void OnDisable()
     {
         LevelScoring.onScore -= OnScore;
-        LevelGenerator.levelInit -= ProceduralInitiation;
+        LevelGenerator.levelInit -= LevelInitiation;
         GalaxyLevels.initGalaxy -= SetGalaxyLevels;
         ShootBall.onHole -= CompleteCurrentLevel;
     }
