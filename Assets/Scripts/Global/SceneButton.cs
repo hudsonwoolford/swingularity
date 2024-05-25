@@ -29,6 +29,7 @@ public class SceneButton : MonoBehaviour
         {
             unlocked = GameManager.LevelManager.LevelCompleted(requiredScene); //Setting unlocked boolean
         }
+        if(!unlocked && Application.isPlaying) { color *= 0.8f; }
         nameText = GetComponentInChildren<TextMeshProUGUI>(true);
         image = GetComponentInChildren<Image>(true);
         button = GetComponent<Button>();

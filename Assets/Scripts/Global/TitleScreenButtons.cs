@@ -21,10 +21,10 @@ public class TitleScreenButtons : MonoBehaviour
         settingsBtn.onClick.AddListener(() => OpenSettings());
     }
     void Continue(){
-
+        NewGame(); //TEMPORARY
     }
     void NewGame(){
-        SceneManager.LoadScene("UniverseSelect");
+        SceneManager.LoadScene("Galaxies");
     }
     void LoadGame(){
         
