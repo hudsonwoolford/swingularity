@@ -15211,6 +15211,10 @@ MonoBehaviour:
   nameText: {fileID: 908312335}
   right: {fileID: 1250875657}
   left: {fileID: 1869764377}
+  lrMat: {fileID: 2100000, guid: 1a5cd9b1382b09a4dbe59d607a9abb25, type: 2}
+  lrWidth: 0.05
+  lrRadius: 0.25
+  hexagonRangeMult: 2
 --- !u!1 &713850632
 GameObject:
   m_ObjectHideFlags: 0
@@ -34922,6 +34926,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: System Button
       objectReference: {fileID: 0}
+    - target: {fileID: 1466374565268567023, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4454914093921131055, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: m_Enabled
@@ -39919,6 +39928,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: System Button (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466374565268567023, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4454914093921131055, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: m_Enabled
@@ -40047,12 +40061,17 @@ PrefabInstance:
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: sceneName
-      value: Earth_0
+      value: Earth_2
       objectReference: {fileID: 0}
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: stringName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45278,6 +45297,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: System Button (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466374565268567023, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4454914093921131055, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: m_Enabled
@@ -45406,12 +45430,17 @@ PrefabInstance:
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: sceneName
-      value: Earth_0
+      value: Earth_1
       objectReference: {fileID: 0}
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: stringName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -50848,6 +50877,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222895, g: 0.6669438, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.047058824, b: 0, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Desert
     type: 1
     primarySpiral: {r: 1, g: 0.7671119, b: 0, a: 1}
@@ -50858,6 +50890,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.03529412, b: 0, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Ice
     type: 2
     primarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
@@ -50868,6 +50903,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.4745098, b: 0, a: 0.02745098}
     lightColor: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
     darkColor: {r: 0, g: 0.015686275, b: 0.13333334, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Fire
     type: 3
     primarySpiral: {r: 1, g: 0.22297566, b: 0, a: 1}
@@ -50878,6 +50916,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.9411765, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 3.0222886, g: 0.52197284, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0, b: 0.003921569, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Goop
     type: 4
     primarySpiral: {r: 0.5051341, g: 0, b: 1, a: 1}
@@ -50888,6 +50929,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.84705883, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.4862745, g: 0.78431374, b: 0.1882353, a: 1}
     darkColor: {r: 0.07058824, g: 0.65882355, b: 0.3019608, a: 1}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Waste
     type: 5
     primarySpiral: {r: 1, g: 0.6, b: 0, a: 1}
@@ -50898,6 +50942,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 1, b: 1, a: 0.02745098}
     lightColor: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
     darkColor: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Mythical
     type: 6
     primarySpiral: {r: 1, g: 0, b: 0.8081136, a: 1}
@@ -50908,6 +50955,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.7921569, b: 0, a: 0.02745098}
     lightColor: {r: 3.105423, g: 0.4540948, b: 1.3177848, a: 1}
     darkColor: {r: 0.32156864, g: 0.09019608, b: 0.16862746, a: 1}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   schemeIndex: 0
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
@@ -50961,6 +51011,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: System Button (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466374565268567023, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4454914093921131055, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
@@ -51090,12 +51145,17 @@ PrefabInstance:
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: sceneName
-      value: Earth_0
+      value: Earth_3
       objectReference: {fileID: 0}
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: stringName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -51125,6 +51185,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: System Button (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466374565268567023, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4454914093921131055, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
@@ -51254,12 +51319,17 @@ PrefabInstance:
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: sceneName
-      value: Earth_0
+      value: PlayTest
       objectReference: {fileID: 0}
     - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
         type: 3}
       propertyPath: stringName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170480074468327979, guid: e2f32a65f7dd6fa4195af65b5706652d,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -95193,6 +95263,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.9411765, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.23072478, g: 0.7490195, b: 0.4748249, a: 0.09803922}
     darkColor: {r: 0.008677465, g: 0.027923634, b: 0.047169805, a: 0.13725491}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Desert
     type: 1
     primarySpiral: {r: 1, g: 0.7671119, b: 0, a: 1}
@@ -95203,6 +95276,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 1.9766746, g: 0.894836, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.03529412, b: 0, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Ice
     type: 2
     primarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
@@ -95213,6 +95289,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.4745098, b: 0, a: 0.02745098}
     lightColor: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
     darkColor: {r: 0, g: 0.015686275, b: 0.13333334, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Fire
     type: 3
     primarySpiral: {r: 1, g: 0.46619305, b: 0, a: 1}
@@ -95223,6 +95302,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222895, g: 0.6669438, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.047058824, b: 0, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Goop
     type: 4
     primarySpiral: {r: 0.5051341, g: 0, b: 1, a: 1}
@@ -95233,6 +95315,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.84705883, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.4862745, g: 0.78431374, b: 0.1882353, a: 1}
     darkColor: {r: 0.07058824, g: 0.65882355, b: 0.3019608, a: 1}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Waste
     type: 5
     primarySpiral: {r: 1, g: 0.6, b: 0, a: 1}
@@ -95243,6 +95328,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 1, b: 1, a: 0.02745098}
     lightColor: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
     darkColor: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 0.49803922}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   - name: Mythical
     type: 6
     primarySpiral: {r: 1, g: 0, b: 0.8081136, a: 1}
@@ -95253,6 +95341,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.7921569, b: 0, a: 0.02745098}
     lightColor: {r: 3.105423, g: 0.4540948, b: 1.3177848, a: 1}
     darkColor: {r: 0.32156864, g: 0.09019608, b: 0.16862746, a: 1}
+    hexagonSeed: 0
+    targetScene: 
+    requiredScene: 
   schemeIndex: 1
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0

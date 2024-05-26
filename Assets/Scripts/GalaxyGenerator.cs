@@ -5,18 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GalaxyGenerator : MonoBehaviour
 {
-    [System.Serializable]
-    struct GalaxyScheme
-    {
-        public string name;
-        public ColorSchemeStaticReference.PlanetType type;
-        public Color primarySpiral, secondarySpiral;
-        public Color coreGlow, coreQuasar;
-        public Color primaryTransparent, secondaryTransparent; //Obsolete
-        [ColorUsage(true, true)]
-        public Color lightColor, darkColor;
-    }
-    [SerializeField] GalaxyScheme[] schemes;
+    [SerializeField] Galaxy.GalaxyScheme[] schemes;
     [SerializeField] int schemeIndex;
     [SerializeField] Vector3 galaxyRotation;
     [SerializeField] bool update = false;
@@ -40,7 +29,7 @@ public class GalaxyGenerator : MonoBehaviour
     {
         outerSpiral.transform.eulerAngles = galaxyRotation; //Galaxy rotation
     }
-    public string SetScheme(ColorSchemeStaticReference.PlanetType type)
+    public Galaxy.GalaxyScheme SetScheme(ColorSchemeStaticReference.PlanetType type)
     {
         for (int i = 0; i < schemes.Length; i++)
         {
@@ -48,10 +37,10 @@ public class GalaxyGenerator : MonoBehaviour
             {
                 schemeIndex = i;
                 InitParticleSystems();
-                return schemes[i].name;
+                return schemes[schemeIndex];
             }
         }
-        return "Invalid Type";
+        return schemes[schemeIndex];
     }
     void InitParticleSystems() //Called in start to initialise colours
     {
@@ -123,3 +112,22 @@ public class GalaxyGenerator : MonoBehaviour
         //if(Application.isPlaying) { UpdateParticleSystems(); }
     }
 }
+public static class Galaxy
+{
+    [System.Serializable]
+    public struct GalaxyScheme
+    {
+        public string name;
+        public ColorSchemeStaticReference.PlanetType type;
+        public Color primarySpiral, secondarySpiral;
+        public Color coreGlow, coreQuasar;
+        public Color primaryTransparent, secondaryTransparent; //Obsolete
+        [ColorUsage(true, true)]
+        public Color lightColor, darkColor;
+        public int hexagonSeed;
+        public string targetScene;
+        public string requiredScene;
+    }
+
+}
+
