@@ -27,14 +27,14 @@ public class SolarSystemGenerator : MonoBehaviour
             //Spawning and deleting mock planets
             if(mockPlanetParent.childCount != orbitPlanets.Length)
             {
-                for (int i = 0; i < mockPlanetParent.childCount; i++)
+                while(orbitPlanets.Length < mockPlanetParent.childCount)
                 {
                     DestroyImmediate(mockPlanetParent.GetChild(0).gameObject);
                 }
-                for (int i = 0; i < orbitPlanets.Length; i++)
+                while (orbitPlanets.Length > mockPlanetParent.childCount)
                 {
                     MockPlanet mp = Instantiate(mockPlanet, mockPlanetParent).GetComponent<MockPlanet>();
-                    orbitPlanets[i].script = mp;
+                    orbitPlanets[mockPlanetParent.childCount].script = mp;
                 }
             }
             //Sun variables
