@@ -39,6 +39,9 @@ public class ShootBall : MonoBehaviour
 
     [SerializeField] GameObject astronaut;
 
+    [SerializeField] Material[] astronautFadeMats;
+    [SerializeField] Shader emmisionShader;
+
     MeshRenderer ballRenderer;
     Material defaultBallMat;
     Scene simulationScene;
@@ -80,6 +83,11 @@ public class ShootBall : MonoBehaviour
         planetTransform = env;
         transform.position = originPos;
         origin = originPos;
+        foreach (Material mat in astronautFadeMats){
+            if (mat.shader == emmisionShader){
+                mat.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
+            }
+        }
         StartCoroutine(AstronautFade());
         foreach (Transform t in planetTransform)
         {
@@ -198,17 +206,22 @@ public class ShootBall : MonoBehaviour
     IEnumerator AstronautFade(){
         
         float timeCounter = 0;
-        Material mat = astronaut.GetComponent<MeshRenderer>().material;
-        mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);
+        foreach(Material mat in astronautFadeMats){
+            mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
+        }
 
         while(timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
-            mat.SetFloat("_Cutoff", 1 - progress);
+            foreach(Material mat in astronautFadeMats){
+                mat.SetFloat("_Cutoff", 1 - progress);    
+            }
             timeCounter += Time.deltaTime;
             yield return null;
         }
         timeCounter = 0;
-        mat.SetFloat("_Cutoff", 0);
+        foreach(Material mat in astronautFadeMats){
+            mat.SetFloat("_Cutoff", 0);    
+        }
 
         if(!movedAstronaut){
             astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, astronaut.transform.position.x);
@@ -228,11 +241,15 @@ public class ShootBall : MonoBehaviour
 
         while(timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
-            mat.SetFloat("_Cutoff", progress);
+            foreach(Material mat in astronautFadeMats){
+                mat.SetFloat("_Cutoff", progress);    
+            }
             timeCounter += Time.deltaTime;
             yield return null;
         }
-        mat.SetFloat("_Cutoff", 1);
+        foreach(Material mat in astronautFadeMats){
+            mat.SetFloat("_Cutoff", 1);    
+        }
         canShoot = true;
         yield break;
 
