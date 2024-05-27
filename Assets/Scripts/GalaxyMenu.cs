@@ -12,12 +12,14 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] GalaxyGenerator gGen1, gGen2;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Button right, left;
-    [Header("Lines")]
-    [SerializeField] Material lrMat;
-    [SerializeField] float lrWidth;
-    [SerializeField] float lrRadius;
+    [Header("Scene Buttons")]
+    [SerializeField] SceneButton[] sceneButtons;
+    //[Header("Lines")]
+    //[SerializeField] Material lrMat;
+    //[SerializeField] float lrWidth;
+    //[SerializeField] float lrRadius;
     [SerializeField] float hexagonRangeMult;
-    List<LineRenderer> hexagons = new List<LineRenderer>();
+    //List<LineRenderer> hexagons = new List<LineRenderer>();
     int currentGalaxy;
     bool swap;
     // Start is called before the first frame update
@@ -30,7 +32,8 @@ public class GalaxyMenu : MonoBehaviour
         nameText.text = gGen1.SetScheme(galaxyTypes[currentGalaxy]).name;
         right.onClick.AddListener(RightGalaxy);
         left.onClick.AddListener(LeftGalaxy);
-        DrawGalaxyHexagons(10);
+        CalibrateButtons(gGen1.SetScheme(galaxyTypes[currentGalaxy]).hexagonSeed);
+
     }
 
     // Update is called once per frame
@@ -47,7 +50,7 @@ public class GalaxyMenu : MonoBehaviour
         GalaxyGenerator gen = swap ? gGen1 : gGen2;
         Galaxy.GalaxyScheme scheme = gen.SetScheme(galaxyTypes[currentGalaxy]);
         nameText.text = scheme.name;
-        DrawGalaxyHexagons(scheme.hexagonSeed);
+        CalibrateButtons(scheme.hexagonSeed);
 
         y.Play("GalaxyEnter");
         x.Play("GalaxyExit");
@@ -62,40 +65,54 @@ public class GalaxyMenu : MonoBehaviour
         GalaxyGenerator gen = swap ? gGen1 : gGen2;
         Galaxy.GalaxyScheme scheme = gen.SetScheme(galaxyTypes[currentGalaxy]);
         nameText.text = scheme.name;
-        DrawGalaxyHexagons(scheme.hexagonSeed);
+        CalibrateButtons(scheme.hexagonSeed);
 
         x.Play("GalaxyEnterR");
         y.Play("GalaxyExitR");
         swap = !swap;
     }
-    #region Drawing Hexagons
-    void DrawGalaxyHexagons(int seed)
+    #region Buttons
+    void CalibrateButtons(int seed)
+    {
+        PositionButtons(seed);
+    }
+    void PositionButtons(int seed)
     {
         for (int i = 0; i < 5; i++)
         {
             UnityEngine.Random.InitState(seed + i * 10);
-            DrawHexagon(UnityEngine.Random.insideUnitCircle * hexagonRangeMult, lrRadius, i);
+            sceneButtons[i].transform.position = Camera.main.WorldToScreenPoint(UnityEngine.Random.insideUnitCircle * hexagonRangeMult);
         }
     }
-    void DrawHexagon(Vector3 center, float rad, int index)
-    {
-        if (hexagons.Count <= index) { hexagons.Add(new GameObject("Hexagon " + index).AddComponent<LineRenderer>()); }
-        LineRenderer lr = hexagons[index];
-        lr.positionCount = 8;
-        lr.material = lrMat;
-        lr.startWidth = lrWidth;
-        lr.endWidth = lrWidth;
-        Vector3 bearing30 = new Vector3(Mathf.Cos(Mathf.PI/3), Mathf.Sin(Mathf.PI / 3), 0);
-        Vector3 bearing330 = new Vector3(Mathf.Cos(2 * Mathf.PI / 3), Mathf.Sin(2 * Mathf.PI / 3), 0);
-
-        lr.SetPosition(0, center + (bearing330) * rad);
-        lr.SetPosition(1, center + (bearing30) * rad);
-        lr.SetPosition(2, center +  Vector3.right * rad);
-        lr.SetPosition(3, center + (-bearing330) * rad);
-        lr.SetPosition(4, center + (-bearing30) * rad);
-        lr.SetPosition(5, center +  Vector3.left * rad);
-        lr.SetPosition(6, center + (bearing330) * rad);
-        lr.SetPosition(7, center + (bearing30) * rad);
-    }
     #endregion
+    //#region Drawing Hexagons
+    //void DrawGalaxyHexagons(int seed)
+    //{
+    //    for (int i = 0; i < 5; i++)
+    //    {
+    //        UnityEngine.Random.InitState(seed + i * 10);
+    //        DrawHexagon(UnityEngine.Random.insideUnitCircle * hexagonRangeMult, lrRadius, i);
+    //    }
+    //}
+    //void DrawHexagon(Vector3 center, float rad, int index)
+    //{
+    //    if (hexagons.Count <= index) { hexagons.Add(new GameObject("Hexagon " + index).AddComponent<LineRenderer>()); }
+    //    LineRenderer lr = hexagons[index];
+    //    lr.positionCount = 8;
+    //    lr.material = lrMat;
+    //    lr.startWidth = lrWidth;
+    //    lr.endWidth = lrWidth;
+    //    Vector3 bearing30 = new Vector3(Mathf.Cos(Mathf.PI/3), Mathf.Sin(Mathf.PI / 3), 0);
+    //    Vector3 bearing330 = new Vector3(Mathf.Cos(2 * Mathf.PI / 3), Mathf.Sin(2 * Mathf.PI / 3), 0);
+
+    //    lr.SetPosition(0, center + (bearing330) * rad);
+    //    lr.SetPosition(1, center + (bearing30) * rad);
+    //    lr.SetPosition(2, center +  Vector3.right * rad);
+    //    lr.SetPosition(3, center + (-bearing330) * rad);
+    //    lr.SetPosition(4, center + (-bearing30) * rad);
+    //    lr.SetPosition(5, center +  Vector3.left * rad);
+    //    lr.SetPosition(6, center + (bearing330) * rad);
+    //    lr.SetPosition(7, center + (bearing30) * rad);
+    //}
+    //#endregion
 }

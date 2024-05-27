@@ -199,8 +199,8 @@ public class LevelGenerator : MonoBehaviour
         Vector2 planetsCenter = avg;
         Vector2 startPos = planetsCenter;
         Vector2 endPos = startPos;
-        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x);
-        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y);
+        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x) /2;
+        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y) /2;
         if (x){endPos += new Vector2(xExtension, 0); startPos -= new Vector2(xExtension, 0); }
         else{endPos += new Vector2(0, yExtension); startPos -=  new Vector2(0, yExtension); }
         return (startPos, endPos);
