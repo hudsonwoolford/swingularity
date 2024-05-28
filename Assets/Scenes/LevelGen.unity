@@ -346,7 +346,7 @@ MonoBehaviour:
   minRegionExtension: {x: 25, y: 10}
   maxRegionExtension: {x: 40, y: 15}
   resolution: 1024
-  possiblePlanetTypes: 03000000
+  possiblePlanetTypes: 02000000
   specialObjects:
   - type: 0
     amount: 1
@@ -375,6 +375,7 @@ MonoBehaviour:
     type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
+  astronaut: {fileID: 919132149153254394}
 --- !u!4 &866247461
 Transform:
   m_ObjectHideFlags: 0
@@ -401,7 +402,7 @@ GameObject:
   - component: {fileID: 976139963}
   m_Layer: 0
   m_Name: AstronautParent
-  m_TagString: Untagged
+  m_TagString: ForceFieldInteraction
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1549,7 +1550,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f6857fbd3186439d35a0b79faece0, type: 2}
+  - {fileID: 2100000, guid: f1f8ecd383a0fab478b5f38b6a1e7f2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2254,7 +2255,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 1300677027
   m_SortingLayer: 3
-  m_SortingOrder: 10
+  m_SortingOrder: 8
   m_SortAtRoot: 0
 --- !u!1 &2614432978722047522
 GameObject:
@@ -3729,10 +3730,10 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b963fed28814502479f3b73284d2cfb5, type: 2}
-  - {fileID: 2100000, guid: b963fed28814502479f3b73284d2cfb5, type: 2}
-  - {fileID: 2100000, guid: b963fed28814502479f3b73284d2cfb5, type: 2}
-  - {fileID: 2100000, guid: b963fed28814502479f3b73284d2cfb5, type: 2}
+  - {fileID: -1580535799172915004, guid: cdeb3172e61de8b4fa7bffce42621ad3, type: 3}
+  - {fileID: 2100000, guid: f1f8ecd383a0fab478b5f38b6a1e7f2f, type: 2}
+  - {fileID: 2100000, guid: 6fa89aff0a0b1584fac255b1430fffec, type: 2}
+  - {fileID: -1580535799172915004, guid: cdeb3172e61de8b4fa7bffce42621ad3, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4046,7 +4047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!137 &4966483026231475806
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -4339,7 +4340,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f6857fbd3186439d35a0b79faece0, type: 2}
+  - {fileID: 2100000, guid: f1f8ecd383a0fab478b5f38b6a1e7f2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5848,7 +5849,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f6857fbd3186439d35a0b79faece0, type: 2}
+  - {fileID: 2100000, guid: f1f8ecd383a0fab478b5f38b6a1e7f2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -91,7 +91,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] LevelGenStaticReferences levelStatic;
     [Header("Special Prefabs")]
     [SerializeField] GameObject planetGeneratorPrefab;
-    [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab; //Needed prefabs
+    [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab, astronaut; //Needed prefabs
 
     //Private variables
     Transform specialObjectsParent;
@@ -508,6 +508,7 @@ public class LevelGenerator : MonoBehaviour
         ForceField ff = forcefield.GetComponent<ForceField>();
         ff.enabled = true;
         ff.Init(planet);
+        ff.AddInteractable(astronaut.transform);
         return forcefield;
     }
     #region Special Generation
