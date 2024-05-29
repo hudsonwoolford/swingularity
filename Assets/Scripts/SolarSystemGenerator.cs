@@ -11,6 +11,7 @@ public class SolarSystemGenerator : MonoBehaviour
     [System.Serializable]
     struct OrbitPlanet
     {
+        public float size;
         public float radius;
         public float speed;
         [Range(-1f, 1f)]
@@ -20,8 +21,6 @@ public class SolarSystemGenerator : MonoBehaviour
     }
     [SerializeField] Transform sun;
     [SerializeField] float sunSize = 1;
-    [SerializeField] float sunOffset = 0.2f;
-    [SerializeField] float planetOffset = 0.2f;
     [SerializeField] Transform mockPlanetParent;
     [SerializeField] GameObject mockPlanet;
     [SerializeField] OrbitPlanet[] orbitPlanets;
@@ -58,16 +57,13 @@ public class SolarSystemGenerator : MonoBehaviour
             //Sun variables
             sun.transform.localScale = Vector3.one * sunSize;
             //Calibrating variables on mock planets, position setting, seed setting, etc
-            float totalRadius = sunSize + planetOffset + sunOffset;
             for (int i = 0; i < orbitPlanets.Length; i++)
             {
                 if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
-                totalRadius += orbitPlanets[i].radius/2;
                 orbitPlanets[i].script.seed = orbitPlanets[i].seed;
-                orbitPlanets[i].script.transform.localScale = Vector3.one * orbitPlanets[i].radius;
+                orbitPlanets[i].script.transform.localScale = Vector3.one * orbitPlanets[i].size;
                 Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
-                orbitPlanets[i].script.transform.position = sun.transform.position + dir * totalRadius;
-                totalRadius += orbitPlanets[i].radius/2 + planetOffset;
+                orbitPlanets[i].script.transform.position = sun.transform.position + dir * orbitPlanets[i].radius;
             }
         }
         else if(levelGen)
@@ -139,5 +135,12 @@ public class SolarSystemGenerator : MonoBehaviour
     {
         LevelGenerator.levelGenerated += LevelGenerated;
     }
-    
+    void OnDrawGizmosSelected()
+    {
+        for (int i = 0; i < orbitPlanets.Length; i++)
+        {
+            Gizmos.DrawWireSphere(sun.position, orbitPlanets[i].radius);
+        }
+    }
 }
+
