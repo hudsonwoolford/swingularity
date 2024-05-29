@@ -226,7 +226,7 @@ public class LevelGenerator : MonoBehaviour
     /// Calculates what planet indices to replace with special object
     /// </summary>
     /// <returns>An index and special object</returns>
-    (int, SpecialObject)[] CalculateReplaceIndices(ProceduralLevelGeneration.Level level)
+    (int, SpecialObject)[] CalculateReplaceIndices(ProceduralLevelGeneration.Level level, int[] ignoreIndices)
     {
         List<(int, SpecialObject)> replaceObjects = new List<(int, SpecialObject)>(specialObjects.Length); //Takes all the special object that replace a planet
         int numSpecial = 0; //number of objects
@@ -262,7 +262,9 @@ public class LevelGenerator : MonoBehaviour
         List<int> availableIndices = new List<int>(); //Prevents overlapping indices
         for (int i = 0; i < level.numPlanets; i++)
         {
-            availableIndices.Add(i);
+            if(i != ignoreIndices[0] && i != ignoreIndices[1]){
+                availableIndices.Add(i);
+            }
         }
 
         //Moon priority to bigger planets
@@ -270,7 +272,7 @@ public class LevelGenerator : MonoBehaviour
         {
             int moonAmount = 0;
             List<int> removeIndices = new List<int>();
-            for (int u = 0; u < level.numPlanets - 2; u++)
+            for (int u = 0; u < availableIndices.Count; u++)
             {
                 if (level.planetSizes[availableIndices[u]] > levelStatic.moonCutoffSize)
                 {
@@ -340,7 +342,7 @@ public class LevelGenerator : MonoBehaviour
             {
                 for (int u = 0; u < replaceObjects[i].Item1 && u < 2; u++)
                 {
-                    int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+                    int index = ignoreIndices[UnityEngine.Random.Range(0,1)];
                     availableIndices.Remove(index);
                     replacers.Add((index, replaceObjects[i].Item2));
                 }
@@ -398,9 +400,11 @@ public class LevelGenerator : MonoBehaviour
             tag = "PlanetParent"
         }.transform;
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
+        
+        int[] ignoreIndices = FarthestIndices(level);
 
         //Replacement special objects
-        (int, SpecialObject)[] replacers = CalculateReplaceIndices(level);
+        (int, SpecialObject)[] replacers = CalculateReplaceIndices(level, ignoreIndices);
         int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
         Array.Sort(replacers, (x, y) => CompareEnums(x, y));
         for (int i = 0; i < replacers.Length; i++)
@@ -438,7 +442,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
 
-        SetBallFlagPositionFarthest(flag, player.transform, normPlanets.ToArray());
+        SetBallFlagPositionFarthest(flag, player.transform, planetList, ignoreIndices);
         Physics.SyncTransforms();
         player.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
 
@@ -678,26 +682,9 @@ public class LevelGenerator : MonoBehaviour
     /// <summary>
     /// Sets the position for the flag and ball. Farthest position possible for flag and ball.
     /// </summary>
-    void SetBallFlagPositionFarthest(Transform flag, Transform ball, Planet[] candidates)
+    void SetBallFlagPositionFarthest(Transform flag, Transform ball, Planet[] candidates, int[] farthestPlanets)
     {
         Physics.SyncTransforms();
-        if (candidates.Length == 0) { return; }
-        int[] farthestPlanets = new int[2];
-        float farthestDistance = 0;
-        for (int x = 0; x < candidates.Length; x++)
-        {
-            for (int y = 0; y < candidates.Length; y++)
-            {
-                if(y == x) { continue; }
-                float distance = Vector2.Distance(candidates[x].forceField.transform.position, candidates[y].forceField.transform.position);
-                if  (distance > farthestDistance)
-                {
-                    farthestDistance = distance;
-                    farthestPlanets[0] = x; farthestPlanets[1] = y;
-                }
-            }
-        }
-
         //Flag position
         UnityEngine.Random.InitState(seed);
         int rot = UnityEngine.Random.Range(0, 360);
@@ -706,19 +693,57 @@ public class LevelGenerator : MonoBehaviour
         {
             flag.eulerAngles = new Vector3(0, 0, rot);
             predictedFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + flag.up * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + 1.2f); //maybe scale with radius
-            if (!Physics.CheckSphere(predictedFlagPos, 1.15f))
+            if (!Physics.CheckSphere(predictedFlagPos, 1.15f, 12))
             {
                 break;
             }
             rot += 360 / 7;
         }
         flag.position = predictedFlagPos;
+        UnityEngine.Random.InitState(seed + 9);
         //Ball position
-        float flagAng = Mathf.Atan2((candidates[farthestPlanets[0]].planet.transform.position - flag.position).normalized.y, (candidates[farthestPlanets[0]].planet.transform.position - flag.position).normalized.x);
-        flagAng += Mathf.PI * 0.4f * UnityEngine.Random.value;
+        float flagAng = UnityEngine.Random.Range(0, 2 * Mathf.PI);
         Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x);
         Vector3 closestPoint = candidates[farthestPlanets[1]].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
+        for (int u = 0; u < 6; u++)
+        {
+            flagAng = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+            initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x);
+            closestPoint = candidates[farthestPlanets[1]].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
+            if (!Physics.CheckSphere(closestPoint, 1.5f))
+            {
+                break;
+            }
+            rot += 360 / 7;
+        }
         ball.GetComponent<Rigidbody>().position = closestPoint + (closestPoint - candidates[farthestPlanets[1]].planet.transform.position).normalized * (0.22f);
+    }
+    
+    int[] FarthestIndices(Level level){
+        Physics.SyncTransforms();
+        UnityEngine.Random.InitState(seed);
+        if (level.planetPoints.Length == 0) { return new int[0]; }
+        int[] farthestPlanets = new int[2];
+        float farthestDistance = 0;
+        for (int x = 0; x < level.planetPoints.Length; x++)
+        {
+            for (int y = 0; y < level.planetPoints.Length; y++)
+            {
+                if(y == x) { continue; }
+                float distance = Vector2.Distance(level.planetPoints[x], level.planetPoints[y]);
+                if  (distance > farthestDistance)
+                {
+                    farthestDistance = distance;
+                    if(UnityEngine.Random.Range(0, 1) == 0){
+                        farthestPlanets[0] = x; farthestPlanets[1] = y;
+                    }
+                    else{
+                        farthestPlanets[0] = y; farthestPlanets[1] = x;
+                    }
+                }
+            }
+        }
+        return farthestPlanets;
     }
     #endregion
     #region Utility
