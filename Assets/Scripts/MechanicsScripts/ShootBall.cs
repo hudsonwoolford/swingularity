@@ -88,7 +88,6 @@ public class ShootBall : MonoBehaviour
                 mat.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
             }
         }
-        StartCoroutine(AstronautFade());
         foreach (Transform t in planetTransform)
         {
             planets.Add(t.gameObject.GetComponent<CelestialMass>());
@@ -176,7 +175,7 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) { BallReset(); } //reset1ity
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay) { BallReset(); } //reset1ity
     }
     void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
