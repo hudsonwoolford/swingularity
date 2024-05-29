@@ -42,7 +42,7 @@ public class SolarSystemGenerator : MonoBehaviour
         if(mockPlanet == null || mockPlanetParent == null || sun == null || orbitPlanets.Length <= 0) { return; }
         if(!Application.isPlaying)
         {
-            //Spawning and deleting mock planets
+            //Spawning and deleting mock planets to match orbit planet array size
             if(mockPlanetParent.childCount != orbitPlanets.Length)
             {
                 while(orbitPlanets.Length < mockPlanetParent.childCount)
@@ -52,7 +52,7 @@ public class SolarSystemGenerator : MonoBehaviour
                 while (orbitPlanets.Length > mockPlanetParent.childCount)
                 {
                     MockPlanet mp = Instantiate(mockPlanet, mockPlanetParent).GetComponent<MockPlanet>();
-                    orbitPlanets[mockPlanetParent.childCount].script = mp;
+                    orbitPlanets[mockPlanetParent.childCount-1].script = mp;
                 }
             }
             //Sun variables
@@ -76,13 +76,15 @@ public class SolarSystemGenerator : MonoBehaviour
             for (int i = 0; i < orbitPlanets.Length; i++)
             {
                 if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
+                //Incrementing rotation
                 float totalRadius = (orbitPlanets[i].script.transform.position-sun.transform.position).magnitude;
                 orbitPlanets[i].progress += orbitPlanets[i].speed * Time.deltaTime / 5;
                 orbitPlanets[i].progress %= 1;
                 
+                //Rotating and setting position
                 Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
                 allPlanetParent.GetChild(i).position = sun.transform.position + dir * totalRadius;
-                allPlanetParent.GetChild(i).rotation = Quaternion.Euler(0,0, orbitPlanets[i].progress * 360);
+                allPlanetParent.GetChild(i).eulerAngles += new Vector3(0,0,orbitPlanets[i].speed* Time.deltaTime / 5 * 360);
             }
         }
     }
