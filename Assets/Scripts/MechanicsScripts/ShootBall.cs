@@ -56,7 +56,7 @@ public class ShootBall : MonoBehaviour
     Camera main;
     TrailRenderer tr;
     bool liningUpShot;
-    bool ballStill = false, canShoot = false;
+    bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
     float ballStillTimeVal = 0.2f;
@@ -125,6 +125,8 @@ public class ShootBall : MonoBehaviour
         lr.positionCount = 0; //no line
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
+        ballStill = true;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         ballStillTimer = 0f;
         if(astronaut == null)
         {
@@ -132,7 +134,6 @@ public class ShootBall : MonoBehaviour
             astronaut.AddComponent<MeshRenderer>().material = defaultBallMat;
         }
         StartCoroutine(BallStillTiming(0.5f));
-
     }
     // Update is called once per frame
     void Update()
@@ -149,7 +150,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && canShoot)
+            if(Input.GetMouseButtonDown(0) && !astronautFading)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -167,8 +168,8 @@ public class ShootBall : MonoBehaviour
             }
         }
         else{
+
             ballStill = false;
-            canShoot = false;
             childObj.transform.up =
             Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f);
             childObj.transform.forward =
@@ -194,16 +195,17 @@ public class ShootBall : MonoBehaviour
                 yield return null;
             }
         }
-        if(!astronautFading && !deathDelay){
-            astronautFading = true;
-            ballStill = true;   
-            canShoot = false;
+        ballStill = true;
+        if (!astronautFading && !deathDelay){
             StartCoroutine(AstronautFade());
         }
         yield break;
     }
     IEnumerator AstronautFade(){
-        
+        astronautFading = true;
+        if(movedAstronaut || Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
+            astronautFading = false;
+            yield break; }
         float timeCounter = 0;
         foreach(Material mat in astronautFadeMats){
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
@@ -249,7 +251,7 @@ public class ShootBall : MonoBehaviour
         foreach(Material mat in astronautFadeMats){
             mat.SetFloat("_Cutoff", 1);    
         }
-        canShoot = true;
+        astronautFading = false;
         yield break;
 
     }
@@ -347,7 +349,6 @@ public class ShootBall : MonoBehaviour
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;
-        astronautFading = false;
         movedAstronaut = false;
 
         onShoot?.Invoke(); //invoke shoot event
@@ -364,20 +365,26 @@ public class ShootBall : MonoBehaviour
     {
         childObj.GetComponent<MeshRenderer>().enabled = true;
 
+        Vector3 originalPos = transform.position;
         rb.position = origin;
         transform.position = origin;
         tr?.Clear();
         tr.emitting = true;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
         lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
         ballStill = false;
-        canShoot = false;
-        astronautFading = false;
-        movedAstronaut = false;
+        if(Vector3.Distance(originalPos, rb.position)>0.05f)
+        {
+            movedAstronaut = false;
+        }
+        //Stopping all coroutines + stopping coroutine booleans
         StopAllCoroutines();
+        astronautFading = false;
+        deathDelay = false;
+        liningUpShot = false;
     }
     void DeleteSimulation()
     {
