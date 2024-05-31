@@ -24,11 +24,16 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] Transform mockPlanetParent;
     [SerializeField] GameObject mockPlanet;
     [SerializeField] OrbitPlanet[] orbitPlanets;
+    [Header("Animation")]
+    [SerializeField] Animator sunAnimator;
     [Header("Line Variables")]
     [SerializeField] Gradient lineColor;
     [SerializeField] float lineWidth = 0.2f;
     [SerializeField] Material lineMat;
     bool levelGen;
+    float planetSpeed, planetVel;
+    //animation
+    bool hovering;
     Transform allPlanetParent;
 
     private void Start()
@@ -39,48 +44,73 @@ public class SolarSystemGenerator : MonoBehaviour
     void Update()
     {
         if(mockPlanet == null || mockPlanetParent == null || sun == null || orbitPlanets.Length <= 0) { return; }
-        if(!Application.isPlaying)
+        if(!Application.isPlaying) //EDITOR
         {
-            //Spawning and deleting mock planets to match orbit planet array size
-            if(mockPlanetParent.childCount != orbitPlanets.Length)
-            {
-                while(orbitPlanets.Length < mockPlanetParent.childCount)
-                {
-                    DestroyImmediate(mockPlanetParent.GetChild(0).gameObject);
-                }
-                while (orbitPlanets.Length > mockPlanetParent.childCount)
-                {
-                    MockPlanet mp = Instantiate(mockPlanet, mockPlanetParent).GetComponent<MockPlanet>();
-                    orbitPlanets[mockPlanetParent.childCount-1].script = mp;
-                }
-            }
-            //Sun variables
-            sun.transform.localScale = Vector3.one * sunSize;
-            //Calibrating variables on mock planets, position setting, seed setting, etc
-            for (int i = 0; i < orbitPlanets.Length; i++)
-            {
-                if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
-                orbitPlanets[i].script.seed = orbitPlanets[i].seed;
-                orbitPlanets[i].script.transform.localScale = Vector3.one * orbitPlanets[i].size;
-                Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
-                orbitPlanets[i].script.transform.position = sun.transform.position + dir * orbitPlanets[i].radius;
-            }
+            MatchPlanets();
+            CalibrateSystemVar();
         }
-        else if(levelGen)
+        else if(levelGen) //PLAYMODE + LEVEL HAS BEEN CREATED
         {
             if(allPlanetParent == null) { allPlanetParent = GameObject.Find("Planets").transform; }
-            for (int i = 0; i < orbitPlanets.Length; i++)
+            ButtonBehaviour();
+            MovePlanets();
+        }
+    }
+    void ButtonBehaviour()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float maxRad = 0;
+        for (int i = 0; i < orbitPlanets.Length; i++)
+        {
+            maxRad = Mathf.Max(maxRad, orbitPlanets[i].radius);
+        }
+        hovering = Vector2.Distance(mousePos, sun.position) < maxRad;
+    }
+    void MovePlanets()
+    {
+        for (int i = 0; i < orbitPlanets.Length; i++)
+        {
+            if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
+            //Incrementing rotation
+            float totalRadius = (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude;
+            float target = hovering ? orbitPlanets[i].speed * Time.deltaTime / 5 : orbitPlanets[i].speed * Time.deltaTime / 30;
+            planetSpeed = Mathf.SmoothDamp(planetSpeed, target, ref planetVel, 1f);
+            orbitPlanets[i].progress += planetSpeed;
+            orbitPlanets[i].progress %= 1;
+
+            //Rotating and setting position
+            Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
+            allPlanetParent.GetChild(i).position = sun.transform.position + dir * totalRadius;
+            allPlanetParent.GetChild(i).eulerAngles += new Vector3(0, 0, planetSpeed * 360);
+        }
+    }
+    void CalibrateSystemVar()
+    {
+        //Sun variables
+        sun.transform.localScale = Vector3.one * sunSize;
+        //Calibrating variables on mock planets, position setting, seed setting, etc
+        for (int i = 0; i < orbitPlanets.Length; i++)
+        {
+            if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
+            orbitPlanets[i].script.seed = orbitPlanets[i].seed;
+            orbitPlanets[i].script.transform.localScale = Vector3.one * orbitPlanets[i].size;
+            Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
+            orbitPlanets[i].script.transform.position = sun.transform.position + dir * orbitPlanets[i].radius;
+        }
+    }
+    void MatchPlanets()
+    {
+        //Spawning and deleting mock planets to match orbit planet array size
+        if (mockPlanetParent.childCount != orbitPlanets.Length)
+        {
+            while (orbitPlanets.Length < mockPlanetParent.childCount)
             {
-                if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
-                //Incrementing rotation
-                float totalRadius = (orbitPlanets[i].script.transform.position-sun.transform.position).magnitude;
-                orbitPlanets[i].progress += orbitPlanets[i].speed * Time.deltaTime / 5;
-                orbitPlanets[i].progress %= 1;
-                
-                //Rotating and setting position
-                Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
-                allPlanetParent.GetChild(i).position = sun.transform.position + dir * totalRadius;
-                allPlanetParent.GetChild(i).eulerAngles += new Vector3(0,0,orbitPlanets[i].speed* Time.deltaTime / 5 * 360);
+                DestroyImmediate(mockPlanetParent.GetChild(0).gameObject);
+            }
+            while (orbitPlanets.Length > mockPlanetParent.childCount)
+            {
+                MockPlanet mp = Instantiate(mockPlanet, mockPlanetParent).GetComponent<MockPlanet>();
+                orbitPlanets[mockPlanetParent.childCount - 1].script = mp;
             }
         }
     }
