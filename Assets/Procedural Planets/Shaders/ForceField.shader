@@ -156,7 +156,7 @@ Shader "Custom/ForceField"
                     continue;
                 }
 
-                float lengthToBall = length(_ObjPos[u] - faceCentre) / _Scale;
+                float lengthToBall = length(float3(_ObjPos[u].xy,0) - faceCentre) / _Scale;
                 distToBall = distToBall > lengthToBall ? lengthToBall : distToBall;
             }
             if (distToBall <= _InteractiveDistance){ o.objNear = true; }
