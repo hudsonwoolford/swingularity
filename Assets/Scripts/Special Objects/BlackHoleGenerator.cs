@@ -138,7 +138,6 @@ public class BlackHoleGenerator : MonoBehaviour
         if(correspondent == null) { return; }
         if (collision.gameObject.tag == "Player" && canTravel) //Player or simulated player
         {
-            collision.attachedRigidbody.velocity *= -1;
             TrailRenderer trailRenderer = collision.gameObject.GetComponent<TrailRenderer>();
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
@@ -146,7 +145,6 @@ public class BlackHoleGenerator : MonoBehaviour
             blackHoleTravel?.Invoke();
         }
         if(collision.gameObject.layer == 7){
-            collision.attachedRigidbody.velocity *= -1;
             collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
     }
