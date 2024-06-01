@@ -25,19 +25,23 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] GameObject mockPlanet;
     [SerializeField] OrbitPlanet[] orbitPlanets;
     [Header("Animation")]
-    [SerializeField] Animator sunAnimator;
+    [SerializeField] float hoverSmoothness;
     [Header("Line Variables")]
     [SerializeField] Gradient lineColor;
     [SerializeField] float lineWidth = 0.2f;
     [SerializeField] Material lineMat;
+    float[] planetVel;
+    float[] planetSpeed;
     bool levelGen;
-    float planetSpeed, planetVel;
+    float sunVel;
     //animation
     bool hovering;
     Transform allPlanetParent;
 
     private void Start()
     {
+        planetVel = new float[orbitPlanets.Length];
+        planetSpeed = new float[orbitPlanets.Length];
         if (Application.isPlaying) { DrawAllCircles(); }
     }
     // Update is called once per frame
@@ -68,26 +72,30 @@ public class SolarSystemGenerator : MonoBehaviour
     }
     void MovePlanets()
     {
+        //Sun variables
+        float targetSize = hovering ? sunSize : sunSize * 0.8f;
+        sun.transform.localScale = Mathf.SmoothDamp(sun.transform.localScale.x, targetSize, ref sunVel, hoverSmoothness) * Vector3.one;
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
             if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
             //Incrementing rotation
             float totalRadius = (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude;
-            float target = hovering ? orbitPlanets[i].speed * Time.deltaTime / 5 : orbitPlanets[i].speed * Time.deltaTime / 30;
-            planetSpeed = Mathf.SmoothDamp(planetSpeed, target, ref planetVel, 1f);
-            orbitPlanets[i].progress += planetSpeed;
+            float target = hovering ? orbitPlanets[i].speed : orbitPlanets[i].speed / 20;
+            planetSpeed[i] = Mathf.SmoothDamp(planetSpeed[i], target, ref planetVel[i], hoverSmoothness);
+            orbitPlanets[i].progress += planetSpeed[i] * Time.deltaTime;
             orbitPlanets[i].progress %= 1;
 
             //Rotating and setting position
             Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
             allPlanetParent.GetChild(i).position = sun.transform.position + dir * totalRadius;
-            allPlanetParent.GetChild(i).eulerAngles += new Vector3(0, 0, planetSpeed * 360);
+            allPlanetParent.GetChild(i).eulerAngles += new Vector3(0, 0, planetSpeed[i] * Time.deltaTime * 360);
         }
     }
     void CalibrateSystemVar()
     {
         //Sun variables
-        sun.transform.localScale = Vector3.one * sunSize;
+        float targetSize = hovering ? sunSize : sunSize * 0.8f;
+        sun.transform.localScale = Mathf.SmoothDamp(sun.transform.localScale.x, targetSize, ref sunVel, 1) * Vector3.one;
         //Calibrating variables on mock planets, position setting, seed setting, etc
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
