@@ -5,9 +5,9 @@ using UnityEditor;
 
 public class MockPlanet : MonoBehaviour
 {
-    public ColorSchemeStaticReference.PlanetType planetType;
-    public bool specificSeed;
-    public int seed;
+    [SerializeField]public ColorSchemeStaticReference.PlanetType planetType;
+    [SerializeField] public bool specificSeed;
+    [SerializeField] public int seed;
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(MockPlanet))]

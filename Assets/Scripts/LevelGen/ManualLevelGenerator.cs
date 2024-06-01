@@ -13,8 +13,10 @@ public class ManualLevelGenerator : MonoBehaviour
     [SerializeField] GameObject planetGeneratorPrefab, forcefieldPrefab;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] int resolution = 1024;
+    [SerializeField] bool spawnForcefields = true;
+    [SerializeField] Transform allPlanetParent;
     MockPlanet[] mockPlanets = new MockPlanet[0];
-    Transform environment, allPlanetParent;
+    Transform environment;
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
     GameObject player;
@@ -26,6 +28,12 @@ public class ManualLevelGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (allPlanetParent == null)
+        {
+            allPlanetParent = new GameObject("Planets").transform;
+        }
+        allPlanetParent.gameObject.tag = "PlanetParent";
+
         levelInit?.Invoke(levelStatic.possibleGalaxySchemes[0]);  //Initiation failsafe
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
@@ -57,10 +65,7 @@ public class ManualLevelGenerator : MonoBehaviour
         Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
-        allPlanetParent = new GameObject("Planets")
-        {
-            tag = "PlanetParent"
-        }.transform;
+
 
         for (int i = 0; i < level.numPlanets; i++)
         {
@@ -93,7 +98,7 @@ public class ManualLevelGenerator : MonoBehaviour
 
         Time.timeScale = 1;
         levelGenerated?.Invoke();
-        player.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
+        player?.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
         mockPlanetsParent.gameObject.SetActive(false);
     }
     #region Generation Functions
@@ -121,10 +126,14 @@ public class ManualLevelGenerator : MonoBehaviour
 
         newPlanet.transform.position = new Vector3(position.x, position.y, 0);
         newPlanet.transform.localScale = Vector3.one * size * levelStatic.planetScale;
-        GameObject forceField = GenerateForcefield(newPlanet.transform);
+        GameObject forceField = null;
+        if(spawnForcefields)
+        {
+            forceField = GenerateForcefield(newPlanet.transform);
+            forceField.transform.parent = environment;
+        }
 
         newPlanet.transform.parent = allPlanetParent;
-        forceField.transform.parent = environment;
 
 
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);

@@ -19,16 +19,20 @@ public class SolarSystemGenerator : MonoBehaviour
         public int seed;
         public MockPlanet script;
     }
-    [SerializeField] Transform sun;
+    [SerializeField] ColorSchemeStaticReference.PlanetType systemType;
+    [SerializeField] int sunSeed;
+    [SerializeField] SunGenerator sun;
     [SerializeField] float sunSize = 1;
     [SerializeField] Transform mockPlanetParent;
     [SerializeField] GameObject mockPlanet;
     [SerializeField] OrbitPlanet[] orbitPlanets;
+    [SerializeField] Transform allPlanetParent;
     [Header("Animation")]
     [SerializeField] float hoverSmoothness;
     [Header("Line Variables")]
     [SerializeField] Gradient lineColor;
     [SerializeField] float lineWidth = 0.2f;
+    [SerializeField] float lineTiling = 3f;
     [SerializeField] Material lineMat;
     float[] planetVel;
     float[] planetSpeed;
@@ -36,12 +40,13 @@ public class SolarSystemGenerator : MonoBehaviour
     float sunVel;
     //animation
     bool hovering;
-    Transform allPlanetParent;
 
     private void Start()
     {
         planetVel = new float[orbitPlanets.Length];
         planetSpeed = new float[orbitPlanets.Length];
+        sun.RandomSun(sunSeed, systemType);
+        CalibrateSystemVar();
         if (Application.isPlaying) { DrawAllCircles(); }
     }
     // Update is called once per frame
@@ -53,7 +58,7 @@ public class SolarSystemGenerator : MonoBehaviour
             MatchPlanets();
             CalibrateSystemVar();
         }
-        else if(levelGen) //PLAYMODE + LEVEL HAS BEEN CREATED
+        else if(allPlanetParent.childCount == orbitPlanets.Length) //PLAYMODE + LEVEL HAS BEEN CREATED
         {
             if(allPlanetParent == null) { allPlanetParent = GameObject.Find("Planets").transform; }
             ButtonBehaviour();
@@ -68,7 +73,7 @@ public class SolarSystemGenerator : MonoBehaviour
         {
             maxRad = Mathf.Max(maxRad, orbitPlanets[i].radius);
         }
-        hovering = Vector2.Distance(mousePos, sun.position) < maxRad;
+        hovering = Vector2.Distance(mousePos, sun.transform.position) < maxRad;
     }
     void MovePlanets()
     {
@@ -79,7 +84,7 @@ public class SolarSystemGenerator : MonoBehaviour
         {
             if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
             //Incrementing rotation
-            float totalRadius = (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude;
+            float totalRadius = (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude * transform.localScale.x;
             float target = hovering ? orbitPlanets[i].speed : orbitPlanets[i].speed / 20;
             planetSpeed[i] = Mathf.SmoothDamp(planetSpeed[i], target, ref planetVel[i], hoverSmoothness);
             orbitPlanets[i].progress += planetSpeed[i] * Time.deltaTime;
@@ -93,17 +98,16 @@ public class SolarSystemGenerator : MonoBehaviour
     }
     void CalibrateSystemVar()
     {
-        //Sun variables
-        float targetSize = hovering ? sunSize : sunSize * 0.8f;
-        sun.transform.localScale = Mathf.SmoothDamp(sun.transform.localScale.x, targetSize, ref sunVel, 1) * Vector3.one;
+        sun.transform.localScale = sunSize * Vector3.one;
         //Calibrating variables on mock planets, position setting, seed setting, etc
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
             if (orbitPlanets[i].script == null) { orbitPlanets[i].script = mockPlanetParent.GetChild(i).GetComponent<MockPlanet>(); }
+            orbitPlanets[i].script.planetType = systemType;
             orbitPlanets[i].script.seed = orbitPlanets[i].seed;
             orbitPlanets[i].script.transform.localScale = Vector3.one * orbitPlanets[i].size;
             Vector3 dir = new Vector3(Mathf.Cos(orbitPlanets[i].progress * Mathf.PI * 2), Mathf.Sin(orbitPlanets[i].progress * Mathf.PI * 2), 0);
-            orbitPlanets[i].script.transform.position = sun.transform.position + dir * orbitPlanets[i].radius;
+            orbitPlanets[i].script.transform.position = sun.transform.position + dir * orbitPlanets[i].radius * transform.localScale.x;
         }
     }
     void MatchPlanets()
@@ -118,6 +122,7 @@ public class SolarSystemGenerator : MonoBehaviour
             while (orbitPlanets.Length > mockPlanetParent.childCount)
             {
                 MockPlanet mp = Instantiate(mockPlanet, mockPlanetParent).GetComponent<MockPlanet>();
+                mp.planetType = systemType;
                 orbitPlanets[mockPlanetParent.childCount - 1].script = mp;
             }
         }
@@ -127,7 +132,7 @@ public class SolarSystemGenerator : MonoBehaviour
     {
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
-            DrawCircle(sun.position, (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude, 90);
+            DrawCircle(sun.transform.position, (orbitPlanets[i].script.transform.position - sun.transform.position).magnitude, 90);
         }
     }
     //Draws a circle by spawning a linerenderer
@@ -158,7 +163,7 @@ public class SolarSystemGenerator : MonoBehaviour
         l.material = lineMat;
         l.sortingLayerName = "Background";
 
-        l.textureScale = new Vector2(3, 1);
+        l.textureScale = new Vector2(lineTiling, 1);
         l.textureMode = LineTextureMode.Tile;
     }
     void LevelGenerated()
@@ -177,7 +182,7 @@ public class SolarSystemGenerator : MonoBehaviour
     {
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
-            Gizmos.DrawWireSphere(sun.position, orbitPlanets[i].radius);
+            Gizmos.DrawWireSphere(sun.transform.position, orbitPlanets[i].radius * transform.localScale.x);
         }
     }
 }

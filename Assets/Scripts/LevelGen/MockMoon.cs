@@ -9,14 +9,14 @@ using UnityEngine;
 public class MockMoon : MockPlanet
 {
     [Header("Moon Var")]
-    public Transform orbitPlanet;
+    [SerializeField] public Transform orbitPlanet;
     [Range(0f, 1f)]
-    public float eccentricity = 1;
-    public float speed = 1;
+    [SerializeField] public float eccentricity = 1;
+    [SerializeField] public float speed = 1;
     [Min(0.0001f)]
-    public float apoapsis = 1;
+    [SerializeField] public float apoapsis = 1;
     [Range(0,360f)]
-    public float rotation;
+    [SerializeField] public float rotation;
 
     private void OnDrawGizmosSelected()
     {
