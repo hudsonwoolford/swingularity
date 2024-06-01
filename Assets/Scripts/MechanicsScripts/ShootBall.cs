@@ -195,6 +195,7 @@ public class ShootBall : MonoBehaviour
                 yield return null;
             }
         }
+        //origin = transform.position;
         ballStill = true;
         if (!astronautFading && !deathDelay){
             StartCoroutine(AstronautFade());
