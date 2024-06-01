@@ -402,11 +402,11 @@ public class LevelGenerator : MonoBehaviour
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
         
         int[] ignoreIndices = FarthestIndices(level);
-
+        print(ignoreIndices[0] + " | " + ignoreIndices[1]);
         //Replacement special objects
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level, ignoreIndices);
-        int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
         Array.Sort(replacers, (x, y) => CompareEnums(x, y));
+        int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
         for (int i = 0; i < replacers.Length; i++)
         {
             replacers[i].Item2.replaceGeneration(ref planetList[replaceIndices[i]], level.planetSizes[replaceIndices[i]], level.planetPoints[replaceIndices[i]], level.planetSeeds[replaceIndices[i]], level.planetTypes[replaceIndices[i]], generator, i);
