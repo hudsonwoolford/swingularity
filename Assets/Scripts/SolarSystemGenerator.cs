@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode()]
 public class SolarSystemGenerator : MonoBehaviour
@@ -27,6 +26,9 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] GameObject mockPlanet;
     [SerializeField] OrbitPlanet[] orbitPlanets;
     [SerializeField] Transform allPlanetParent;
+    [Header("Button")]
+    [SerializeField] bool unlocked = false;
+    [SerializeField] string targetScene, requiredScene;
     [Header("Animation")]
     [SerializeField] float hoverSmoothness;
     [Header("Line Variables")]
@@ -36,13 +38,17 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] Material lineMat;
     float[] planetVel;
     float[] planetSpeed;
-    bool levelGen;
     float sunVel;
     //animation
     bool hovering;
+    bool clickDown; //used to get click behaviour - click only goes through if clickdown while hovering and clickup while hovering
 
     private void Start()
     {
+        if(GameManager.LevelManager.LevelCompleted(requiredScene))
+        {
+            unlocked = true;
+        }
         planetVel = new float[orbitPlanets.Length];
         planetSpeed = new float[orbitPlanets.Length];
         sun.RandomSun(sunSeed, systemType);
@@ -61,19 +67,34 @@ public class SolarSystemGenerator : MonoBehaviour
         else if(allPlanetParent.childCount == orbitPlanets.Length) //PLAYMODE + LEVEL HAS BEEN CREATED
         {
             if(allPlanetParent == null) { allPlanetParent = GameObject.Find("Planets").transform; }
-            ButtonBehaviour();
+            if (unlocked) { ButtonBehaviour(); }
             MovePlanets();
         }
     }
     void ButtonBehaviour()
     {
+        //Hovering animation
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float maxRad = 0;
         for (int i = 0; i < orbitPlanets.Length; i++)
         {
             maxRad = Mathf.Max(maxRad, orbitPlanets[i].radius);
         }
-        hovering = Vector2.Distance(mousePos, sun.transform.position) < maxRad;
+        bool dryHover = Vector2.Distance(mousePos, sun.transform.position) < maxRad;
+        hovering = clickDown && dryHover ? false : dryHover;
+
+        if(!unlocked) { return; } //The following behaviour loads scenes
+        //Check for clicks
+        if(Input.GetMouseButtonDown(0) && dryHover) { clickDown = true; }
+        if(Input.GetMouseButtonUp(0))
+        {
+            if(!dryHover) { clickDown = false; }
+            if(clickDown)
+            {
+                clickDown = false;
+                SceneManager.LoadScene(targetScene);
+            }
+        }
     }
     void MovePlanets()
     {
@@ -127,6 +148,11 @@ public class SolarSystemGenerator : MonoBehaviour
             }
         }
     }
+    public string SystemLevel()
+    {
+        return targetScene;
+    }
+    #region Line Rendering
     //Draws a circle for every level
     void DrawAllCircles()
     {
@@ -166,17 +192,12 @@ public class SolarSystemGenerator : MonoBehaviour
         l.textureScale = new Vector2(lineTiling, 1);
         l.textureMode = LineTextureMode.Tile;
     }
-    void LevelGenerated()
-    {
-        levelGen = true;
-    }
+    #endregion
     private void OnEnable()
     {
-        LevelGenerator.levelGenerated += LevelGenerated;
     }
     private void OnDisable()
     {
-        LevelGenerator.levelGenerated += LevelGenerated;
     }
     void OnDrawGizmosSelected()
     {
