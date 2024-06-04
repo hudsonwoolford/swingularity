@@ -118,6 +118,7 @@ public static class Galaxy
     public struct GalaxyScheme
     {
         public string name;
+        public string levelScene;
         public ColorSchemeStaticReference.PlanetType type;
         public Color primarySpiral, secondarySpiral;
         public Color coreGlow, coreQuasar;
@@ -125,8 +126,6 @@ public static class Galaxy
         [ColorUsage(true, true)]
         public Color lightColor, darkColor;
         public int hexagonSeed;
-        public string targetScene;
-        public string requiredScene;
     }
 
 }

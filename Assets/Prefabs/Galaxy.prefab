@@ -221,13 +221,13 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 1
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 0.9245283, g: 0.68255955, b: 0.44045925, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0, g: 0, b: 0, a: 1}
+        key1: {r: 0, g: 0, b: 0, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -14538,7 +14538,7 @@ Transform:
   - {fileID: 5605690775505283321}
   - {fileID: 4872684063597325899}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6688122606030308696
 MonoBehaviour:
@@ -14554,6 +14554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   schemes:
   - name: Earth
+    levelScene: Earth Galaxy
     type: 0
     primarySpiral: {r: 1, g: 0.46619305, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60645056, b: 1, a: 1}
@@ -14567,6 +14568,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Desert
+    levelScene: Desert Galaxy
     type: 1
     primarySpiral: {r: 1, g: 0.7671119, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
@@ -14580,6 +14582,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Ice
+    levelScene: 
     type: 2
     primarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
     secondarySpiral: {r: 1, g: 0.4760489, b: 0, a: 1}
@@ -14593,6 +14596,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Fire
+    levelScene: Fire Galaxy
     type: 3
     primarySpiral: {r: 1, g: 0.22297566, b: 0, a: 1}
     secondarySpiral: {r: 0.9427508, g: 1, b: 0, a: 1}
@@ -14606,6 +14610,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Goop
+    levelScene: 
     type: 4
     primarySpiral: {r: 0.5051341, g: 0, b: 1, a: 1}
     secondarySpiral: {r: 0.8460462, g: 1, b: 0, a: 1}
@@ -14619,6 +14624,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Waste
+    levelScene: 
     type: 5
     primarySpiral: {r: 1, g: 0.6, b: 0, a: 1}
     secondarySpiral: {r: 1, g: 1, b: 1, a: 1}
@@ -14632,6 +14638,7 @@ MonoBehaviour:
     targetScene: 
     requiredScene: 
   - name: Mythical
+    levelScene: 
     type: 6
     primarySpiral: {r: 1, g: 0, b: 0.8081136, a: 1}
     secondarySpiral: {r: 1, g: 0.7932249, b: 0, a: 1}
@@ -14655,7 +14662,7 @@ MonoBehaviour:
   coreFlicker: {fileID: 350261468486414592}
   coreQuasar: {fileID: 7270408550991831030}
   coreTwinkle: {fileID: 427820098260517647}
-  swirlSystem: {fileID: 0}
+  swirlSystem: {fileID: 5904881901543858417}
 --- !u!95 &6624237320031215746
 Animator:
   serializedVersion: 5
@@ -43878,8 +43885,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 0.46619305, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1024, g: 455.60953, b: 0, a: 1}
-        key1: {r: 1024, g: 455.60953, b: 0, a: 1}
+        key0: {r: 0, g: 0, b: 0, a: 1}
+        key1: {r: 0, g: 0, b: 0, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}

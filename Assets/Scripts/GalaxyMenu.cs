@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -12,19 +14,19 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] GalaxyGenerator gGen1, gGen2;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Button right, left;
-    [Header("Scene Buttons")]
-    [SerializeField] SceneButton[] sceneButtons;
     //[Header("Lines")]
     //[SerializeField] Material lrMat;
     //[SerializeField] float lrWidth;
     //[SerializeField] float lrRadius;
     [SerializeField] float hexagonRangeMult;
+    EventSystem eventSystem;
     //List<LineRenderer> hexagons = new List<LineRenderer>();
     int currentGalaxy;
     bool swap;
     // Start is called before the first frame update
     void Start()
     {
+        eventSystem = FindObjectOfType<EventSystem>();
         currentGalaxy = 0;
         swap = false;
         galaxy1.Play("GalaxyDisplay");
@@ -32,14 +34,26 @@ public class GalaxyMenu : MonoBehaviour
         nameText.text = gGen1.SetScheme(galaxyTypes[currentGalaxy]).name;
         right.onClick.AddListener(RightGalaxy);
         left.onClick.AddListener(LeftGalaxy);
-        CalibrateButtons(gGen1.SetScheme(galaxyTypes[currentGalaxy]).hexagonSeed);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(eventSystem.currentSelectedGameObject != null) { eventSystem.SetSelectedGameObject(null); }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GalaxyGenerator gen = swap ? gGen1 : gGen2;
+            string targetScene = gen.SetScheme(galaxyTypes[currentGalaxy]).levelScene;
+            if (!string.IsNullOrEmpty(targetScene))
+            {
+                SceneManager.LoadScene(targetScene);
+            }
+            else
+            {
+                Debug.LogWarning("LevelScene from '" + gen.SetScheme(galaxyTypes[currentGalaxy]).name +"' galaxy struct references an invalid scene: '" + targetScene+"'.");
+            }
+        }
     }
     void RightGalaxy()
     {
@@ -50,7 +64,6 @@ public class GalaxyMenu : MonoBehaviour
         GalaxyGenerator gen = swap ? gGen1 : gGen2;
         Galaxy.GalaxyScheme scheme = gen.SetScheme(galaxyTypes[currentGalaxy]);
         nameText.text = scheme.name;
-        CalibrateButtons(scheme.hexagonSeed);
 
         y.Play("GalaxyEnter");
         x.Play("GalaxyExit");
@@ -65,26 +78,11 @@ public class GalaxyMenu : MonoBehaviour
         GalaxyGenerator gen = swap ? gGen1 : gGen2;
         Galaxy.GalaxyScheme scheme = gen.SetScheme(galaxyTypes[currentGalaxy]);
         nameText.text = scheme.name;
-        CalibrateButtons(scheme.hexagonSeed);
 
         x.Play("GalaxyEnterR");
         y.Play("GalaxyExitR");
         swap = !swap;
     }
-    #region Buttons
-    void CalibrateButtons(int seed)
-    {
-        PositionButtons(seed);
-    }
-    void PositionButtons(int seed)
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            UnityEngine.Random.InitState(seed + i * 10);
-            sceneButtons[i].transform.position = Camera.main.WorldToScreenPoint(UnityEngine.Random.insideUnitCircle * hexagonRangeMult);
-        }
-    }
-    #endregion
     //#region Drawing Hexagons
     //void DrawGalaxyHexagons(int seed)
     //{
