@@ -4,6 +4,7 @@ Shader "Unlit/Fresnel"
     {
         [HDR]_MainColor("Main Color", Color) = (1,1,1)
         [HDR]_FresnelColor("Fresnel Color", Color) = (0,0,0)
+        _DotCutoff("Dot Cutoff", float) = 0
         _FresnelStrength("Fresnel Strength", float) = 1
     }
     SubShader
@@ -35,6 +36,7 @@ Shader "Unlit/Fresnel"
             fixed4 _MainColor;
             fixed4 _FresnelColor;
             float _FresnelStrength;
+            float _DotCutoff;
 
             v2f vert (appdata v)
             {
@@ -48,9 +50,13 @@ Shader "Unlit/Fresnel"
             fixed4 frag (v2f i) : SV_Target
             {
                 //float fresnel = 1-abs(dot(i.normal, float3(0,0,1));
-
-                float fresnel = (pow((1.0 - saturate(abs(dot(i.normal, float3(0,0,-1))))), _FresnelStrength));
+                float dotP = saturate(abs(dot(i.normal, float3(0,0,-1))));
+                float fresnel = (pow((1.0 - dotP), _FresnelStrength));
                 
+                if(dotP >= _DotCutoff)
+                {
+                    return _MainColor;
+                }
                 float4 col = lerp(_MainColor, _FresnelColor, pow(fresnel, _FresnelStrength));
                 return col;
             }

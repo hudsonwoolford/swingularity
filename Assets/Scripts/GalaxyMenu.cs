@@ -19,6 +19,7 @@ public class GalaxyMenu : MonoBehaviour
     //[SerializeField] float lrWidth;
     //[SerializeField] float lrRadius;
     [SerializeField] float hexagonRangeMult;
+    GalaxyGenerator currentGenerator;
     EventSystem eventSystem;
     //List<LineRenderer> hexagons = new List<LineRenderer>();
     int currentGalaxy;
@@ -40,18 +41,18 @@ public class GalaxyMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        currentGenerator = swap ? gGen1 : gGen2;
         if(eventSystem.currentSelectedGameObject != null) { eventSystem.SetSelectedGameObject(null); }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            GalaxyGenerator gen = swap ? gGen1 : gGen2;
-            string targetScene = gen.SetScheme(galaxyTypes[currentGalaxy]).levelScene;
+            string targetScene = currentGenerator.SetScheme(galaxyTypes[currentGalaxy]).levelScene;
             if (!string.IsNullOrEmpty(targetScene))
             {
                 SceneManager.LoadScene(targetScene);
             }
             else
             {
-                Debug.LogWarning("LevelScene from '" + gen.SetScheme(galaxyTypes[currentGalaxy]).name +"' galaxy struct references an invalid scene: '" + targetScene+"'.");
+                Debug.LogWarning("LevelScene from '" + currentGenerator.SetScheme(galaxyTypes[currentGalaxy]).name +"' galaxy struct references an invalid scene: '" + targetScene+"'.");
             }
         }
     }
