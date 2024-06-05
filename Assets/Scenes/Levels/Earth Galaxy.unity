@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007526484, g: 0.0007269121, b: 0.0007526484, a: 1}
+  m_IndirectSpecularColor: {r: 0.00091242965, g: 0.0007269998, b: 0.00091242965, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,947 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &39552407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 39552408}
+  - component: {fileID: 39552411}
+  - component: {fileID: 39552410}
+  - component: {fileID: 39552409}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &39552408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39552407}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3896303, y: 1.4798064, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &39552409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39552407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1264
+--- !u!23 &39552410
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39552407}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &39552411
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39552407}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &160739053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160739054}
+  - component: {fileID: 160739057}
+  - component: {fileID: 160739056}
+  - component: {fileID: 160739055}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160739054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160739053}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3695211, y: 0.44498467, z: 0}
+  m_LocalScale: {x: 0.33, y: 0.33, z: 0.33}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &160739055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160739053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -6
+--- !u!23 &160739056
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160739053}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &160739057
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160739053}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &177592377
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 676937497}
+    m_Modifications:
+    - target: {fileID: 1049217193119386871, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4186063889061935077, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_Name
+      value: Solar System (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: unlocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: targetScene
+      value: Earth_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].size
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].seed
+      value: -1093
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].size
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].seed
+      value: 1264
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].size
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].seed
+      value: 1089
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].size
+      value: 0.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].seed
+      value: 1396
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].size
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].seed
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].size
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].script
+      value: 
+      objectReference: {fileID: 521698224}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].radius
+      value: 1.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].script
+      value: 
+      objectReference: {fileID: 966847541}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].script
+      value: 
+      objectReference: {fileID: 957357731}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].script
+      value: 
+      objectReference: {fileID: 358557987}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].script
+      value: 
+      objectReference: {fileID: 1538242089}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].script
+      value: 
+      objectReference: {fileID: 2145381879}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].radius
+      value: 1.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].script
+      value: 
+      objectReference: {fileID: 160739055}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].progress
+      value: -0.184
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].progress
+      value: 0.047
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].progress
+      value: -0.252
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].progress
+      value: -0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].progress
+      value: -0.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].progress
+      value: 0.102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].progress
+      value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: 2539.8325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477958616158902032, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: mass
+      value: 100.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719461464782528479, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.3776655
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719461464782528479, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.41909218
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 614137703797241023, guid: f13b9185c10983f4eb62ba9b60021d20, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 521698223}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 966847540}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 957357730}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 358557986}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1538242088}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2145381878}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 160739054}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f13b9185c10983f4eb62ba9b60021d20, type: 3}
+--- !u!1 &229251048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 229251049}
+  - component: {fileID: 229251052}
+  - component: {fileID: 229251051}
+  - component: {fileID: 229251050}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &229251049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229251048}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.3776655, y: 0.41909218, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &229251050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229251048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -838
+--- !u!23 &229251051
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229251048}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &229251052
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229251048}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &279155729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 279155730}
+  - component: {fileID: 279155733}
+  - component: {fileID: 279155732}
+  - component: {fileID: 279155731}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &279155730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279155729}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.5801854, y: -1.3179474, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &279155731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279155729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -838
+--- !u!23 &279155732
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279155729}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &279155733
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279155729}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &358557985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 358557986}
+  - component: {fileID: 358557989}
+  - component: {fileID: 358557988}
+  - component: {fileID: 358557987}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &358557986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358557985}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3896303, y: 1.4798062, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &358557987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358557985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1264
+--- !u!23 &358557988
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358557985}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &358557989
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358557985}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &521698222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 521698223}
+  - component: {fileID: 521698226}
+  - component: {fileID: 521698225}
+  - component: {fileID: 521698224}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &521698223
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521698222}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.58018494, y: -1.3179475, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &521698224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521698222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -838
+--- !u!23 &521698225
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521698222}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &521698226
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521698222}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &571587975
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +1335,111 @@ Transform:
   m_Father: {fileID: 691840850}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &669739503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 669739504}
+  - component: {fileID: 669739507}
+  - component: {fileID: 669739506}
+  - component: {fileID: 669739505}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &669739504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669739503}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.627181, y: 1.2137475, z: 0}
+  m_LocalScale: {x: 0.33, y: 0.33, z: 0.33}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &669739505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669739503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1396
+--- !u!23 &669739506
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669739503}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &669739507
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669739503}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &676908716 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+    type: 3}
+  m_PrefabInstance: {fileID: 177592377}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &676937496
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,6 +1471,8 @@ Transform:
   - {fileID: 6202046869116580849}
   - {fileID: 744189759}
   - {fileID: 691840851}
+  - {fileID: 1140516713}
+  - {fileID: 676908716}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -548,7 +1596,7 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: unlocked
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -774,6 +1822,105 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 691840849}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &732350042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 732350043}
+  - component: {fileID: 732350046}
+  - component: {fileID: 732350045}
+  - component: {fileID: 732350044}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &732350043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732350042}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.0139928, y: -0.25442648, z: 0}
+  m_LocalScale: {x: 0.48, y: 0.48, z: 0.48}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &732350044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732350042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1089
+--- !u!23 &732350045
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732350042}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &732350046
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732350042}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &744189757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -790,7 +1937,7 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: unlocked
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -1119,6 +2266,563 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &957357729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 957357730}
+  - component: {fileID: 957357733}
+  - component: {fileID: 957357732}
+  - component: {fileID: 957357731}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &957357730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957357729}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.02550888, y: -2.02984, z: 0}
+  m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &957357731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957357729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -1093
+--- !u!23 &957357732
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957357729}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &957357733
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957357729}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &966847539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 966847540}
+  - component: {fileID: 966847543}
+  - component: {fileID: 966847542}
+  - component: {fileID: 966847541}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &966847540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966847539}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.3776655, y: 0.41909194, z: 0}
+  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &966847541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966847539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -838
+--- !u!23 &966847542
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966847539}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &966847543
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966847539}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1140516712
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 676937497}
+    m_Modifications:
+    - target: {fileID: 1049217193119386871, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4186063889061935077, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_Name
+      value: Solar System (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: unlocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: targetScene
+      value: Earth_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: requiredScene
+      value: Earth_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].seed
+      value: -838
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].size
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].seed
+      value: -1093
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].size
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].seed
+      value: 1264
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].size
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].seed
+      value: 1089
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].size
+      value: 0.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].seed
+      value: 1396
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].size
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].seed
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].size
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].speed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].speed
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].script
+      value: 
+      objectReference: {fileID: 279155731}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].radius
+      value: 1.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].script
+      value: 
+      objectReference: {fileID: 229251050}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].script
+      value: 
+      objectReference: {fileID: 1911733290}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].script
+      value: 
+      objectReference: {fileID: 39552409}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].script
+      value: 
+      objectReference: {fileID: 732350044}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].radius
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].script
+      value: 
+      objectReference: {fileID: 669739505}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].radius
+      value: 1.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].script
+      value: 
+      objectReference: {fileID: 1703070473}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[0].progress
+      value: -0.184
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[1].progress
+      value: 0.047
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[2].progress
+      value: -0.252
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[3].progress
+      value: -0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[4].progress
+      value: -0.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[5].progress
+      value: 0.102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: orbitPlanets.Array.data[6].progress
+      value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: 2539.8325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477958616158902032, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: mass
+      value: 100.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719461464782528479, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.3776655
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719461464782528479, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.41909218
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 614137703797241023, guid: f13b9185c10983f4eb62ba9b60021d20, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 279155730}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 229251049}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1911733289}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 39552408}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 732350043}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 669739504}
+    - targetCorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1703070472}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f13b9185c10983f4eb62ba9b60021d20, type: 3}
+--- !u!4 &1140516713 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
+    type: 3}
+  m_PrefabInstance: {fileID: 1140516712}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1140516714 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+    type: 3}
+  m_PrefabInstance: {fileID: 1140516712}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1229589684
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +2995,309 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3cbb03f953f6d34ba4b2e7908bf2c9e, type: 3}
+--- !u!1 &1538242087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1538242088}
+  - component: {fileID: 1538242091}
+  - component: {fileID: 1538242090}
+  - component: {fileID: 1538242089}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1538242088
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538242087}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.0139928, y: -0.25442672, z: 0}
+  m_LocalScale: {x: 0.48, y: 0.48, z: 0.48}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1538242089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538242087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1089
+--- !u!23 &1538242090
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538242087}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1538242091
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538242087}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1703070471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1703070472}
+  - component: {fileID: 1703070475}
+  - component: {fileID: 1703070474}
+  - component: {fileID: 1703070473}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1703070472
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703070471}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3695211, y: 0.4449849, z: 0}
+  m_LocalScale: {x: 0.33, y: 0.33, z: 0.33}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1703070473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703070471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -6
+--- !u!23 &1703070474
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703070471}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1703070475
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703070471}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1911733288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1911733289}
+  - component: {fileID: 1911733292}
+  - component: {fileID: 1911733291}
+  - component: {fileID: 1911733290}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1911733289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911733288}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.025509357, y: -2.02984, z: 0}
+  m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1140516714}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1911733290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911733288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: -1093
+--- !u!23 &1911733291
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911733288}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1911733292
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911733288}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1935826766 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3724020340293529853, guid: f13b9185c10983f4eb62ba9b60021d20,
+    type: 3}
+  m_PrefabInstance: {fileID: 177592377}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1954839638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,6 +3375,105 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2145381877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2145381878}
+  - component: {fileID: 2145381881}
+  - component: {fileID: 2145381880}
+  - component: {fileID: 2145381879}
+  m_Layer: 14
+  m_Name: MockPlanet(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2145381878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145381877}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.627181, y: 1.2137468, z: 0}
+  m_LocalScale: {x: 0.33, y: 0.33, z: 0.33}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1935826766}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2145381879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145381877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 0
+  specificSeed: 1
+  seed: 1396
+--- !u!23 &2145381880
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145381877}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2145381881
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145381877}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &1737516658654864685
 PrefabInstance:
   m_ObjectHideFlags: 0
