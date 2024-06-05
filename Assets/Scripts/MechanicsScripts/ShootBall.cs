@@ -168,7 +168,10 @@ public class ShootBall : MonoBehaviour
             }
         }
         else{
-
+            if(rb.constraints == RigidbodyConstraints.FreezeAll) //if the ball is frozen while it shouldnt be, implemented because the ball would be frozen at the start after loading a level, but not colliding with anything
+            {
+                rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+            }
             ballStill = false;
             childObj.transform.up =
             Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f);

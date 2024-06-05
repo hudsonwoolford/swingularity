@@ -131,13 +131,18 @@ MonoBehaviour:
   animLength: 1.5
   animSmoothing: 0.15
   animScale: 0.75
-  astronautAnimLength: 0
+  astronautAnimLength: 0.25
   ignoreStill:
     serializedVersion: 2
     m_Bits: 4087
   astronaut: {fileID: 0}
-  astronautFadeMats: []
-  emmisionShader: {fileID: 0}
+  astronautFadeMats:
+  - {fileID: 2100000, guid: 3a8f6857fbd3186439d35a0b79faece0, type: 2}
+  - {fileID: 2100000, guid: f1f8ecd383a0fab478b5f38b6a1e7f2f, type: 2}
+  - {fileID: 2100000, guid: 6fa89aff0a0b1584fac255b1430fffec, type: 2}
+  - {fileID: 2100000, guid: cfdac6a55d7856d48bfb9739e903ff52, type: 2}
+  - {fileID: 2100000, guid: b963fed28814502479f3b73284d2cfb5, type: 2}
+  emmisionShader: {fileID: 4800000, guid: a62c396a81723314696aa0c5367e474a, type: 3}
 --- !u!96 &6428762038808385085
 TrailRenderer:
   serializedVersion: 3
