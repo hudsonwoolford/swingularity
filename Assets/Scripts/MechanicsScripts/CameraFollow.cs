@@ -344,13 +344,20 @@ public class CameraFollow : MonoBehaviour
     private void OnDrawGizmos()
     {
         //scene view visuals
-        Gizmos.color = Color.green;
-        Vector2[] polygon = PolygonPositions(startPos, endPos, 1 * sizeScalar, 0, 0);
+        Vector2[] polygon = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, 1 * sizeScalar, 0, 0);
+        Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, cameraMinMax.y, 1 * sizeScalar, 0, 0);
         for (int i = 0; i < polygon.Length-1; i++)
         {
+            Gizmos.color = Color.green;
             Gizmos.DrawLine(polygon[i], polygon[i + 1]);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(outerPol[i], outerPol[i + 1]);
         }
+        Gizmos.color = Color.green;
         Gizmos.DrawLine(polygon[polygon.Length - 1], polygon[0]);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(outerPol[outerPol.Length - 1], outerPol[0]);
+
 
         Gizmos.color = Color.white;
     }

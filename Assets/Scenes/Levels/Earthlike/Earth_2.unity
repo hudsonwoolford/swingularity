@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: eb2efd70f97b46441a8bdeadcca5fc1c, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00091242965, g: 0.0007269998, b: 0.00091242965, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014785795, g: 0.0013591028, b: 0.0012890887, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -406,6 +406,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AstronautParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 3432883320014890833, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
@@ -1455,21 +1460,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.4
       objectReference: {fileID: 0}
@@ -1518,20 +1508,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5419254315037307910, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_Name
       value: Flag
-      objectReference: {fileID: 0}
-    - target: {fileID: 5419254315037307910, guid: 93aed6f7bf9366e429975372dd1e7233,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

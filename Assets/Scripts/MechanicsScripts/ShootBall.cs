@@ -229,7 +229,7 @@ public class ShootBall : MonoBehaviour
         }
 
         if(!movedAstronaut){
-            astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, astronaut.transform.position.x);
+            astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, 10);
             Collider[] currentPlanets = Physics.OverlapSphere(rb.position, 0.25f, ignoreStill);
             Vector3 planetPos = Vector3.zero;
             foreach(Collider collider in currentPlanets){

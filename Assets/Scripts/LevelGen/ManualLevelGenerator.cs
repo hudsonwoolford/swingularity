@@ -96,6 +96,14 @@ public class ManualLevelGenerator : MonoBehaviour
         }
         Destroy(generator.gameObject);
 
+        ////Camera start and end positions
+        //(Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, camSize, extensionAmount, xOry);
+        //Vector2 startPos = startEndPos.Item1;
+        //Vector2 endPos = startEndPos.Item2;
+        //float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
+
+        //Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
+
         Time.timeScale = 1;
         levelGenerated?.Invoke();
         player?.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
