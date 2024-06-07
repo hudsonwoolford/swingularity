@@ -18,7 +18,7 @@ public class MockMoon : MockPlanet
     [Range(0,360f)]
     [SerializeField] public float rotation;
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         if(orbitPlanet == null) {  return; }
         float semiMajorAxis = apoapsis / (1 - eccentricity);
@@ -28,7 +28,7 @@ public class MockMoon : MockPlanet
         Vector2 focus2 = focus1 + new Vector2(centerDistance * 2, 0f);
         Vector2 centre = (focus1 + focus2) / 2f;
 
-        Vector3 lastPoint = Vector3.zero;
+        Vector3 lastPoint = orbitPlanet.transform.position;
         float mockProgress = 0;
         for (int i = 0; i < 90; i++)
         {
