@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] bool lockCamera;
     [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
     [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
-    [SerializeField] bool focusBall = true;
+    //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball;                            //ball transform
     Vector3 vel;
@@ -44,9 +44,9 @@ public class CameraFollow : MonoBehaviour
         innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35, 35); //to scale version
     }
     // Start is called before the first frame update
-    void Start()
+    void Start() 
     {
-        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) + 0.5f;
+        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) + 2.5f;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
         MasterStart();

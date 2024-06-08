@@ -97,17 +97,41 @@ public class ManualLevelGenerator : MonoBehaviour
         Destroy(generator.gameObject);
 
         ////Camera start and end positions
-        //(Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, camSize, extensionAmount, xOry);
+        //(Vector2, Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList);
         //Vector2 startPos = startEndPos.Item1;
         //Vector2 endPos = startEndPos.Item2;
-        //float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
+        //Vector2 regionSize = startEndPos.Item3;
+        //float maxZoom = Mathf.Max((regionSize.x) / (2 * Camera.main.aspect), regionSize.y / 2) + 5;
 
         //Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
+
+
 
         Time.timeScale = 1;
         levelGenerated?.Invoke();
         player?.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
         mockPlanetsParent.gameObject.SetActive(false);
+    }
+    (Vector2, Vector2, Vector2) CalculateStartEndPos(Planet[] planets)
+    {
+        Vector3 avg = Vector3.zero;
+        float maxX = 0, maxY = 0;
+        foreach (Planet planet in planets)
+        {
+            avg += planet.planet.transform.position;
+        }
+        avg /= planets.Length;
+        Vector2 planetsCenter = avg;
+        Vector2 startPos = planetsCenter;
+        Vector2 endPos = startPos;
+        foreach (Planet planet in planets)
+        {
+            maxX = Mathf.Max(planet.planet.transform.position.x - planetsCenter.x, maxX);
+            maxY = Mathf.Max(planet.planet.transform.position.y - planetsCenter.y, maxY);
+        }
+
+        endPos += new Vector2(maxX, maxY); startPos -= new Vector2(maxX, maxY);
+        return (startPos, endPos, new Vector2(maxX, maxY) * 2);
     }
     #region Generation Functions
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
@@ -173,7 +197,7 @@ public class ManualLevelGenerator : MonoBehaviour
         float semiMajorAxis = apoapsis / (1 - eccentricity);
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
         smallMoon.forceField.GetComponent<Collider>().material = levelStatic.superBouncyMoon;
-        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), correspondant, levelStatic.moonLine, rotation);
+        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), correspondant, levelStatic.moonLine, rotation, (int)seed.x);
         moonScript.GetComponent<MeshRenderer>().enabled = true;
         return smallMoon;
     }

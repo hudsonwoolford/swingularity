@@ -29,7 +29,9 @@ public class FullPlanetGeneration : MonoBehaviour
     [SerializeField]
     ColorSchemeStaticReference.PlanetType[] planetFilter;
     [SerializeField]
+#pragma warning disable
     bool moonOnly = false;
+#pragma warning restore
     [HideInInspector]
     [SerializeField] public PlanetColorScheme biomeA, biomeB, biomeP; //biome A and biome B for color schemes + polar biome
     [HideInInspector]

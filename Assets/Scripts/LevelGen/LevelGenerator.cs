@@ -651,7 +651,7 @@ public class LevelGenerator : MonoBehaviour
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
         smallMoon.forceField.GetComponent<Collider>().material = levelStatic.superBouncyMoon;
         bigPlanet.forceField.GetComponent<ForceField>().AutoMass();
-        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), levelStatic.moonLine, rotation);
+        moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), bigPlanet.forceField.GetComponent<CelestialMass>(), levelStatic.moonLine, rotation, (int)seed.x);
 
         bigPlanet.planetType = ColorSchemeStaticReference.PlanetType.special;
         planet = bigPlanet;

@@ -25,9 +25,10 @@ public class MoonManager : MonoBehaviour
     Vector2 centre;
     Rigidbody rb;
     bool moonEnabled = false;
+    int seed;
     
 
-    public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation){
+    public void Init(float semiMajorAxis, float gravitationalConstant, float eccentricity, float speed, CelestialMass associatedPlanet, CelestialMass orbitPlanet, Material moonLine, float rotation, int seed){
         this.semiMajorAxis = semiMajorAxis;
         this.gravitationalConstant = gravitationalConstant;
         this.eccentricity = eccentricity;
@@ -65,8 +66,9 @@ public class MoonManager : MonoBehaviour
     {
         GetComponent<MeshRenderer>().enabled = true;
 
+        UnityEngine.Random.InitState(seed);
         rb.position = RotateAround(rotation, orbitPlanet.transform.position + new Vector3(apoapsis, 0f, 0f), orbitPlanet.transform.position);
-        rb.angularVelocity = new Vector3(0f, 2f, 1f);
+        rb.angularVelocity = new Vector3(0f,UnityEngine.Random.value * speed *3, 1f);
         yield return new WaitForFixedUpdate();
         moonEnabled = true;
     }
