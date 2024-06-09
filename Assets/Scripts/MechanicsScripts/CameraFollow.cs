@@ -46,7 +46,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start() 
     {
-        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) + 2.5f;
+        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) *1.3f;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
         MasterStart();
