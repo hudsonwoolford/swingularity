@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
+    [SerializeField] Canvas settingsCanvas;
     public delegate void PauseGame();
-    public PauseGame pauseGame;
+    public static PauseGame pauseGame;
     public delegate void UnpauseGame();
-    public UnpauseGame unpauseGame;
+    public static UnpauseGame unpauseGame;
 
     [SerializeField]
     string[] dontPauseScene;
@@ -21,6 +22,7 @@ public class PauseManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        settingsCanvas.enabled = false;
         pausecanvas.enabled = false;
     }
 
@@ -47,19 +49,26 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 0;
         pausecanvas.enabled = true;
+        settingsCanvas.enabled = false;
     }
     void Unpause()
     {
         Time.timeScale = 1;
         pausecanvas.enabled = false;
+        settingsCanvas.enabled = false;
+    }
+    public void SettingsButton()
+    {
+        settingsCanvas.enabled = true;
+        pausecanvas.enabled = false;
     }
     public void ResumeButton()
     {
-        unpauseGame.Invoke();
+        unpauseGame?.Invoke();
     }
     public void MenuButton()
     {
-        unpauseGame.Invoke();
+        unpauseGame?.Invoke();
     }
     private void OnEnable()
     {

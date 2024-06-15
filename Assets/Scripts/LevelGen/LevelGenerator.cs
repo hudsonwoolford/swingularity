@@ -79,6 +79,7 @@ public class LevelGenerator : MonoBehaviour
     [Header("Level Parameters")]
     public int seed; //The seed for the level
     [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
+    [SerializeField] bool useLevelParams = false; //Whether level params are used
     //Level gen params
     float minPlanets, maxPlanets;
     [SerializeField] Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
@@ -108,6 +109,7 @@ public class LevelGenerator : MonoBehaviour
     void Start()
     {
         proceduralInit?.Invoke();
+        if(useLevelParams) { SetLevelParams(); }
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
@@ -115,7 +117,7 @@ public class LevelGenerator : MonoBehaviour
 
         SetSpecialDelegates();
         //Randomising or keeping seed
-        if(randomSeed)
+        if(randomSeed && !useLevelParams)
         {
             seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * UnityEngine.Random.Range(-1000f, 1000f) + UnityEngine.Random.value * Time.time);
         }
@@ -136,6 +138,7 @@ public class LevelGenerator : MonoBehaviour
         //Region size calculation
         camSize = CamSize(mainCam);                             //1. Calculates camera size
         xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
+        xOry = true; //2. Chooses which axis to extend into, X or Y.
         extensionAmount = UnityEngine.Random.value;               //3. Randomizes extension amount. 
         regionSize = CalculateBounds(camSize, extensionAmount, xOry);   //4. Calculating bounds based off previous variables
 
@@ -168,11 +171,13 @@ public class LevelGenerator : MonoBehaviour
     }
     #region Variable Setting
 
-    public void SetLevelParams(LevelManager.LevelParams levelParams){
+    void SetLevelParams(){
+        LevelManager.LevelParams levelParams = GameManager.LevelManager.levelParams;
         UnityEngine.Random.InitState(levelParams.seed);
+        seed = levelParams.seed;
 
-        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty];
-
+        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1];
+        float regionExtensionSize  = levelStatic.regionExtensionSizes[levelParams.difficulty - 1];
 
         possiblePlanetTypes = levelParams.themes;
 
@@ -183,6 +188,9 @@ public class LevelGenerator : MonoBehaviour
             SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
+
+        maxRegionExtension.x = regionExtensionSize; maxRegionExtension.y = regionExtensionSize;
+        minRegionExtension.x = regionExtensionSize; minRegionExtension.y = regionExtensionSize;
     }
 
     #endregion
@@ -220,8 +228,7 @@ public class LevelGenerator : MonoBehaviour
 
         return regionSize;
     }
-    #endregion
-    #region Level Generation
+
     /// <summary>
     /// Calculates what planet indices to replace with special object
     /// </summary>
@@ -262,13 +269,14 @@ public class LevelGenerator : MonoBehaviour
         List<int> availableIndices = new List<int>(); //Prevents overlapping indices
         for (int i = 0; i < level.numPlanets; i++)
         {
-            if(i != ignoreIndices[0] && i != ignoreIndices[1]){
+            if (i != ignoreIndices[0] && i != ignoreIndices[1])
+            {
                 availableIndices.Add(i);
             }
         }
 
         //Moon priority to bigger planets
-        if(moonIndex >= 0)
+        if (moonIndex >= 0 && specialObjects[moonIndex].amount > 0)
         {
             int moonAmount = 0;
             List<int> removeIndices = new List<int>();
@@ -293,7 +301,7 @@ public class LevelGenerator : MonoBehaviour
                 availableIndices.Remove(removeIndices[i]);
             }
         }
-        
+
 
 
         //Setting the return array
@@ -306,10 +314,10 @@ public class LevelGenerator : MonoBehaviour
             SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
 
             //if enough space is left for black hole to spawn
-            if(chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
+            if (chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
             {
                 replaceObjects.Remove(replaceObjects[randomSpecial]);
-                if(replaceObjects.Count == 0) { break; } //no more objects to choose from
+                if (replaceObjects.Count == 0) { break; } //no more objects to choose from
                 randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
                 chosenObject = replaceObjects[randomSpecial].Item2;
             }
@@ -320,14 +328,14 @@ public class LevelGenerator : MonoBehaviour
             replacers.Add((index, chosenObject));
 
             //Subtracting from amount on that object
-            replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1-1, replaceObjects[randomSpecial].Item2);
-            if (replaceObjects[randomSpecial].Item1 <=0)
+            replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1 - 1, replaceObjects[randomSpecial].Item2);
+            if (replaceObjects[randomSpecial].Item1 <= 0)
             {
                 replaceObjects.Remove(replaceObjects[randomSpecial]);
             }
 
             //Doubling with black holes
-            if(chosenObject.type == SpecialType.BlackHole)
+            if (chosenObject.type == SpecialType.BlackHole)
             {
                 index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
                 availableIndices.Remove(index);
@@ -342,7 +350,7 @@ public class LevelGenerator : MonoBehaviour
             {
                 for (int u = 0; u < replaceObjects[i].Item1 && u < 2; u++)
                 {
-                    int index = ignoreIndices[UnityEngine.Random.Range(0,1)];
+                    int index = ignoreIndices[UnityEngine.Random.Range(0, 1)];
                     availableIndices.Remove(index);
                     replacers.Add((index, replaceObjects[i].Item2));
                 }
@@ -350,25 +358,6 @@ public class LevelGenerator : MonoBehaviour
         }
 
         return replacers.ToArray();
-    }
-    private int CompareEnums((int, SpecialObject) x, (int, SpecialObject) y)
-    {
-        // Specify the enum value you want at the start
-        SpecialType desiredEnum = SpecialType.Star;
-
-        // Check if either x or y is the desired enum
-        if (x.Item2.type == desiredEnum && y.Item2.type != desiredEnum)
-        {
-            return -1; // x comes before y
-        }
-        else if (x.Item2.type != desiredEnum && y.Item2.type == desiredEnum)
-        {
-            return 1; // y comes before x
-        }
-        else
-        {
-            return x.Item2.type.CompareTo(y.Item2.type); // default comparison
-        }
     }
     /// <summary>
     /// Calculates which objects in special objects array are adding to the level instead of replacing planets
@@ -386,6 +375,8 @@ public class LevelGenerator : MonoBehaviour
         }
         return list.ToArray();
     }
+    #endregion
+    #region Level Generation
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
@@ -777,6 +768,25 @@ public class LevelGenerator : MonoBehaviour
                 default:
                     break;
             }
+        }
+    }
+    private int CompareEnums((int, SpecialObject) x, (int, SpecialObject) y)
+    {
+        // Specify the enum value you want at the start
+        SpecialType desiredEnum = SpecialType.Star;
+
+        // Check if either x or y is the desired enum
+        if (x.Item2.type == desiredEnum && y.Item2.type != desiredEnum)
+        {
+            return -1; // x comes before y
+        }
+        else if (x.Item2.type != desiredEnum && y.Item2.type == desiredEnum)
+        {
+            return 1; // y comes before x
+        }
+        else
+        {
+            return x.Item2.type.CompareTo(y.Item2.type); // default comparison
         }
     }
     /// <summary>

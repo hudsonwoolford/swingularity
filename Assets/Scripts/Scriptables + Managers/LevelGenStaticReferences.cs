@@ -10,6 +10,10 @@ public class LevelGenStaticReferences : ScriptableObject
     [SerializeField] public readonly float[] specialObjectMultipliers = new float[10]{
         0f, 0.65f, 0.9f, 1.65f, 1.9f, 2.25f, 2.65f, 2.9f, 3.65f, 3.9f, 
     };
+    [SerializeField]
+    public readonly float[] regionExtensionSizes = new float[10]{
+        10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f, 100f,
+    };
     [SerializeField] public float planetScale; //Scale of planets multiplier
     [SerializeField] public float moonCutoffSize = 7, moonDstScale = 0.8f;
     [SerializeField] public Material moonLine;

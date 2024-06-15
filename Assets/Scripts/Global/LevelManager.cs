@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] public GalaxyData currentTheme { get; private set; }
+    [SerializeField] public LevelParams levelParams { get; private set; }
     [Header("Parameters")]
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
     [Space()]
@@ -26,6 +27,13 @@ public class LevelManager : MonoBehaviour
         public int difficulty; //Range 0-10 determining size of level and number of special objects
         public ColorSchemeStaticReference.PlanetType[] themes; //Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
+        public LevelParams(int seed, int difficulty, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
+        {
+            this.seed = seed;
+            this.difficulty = difficulty;
+            this.themes = themes;
+            this.specialObjects = specialObjects;
+        }
     }
 
     private void Awake()
@@ -83,6 +91,10 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
     #region EventFunctions
+    public void SetLevelParams(LevelParams lp)
+    {
+        levelParams = lp;
+    }
     void CompleteCurrentLevel() //Adds the current level to completed level array
     {
         if (procedural) { return; }
@@ -132,6 +144,7 @@ public class LevelManager : MonoBehaviour
         LevelGenerator.proceduralInit += ProceduralInitiation;//Invoked by level generator in start when after generating the level
         GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
         ShootBall.onHole += CompleteCurrentLevel;           //Invoked by shoot ball on collision with the flag
+        LevelSettingsManager.onLevelSettingChange += SetLevelParams;//Invoked by level setting params when the player changes a value to do with the level params | (LevelParams params)
     }
     private void OnDisable()
     {
@@ -139,5 +152,6 @@ public class LevelManager : MonoBehaviour
         LevelGenerator.levelInit -= LevelInitiation;
         GalaxyLevels.initGalaxy -= SetGalaxyLevels;
         ShootBall.onHole -= CompleteCurrentLevel;
+        LevelSettingsManager.onLevelSettingChange -= SetLevelParams;
     }
 }
