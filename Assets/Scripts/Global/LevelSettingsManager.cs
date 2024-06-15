@@ -13,6 +13,7 @@ public class LevelSettingsManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TMP_Dropdown typeDropdown;
     [SerializeField] TMP_InputField seedInput;
+    [SerializeField] Toggle randomSeedToggle;
     [SerializeField] LevelGenerator.SpecialType[] specialTypes;
     [SerializeField] string levelGenScene = "LevelGen";
     public delegate void LevelSettingChange(LevelManager.LevelParams levelParams);
@@ -22,6 +23,7 @@ public class LevelSettingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        randomSeedToggle.isOn = true;
         levenGenSettingsCanvas = GetComponent<Canvas>();
         levenGenSettingsCanvas.enabled = false;
         ValueUpdate();
@@ -60,5 +62,20 @@ public class LevelSettingsManager : MonoBehaviour
     LevelManager.LevelParams SynthesizeParams() //Synthesizes parameters from UI into levlel params
     {
         return new LevelManager.LevelParams(seedInput.text.GetHashCode(), (int)difficultySlider.value, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
+    }
+    void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == levelGenScene && randomSeedToggle.isOn)
+        {
+            RandomizeSeedInput();
+        }
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
     }
 }
