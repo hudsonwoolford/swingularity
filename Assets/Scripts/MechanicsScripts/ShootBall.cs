@@ -50,7 +50,7 @@ public class ShootBall : MonoBehaviour
     Rigidbody srb;
     List<CelestialMass> planets = new List<CelestialMass>();
     Vector3 mousePos;
-    Vector3 origin;
+    Vector3 origin, trueOrigin;
     Vector3 posLastFrame;
     Rigidbody rb;
     Camera main;
@@ -111,6 +111,7 @@ public class ShootBall : MonoBehaviour
     private void Awake()
     {
         origin = transform.position;
+        trueOrigin = origin;
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         ballRenderer = GetComponentInChildren<MeshRenderer>(true);
@@ -180,6 +181,7 @@ public class ShootBall : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay) { BallReset(); } //reset1ity
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl)) { origin = trueOrigin; BallReset(); } //reset1ity
     }
     void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
@@ -255,6 +257,7 @@ public class ShootBall : MonoBehaviour
         foreach(Material mat in astronautFadeMats){
             mat.SetFloat("_Cutoff", 1);    
         }
+        origin = transform.position; //Ball reset position
         astronautFading = false;
         yield break;
 
