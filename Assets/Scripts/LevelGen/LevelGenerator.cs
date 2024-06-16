@@ -184,6 +184,7 @@ public class LevelGenerator : MonoBehaviour
         specialObjects = new SpecialObject[levelParams.specialObjects.Length];
 
         for(int i = 0; i < levelParams.specialObjects.Length; i++){
+            UnityEngine.Random.InitState(levelParams.seed + i);
             int num = Mathf.RoundToInt(UnityEngine.Random.value * specialObjMultiplier);
             SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
