@@ -13,8 +13,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] List<Score> scores = new List<Score>();
     [Header("UI")]
     //[SerializeField] Animator canvasAnimator;
-    [SerializeField] Transform sectorParent;
-    [SerializeField] Color underColor = Color.white, parColor = Color.white, overColor = Color.white, doneColor = Color.white;
+    [SerializeField] Gradient scoreGradient;
     [SerializeField] TextMeshProUGUI parText;
     [SerializeField] TextMeshProUGUI numShotsText;
     [Serializable]
@@ -23,11 +22,10 @@ public class LevelScoring : MonoBehaviour
         public string name;
         public int scoreRelToPar;
     }
-    Image[] sectors;
     int numShots;
     string currentScore;
 
-    public delegate void OnScore(string score, int scoreRelToPar, int totalShots);
+    public delegate void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor);
     public static OnScore onScore;
 
     private void Start()
@@ -35,18 +33,13 @@ public class LevelScoring : MonoBehaviour
         //holeScoreText.gameObject.SetActive(false);
         parText.text = "Par: " + par.ToString();
         numShotsText.text = "Shots: " + numShots.ToString();
-        sectors = sectorParent.GetComponentsInChildren<Image>();
-        for (int i = 0; i < sectors.Length; i++)
-        {
-            sectors[i].color = i < par-1 ? underColor : i > par-1 ? overColor : parColor;
-        }
     }
     void HoleEnd()
     {
         if(numShots == 1)
         {
             currentScore = "Hole in One!";
-            onScore?.Invoke(currentScore, numShots - par, numShots);
+            onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate(0));
             return;
         }
         bool namedScore = false;
@@ -63,15 +56,12 @@ public class LevelScoring : MonoBehaviour
         { 
             currentScore = numShots.ToString() + " Shots";
         }
-        onScore?.Invoke(currentScore, numShots - par, numShots);
-
+        onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate((float)numShots / 12));
 
     }
     void IncrementScore()
     {
-        sectors[numShots].color = doneColor;
         numShots++;
-        numShots = Mathf.Clamp(numShots, 0, sectors.Length-1);
         numShotsText.text = "Shots: " + numShots.ToString();
     }
     void ResetHole()

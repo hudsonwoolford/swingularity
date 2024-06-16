@@ -120,7 +120,7 @@ public class LevelManager : MonoBehaviour
     {
         procedural = true;
     }
-    void OnScore(string score, int scoreRelToPar, int totalShots) //Updates score text to the score invoked in the event by LevelScoring
+    void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor) //Updates score text to the score invoked in the event by LevelScoring
     {
         if(scoreText == null) { return; }
         scoreText.text = score;

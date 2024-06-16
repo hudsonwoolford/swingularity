@@ -1565,7 +1565,7 @@ Transform:
   m_Children:
   - {fileID: 6786700551918719497}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2041861299221359432
 MonoBehaviour:
@@ -1599,11 +1599,36 @@ MonoBehaviour:
     scoreRelToPar: 3
   - name: Quadruple-Bogey
     scoreRelToPar: 4
-  sectorParent: {fileID: 3864173889934888452}
-  underColor: {r: 0.29559433, g: 0.5849056, b: 0.1462264, a: 1}
-  parColor: {r: 0.8301887, g: 0.6782658, b: 0.16055535, a: 1}
-  overColor: {r: 0.5849056, g: 0.31099787, b: 0.12967247, a: 1}
-  doneColor: {r: 0.44705883, g: 0.6313726, b: 0.8980392, a: 1}
+  scoreGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0.7027648, b: 0, a: 1}
+    key1: {r: 0.5692917, g: 0.9843137, b: 0.043137226, a: 1}
+    key2: {r: 0, g: 0.7229626, b: 0.7372549, a: 0}
+    key3: {r: 0.46818066, g: 0, b: 1, a: 0}
+    key4: {r: 1, g: 0.009791803, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 8192
+    ctime2: 24576
+    ctime3: 40959
+    ctime4: 56163
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
   parText: {fileID: 1911259119963183151}
   numShotsText: {fileID: 7805516813965719600}
 --- !u!1 &9138670583108535268
