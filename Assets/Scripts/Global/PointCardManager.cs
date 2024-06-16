@@ -35,6 +35,7 @@ public class PointCardManager : MonoBehaviour
     }
     void OnScore(string score, int relPar, int totalShots, Color scoreColor) //Called by onScore delegate from LevelScoring, sets the text required for the current level
     {
+        if(currentGalaxy == null) { return; }
         string sceneName = SceneManager.GetActiveScene().name;
         for (int i = 0; i < currentGalaxy.Length; i++)
         {
