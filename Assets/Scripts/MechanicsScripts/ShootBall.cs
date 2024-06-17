@@ -83,6 +83,7 @@ public class ShootBall : MonoBehaviour
         planetTransform = env;
         transform.position = originPos;
         origin = originPos;
+        trueOrigin = origin;
         foreach (Material mat in astronautFadeMats){
             if (mat.shader == emmisionShader){
                 mat.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
