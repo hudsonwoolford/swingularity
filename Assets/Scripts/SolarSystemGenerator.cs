@@ -45,15 +45,16 @@ public class SolarSystemGenerator : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.LevelManager.LevelCompleted(requiredScene))
-        {
-            unlocked = true;
-        }
         planetVel = new float[orbitPlanets.Length];
         planetSpeed = new float[orbitPlanets.Length];
         sun.RandomSun(sunSeed, systemType);
         CalibrateSystemVar();
-        if (Application.isPlaying) { DrawAllCircles(); }
+        if (Application.isPlaying) { DrawAllCircles(); 
+            if (GameManager.LevelManager.LevelCompleted(requiredScene))
+            {
+                unlocked = true;
+            }
+        }
     }
     // Update is called once per frame
     void Update()
