@@ -142,7 +142,7 @@ public class LevelManager : MonoBehaviour
         LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
         LevelGenerator.levelInit += LevelInitiation;        //Invoked by level generator in start when after generating the level
         LevelGenerator.proceduralInit += ProceduralInitiation;//Invoked by level generator in start when after generating the level
-        GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
+        GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels, GalaxyTheme currentTheme)
         ShootBall.onHole += CompleteCurrentLevel;           //Invoked by shoot ball on collision with the flag
         LevelSettingsManager.onLevelSettingChange += SetLevelParams;//Invoked by level setting params when the player changes a value to do with the level params | (LevelParams params)
     }

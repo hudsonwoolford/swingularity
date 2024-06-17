@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "galaxyData", menuName = "galaxyData")]
+[System.Serializable]
 public class GalaxyData : ScriptableObject
 {
     [ColorUsage(true, true)]
