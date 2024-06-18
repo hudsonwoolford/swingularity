@@ -39,8 +39,8 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] Material lineMat;
     [Header("Procedural Variables")]
     [SerializeField] bool procedural;
-    [HideInInspector][SerializeField] string proceduralScene = "LevelGen";
-    [HideInInspector][SerializeField] LevelManager.LevelParams levelParams = new LevelManager.LevelParams();
+    [SerializeField] string proceduralScene = "LevelGen";
+    [SerializeField] LevelManager.LevelParams levelParams = new LevelManager.LevelParams();
 
     float[] planetVel;
     float[] planetSpeed;
@@ -65,6 +65,7 @@ public class SolarSystemGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if(mockPlanet == null || mockPlanetParent == null || sun == null || orbitPlanets.Length <= 0) { return; }
         if(!Application.isPlaying) //EDITOR
         {
@@ -76,6 +77,13 @@ public class SolarSystemGenerator : MonoBehaviour
             if(allPlanetParent == null) { allPlanetParent = GameObject.Find("Planets").transform; }
             if (unlocked) { ButtonBehaviour(); }
             MovePlanets();
+        }
+    }
+    void ProceduralCalibration()
+    {
+        if (levelParams.themes.Length > 0)
+        {
+            systemType = levelParams.themes[0];
         }
     }
     void ButtonBehaviour()
@@ -99,7 +107,8 @@ public class SolarSystemGenerator : MonoBehaviour
             if(clickDown)
             {
                 clickDown = false;
-                SceneManager.LoadScene(targetScene);
+                if (procedural) { LevelSettingsManager.onLevelSettingChange(levelParams); }
+                SceneManager.LoadScene(SystemLevel());
             }
         }
     }
@@ -157,6 +166,7 @@ public class SolarSystemGenerator : MonoBehaviour
     }
     public string SystemLevel()
     {
+        if(procedural) { return proceduralScene; }
         return targetScene;
     }
     #region Line Rendering
@@ -219,42 +229,42 @@ public class SolarSystemGenerator : MonoBehaviour
     }
 }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(SolarSystemGenerator))]
-[CanEditMultipleObjects()]
-public class SolarSystemGeneratorEditor : Editor
-{
-    SerializedProperty[] proceduralProperties;
-    SerializedProperty lockProcedural;
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        serializedObject.Update();
-        GUI.enabled = lockProcedural.boolValue;
-        foreach (SerializedProperty p in proceduralProperties)
-        {
-            EditorGUILayout.PropertyField(p, true);
-        }
-        GUI.enabled = true;
-        serializedObject.ApplyModifiedProperties();
-    }
-    private void OnEnable()
-    {
-        lockProcedural = serializedObject.FindProperty("procedural");
-        proceduralProperties = new SerializedProperty[]
-        {
-            serializedObject.FindProperty("proceduralScene"),
-            serializedObject.FindProperty("levelParams")
-        };
-    }
-    private void OnDisable()
-    {
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(SolarSystemGenerator))]
+//[CanEditMultipleObjects()]
+//public class SolarSystemGeneratorEditor : Editor
+//{
+//    SerializedProperty[] proceduralProperties;
+//    SerializedProperty lockProcedural;
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector();
+//        serializedObject.Update();
+//        GUI.enabled = lockProcedural.boolValue;
+//        foreach (SerializedProperty p in proceduralProperties)
+//        {
+//            EditorGUILayout.PropertyField(p, true);
+//        }
+//        GUI.enabled = true;
+//        serializedObject.ApplyModifiedProperties();
+//    }
+//    private void OnEnable()
+//    {
+//        lockProcedural = serializedObject.FindProperty("procedural");
+//        proceduralProperties = new SerializedProperty[]
+//        {
+//            serializedObject.FindProperty("proceduralScene"),
+//            serializedObject.FindProperty("levelParams")
+//        };
+//    }
+//    private void OnDisable()
+//    {
         
-    }
+//    }
 
 
 
 
-}
+//}
 
-#endif
+//#endif
