@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 [ExecuteInEditMode()]
 public class SolarSystemGenerator : MonoBehaviour
@@ -36,6 +37,11 @@ public class SolarSystemGenerator : MonoBehaviour
     [SerializeField] float lineWidth = 0.2f;
     [SerializeField] float lineTiling = 3f;
     [SerializeField] Material lineMat;
+    [Header("Procedural Variables")]
+    [SerializeField] bool procedural;
+    [HideInInspector][SerializeField] string proceduralScene = "LevelGen";
+    [HideInInspector][SerializeField] LevelManager.LevelParams levelParams = new LevelManager.LevelParams();
+
     float[] planetVel;
     float[] planetSpeed;
     float sunVel;
@@ -194,6 +200,10 @@ public class SolarSystemGenerator : MonoBehaviour
         l.textureMode = LineTextureMode.Tile;
     }
     #endregion
+    //public void InitSolarSystem(OrbitPlanet[] orbitPlanets, ColorSchemeStaticReference.PlanetType systemType, string targetScene)
+    //{
+
+    //}
     private void OnEnable()
     {
     }
@@ -209,3 +219,42 @@ public class SolarSystemGenerator : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
+[CustomEditor(typeof(SolarSystemGenerator))]
+[CanEditMultipleObjects()]
+public class SolarSystemGeneratorEditor : Editor
+{
+    SerializedProperty[] proceduralProperties;
+    SerializedProperty lockProcedural;
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        serializedObject.Update();
+        GUI.enabled = lockProcedural.boolValue;
+        foreach (SerializedProperty p in proceduralProperties)
+        {
+            EditorGUILayout.PropertyField(p, true);
+        }
+        GUI.enabled = true;
+        serializedObject.ApplyModifiedProperties();
+    }
+    private void OnEnable()
+    {
+        lockProcedural = serializedObject.FindProperty("procedural");
+        proceduralProperties = new SerializedProperty[]
+        {
+            serializedObject.FindProperty("proceduralScene"),
+            serializedObject.FindProperty("levelParams")
+        };
+    }
+    private void OnDisable()
+    {
+        
+    }
+
+
+
+
+}
+
+#endif

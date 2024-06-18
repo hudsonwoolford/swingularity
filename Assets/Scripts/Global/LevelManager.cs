@@ -21,7 +21,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] bool procedural = false; //Whether you are currently in a procedural level or not
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
-
+    [Serializable]
     public struct LevelParams{
         public int seed; //Seed for level planets and stuff
         public int difficulty; //Range 0-10 determining size of level and number of special objects
