@@ -6,6 +6,7 @@ using UnityEditor;
 public class TreeObject : ScriptableObject
 {
     public GameObject treePrefab;
+    public Vector3 rotationAxis;
     public Vector3 objectSize = Vector3.one;
     [HideInInspector]
     [SerializeField] public bool[] dynamicMaterial;

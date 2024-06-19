@@ -32,6 +32,7 @@ public class BlackHoleGenerator : MonoBehaviour
     Material distortMat;
     CelestialMass cMass;
     bool canTravel = true;
+    LineRenderer correspondantLine;
     
     public delegate void BlackHoleTravel();
     public static BlackHoleTravel blackHoleTravel;
@@ -40,6 +41,8 @@ public class BlackHoleGenerator : MonoBehaviour
     {
         canTravel = true;
         NullChecks();
+        CreateLine();
+        EnableLine(false, null);
     }
 
     // Update is called once per frame
@@ -74,6 +77,9 @@ public class BlackHoleGenerator : MonoBehaviour
         //Reset system
         swirlSystem.Clear();
         swirlSystem.Play();
+
+        //Line Renderer
+        CreateLine();
     }
     [ContextMenu("Random Color")]
     void RandomHole()
@@ -122,6 +128,20 @@ public class BlackHoleGenerator : MonoBehaviour
         grad.SetKeys(new GradientColorKey[] { new GradientColorKey(schemePool[schemeIndex].lightColor, 0.0f), new GradientColorKey(schemePool[schemeIndex].darkColor, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) });
         module.startColor = grad;
     }
+    void CreateLine()
+    {
+        if(whiteHole)
+        {
+            correspondantLine.positionCount = 2;
+            correspondantLine.SetPosition(0, correspondent.transform.position);
+            correspondantLine.SetPosition(1, transform.position);
+        }
+    }
+    void EnableLine(bool enable, Material whiteMat)
+    {
+
+        correspondantLine.enabled = enable;
+    }
     void NullChecks()
     {
         if (sphereRenderer == null) { sphereRenderer = GetComponent<MeshRenderer>(); }
@@ -132,6 +152,7 @@ public class BlackHoleGenerator : MonoBehaviour
         if (distortBlock == null) { distortBlock = new MaterialPropertyBlock(); }
         if (distortionQuad == null) { distortionQuad = transform.GetChild(0); }
         if(cMass == null) { cMass = GetComponent<CelestialMass>(); }
+        if(correspondantLine == null) { correspondantLine = GetComponent<LineRenderer>(); }
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -158,8 +179,10 @@ public class BlackHoleGenerator : MonoBehaviour
     }
     private void OnEnable(){
         blackHoleTravel += BlackHoleTravelTimer;
+        HackMode.onHackMode += EnableLine;
     }
     private void OnDisable(){
+        HackMode.onHackMode -= EnableLine;
         blackHoleTravel -= BlackHoleTravelTimer;
     }
 }

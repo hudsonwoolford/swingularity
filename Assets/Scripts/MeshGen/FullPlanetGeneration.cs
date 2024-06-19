@@ -317,6 +317,7 @@ public class FullPlanetGeneration : MonoBehaviour
             tree.transform.position = vertPool[chosenVert] * transform.localScale.x; //set tree position to vertex
             tree.transform.localScale *= transform.localScale.x;
             tree.transform.rotation = Quaternion.FromToRotation(Vector3.up, vertexElevationDir); //tree normal = vertex normal
+            tree.transform.rotation = Quaternion.Euler(tree.transform.eulerAngles + selectedTreeObj.rotationAxis * UnityEngine.Random.Range(0,360)) ; //tree normal = vertex normal
             tree.transform.GetChild(0).Rotate(0,0,Random.Range(0, 359)); //tree normal = vertex normal
             ; //tree normal = vertex normal
 

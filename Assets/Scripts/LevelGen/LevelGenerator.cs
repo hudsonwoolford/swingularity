@@ -139,7 +139,7 @@ public class LevelGenerator : MonoBehaviour
         camSize = CamSize(mainCam);                             //1. Calculates camera size
         xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
         xOry = true; //2. Chooses which axis to extend into, X or Y.
-        extensionAmount = UnityEngine.Random.value;               //3. Randomizes extension amount. 
+        extensionAmount = 1;               //3. Randomizes extension amount. 
         regionSize = CalculateBounds(camSize, extensionAmount, xOry);   //4. Calculating bounds based off previous variables
 
         //Sets the level generation settings
@@ -150,8 +150,8 @@ public class LevelGenerator : MonoBehaviour
             levelStatic.maxSize,
             levelStatic.sizeBias,
             levelStatic.sizeScale,
-            (regionSize.x - levelStatic.maxSize) / 1.25f,
-            (regionSize.y - levelStatic.maxSize) / 1.25f,
+            (regionSize.x - levelStatic.maxSize),
+            (regionSize.y - levelStatic.maxSize),
             levelStatic.samplesBeforeRejection,
             levelStatic.offsetScale
         };
@@ -189,9 +189,8 @@ public class LevelGenerator : MonoBehaviour
             SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
-
-        maxRegionExtension.x = regionExtensionSize; maxRegionExtension.y = regionExtensionSize;
-        minRegionExtension.x = regionExtensionSize; minRegionExtension.y = regionExtensionSize;
+        maxRegionExtension = new Vector2(16, 9) * regionExtensionSize;
+        minRegionExtension = new Vector2(16, 9) * regionExtensionSize;
     }
 
     #endregion
