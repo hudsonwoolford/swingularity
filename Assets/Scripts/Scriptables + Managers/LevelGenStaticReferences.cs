@@ -12,7 +12,7 @@ public class LevelGenStaticReferences : ScriptableObject
     };
     [SerializeField]
     public readonly float[] regionExtensionSizes = new float[10]{
-        1f, 1.25f, 1.5f, 1.75f, 2f, 2.25f, 2.5f, 2.75f, 3f, 3.25f,
+        0.33f, 0.66f, 1f, 1.33f, 1.66f, 2f, 2.33f, 2.66f, 3f, 3.33f,
     };
     [SerializeField] public float planetScale; //Scale of planets multiplier
     [SerializeField] public float moonCutoffSize = 7, moonDstScale = 0.8f;

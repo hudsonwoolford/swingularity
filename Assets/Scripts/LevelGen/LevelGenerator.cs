@@ -393,7 +393,6 @@ public class LevelGenerator : MonoBehaviour
         Vector3 levelSize = new Vector3(level.levelSize.x, level.levelSize.y, 0f);
         
         int[] ignoreIndices = FarthestIndices(level);
-        print(ignoreIndices[0] + " | " + ignoreIndices[1]);
         //Replacement special objects
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level, ignoreIndices);
         Array.Sort(replacers, (x, y) => CompareEnums(x, y));
