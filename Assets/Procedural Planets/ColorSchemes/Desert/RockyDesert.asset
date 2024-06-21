@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f245485767e1dc4a95381a312221971, type: 3}
+  m_Name: RockyDesert
+  m_EditorClassIdentifier: 
+  _FlatColor: {r: 1, g: 0.9296898, b: 0.6556604, a: 1}
+  _FlatColorVariant: {r: 0.9056604, g: 0.7126766, b: 0.45710218, a: 1}
+  _SteepColor: {r: 0.5377358, g: 0.37178612, b: 0.2663314, a: 1}
+  _HighElevationColor: {r: 0.9254902, g: 0.70520264, b: 0.36078432, a: 1}
+  _HighElevationSteepColor: {r: 0.8117647, g: 0.6241145, b: 0.23529412, a: 1}
+  _ShorelineColor: {r: 1, g: 0.9778275, b: 0.83647794, a: 1}
+  _Metallic: 0
+  _Smoothness: 0.07
+  _VegetationLine: 0.05
+  _VegetationLineHarshness: 10
+  _SteepMultiplier: 4.64
+  _NormalVariables:
+    _Normal: {fileID: 2800000, guid: 55ac8acc8d1f9a54984550f74620d895, type: 3}
+    _NormalScale: 1.14
+    _NormalOffset: {x: 92.23204, y: 172.10123, z: 340.13245}
+    _NormalPower: 0.21
+  oceanVariables:
+    _OceanBlendEnd: 0.038
+    _OceanBlendIntensity: 0.82
+    _BeachBlendEnd: 0.022
+    _BeachBlendIntensity: 0.9
+    _SeabedColor: {r: 0, g: 0.683905, b: 0.8490566, a: 1}
+    _OceanColor: {r: 0, g: 1, b: 0.62010384, a: 0.30980393}
+    _OceanNormal: {fileID: 2800000, guid: ca2018cce4b3041ca94fe509b701bce5, type: 3}
+    _OceanMetallic: 0
+    _OceanSmoothness: 0.811
+  atmosphereVariables:
+    _ForceFieldColor: {r: 0.8117647, g: 0.61960787, b: 0.22745098, a: 1}
+    _OuterBandColor: {r: 0.8117647, g: 0.6191274, b: 0.22745097, a: 1}
+    _OuterBandRange: 2.5
+    _OuterBandIntensity: 0.44
+    _InnerBandColor: {r: 0.5764706, g: 0.4334064, b: 0.17254901, a: 1}
+    _InnerBandRange: 2.3
+    _InnerBandIntensity: 0.97
+    _FrontColor: {r: 0.8117647, g: 0.61979187, b: 0.22745097, a: 1}
+    _FrontRange: 2.2
+    _FrontIntensity: 0.07
+  fresnelVariables:
+    _UseFresnel: 0
+    _FresnelColor: {r: 1, g: 0.7175037, b: 0.1372549, a: 1}
+    _FresnelStrengthNear: 2
+    _FresnelStrengthFar: 5
+    _FresnelPower: 8
+  treeVariables:
+    _UseTrees: 1
+    _TreeObjects:
+    - {fileID: 11400000, guid: 8973dfbff748e5e40b53070051cedc18, type: 2}
+    _TreeLeafColors:
+    - {r: 0.8018868, g: 0.703903, b: 0.4501157, a: 1}
+    - {r: 0.8301887, g: 0.58578557, b: 0.246707, a: 1}
+    - {r: 0.7830189, g: 0.71574634, b: 0.114498034, a: 1}
+    _TreeBarkColor: {r: 0.3773585, g: 0.25556397, b: 0.11213955, a: 1}
+    _TreeMetallic: 0
+    _TreeSmoothness: 0
+    _NumTrees: 0

@@ -12,7 +12,6 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector2 endPos; //endpos of path
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
-    [SerializeField] Vector2 cameraMinMax = new Vector2(3, 10);
     [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
@@ -22,6 +21,7 @@ public class CameraFollow : MonoBehaviour
     float cameraSize;
     float targetCameraSize;
     public float defaultCameraSize;
+    public Vector2 cameraMinMax = new Vector2(3, 10);
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;

@@ -915,7 +915,7 @@ public class LevelGenerator : MonoBehaviour
     /// Calculates the Camera Size
     /// </summary>
     public static Vector2 CamSize(Camera cam){
-        float height = cam.GetComponent<CameraFollow>().defaultCameraSize * 2; //camera height in units
+        float height = cam.GetComponent<CameraFollow>().cameraMinMax.x * 2; //camera height in units
         float width = height * cam.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
         return camSize;
