@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
-    Transform ball;                            //ball transform
+    Transform ball, flag;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
     float cameraSize;
@@ -53,6 +53,7 @@ public class CameraFollow : MonoBehaviour
     }
     void MasterStart()
     {
+        flag = GameObject.FindGameObjectWithTag("Hole").transform;
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
 
         if (cameraPath == null) 
@@ -153,8 +154,11 @@ public class CameraFollow : MonoBehaviour
                 float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
 
                 Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y);
+                Vector2 flagProgressPos = new Vector2 (flag.position.x, startPos.y);
+
                 Vector2 pathDir = (endPos - ballProgressPos).normalized;
-                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/4f, -(endPos - ballProgressPos).magnitude/2, (endPos - ballProgressPos).magnitude/2);
+                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/4f, -(flagProgressPos - ballProgressPos).magnitude/2, (flagProgressPos - ballProgressPos).magnitude/2);
+                print(moveMag);
                 Vector2 movePoint = pathDir * moveMag + ballProgressPos;
                 Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
                 targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
