@@ -23,7 +23,7 @@ public class LevelSettingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        randomSeedToggle.isOn = true;
+        randomSeedToggle.isOn = false;
         levenGenSettingsCanvas = GetComponent<Canvas>();
         levenGenSettingsCanvas.enabled = false;
         ValueUpdate();
@@ -58,6 +58,14 @@ public class LevelSettingsManager : MonoBehaviour
     {
         onLevelSettingChange?.Invoke(SynthesizeParams());
         difficultyText.text = difficultySlider.value.ToString();
+    }
+    public void UIMatchParams()
+    {
+        LevelManager.LevelParams lp = GameManager.LevelManager.levelParams;
+        difficultySlider.value = lp.difficulty;
+        difficultyText.text = difficultySlider.value.ToString();
+        seedInput.text = lp.seed.ToString();
+        typeDropdown.value = (int)lp.themes[0];
     }
     LevelManager.LevelParams SynthesizeParams() //Synthesizes parameters from UI into levlel params
     {

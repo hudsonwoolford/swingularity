@@ -179,7 +179,7 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: levelParams.difficulty
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -224,7 +224,7 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: orbitPlanets.Array.data[0].progress
-      value: 0.17
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -391,7 +391,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166761850}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.587739, y: 1.0690942, z: 0}
+  m_LocalPosition: {x: 1.2200003, y: 0.00000047683716, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -509,7 +509,7 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: procedural
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -1385,6 +1385,11 @@ PrefabInstance:
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: unlocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: procedural
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4981221330636008324, guid: f13b9185c10983f4eb62ba9b60021d20,
@@ -2278,13 +2283,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7098d5fabf6a148bbab82ce19511dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  galaxySeed: 0
-  galaxyRelativeDifficulty: 1
-  orbitSizeScalar: 0.2
-  ringDifference: 1
+  galaxySeed: 3
+  galaxyRelativeDifficulty: 4
+  orbitSizeScalar: 0.17
+  ringDifference: 1.2
+  basePlanetGap: 0.2
+  planetGapVariance: 0.05
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
+  galaxyType: 6
   specialTypes: 000000000100000002000000030000000400000005000000
-  galaxyType: 0
   solarSystems:
   - {fileID: 97612481}
   - {fileID: 723430568}

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static LevelManager LevelManager { get; private set; }
     public static PauseManager PauseManager { get; private set; }
     public static SettingsManager SettingsManager { get; private set; }
+    public static LevelSettingsManager LevelSettingsManager { get; private set; }
     private void Awake()
     {
         if (Instance != null)
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
         LevelManager = GetComponentInChildren<LevelManager>(true);
         PauseManager = GetComponentInChildren<PauseManager>(true);
         SettingsManager = GetComponentInChildren<SettingsManager>(true);
+        LevelSettingsManager = GetComponentInChildren<LevelSettingsManager>(true);
     }
     private void Start()
     {

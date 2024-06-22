@@ -363,8 +363,6 @@ public static class ManualLevelGeneration
 
         for (int i = 0; i < mockPlanets.Length; i++)
         {
-            if (mockPlanets[i] is MockMoon) 
-            { Debug.Log("Hello"); }
             points[i] = mockPlanets[i].transform.position;
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;

@@ -100,7 +100,7 @@ public class SolarSystemGenerator : MonoBehaviour
             if(clickDown)
             {
                 clickDown = false;
-                if (procedural) { LevelSettingsManager.onLevelSettingChange(levelParams); }
+                if (procedural) { LevelSettingsManager.onLevelSettingChange?.Invoke(levelParams); GameManager.LevelSettingsManager.UIMatchParams(); }
                 SceneManager.LoadScene(SystemLevel());
             }
         }
@@ -203,10 +203,12 @@ public class SolarSystemGenerator : MonoBehaviour
         l.textureMode = LineTextureMode.Tile;
     }
     #endregion
-    public void InitSolarSystem(LevelManager.LevelParams levelParams, string targetScene, LevelGenStaticReferences levelStatic, float orbitSizeScalar, float ringDifference) //Needs to updated with logic from level generator
+    public void InitSolarSystem(LevelManager.LevelParams levelParams, string targetScene, LevelGenStaticReferences levelStatic, float orbitSizeScalar, float ringDifference, float basePlanetGap, float planetGapVariance) //Needs to updated with logic from level generator
     {
+        UnityEngine.Random.InitState(levelParams.seed);
         this.targetScene = targetScene;
         this.levelParams = levelParams;
+        this.systemType = levelParams.themes[UnityEngine.Random.Range(0,levelParams.themes.Length - 1)];
 
         int randIndex = UnityEngine.Random.Range(0, levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes.Count);
         Vector2 regionSize = levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes[randIndex] * levelStatic.regionSizes[levelParams.difficulty - 1].baseMultiplier; //Random region size from difficulty
@@ -234,16 +236,19 @@ public class SolarSystemGenerator : MonoBehaviour
         for (int i = 0; i < level.numPlanets; i++)
         {
             orbitPlanets[i].size = level.planetSizes[i] * orbitSizeScalar;
-            orbitPlanets[i].radius = sunSize + ringNum * ringDifference;
+            orbitPlanets[i].radius = sunSize + (ringNum+1) * ringDifference;
             orbitPlanets[i].speed = 1 - ringNum * speedFalloff;
             orbitPlanets[i].progress = ringProgress;
-            ringProgress += (level.planetSizes[i] * orbitSizeScalar / 2) + UnityEngine.Random.value * 0.5f;
-            if(ringProgress > Mathf.PI * 2 - (level.planetSizes[i] * orbitSizeScalar) / 2)
+            orbitPlanets[i].seed = UnityEngine.Random.Range(-2147483647, 2147483647) + i;
+
+            ringProgress += basePlanetGap + (UnityEngine.Random.value * 2 - 1) * planetGapVariance;
+            if(ringProgress > 0.9f)
             {
                 ringProgress = 0;
                 ringNum++;
             }
         }
+        MatchPlanets();
         Start();
     }
     private void OnEnable()
