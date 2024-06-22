@@ -16,7 +16,7 @@ public class SolarSystemGenerator : MonoBehaviour
         public float speed;
         [Range(-1f, 1f)]
         public float progress;
-        public int seed;
+        public Vector3 seed;
         public MockPlanet script;
     }
     [SerializeField] ColorSchemeStaticReference.PlanetType systemType;
@@ -239,7 +239,7 @@ public class SolarSystemGenerator : MonoBehaviour
             orbitPlanets[i].radius = sunSize + (ringNum+1) * ringDifference;
             orbitPlanets[i].speed = 1 - ringNum * speedFalloff;
             orbitPlanets[i].progress = ringProgress;
-            orbitPlanets[i].seed = UnityEngine.Random.Range(-2147483647, 2147483647) + i;
+            orbitPlanets[i].seed = level.planetSeeds[i];
 
             ringProgress += basePlanetGap + (UnityEngine.Random.value * 2 - 1) * planetGapVariance;
             if(ringProgress > 0.9f)

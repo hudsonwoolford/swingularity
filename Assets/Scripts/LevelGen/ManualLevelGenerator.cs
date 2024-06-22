@@ -20,6 +20,7 @@ public class ManualLevelGenerator : MonoBehaviour
     RenderTexture frontTexture, backTexture;
     Texture2D planetTexture;
     GameObject player;
+    bool procedural = false;
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -66,7 +67,6 @@ public class ManualLevelGenerator : MonoBehaviour
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
 
-
         for (int i = 0; i < level.numPlanets; i++)
         {
             if(moonIndices.Contains(i))
@@ -74,7 +74,13 @@ public class ManualLevelGenerator : MonoBehaviour
                 planetList[i] = new Planet();
                 continue;
             }
-            planetList[i] = GeneratePlanet(generator, level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+            if(procedural){
+                planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+            }
+            else{
+                planetList[i] = GenerateManualPlanet(generator, level.planetSizes[i], level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
+            }
+            
 
             yield return new WaitForSecondsRealtime(0.1f);
         }
@@ -134,7 +140,43 @@ public class ManualLevelGenerator : MonoBehaviour
         return (startPos, endPos, new Vector2(maxX, maxY) * 2);
     }
     #region Generation Functions
-    Planet GeneratePlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    Planet GenerateManualPlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
+    {
+        UnityEngine.Random.InitState((int)seed.z * 100);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1, false);
+        generator.ClearAllTrees();
+        generator.UpdateAndApplyAll();
+
+        if (generator.biomeP == null)
+        {
+            generator.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-180, 180));
+        }
+        else
+        {
+            generator.transform.rotation = Quaternion.identity;
+        }
+
+
+        GameObject newPlanet = ConvertToImage(generator.gameObject, position, size);
+        frontTexture.Release(); //Memory
+        backTexture.Release();  //Memory
+        newPlanet.SetActive(true);
+
+        newPlanet.transform.position = new Vector3(position.x, position.y, 0);
+        newPlanet.transform.localScale = Vector3.one * size * levelStatic.planetScale;
+        GameObject forceField = null;
+        if(spawnForcefields)
+        {
+            forceField = GenerateForcefield(newPlanet.transform);
+            forceField.transform.parent = environment;
+        }
+
+        newPlanet.transform.parent = allPlanetParent;
+
+
+        return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);
+    }
+    Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         UnityEngine.Random.InitState((int)seed.z * 100);
         (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1, false);
@@ -348,6 +390,16 @@ public class ManualLevelGenerator : MonoBehaviour
         return sprite;
     }
     #endregion
+
+    void OnEnable(){
+        ProceduralGalaxyGeneration.initProceduralSolarSystem += IsProcedural; 
+    }
+    void OnDisable(){
+        ProceduralGalaxyGeneration.initProceduralSolarSystem -= IsProcedural; 
+    }
+    void IsProcedural(){
+        procedural = true;
+    }
 }
 public static class ManualLevelGeneration
 {
@@ -367,11 +419,8 @@ public static class ManualLevelGeneration
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;
 
-            Vector3 rand = mockPlanets[i].specificSeed ? new Vector3(Mathf.Sin(mockPlanets[i].seed), Mathf.Cos(mockPlanets[i].seed), Mathf.Sin(mockPlanets[i].seed) * Mathf.Cos(mockPlanets[i].seed)) : new Vector3(UnityEngine.Random.value + i, UnityEngine.Random.value + i * 2, UnityEngine.Random.value + i * 3);
-            float xOffset = rand.x * levelStatic.offsetScale * levelStatic.offsetScale;
-            float yOffset = rand.y * levelStatic.offsetScale * levelStatic.offsetScale;
-            float zOffset = rand.z * levelStatic.offsetScale * levelStatic.offsetScale;
-            seeds[i] = new Vector3(xOffset, yOffset, zOffset);
+            Vector3 rand = mockPlanets[i].specificSeed ? mockPlanets[i].seed : new Vector3(UnityEngine.Random.value + i * levelStatic.offsetScale, UnityEngine.Random.value + i * 2 * levelStatic.offsetScale, UnityEngine.Random.value + i * 3 * levelStatic.offsetScale);
+            seeds[i] = rand;
         }
         return new ProceduralLevelGeneration.Level(mockPlanets.Length, sizes, points, seeds, types, Vector2.zero);
     }

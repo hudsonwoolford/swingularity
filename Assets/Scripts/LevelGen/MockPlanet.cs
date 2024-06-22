@@ -7,7 +7,7 @@ public class MockPlanet : MonoBehaviour
 {
     [SerializeField]public ColorSchemeStaticReference.PlanetType planetType;
     [SerializeField] public bool specificSeed;
-    [SerializeField] public int seed;
+    [SerializeField] public Vector3 seed;
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(MockPlanet))]
@@ -22,7 +22,7 @@ public class MockPlanetEditor : Editor
         if(GUILayout.Button("Randomize Seed"))
         {
             UnityEngine.Random.InitState(Mathf.RoundToInt(Time.deltaTime * 1000000) + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * (int)UnityEngine.Random.value * (System.DateTime.Now.Millisecond * 100000) + mPlanet.transform.GetSiblingIndex());
-            mPlanet.seed = UnityEngine.Random.Range(-2147483647, 2147483647);
+            mPlanet.seed = new Vector3(UnityEngine.Random.Range(-2147483647, 2147483647), UnityEngine.Random.Range(-2147483647, 2147483647) * 2, UnityEngine.Random.Range(-2147483647, 2147483647) * 3);
         }
         serializedObject.ApplyModifiedProperties();
     }
