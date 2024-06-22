@@ -8,7 +8,7 @@ using static LevelGenerator;
 
 public class ManualLevelGenerator : MonoBehaviour
 {
-    [SerializeField] int aestheticSeed;
+    public int aestheticSeed;
     [SerializeField] Transform mockPlanetsParent;
     [SerializeField] GameObject planetGeneratorPrefab, forcefieldPrefab;
     [SerializeField] LevelGenStaticReferences levelStatic;
@@ -74,6 +74,7 @@ public class ManualLevelGenerator : MonoBehaviour
                 planetList[i] = new Planet();
                 continue;
             }
+
             if(procedural){
                 planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
             }
@@ -179,7 +180,7 @@ public class ManualLevelGenerator : MonoBehaviour
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {
         UnityEngine.Random.InitState((int)seed.z * 100);
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1, false);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, false);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
 
@@ -419,8 +420,12 @@ public static class ManualLevelGeneration
             sizes[i]  = mockPlanets[i].transform.localScale.x;
             types[i]  = mockPlanets[i].planetType;
 
-            Vector3 rand = mockPlanets[i].specificSeed ? mockPlanets[i].seed : new Vector3(UnityEngine.Random.value + i * levelStatic.offsetScale, UnityEngine.Random.value + i * 2 * levelStatic.offsetScale, UnityEngine.Random.value + i * 3 * levelStatic.offsetScale);
+            Vector3 rand = mockPlanets[i].seed;
             seeds[i] = rand;
+            if (!mockPlanets[i].specificSeed)
+            {
+                seeds[i] = new Vector3(UnityEngine.Random.value * levelStatic.offsetScale + i * levelStatic.offsetScale, UnityEngine.Random.value * levelStatic.offsetScale + 2 * i * levelStatic.offsetScale, UnityEngine.Random.value * levelStatic.offsetScale + 3 * i * levelStatic.offsetScale);
+            }
         }
         return new ProceduralLevelGeneration.Level(mockPlanets.Length, sizes, points, seeds, types, Vector2.zero);
     }

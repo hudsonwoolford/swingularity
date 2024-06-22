@@ -435,7 +435,7 @@ public class LevelGenerator : MonoBehaviour
         //    previousBiomes[i].Item1 = planetList[i].biomeA;
         //    previousBiomes[i].Item2 = planetList[i].biomeB;
         //}
-        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, 1, false);
+        (PlanetColorScheme, PlanetColorScheme) biomes = generator.RandomizeColorScheme(seed, planetType, index + 1, false);
         generator.ClearAllTrees();
         generator.UpdateAndApplyAll();
         if(generator.biomeP == null)

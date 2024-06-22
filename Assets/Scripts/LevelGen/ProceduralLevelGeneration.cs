@@ -71,7 +71,8 @@ public static class ProceduralLevelGeneration
             planetSizes[i] = poisson[i].Item2;
         }
 
-  
+        UnityEngine.Random.InitState(seed);
+
         Vector3[] planetSeeds = new Vector3[poisson.Length];
         float offsetScale = levelGenSettings[9];
         for (int i = 0; i < poisson.Length; i++){

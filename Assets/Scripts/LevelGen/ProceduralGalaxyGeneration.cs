@@ -28,7 +28,7 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     {
         for (int i = 0; i < solarSystems.Length; i++)
         {
-            UnityEngine.Random.InitState(i + galaxySeed);
+            UnityEngine.Random.InitState(i * 120523 + galaxySeed);
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(galaxyRelativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
 
