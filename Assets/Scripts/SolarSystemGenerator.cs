@@ -238,10 +238,13 @@ public class SolarSystemGenerator : MonoBehaviour
             orbitPlanets[i].size = level.planetSizes[i] * orbitSizeScalar;
             orbitPlanets[i].radius = sunSize + (ringNum+1) * ringDifference;
             orbitPlanets[i].speed = 1 - ringNum * speedFalloff;
+
+            float progressApprox = (orbitPlanets[i].size) / (Mathf.PI * 2 * orbitPlanets[i].radius) / 2;
+            ringProgress += progressApprox;
             orbitPlanets[i].progress = ringProgress;
+            ringProgress += progressApprox + basePlanetGap + planetGapVariance * UnityEngine.Random.value;
             orbitPlanets[i].seed = level.planetSeeds[i];
 
-            ringProgress += basePlanetGap + (UnityEngine.Random.value * 2 - 1) * planetGapVariance;
             if(ringProgress > 0.9f)
             {
                 ringProgress = 0;

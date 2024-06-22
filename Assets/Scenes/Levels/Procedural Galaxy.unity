@@ -1336,52 +1336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113616ac0975c0a4e9442b0e6aeb46c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &544235988
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 544235990}
-  - component: {fileID: 544235989}
-  m_Layer: 0
-  m_Name: Galaxy Levels
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &544235989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544235988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e46db50d689114f9e24890251cfb4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  systemPlanets: {fileID: 1714358681}
-  galaxyTheme: {fileID: 11400000, guid: b8af5211c2bafe244ad601cde008e828, type: 2}
---- !u!4 &544235990
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544235988}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2258968, y: -2.235817, z: 11.512116}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &723430566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2314,7 +2268,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2123561472
 MonoBehaviour:
@@ -2328,12 +2282,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7098d5fabf6a148bbab82ce19511dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  galaxySeed: -1
+  galaxySeed: 202
   galaxyRelativeDifficulty: 1
   orbitSizeScalar: 0.17
   ringDifference: 1.2
-  basePlanetGap: 0.2
-  planetGapVariance: 0.1
+  basePlanetGap: 0.05
+  planetGapVariance: 0.2
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   galaxyType: 0
   specialTypes: 000000000100000002000000030000000400000005000000

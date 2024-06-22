@@ -17,8 +17,8 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     [SerializeField] LevelGenerator.SpecialType[] specialTypes;
     [SerializeField] SolarSystemGenerator[] solarSystems = new SolarSystemGenerator[5];
 
-    public delegate void InitProceduralSolarSystem();
-    public static InitProceduralSolarSystem initProceduralSolarSystem; 
+    public delegate void InitProceduralGalaxy(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyData theme);
+    public static InitProceduralGalaxy initProceduralGalaxy; 
 
     private void Awake()
     {
@@ -26,6 +26,8 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     }
     void SetSolarSystems()
     {
+        LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
+        string[] galaxyLevels = new string[5];
         for (int i = 0; i < solarSystems.Length; i++)
         {
             UnityEngine.Random.InitState(i * 120523 + galaxySeed);
@@ -34,7 +36,10 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
 
             LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, galaxyRelativeDifficulty, new ColorSchemeStaticReference.PlanetType[] { galaxyType }, specialTypes);
             solarSystems[i].InitSolarSystem(systemParams, "LevelGen", levelStatic, orbitSizeScalar, ringDifference, basePlanetGap, planetGapVariance);
-            initProceduralSolarSystem?.Invoke();
+
+            galaxyLevelParams[i] = systemParams;
+            galaxyLevels[i] = "LevelGen";
         }
+        initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, null);
     }
 }

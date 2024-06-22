@@ -30,7 +30,10 @@ public class LevelScoring : MonoBehaviour
 
     private void Start()
     {
-        //holeScoreText.gameObject.SetActive(false);
+        if(GameManager.LevelManager.procedural) //Procedural level parss
+        {
+            par = GameManager.LevelManager.levelParams.levelPar;
+        }
         parText.text = "Par: " + par.ToString();
         numShotsText.text = "Shots: " + numShots.ToString();
     }
