@@ -61,7 +61,7 @@ public class LevelSettingsManager : MonoBehaviour
     }
     LevelManager.LevelParams SynthesizeParams() //Synthesizes parameters from UI into levlel params
     {
-        return new LevelManager.LevelParams(seedInput.text.GetHashCode(), (int)difficultySlider.value, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
+        return new LevelManager.LevelParams(seedInput.text.GetHashCode(), (int)difficultySlider.value, 2, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
     }
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {

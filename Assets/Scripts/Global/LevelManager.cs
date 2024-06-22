@@ -24,12 +24,14 @@ public class LevelManager : MonoBehaviour
     [Serializable]
     public struct LevelParams{
         public int seed; //Seed for level planets and stuff
+        public int levelPar;
         public int difficulty; //Range 0-10 determining size of level and number of special objects
         public ColorSchemeStaticReference.PlanetType[] themes; //Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
-        public LevelParams(int seed, int difficulty, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
+        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
         {
             this.seed = seed;
+            this.levelPar = par;
             this.difficulty = difficulty;
             this.themes = themes;
             this.specialObjects = specialObjects;

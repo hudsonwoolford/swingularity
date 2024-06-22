@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35, 35); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
 
         MasterStart();
     }   
@@ -41,7 +41,7 @@ public class CameraFollow : MonoBehaviour
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35, 35); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
     }
     // Start is called before the first frame update
     void Start() 
@@ -55,7 +55,7 @@ public class CameraFollow : MonoBehaviour
     {
         transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
 
-        if (cameraPath == null)
+        if (cameraPath == null) 
         {
             cameraPath = new GameObject("Camera Bounds")
             {
@@ -76,9 +76,8 @@ public class CameraFollow : MonoBehaviour
         CamBehaviour();
     }
     void CamBehaviour(){
-        float height = Camera.main.orthographicSize * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
-        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35-width, 35-height);
+        Vector2 camSize = CalculateCamsize(Camera.main.orthographicSize);
+        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / Camera.main.aspect - camSize.x, 35-camSize.y);
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -153,7 +152,11 @@ public class CameraFollow : MonoBehaviour
             if (cameraSize > defaultCameraSize){
                 float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
 
-                Vector2 alteredTargetpos = Vector2.Lerp(targetPos, (endPos + startPos)/2, camLerpVal);
+                Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y);
+                Vector2 pathDir = (endPos - ballProgressPos).normalized;
+                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/4f, -(endPos - ballProgressPos).magnitude/2, (endPos - ballProgressPos).magnitude/2);
+                Vector2 movePoint = pathDir * moveMag + ballProgressPos;
+                Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
                 targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
             }                   
 
@@ -324,7 +327,12 @@ public class CameraFollow : MonoBehaviour
     void HackModeSet(bool enable, Material whiteMat){
         hackMode = enable;
     }
-
+    Vector2 CalculateCamsize(float orthoSize)
+    {
+        float height = orthoSize * 2; //camera height in units
+        float width = height * Camera.main.aspect; //camera width in units
+        return new Vector2(width, height);
+    }
     private void OnEnable()
     {
         ShootBall.onShoot += FocusBall;

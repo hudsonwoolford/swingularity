@@ -78,13 +78,11 @@ public class LevelGenerator : MonoBehaviour
     */
     [Header("Level Parameters")]
     public int seed; //The seed for the level
-    [SerializeField] bool randomSeed = false; //Whether seed is chosen randomly in start
-    [SerializeField] bool useLevelParams = false; //Whether level params are used
     //Level gen params
     float minPlanets, maxPlanets;
-    [SerializeField] Vector2 minRegionExtension, maxRegionExtension; //how much region is extended
     [SerializeField] int resolution;
 
+    [SerializeField] Vector2 regionSize;
     [SerializeField] ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
     [SerializeField] SpecialObject[] specialObjects;
 
@@ -100,16 +98,14 @@ public class LevelGenerator : MonoBehaviour
     Texture2D planetTexture;
     Transform environment, allPlanetParent;
     Camera mainCam;
-    Vector2 regionSize;
     Vector2 camSize;
     bool xOry;
-    float extensionAmount;
 
     #endregion
     void Start()
     {
         proceduralInit?.Invoke();
-        if(useLevelParams) { SetLevelParams(); }
+        SetLevelParams();
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
@@ -117,11 +113,8 @@ public class LevelGenerator : MonoBehaviour
 
         SetSpecialDelegates();
         //Randomising or keeping seed
-        if(randomSeed && !useLevelParams)
-        {
-            seed = Mathf.RoundToInt(UnityEngine.Random.value * System.DateTime.Now.Millisecond + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * UnityEngine.Random.Range(-1000f, 1000f) + UnityEngine.Random.value * Time.time);
-        }
         UnityEngine.Random.InitState(seed);
+
         int typeIndex = UnityEngine.Random.Range(0, possiblePlanetTypes.Length);
         bool init = false;
         for (int i = 0; i < levelStatic.possibleGalaxySchemes.Length; i++)
@@ -135,13 +128,6 @@ public class LevelGenerator : MonoBehaviour
         }
         if(!init) {levelInit?.Invoke(levelStatic.possibleGalaxySchemes[0]);}  //Initiation failsafe
 
-        //Region size calculation
-        camSize = CamSize(mainCam);                             //1. Calculates camera size
-        xOry = UnityEngine.Random.Range(0, 2) == 1 ? true : false; //2. Chooses which axis to extend into, X or Y.
-        xOry = true; //2. Chooses which axis to extend into, X or Y.
-        extensionAmount = 1;               //3. Randomizes extension amount. 
-        regionSize = CalculateBounds(camSize, extensionAmount, xOry);   //4. Calculating bounds based off previous variables
-
         //Sets the level generation settings
         float[] levelGenSettings = new float[10]{
             minPlanets,
@@ -150,8 +136,8 @@ public class LevelGenerator : MonoBehaviour
             levelStatic.maxSize,
             levelStatic.sizeBias,
             levelStatic.sizeScale,
-            (regionSize.x - levelStatic.maxSize),
-            (regionSize.y - levelStatic.maxSize),
+            (regionSize.x - levelStatic.maxSize/2),
+            (regionSize.y - levelStatic.maxSize/2),
             levelStatic.samplesBeforeRejection,
             levelStatic.offsetScale
         };
@@ -171,13 +157,12 @@ public class LevelGenerator : MonoBehaviour
     }
     #region Variable Setting
 
-    void SetLevelParams(){
+    void SetLevelParams(){ //Calculates region size and special objects
         LevelManager.LevelParams levelParams = GameManager.LevelManager.levelParams;
         UnityEngine.Random.InitState(levelParams.seed);
         seed = levelParams.seed;
 
         float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1];
-        float regionExtensionSize  = levelStatic.regionExtensionSizes[levelParams.difficulty - 1];
 
         possiblePlanetTypes = levelParams.themes;
 
@@ -189,8 +174,10 @@ public class LevelGenerator : MonoBehaviour
             SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
-        maxRegionExtension = new Vector2(16, 9) * regionExtensionSize;
-        minRegionExtension = new Vector2(16, 9) * regionExtensionSize;
+
+        int randIndex = UnityEngine.Random.Range(0, levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes.Count);
+        regionSize = levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes[randIndex] * levelStatic.regionSizes[levelParams.difficulty - 1].baseMultiplier; //Random region size from difficulty
+        if(regionSize.magnitude < 2.5f) { regionSize = Vector2.one * 10; }
     }
 
     #endregion
@@ -198,7 +185,7 @@ public class LevelGenerator : MonoBehaviour
     /// <summary>
     /// Calculates the start pos and end pos for the camera. Takes an average of planet positions.
     /// </summary>
-    (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Vector2 camSize, float extensionAmount, bool x){
+    (Vector2, Vector2) CalculateStartEndPos(Planet[] planets, Transform flag, Transform ball){
         Vector3 avg = Vector3.zero;
         foreach (Planet planet in planets){
             avg += planet.planet.transform.position;             
@@ -207,28 +194,12 @@ public class LevelGenerator : MonoBehaviour
         Vector2 planetsCenter = avg;
         Vector2 startPos = planetsCenter;
         Vector2 endPos = startPos;
-        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x) /2;
-        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y) /2;
-        if (x){endPos += new Vector2(xExtension, 0); startPos -= new Vector2(xExtension, 0); }
-        else{endPos += new Vector2(0, yExtension); startPos -=  new Vector2(0, yExtension); }
+
+
+        endPos = new Vector2(flag.position.x, planetsCenter.y);
+        startPos = new Vector2(ball.position.x, planetsCenter.y);
         return (startPos, endPos);
     }
-    /// <summary>
-    /// Calculates the region size
-    /// </summary>
-    Vector2 CalculateBounds(Vector3 camSize, float extensionAmount, bool x){
-        //Extend in the x direction maybe?
-        
-        float xExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.x, minRegionExtension.x, maxRegionExtension.x);
-        float yExtension = Mathf.Clamp(extensionAmount * maxRegionExtension.y, minRegionExtension.y, maxRegionExtension.y);
-
-        Vector2 regionSize = new Vector3 (camSize.x + levelStatic.maxSize, camSize.y + levelStatic.maxSize, camSize.z);
-        if(x){ regionSize += new Vector2(xExtension, 0); }
-        else{ regionSize += new Vector2(0, yExtension);}
-
-        return regionSize;
-    }
-
     /// <summary>
     /// Calculates what planet indices to replace with special object
     /// </summary>
@@ -440,11 +411,12 @@ public class LevelGenerator : MonoBehaviour
 
 
         //Camera start and end positions
-        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, camSize, extensionAmount, xOry);
+        (Vector2, Vector2) startEndPos = CalculateStartEndPos(planetList, flag, player.transform);
         Vector2 startPos = startEndPos.Item1;
         Vector2 endPos = startEndPos.Item2;
-        float maxZoom = Mathf.Max((regionSize.x) / (2 * mainCam.aspect), regionSize.y / 2) + 0.5f;
 
+        mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, 1);
+        float maxZoom = Mathf.Min(CameraFollow.innerShape.bounds.extents.x / (mainCam.aspect), CameraFollow.innerShape.bounds.extents.y) - 5;
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
 
         Time.timeScale = 1;

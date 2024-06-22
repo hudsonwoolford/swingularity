@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class LevelGenStaticReferences : ScriptableObject
 {
+    [System.Serializable]
+    public struct RegionSizesWrapper
+    {
+        public float baseMultiplier;
+        public List<Vector2> nestedRegionSizes;
+    }
+
     [SerializeField] public float minSize = 3;
     [SerializeField] public float maxSize = 9;
     [SerializeField] public float sizeBias = 0.02f, sizeScale = 1, samplesBeforeRejection = 21, offsetScale = 59.5f;
@@ -11,9 +18,10 @@ public class LevelGenStaticReferences : ScriptableObject
         0f, 0.65f, 0.9f, 1.65f, 1.9f, 2.25f, 2.65f, 2.9f, 3.65f, 3.9f, 
     };
     [SerializeField]
-    public readonly float[] regionExtensionSizes = new float[10]{
-        0.001f, 0.25f, 0.5f, 1f, 1.5f, 2f, 2.33f, 2.66f, 3f, 3.1f
+    public readonly int[] difficultyPars = new int[10]{
+        3, 3, 3, 4, 4, 4, 5, 5, 5, 6
     };
+    [SerializeField] public RegionSizesWrapper[] regionSizes = new RegionSizesWrapper[10];
     [SerializeField] public float planetScale; //Scale of planets multiplier
     [SerializeField] public float moonCutoffSize = 7, moonDstScale = 0.8f;
     [SerializeField] public Material moonLine;
