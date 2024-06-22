@@ -79,13 +79,6 @@ public class SolarSystemGenerator : MonoBehaviour
             MovePlanets();
         }
     }
-    void ProceduralCalibration()
-    {
-        if (levelParams.themes.Length > 0)
-        {
-            systemType = levelParams.themes[0];
-        }
-    }
     void ButtonBehaviour()
     {
         //Hovering animation
@@ -210,10 +203,49 @@ public class SolarSystemGenerator : MonoBehaviour
         l.textureMode = LineTextureMode.Tile;
     }
     #endregion
-    //public void InitSolarSystem(OrbitPlanet[] orbitPlanets, ColorSchemeStaticReference.PlanetType systemType, string targetScene)
-    //{
+    public void InitSolarSystem(LevelManager.LevelParams levelParams, string targetScene, LevelGenStaticReferences levelStatic, float orbitSizeScalar, float ringDifference) //Needs to updated with logic from level generator
+    {
+        this.targetScene = targetScene;
+        this.levelParams = levelParams;
 
-    //}
+        int randIndex = UnityEngine.Random.Range(0, levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes.Count);
+        Vector2 regionSize = levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes[randIndex] * levelStatic.regionSizes[levelParams.difficulty - 1].baseMultiplier; //Random region size from difficulty
+        if (regionSize.magnitude < 2.5f) { regionSize = Vector2.one * 10; }
+        //Sets the level generation settings
+        float[] levelGenSettings = new float[10]{
+            0,
+            0,
+            levelStatic.minSize,
+            levelStatic.maxSize,
+            levelStatic.sizeBias,
+            levelStatic.sizeScale,
+            (regionSize.x - levelStatic.maxSize/2),
+            (regionSize.y - levelStatic.maxSize/2),
+            levelStatic.samplesBeforeRejection,
+            levelStatic.offsetScale
+        };
+
+        ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(levelParams.seed, levelParams.themes, levelGenSettings);
+
+        orbitPlanets = new OrbitPlanet[level.numPlanets];
+        int ringNum = 0;
+        float speedFalloff = UnityEngine.Random.Range(0.1f, 0.25f);
+        float ringProgress = 0;
+        for (int i = 0; i < level.numPlanets; i++)
+        {
+            orbitPlanets[i].size = level.planetSizes[i] * orbitSizeScalar;
+            orbitPlanets[i].radius = sunSize + ringNum * ringDifference;
+            orbitPlanets[i].speed = 1 - ringNum * speedFalloff;
+            orbitPlanets[i].progress = ringProgress;
+            ringProgress += (level.planetSizes[i] * orbitSizeScalar / 2) + UnityEngine.Random.value * 0.5f;
+            if(ringProgress > Mathf.PI * 2 - (level.planetSizes[i] * orbitSizeScalar) / 2)
+            {
+                ringProgress = 0;
+                ringNum++;
+            }
+        }
+        Start();
+    }
     private void OnEnable()
     {
     }
