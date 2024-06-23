@@ -106,7 +106,16 @@ public class PointCardManager : MonoBehaviour
                     shotsTexts[i].text = totalShots.ToString();
                     scoreTexts[i].text = relPar.ToString();
                     outlineScoreTexts[i].text = relPar.ToString();
-                    scoreTexts[i].color = scoreColor;
+                    Color col = neutral;
+                    if(totalShots < (totalShots - relPar)){
+                        col = positive;
+                    }
+                    else if (totalShots > (totalShots - relPar)){
+                        col = negative;
+                    }
+                    scoreTexts[i].color = col;
+                    shotsTexts[i].color = col;
+
                     parTexts[i].text = (totalShots - relPar).ToString();
 
                     int scoreSum = 0, shotSum = 0, parSum = 0;
@@ -122,6 +131,17 @@ public class PointCardManager : MonoBehaviour
                         }
                     }
 
+                    Color scoreCol = neutral;
+                    if(shotSum < parSum){
+                        scoreCol = positive;
+                    }
+                    else if (shotSum > parSum){
+                        scoreCol = negative;
+                    }
+
+                    
+                    scoreTexts[5].color = scoreCol;
+                    shotsTexts[5].color = scoreCol;
                     scoreTexts[5].text = scoreSum.ToString();
                     shotsTexts[5].text = shotSum.ToString();
                     parTexts[5].text = parSum.ToString();
