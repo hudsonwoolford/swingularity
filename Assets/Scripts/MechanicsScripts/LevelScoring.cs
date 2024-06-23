@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 public class LevelScoring : MonoBehaviour
 {
@@ -59,7 +58,7 @@ public class LevelScoring : MonoBehaviour
         { 
             currentScore = numShots.ToString() + " Shots";
         }
-        onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate((float)numShots / 12));
+        onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate(Mathf.Clamp01(((float)numShots / 5)) * 0.5f + 0.5f));
 
     }
     void IncrementScore()
