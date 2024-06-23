@@ -29,12 +29,16 @@ public class LevelScoring : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.LevelManager.procedural) //Procedural level parss
+        CheckPar();
+        parText.text = "Par: " + par.ToString();
+        numShotsText.text = "Shots: " + numShots.ToString();
+    }
+    void CheckPar()
+    {
+        if(GameManager.LevelManager.procedural) //Procedural level pars
         {
             par = GameManager.LevelManager.levelParams.levelPar;
         }
-        parText.text = "Par: " + par.ToString();
-        numShotsText.text = "Shots: " + numShots.ToString();
     }
     void HoleEnd()
     {
@@ -73,12 +77,14 @@ public class LevelScoring : MonoBehaviour
     }
     private void OnEnable()
     {
+        LevelGenerator.levelGenerated+=CheckPar;
         ShootBall.onShoot += IncrementScore;
         ShootBall.onHole += HoleEnd;
         ShootBall.triggerReset += ResetHole;
     }
     private void OnDisable()
     {
+        LevelGenerator.levelGenerated+=CheckPar;
         ShootBall.onShoot -= IncrementScore;
         ShootBall.onHole -= HoleEnd;
         ShootBall.triggerReset -= ResetHole;

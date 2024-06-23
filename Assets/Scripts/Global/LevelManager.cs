@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,6 +11,7 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] public GalaxyData currentTheme { get; private set; }
     [SerializeField] public LevelParams levelParams { get; private set; }
+    [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural level or not
     [Header("Parameters")]
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
@@ -22,13 +24,16 @@ public class LevelManager : MonoBehaviour
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
+
     [Serializable]
-    public struct LevelParams{
-        public int seed; //Seed for level planets and stuff
+    public struct LevelParams
+    {
+        public int seed; // Seed for level planets and stuff
         public int levelPar;
-        public int difficulty; //Range 0-10 determining size of level and number of special objects
-        public ColorSchemeStaticReference.PlanetType[] themes; //Themes/color schemes for level - First scheme in list is primary
+        public int difficulty; // Range 0-10 determining size of level and number of special objects
+        public ColorSchemeStaticReference.PlanetType[] themes; // Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
+
         public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
         {
             this.seed = seed;
@@ -37,23 +42,42 @@ public class LevelManager : MonoBehaviour
             this.themes = themes;
             this.specialObjects = specialObjects;
         }
+
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            if (!(obj is LevelParams))
+            {
+                return false;
+            }
+            var other = (LevelParams)obj;
+            return this == other;
         }
+
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            int hash = seed.GetHashCode();
+            hash = (hash * 397) ^ levelPar.GetHashCode();
+            hash = (hash * 397) ^ difficulty.GetHashCode();
+            hash = (hash * 397) ^ (themes != null ? themes.GetHashCode() : 0);
+            hash = (hash * 397) ^ (specialObjects != null ? specialObjects.GetHashCode() : 0);
+            return hash;
         }
+
         public static bool operator ==(LevelParams a, LevelParams b)
         {
-            return (a.seed == b.seed && a.levelPar == b.levelPar && a.difficulty == b.difficulty && a.themes == b.themes && a.specialObjects == b.specialObjects);
+            return a.seed == b.seed
+                && a.levelPar == b.levelPar
+                && a.difficulty == b.difficulty
+                && (a.themes == b.themes || (a.themes != null && b.themes != null && a.themes.SequenceEqual(b.themes)))
+                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)));
         }
+
         public static bool operator !=(LevelParams a, LevelParams b)
         {
-            return (a.seed != b.seed || a.levelPar != b.levelPar || a.difficulty != b.difficulty || a.themes != b.themes || a.specialObjects != b.specialObjects);
+            return !(a == b);
         }
     }
+
 
     private void Awake()
     {
@@ -89,8 +113,8 @@ public class LevelManager : MonoBehaviour
         hioStreakText.enabled = false;
 
         string name = SceneManager.GetActiveScene().name;
-        int currentIndex = Array.IndexOf(currentGalaxy, name);
-        string nextName = currentIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[currentIndex + 1] : "Main Menu";
+        levelIndex = Array.IndexOf(currentGalaxy, name);
+        string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Main Menu";
 
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
         loadNextOp.allowSceneActivation = false;
@@ -104,6 +128,7 @@ public class LevelManager : MonoBehaviour
             }
             yield return new WaitForFixedUpdate();
         }
+        levelIndex++;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;
@@ -115,23 +140,22 @@ public class LevelManager : MonoBehaviour
         streakText.enabled = false;
         hioStreakText.enabled = false;
 
-        int levelIndex = 0;
         for (int i = 0; i < currentProceduralGalaxy.Length; i++)
         {
-            if (levelParams == currentProceduralGalaxy[i]) //ADD == OPERAND FUNCTIONALITY PLEASE, THIS IS PROBABLY SUFFICIENT BUT COULD CAUSE ISSUES
+            if (levelParams.seed == currentProceduralGalaxy[i].seed && levelParams.difficulty == currentProceduralGalaxy[i].difficulty) //OPERATOR DOESNT WORK IDK WHY SHOULD BE FIXED BUT THIS FOR NOW
             {
                 levelIndex = i; break;
             }
         }
-        print(levelIndex);
-        string name = levelIndex+1 < 4 ? SceneManager.GetActiveScene().name : "Main Menu";
-        levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, 4)];
+        int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        string name = levelIndex < 4 ? /*SceneManager.GetActiveScene().name*/"Procedural Galaxy" : "Main Menu";
+        levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync("Procedural Galaxy");
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
-            if (SceneManager.GetActiveScene().name != name)
+            if (SceneManager.GetActiveScene().buildIndex != currentBuildIndex)
             {
                 levelCanvas.enabled = false;
                 chosenOption = false;
@@ -139,6 +163,7 @@ public class LevelManager : MonoBehaviour
             }
             yield return new WaitForFixedUpdate();
         }
+        levelIndex++;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;

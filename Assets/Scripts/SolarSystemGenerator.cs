@@ -226,7 +226,7 @@ public class SolarSystemGenerator : MonoBehaviour
             levelStatic.samplesBeforeRejection,
             levelStatic.offsetScale
         };
-        ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(levelParams.seed.ToString().GetHashCode(), levelParams.themes, levelGenSettings); 
+        ProceduralLevelGeneration.Level level = ProceduralLevelGeneration.CalculateLevel(LevelSettingsManager.ConvertTextToSeed(levelParams.seed.ToString()), levelParams.themes, levelGenSettings); 
 
         orbitPlanets = new OrbitPlanet[level.numPlanets];
         int ringNum = 0;

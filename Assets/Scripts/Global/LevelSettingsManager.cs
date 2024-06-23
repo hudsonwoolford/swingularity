@@ -69,7 +69,7 @@ public class LevelSettingsManager : MonoBehaviour
     }
     LevelManager.LevelParams SynthesizeParams() //Synthesizes parameters from UI into levlel params
     {
-        return new LevelManager.LevelParams(seedInput.text.GetHashCode(), (int)difficultySlider.value, 2, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
+        return new LevelManager.LevelParams(ConvertTextToSeed(seedInput.text), (int)difficultySlider.value, GameManager.LevelManager.levelParams.levelPar, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
     }
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
@@ -86,4 +86,35 @@ public class LevelSettingsManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoad;
     }
+public static int ConvertTextToSeed(string text)
+{
+    int convertedSeed = 0;
+    int signMult = 1;
+    int multiplier = 1;
+
+    for (int i = text.Length - 1; i >= 0; i--)
+    {
+        char currentChar = text[i];
+
+        if (currentChar == '-')
+        {
+            signMult *= -1;
+        }
+        else if (char.IsDigit(currentChar))
+        {
+            convertedSeed += (currentChar - '0') * multiplier;
+        }
+        else
+        {
+            // Using some constant to avoid using GetHashCode, which can vary across different runtime sessions
+            int addSeed = (int)currentChar;
+            convertedSeed += addSeed * multiplier;
+        }
+
+        multiplier *= 10;
+    }
+
+    return convertedSeed * signMult;
+}
+
 }

@@ -97,57 +97,50 @@ public class PointCardManager : MonoBehaviour
         }
         else //Procedural processing
         {
-            for (int i = 0; i < currentProceduralGalaxy.Length; i++)
-            {
-                if (GameManager.LevelManager.levelParams == currentProceduralGalaxy[i]) //ADD == OPERAND FUNCTIONALITY PLEASE, THIS IS PROBABLY SUFFICIENT BUT COULD CAUSE ISSUES
-                {
-                    i--; //because level manager has already switched to the next params
-                    //Setting text strings and colours
-                    shotsTexts[i].text = totalShots.ToString();
-                    scoreTexts[i].text = relPar.ToString();
-                    outlineScoreTexts[i].text = relPar.ToString();
-                    Color col = neutral;
-                    if(totalShots < (totalShots - relPar)){
-                        col = positive;
-                    }
-                    else if (totalShots > (totalShots - relPar)){
-                        col = negative;
-                    }
-                    scoreTexts[i].color = col;
-                    shotsTexts[i].color = col;
+            int i = GameManager.LevelManager.levelIndex;
+            //Setting text strings and colours
+            shotsTexts[i].text = totalShots.ToString();
+            scoreTexts[i].text = relPar.ToString();
+            outlineScoreTexts[i].text = relPar.ToString();
+            Color col = neutral;
+            if(totalShots < (totalShots - relPar)){
+                col = positive;
+            }
+            else if (totalShots > (totalShots - relPar)){
+                col = negative;
+            }
+            scoreTexts[i].color = col;
+            shotsTexts[i].color = col;
 
-                    parTexts[i].text = (totalShots - relPar).ToString();
+            parTexts[i].text = (totalShots - relPar).ToString();
 
-                    int scoreSum = 0, shotSum = 0, parSum = 0;
-                    for(int j = 0; j < 5; j++){
-                        if (scoreTexts[j].text != "?"){
-                            scoreSum += int.Parse(scoreTexts[j].text);
-                        }
-                        if (shotsTexts[j].text != "?"){
-                            shotSum += int.Parse(shotsTexts[j].text);
-                        }
-                        if (parTexts[j].text != "?"){
-                            parSum += int.Parse(parTexts[j].text);
-                        }
-                    }
-
-                    Color scoreCol = neutral;
-                    if(shotSum < parSum){
-                        scoreCol = positive;
-                    }
-                    else if (shotSum > parSum){
-                        scoreCol = negative;
-                    }
-
-                    
-                    scoreTexts[5].color = scoreCol;
-                    shotsTexts[5].color = scoreCol;
-                    scoreTexts[5].text = scoreSum.ToString();
-                    shotsTexts[5].text = shotSum.ToString();
-                    parTexts[5].text = parSum.ToString();
-                    break;
+            int scoreSum = 0, shotSum = 0, parSum = 0;
+            for(int j = 0; j < 5; j++){
+                if (scoreTexts[j].text != "?"){
+                    scoreSum += int.Parse(scoreTexts[j].text);
+                }
+                if (shotsTexts[j].text != "?"){
+                    shotSum += int.Parse(shotsTexts[j].text);
+                }
+                if (parTexts[j].text != "?"){
+                    parSum += int.Parse(parTexts[j].text);
                 }
             }
+
+            Color scoreCol = neutral;
+            if(shotSum < parSum){
+                scoreCol = positive;
+            }
+            else if (shotSum > parSum){
+                scoreCol = negative;
+            }
+
+            
+            scoreTexts[5].color = scoreCol;
+            shotsTexts[5].color = scoreCol;
+            scoreTexts[5].text = scoreSum.ToString();
+            shotsTexts[5].text = shotSum.ToString();
+            parTexts[5].text = parSum.ToString();
         }
     }
     void SetGalaxyLevels(string[] galaxy, GalaxyData theme) //Sets the current galaxy levels
