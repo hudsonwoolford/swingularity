@@ -127,7 +127,7 @@ public class LevelManager : MonoBehaviour
         string name = levelIndex+1 < 4 ? SceneManager.GetActiveScene().name : "Main Menu";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, 4)];
         
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync("Procedural Galaxy");
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
@@ -185,12 +185,12 @@ public class LevelManager : MonoBehaviour
     {
         if(scoreText == null) { return; }
         scoreText.text = score;
-        if(procedural)
-        {
-            int scene = SceneManager.GetActiveScene().buildIndex;
-            AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
-            loadNextOp.allowSceneActivation = true;
-        }
+        // if(procedural)
+        // {
+        //     int scene = SceneManager.GetActiveScene().buildIndex;
+        //     AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
+        //     loadNextOp.allowSceneActivation = true;
+        // }
     }
 
     #endregion
