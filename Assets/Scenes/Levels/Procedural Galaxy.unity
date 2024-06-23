@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007526484, g: 0.0007269121, b: 0.0007526484, a: 1}
+  m_IndirectSpecularColor: {r: 0.00091242965, g: 0.0007269998, b: 0.00091242965, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -271,6 +271,16 @@ PrefabInstance:
         type: 3}
       propertyPath: bigNoiseOffset
       value: 2539.8325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightRangeMult
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightIntensityMult
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -578,6 +588,16 @@ PrefabInstance:
         type: 3}
       propertyPath: bigNoiseOffset
       value: 2539.8325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightRangeMult
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightIntensityMult
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -1242,6 +1262,16 @@ PrefabInstance:
       propertyPath: bigNoiseOffset
       value: 2539.8325
       objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightRangeMult
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightIntensityMult
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: m_RootOrder
@@ -1459,6 +1489,16 @@ PrefabInstance:
         type: 3}
       propertyPath: bigNoiseOffset
       value: 2539.8325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightRangeMult
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightIntensityMult
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
@@ -1921,6 +1961,16 @@ PrefabInstance:
       propertyPath: bigNoiseOffset
       value: 2539.8325
       objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightRangeMult
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080423112295494141, guid: f13b9185c10983f4eb62ba9b60021d20,
+        type: 3}
+      propertyPath: lightIntensityMult
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5777987345081390530, guid: f13b9185c10983f4eb62ba9b60021d20,
         type: 3}
       propertyPath: m_RootOrder
@@ -2282,10 +2332,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7098d5fabf6a148bbab82ce19511dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  galaxySeed: 202
+  galaxySeed: 190
   galaxyRelativeDifficulty: 1
-  orbitSizeScalar: 0.17
-  ringDifference: 1.2
+  orbitSizeScalar: 0.2
+  maxRings: 2
+  ringDifference: 0.9
   basePlanetGap: 0.05
   planetGapVariance: 0.2
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}

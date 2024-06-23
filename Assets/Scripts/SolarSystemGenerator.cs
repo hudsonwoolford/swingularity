@@ -203,7 +203,7 @@ public class SolarSystemGenerator : MonoBehaviour
         l.textureMode = LineTextureMode.Tile;
     }
     #endregion
-    public void InitSolarSystem(LevelManager.LevelParams levelParams, string targetScene, LevelGenStaticReferences levelStatic, float orbitSizeScalar, float ringDifference, float basePlanetGap, float planetGapVariance) //Needs to updated with logic from level generator
+    public void InitSolarSystem(LevelManager.LevelParams levelParams, string targetScene, LevelGenStaticReferences levelStatic, float orbitSizeScalar, float ringDifference, int maxRings, float basePlanetGap, float planetGapVariance) //Needs to updated with logic from level generator
     {
         UnityEngine.Random.InitState(levelParams.seed);
         this.targetScene = targetScene;
@@ -235,6 +235,8 @@ public class SolarSystemGenerator : MonoBehaviour
         float ringProgress = 0;
         for (int i = 0; i < level.numPlanets; i++)
         {
+            if(ringNum+1>maxRings) {break;}
+
             orbitPlanets[i].size = level.planetSizes[i] * orbitSizeScalar;
             orbitPlanets[i].radius = sunSize + (ringNum+1) * ringDifference;
             orbitPlanets[i].speed = 1 - ringNum * speedFalloff;

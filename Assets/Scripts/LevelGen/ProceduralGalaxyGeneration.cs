@@ -9,6 +9,7 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     [Range(1, 10)]
     [SerializeField] int galaxyRelativeDifficulty;
     [SerializeField] float orbitSizeScalar;
+    [SerializeField] int maxRings;
     [SerializeField] float ringDifference;
     [SerializeField] float basePlanetGap;
     [SerializeField] float planetGapVariance;
@@ -35,7 +36,7 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
             int levelDifficulty = Mathf.Clamp(galaxyRelativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
 
             LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, galaxyRelativeDifficulty, new ColorSchemeStaticReference.PlanetType[] { galaxyType }, specialTypes);
-            solarSystems[i].InitSolarSystem(systemParams, "LevelGen", levelStatic, orbitSizeScalar, ringDifference, basePlanetGap, planetGapVariance);
+            solarSystems[i].InitSolarSystem(systemParams, "LevelGen", levelStatic, orbitSizeScalar, ringDifference, maxRings, basePlanetGap, planetGapVariance);
 
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
