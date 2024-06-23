@@ -155,9 +155,14 @@ public class CameraFollow : MonoBehaviour
 
                 Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y);
                 Vector2 flagProgressPos = new Vector2 (flag.position.x, startPos.y);
+                Vector2 midpoint = (startPos + endPos) / 2;
 
-                Vector2 pathDir = (endPos - ballProgressPos).normalized;
-                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/4f, -(flagProgressPos - ballProgressPos).magnitude/2, (flagProgressPos - ballProgressPos).magnitude/2);
+                Vector2 pathDir = (flagProgressPos - ballProgressPos).normalized;
+                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/4f, -(midpoint - ballProgressPos).magnitude, (midpoint - ballProgressPos).magnitude);
+                if(((midpoint - flagProgressPos).magnitude > (ballProgressPos - flagProgressPos).magnitude)){
+                    moveMag = -moveMag;
+                }
+
                 Vector2 movePoint = pathDir * moveMag + ballProgressPos;
                 Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
                 targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
