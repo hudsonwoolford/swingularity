@@ -148,7 +148,7 @@ public class LevelManager : MonoBehaviour
             }
         }
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        string name = levelIndex < 4 ? /*SceneManager.GetActiveScene().name*/"Procedural Galaxy" : "Main Menu";
+        string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Main Menu";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
