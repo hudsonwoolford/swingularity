@@ -43,18 +43,7 @@ public class GalaxyMenu : MonoBehaviour
     {
         currentGenerator = swap ? gGen1 : gGen2;
         if(eventSystem.currentSelectedGameObject != null) { eventSystem.SetSelectedGameObject(null); }
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            string targetScene = currentGenerator.SetScheme(galaxyTypes[currentGalaxy]).levelScene;
-            if (!string.IsNullOrEmpty(targetScene))
-            {
-                SceneManager.LoadScene(targetScene);
-            }
-            else
-            {
-                Debug.LogWarning("LevelScene from '" + currentGenerator.SetScheme(galaxyTypes[currentGalaxy]).name +"' galaxy struct references an invalid scene: '" + targetScene+"'.");
-            }
-        }
+
     }
     void RightGalaxy()
     {

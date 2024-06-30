@@ -22,7 +22,7 @@ public class MockPlanetEditor : Editor
         if(GUILayout.Button("Randomize Seed"))
         {
             UnityEngine.Random.InitState(Mathf.RoundToInt(Time.deltaTime * 1000000) + System.DateTime.Now.Millisecond * System.DateTime.Now.Second * (int)UnityEngine.Random.value * (System.DateTime.Now.Millisecond * 100000) + mPlanet.transform.GetSiblingIndex());
-            mPlanet.seed = new Vector3(UnityEngine.Random.Range(-2147483647, 2147483647), UnityEngine.Random.Range(-2147483647, 2147483647) * 2, UnityEngine.Random.Range(-2147483647, 2147483647) * 3);
+            mPlanet.seed = new Vector3(UnityEngine.Random.Range(-100f, 100f), UnityEngine.Random.Range(-100f, 100f) * 2, UnityEngine.Random.Range(-100f, 100f) * 3);
         }
         serializedObject.ApplyModifiedProperties();
     }

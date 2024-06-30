@@ -16,6 +16,7 @@ public class PointCardManager : MonoBehaviour
     string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     LevelManager.LevelParams[] currentProceduralGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] Color positive, neutral, negative;
+    [SerializeField] Color holeInOne;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +60,7 @@ public class PointCardManager : MonoBehaviour
                     else if (totalShots > (totalShots - relPar)){
                         col = negative;
                     }
+
                     shotsTexts[i].color = col;
                     outlineScoreTexts[i].text = relPar.ToString();
                     scoreTexts[i].color = col;
@@ -85,6 +87,10 @@ public class PointCardManager : MonoBehaviour
                     else if (shotSum > parSum){
                         scoreCol = negative;
                     }
+                    if (shotSum == i+1)
+                    {
+                        scoreCol = holeInOne;
+                    }
 
                     
                     scoreTexts[5].color = scoreCol;
@@ -108,6 +114,10 @@ public class PointCardManager : MonoBehaviour
             }
             else if (totalShots > (totalShots - relPar)){
                 col = negative;
+            }
+            if (totalShots == 1)
+            {
+                col = holeInOne;
             }
             scoreTexts[i].color = col;
             shotsTexts[i].color = col;
@@ -134,8 +144,12 @@ public class PointCardManager : MonoBehaviour
             else if (shotSum > parSum){
                 scoreCol = negative;
             }
+            if (shotSum == i + 1)
+            {
+                scoreCol = holeInOne;
+            }
 
-            
+
             scoreTexts[5].color = scoreCol;
             shotsTexts[5].color = scoreCol;
             scoreTexts[5].text = scoreSum.ToString();
@@ -145,6 +159,7 @@ public class PointCardManager : MonoBehaviour
     }
     void SetGalaxyLevels(string[] galaxy, GalaxyData theme) //Sets the current galaxy levels
     {
+        ClearPointCard();
         currentGalaxy = galaxy;
     }
     void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural

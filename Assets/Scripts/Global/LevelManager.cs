@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural level or not
     [Header("Parameters")]
+    [SerializeField] GalaxyData backupTheme;
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
     [Space()]
     [SerializeField] TextMeshProUGUI streakText; //Text that displays under par streak
@@ -85,6 +86,7 @@ public class LevelManager : MonoBehaviour
         levelCanvas = GetComponent<Canvas>();
         levelCanvas.enabled = false;
         chosenOption = false;
+        if(currentTheme == null) { currentTheme = backupTheme; }
     }
     // Start is called before the first frame update
     void Start()

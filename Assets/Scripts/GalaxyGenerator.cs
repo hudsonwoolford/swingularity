@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class GalaxyGenerator : MonoBehaviour
@@ -24,6 +25,18 @@ public class GalaxyGenerator : MonoBehaviour
     void Start()
     {
         InitParticleSystems();
+    }
+    void LoadGalaxyScene()
+    {
+        string targetScene = schemes[schemeIndex].levelScene;
+        if (!string.IsNullOrEmpty(targetScene))
+        {
+            SceneManager.LoadScene(targetScene);
+        }
+        else
+        {
+            Debug.LogWarning("LevelScene from '" + schemes[schemeIndex].name + "' galaxy struct references an invalid scene: '" + targetScene + "'.");
+        }
     }
     void UpdateParticleSystemsEditor() //Called in both play and editor
     {

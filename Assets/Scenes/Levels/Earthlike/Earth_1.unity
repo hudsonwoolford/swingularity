@@ -514,7 +514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
-  seed: -640288528
+  seed: {x: 0, y: 0, z: 0}
 --- !u!23 &924039812
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -686,7 +686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
-  seed: -640288528
+  seed: {x: 0, y: 0, z: 0}
 --- !u!23 &1334825905
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -819,8 +819,18 @@ PrefabInstance:
       objectReference: {fileID: 2136511873}
     - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
+      propertyPath: endPos.x
+      value: 9.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
       propertyPath: focusBall
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
+        type: 3}
+      propertyPath: startPos.x
+      value: -8.2
       objectReference: {fileID: 0}
     - target: {fileID: 5368257114206789907, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
