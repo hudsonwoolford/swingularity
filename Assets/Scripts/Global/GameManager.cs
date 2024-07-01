@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static PauseManager PauseManager { get; private set; }
     public static SettingsManager SettingsManager { get; private set; }
     public static LevelSettingsManager LevelSettingsManager { get; private set; }
+    public static MusicManager MusicManager {get; private set; }
     private void Awake()
     {
         if (Instance != null)
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
         PauseManager = GetComponentInChildren<PauseManager>(true);
         SettingsManager = GetComponentInChildren<SettingsManager>(true);
         LevelSettingsManager = GetComponentInChildren<LevelSettingsManager>(true);
+        MusicManager = GetComponentInChildren<MusicManager>(true); 
     }
     private void Start()
     {

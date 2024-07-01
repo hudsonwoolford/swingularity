@@ -13,6 +13,7 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     [SerializeField] float ringDifference;
     [SerializeField] float basePlanetGap;
     [SerializeField] float planetGapVariance;
+    [SerializeField] GalaxyData galaxyTheme;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] ColorSchemeStaticReference.PlanetType galaxyType;
     [SerializeField] LevelGenerator.SpecialType[] specialTypes;
@@ -41,6 +42,6 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, null);
+        initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
     }
 }

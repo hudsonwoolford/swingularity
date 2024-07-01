@@ -86,7 +86,7 @@ public class LevelManager : MonoBehaviour
         levelCanvas = GetComponent<Canvas>();
         levelCanvas.enabled = false;
         chosenOption = false;
-        if(currentTheme == null) { currentTheme = backupTheme; }
+        currentTheme = backupTheme;
     }
     // Start is called before the first frame update
     void Start()
@@ -137,6 +137,18 @@ public class LevelManager : MonoBehaviour
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
+        if (currentProceduralGalaxy == null || currentProceduralGalaxy.Length == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            yield break;
+        }
+
+        // Ensure levelIndex is within a valid range
+        if (levelIndex < 0 || levelIndex >= currentProceduralGalaxy.Length)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            yield break;
+        }
         levelCanvas.enabled = true;
         scoreText.enabled = true;
         streakText.enabled = false;
