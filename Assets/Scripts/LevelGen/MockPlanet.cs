@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class MockPlanet : MonoBehaviour
 {
-    [SerializeField]public ColorSchemeStaticReference.PlanetType planetType;
+    [SerializeField] public ColorSchemeStaticReference.PlanetType planetType;
     [SerializeField] public bool specificSeed;
     [SerializeField] public Vector3 seed;
 }
