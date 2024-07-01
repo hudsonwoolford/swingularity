@@ -54,13 +54,7 @@ public class MusicManager : MonoBehaviour
     }
     void ManageCurrentMusic()
     {
-        print(musicSource.time + " | " + (currentMusic.musicClip.length - currentMusic.loopEndOffset) + " | Playing: " + musicSource.isPlaying);
-        if(musicSource.time >= currentMusic.musicClip.length - currentMusic.loopEndOffset) 
-        {
-            musicSource.Play();
-            musicSource.time = currentMusic.loopBeginOffset;
-        }
-        if(musicSource.time<0.5f && musicSource.isPlaying == false)
+        if((musicSource.time >= currentMusic.musicClip.length - currentMusic.loopEndOffset) || (musicSource.time < 0.5f && !musicSource.isPlaying))
         {
             musicSource.Play();
             musicSource.time = currentMusic.loopBeginOffset;
