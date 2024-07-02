@@ -87,11 +87,6 @@ public class PointCardManager : MonoBehaviour
                     else if (shotSum > parSum){
                         scoreCol = negative;
                     }
-                    if (shotSum == i+1)
-                    {
-                        scoreCol = holeInOne;
-                    }
-
                     
                     scoreTexts[5].color = scoreCol;
                     shotsTexts[5].text = shotSum.ToString();
@@ -143,10 +138,6 @@ public class PointCardManager : MonoBehaviour
             }
             else if (shotSum > parSum){
                 scoreCol = negative;
-            }
-            if (shotSum == i + 1)
-            {
-                scoreCol = holeInOne;
             }
 
 
