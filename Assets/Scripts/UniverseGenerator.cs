@@ -20,7 +20,7 @@ public class UniverseGenerator : MonoBehaviour
         bool isCustom;
         int seed;
     }
-
+    [SerializeField]int indexSeed;
     [SerializeField]
     Universe[] possibleUniverses;
 
@@ -33,8 +33,8 @@ public class UniverseGenerator : MonoBehaviour
     void Awake(){
         meshRenderer = GetComponent<MeshRenderer>();
         NullCheck();
-        UnityEngine.Random.InitState(Mathf.RoundToInt(transform.position.x + transform.position.y + transform.position.z));
-        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length-1);
+        UnityEngine.Random.InitState(indexSeed);
+        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
         ChangeMaterialBlock();
     }
 
@@ -60,5 +60,10 @@ public class UniverseGenerator : MonoBehaviour
     {
         if (pBlock == null) { pBlock = new MaterialPropertyBlock(); }
     }
-
+    public void Init(int indexSeed)
+    {
+        this.indexSeed = indexSeed;
+        UnityEngine.Random.InitState(indexSeed);
+        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
+    }
 }
