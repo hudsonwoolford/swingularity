@@ -4,7 +4,6 @@ Shader "Custom/UnivereSphereRemade"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Cube ("Skybox Texture", Cube) = "" {}
-        _CubeOffset ("Cube Offset", vector) = (0,0,0)
         _DepthScale ("Depth Scale", float) = 0.1
         [HDR]_Emission("Emission", Color) = (1,1,1,1)
         _EmissionPower("Emission Power", float) = 2
@@ -33,7 +32,6 @@ Shader "Custom/UnivereSphereRemade"
         
         sampler2D _MainTex;
         samplerCUBE _Cube;
-        float3 _CubeOffset;
         float _DepthScale;
         float _EmissionPower;
         float4 _Emission;
@@ -57,7 +55,7 @@ Shader "Custom/UnivereSphereRemade"
         {
             float3 parallaxOffset = IN.viewDir * _DepthScale;
             float3 worldDir = normalize(mul((float3x3)unity_ObjectToWorld, IN.localNormal + parallaxOffset));
-            half4 col = texCUBE(_Cube, worldDir + _CubeOffset);
+            half4 col = texCUBE(_Cube, worldDir);
 
             float luminance = dot(float3(0.2126729, 0.7151522, 0.0721750), col.rgb);
             o.Albedo = pow(col.rgb, _EmissionPower) * _Emission;
