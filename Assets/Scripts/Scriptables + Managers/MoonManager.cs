@@ -15,7 +15,7 @@ public class MoonManager : MonoBehaviour
     [SerializeField] float eccentricity = 0;
     [Header("Line Renderer")]
     [SerializeField] int points = 360;
-    [SerializeField] float width = 0.1f;
+    [SerializeField] float width = 0.25f;
     [SerializeField] Color lrColor = new Color(1,1,1,0.5f);
     [SerializeField] Material mat;
     LineRenderer lr;
@@ -154,7 +154,7 @@ public class MoonManager : MonoBehaviour
         lr.startWidth = width;
         lr.endWidth = width;
         lr.textureMode = LineTextureMode.Tile;
-        lr.textureScale = new Vector2(3, 1);
+        lr.textureScale = new Vector2(2, 1);
         lr.material = mat;
         lr.startColor = lrColor;
         lr.endColor = lrColor;
