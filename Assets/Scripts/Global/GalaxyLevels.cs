@@ -20,8 +20,6 @@ public class GalaxyLevels : MonoBehaviour
     //[SerializeField] float circleRad = 1f;
     //[SerializeField] Material lineMat;
     //LineRenderer[] lr = new LineRenderer[5];
-    public delegate void InitGalaxy(string[] galaxyLevels, GalaxyData theme);
-    public static InitGalaxy initGalaxy;
     private void Awake()
     {
     }
@@ -36,7 +34,7 @@ public class GalaxyLevels : MonoBehaviour
         {
             ssLevels[i] = ssGens[i].SystemLevel();
         }
-        initGalaxy?.Invoke(ssLevels, galaxyTheme);
+        GalaxyGenerator.initGalaxy?.Invoke(ssLevels, galaxyTheme);
     }
     private void Update()
     {

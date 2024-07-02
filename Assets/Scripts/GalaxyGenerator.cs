@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Galaxy;
+using static LevelGenerator;
 
 [ExecuteInEditMode]
 public class GalaxyGenerator : MonoBehaviour
@@ -10,6 +12,14 @@ public class GalaxyGenerator : MonoBehaviour
     [SerializeField] int schemeIndex;
     [SerializeField] Vector3 galaxyRotation;
     [SerializeField] bool update = false;
+    [Header("Procedural")]
+    [SerializeField] bool proceduralGalaxy;
+    [SerializeField] int galaxySeed;
+    [SerializeField] LevelGenStaticReferences levelStatic;
+    [SerializeField] LevelGenerator.SpecialType[] specialTypes;
+
+    [Range(1, 10)]
+    [SerializeField] int galaxyRelativeDifficulty;
     [Header("Particles")]
     [SerializeField] ParticleSystem outerSpiral;
     [SerializeField] ParticleSystem innerSpiral;
@@ -21,14 +31,43 @@ public class GalaxyGenerator : MonoBehaviour
     [SerializeField] ParticleSystem coreTwinkle;
     [SerializeField] ParticleSystem swirlSystem;
 
+    public delegate void InitProceduralGalaxy(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyData theme);
+    public static InitProceduralGalaxy initProceduralGalaxy;
+    public delegate void InitGalaxy(string[] galaxyLevels, GalaxyData theme);
+    public static InitGalaxy initGalaxy;
+
     // Start is called before the first frame update
     void Start()
     {
         InitParticleSystems();
+        
     }
-    void LoadGalaxyScene()
+    void SetNormalGalaxy() //Sets the galaxy in level manager through event
     {
-        string targetScene = schemes[schemeIndex].levelScene;
+        initGalaxy(schemes[schemeIndex].levelScenes, schemes[schemeIndex].galaxyData);
+    }
+    void SetProceduralGalaxy()
+    {
+        LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
+        string[] galaxyLevels = new string[5];
+        for (int i = 0; i < 5; i++)
+        {
+            UnityEngine.Random.InitState(i * 120523 + galaxySeed);
+            int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
+            int levelDifficulty = Mathf.Clamp(galaxyRelativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
+
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, levelStatic.difficultyPars[levelDifficulty], new ColorSchemeStaticReference.PlanetType[] { schemes[schemeIndex].type }, specialTypes);
+
+            galaxyLevelParams[i] = systemParams;
+            galaxyLevels[i] = "LevelGen";
+        }
+        initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, schemes[schemeIndex].galaxyData);
+    }//Sets the procedural galaxy in level manager through event
+    void LoadGalaxyScene() //Called by animation event (press animation)
+    {
+        if (proceduralGalaxy) { SetProceduralGalaxy(); }
+        else { SetNormalGalaxy(); }
+        string targetScene = schemes[schemeIndex].levelScenes[0];
         if (!string.IsNullOrEmpty(targetScene))
         {
             SceneManager.LoadScene(targetScene);
@@ -122,7 +161,6 @@ public class GalaxyGenerator : MonoBehaviour
     {
         if(update) { InitParticleSystems(); update = false; }
         UpdateParticleSystemsEditor();
-        //if(Application.isPlaying) { UpdateParticleSystems(); }
     }
 }
 public static class Galaxy
@@ -131,14 +169,14 @@ public static class Galaxy
     public struct GalaxyScheme
     {
         public string name;
-        public string levelScene;
+        public string[] levelScenes;
+        public GalaxyData galaxyData;
         public ColorSchemeStaticReference.PlanetType type;
         public Color primarySpiral, secondarySpiral;
         public Color coreGlow, coreQuasar;
         public Color primaryTransparent, secondaryTransparent; //Obsolete
         [ColorUsage(true, true)]
         public Color lightColor, darkColor;
-        public int hexagonSeed;
     }
 
 }

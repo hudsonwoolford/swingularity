@@ -393,10 +393,10 @@ public class ManualLevelGenerator : MonoBehaviour
     #endregion
 
     void OnEnable(){
-        ProceduralGalaxyGeneration.initProceduralGalaxy += IsProcedural; 
+        GalaxyGenerator.initProceduralGalaxy += IsProcedural; 
     }
     void OnDisable(){
-        ProceduralGalaxyGeneration.initProceduralGalaxy -= IsProcedural; 
+        GalaxyGenerator.initProceduralGalaxy -= IsProcedural; 
     }
     void IsProcedural(string[] levels, LevelManager.LevelParams[] levelParams, GalaxyData theme){
         procedural = true;

@@ -19,9 +19,6 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
     [SerializeField] LevelGenerator.SpecialType[] specialTypes;
     [SerializeField] SolarSystemGenerator[] solarSystems = new SolarSystemGenerator[5];
 
-    public delegate void InitProceduralGalaxy(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyData theme);
-    public static InitProceduralGalaxy initProceduralGalaxy; 
-
     private void Awake()
     {
         SetSolarSystems();
@@ -42,6 +39,6 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
+        GalaxyGenerator.initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
     }
 }

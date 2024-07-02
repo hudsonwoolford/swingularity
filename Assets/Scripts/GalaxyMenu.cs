@@ -14,12 +14,6 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] GalaxyGenerator gGen1, gGen2;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Button right, left;
-    //[Header("Lines")]
-    //[SerializeField] Material lrMat;
-    //[SerializeField] float lrWidth;
-    //[SerializeField] float lrRadius;
-    [SerializeField] float hexagonRangeMult;
-    GalaxyGenerator currentGenerator;
     EventSystem eventSystem;
     //List<LineRenderer> hexagons = new List<LineRenderer>();
     int currentGalaxy;
@@ -35,13 +29,11 @@ public class GalaxyMenu : MonoBehaviour
         nameText.text = gGen1.SetScheme(galaxyTypes[currentGalaxy]).name;
         right.onClick.AddListener(RightGalaxy);
         left.onClick.AddListener(LeftGalaxy);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentGenerator = swap ? gGen1 : gGen2;
         if(eventSystem.currentSelectedGameObject != null) { eventSystem.SetSelectedGameObject(null); }
 
     }
@@ -73,34 +65,4 @@ public class GalaxyMenu : MonoBehaviour
         y.Play("GalaxyExitR");
         swap = !swap;
     }
-    //#region Drawing Hexagons
-    //void DrawGalaxyHexagons(int seed)
-    //{
-    //    for (int i = 0; i < 5; i++)
-    //    {
-    //        UnityEngine.Random.InitState(seed + i * 10);
-    //        DrawHexagon(UnityEngine.Random.insideUnitCircle * hexagonRangeMult, lrRadius, i);
-    //    }
-    //}
-    //void DrawHexagon(Vector3 center, float rad, int index)
-    //{
-    //    if (hexagons.Count <= index) { hexagons.Add(new GameObject("Hexagon " + index).AddComponent<LineRenderer>()); }
-    //    LineRenderer lr = hexagons[index];
-    //    lr.positionCount = 8;
-    //    lr.material = lrMat;
-    //    lr.startWidth = lrWidth;
-    //    lr.endWidth = lrWidth;
-    //    Vector3 bearing30 = new Vector3(Mathf.Cos(Mathf.PI/3), Mathf.Sin(Mathf.PI / 3), 0);
-    //    Vector3 bearing330 = new Vector3(Mathf.Cos(2 * Mathf.PI / 3), Mathf.Sin(2 * Mathf.PI / 3), 0);
-
-    //    lr.SetPosition(0, center + (bearing330) * rad);
-    //    lr.SetPosition(1, center + (bearing30) * rad);
-    //    lr.SetPosition(2, center +  Vector3.right * rad);
-    //    lr.SetPosition(3, center + (-bearing330) * rad);
-    //    lr.SetPosition(4, center + (-bearing30) * rad);
-    //    lr.SetPosition(5, center +  Vector3.left * rad);
-    //    lr.SetPosition(6, center + (bearing330) * rad);
-    //    lr.SetPosition(7, center + (bearing30) * rad);
-    //}
-    //#endregion
 }

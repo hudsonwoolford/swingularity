@@ -14957,38 +14957,6 @@ MonoBehaviour:
   nameText: {fileID: 908312335}
   right: {fileID: 1250875657}
   left: {fileID: 1869764377}
-  hexagonRangeMult: 2.76
---- !u!1 &638478369
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 638478370}
-  m_Layer: 6
-  m_Name: GameObject (1)
-  m_TagString: Environment
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &638478370
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 638478369}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0111551, y: 0.8666804, z: 2.8945389}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &713850632
 GameObject:
   m_ObjectHideFlags: 0
@@ -44573,37 +44541,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1693744900
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1693744901}
-  m_Layer: 6
-  m_Name: GameObject
-  m_TagString: Player
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1693744901
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693744900}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0111551, y: 0.8666804, z: 2.8945389}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1696676309
 GameObject:
   m_ObjectHideFlags: 0
@@ -49805,7 +49742,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   schemes:
   - name: Earth
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 0
     primarySpiral: {r: 1, g: 0.46619305, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60645056, b: 1, a: 1}
@@ -49815,9 +49753,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222895, g: 0.6669438, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.047058824, b: 0, a: 0.49803922}
-    hexagonSeed: 0
   - name: Desert
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 1
     primarySpiral: {r: 1, g: 0.7671119, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
@@ -49827,9 +49765,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.03529412, b: 0, a: 0.49803922}
-    hexagonSeed: 0
   - name: Ice
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 2
     primarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
     secondarySpiral: {r: 1, g: 0.4760489, b: 0, a: 1}
@@ -49839,9 +49777,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.4745098, b: 0, a: 0.02745098}
     lightColor: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
     darkColor: {r: 0, g: 0.015686275, b: 0.13333334, a: 0.49803922}
-    hexagonSeed: 0
   - name: Fire
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 3
     primarySpiral: {r: 1, g: 0.22297566, b: 0, a: 1}
     secondarySpiral: {r: 0.9427508, g: 1, b: 0, a: 1}
@@ -49851,9 +49789,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.9411765, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 3.0222886, g: 0.52197284, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0, b: 0.003921569, a: 0.49803922}
-    hexagonSeed: 0
   - name: Goop
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 4
     primarySpiral: {r: 0.5051341, g: 0, b: 1, a: 1}
     secondarySpiral: {r: 0.8460462, g: 1, b: 0, a: 1}
@@ -49863,9 +49801,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.84705883, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.4862745, g: 0.78431374, b: 0.1882353, a: 1}
     darkColor: {r: 0.07058824, g: 0.65882355, b: 0.3019608, a: 1}
-    hexagonSeed: 0
   - name: Waste
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 5
     primarySpiral: {r: 1, g: 0.6, b: 0, a: 1}
     secondarySpiral: {r: 1, g: 1, b: 1, a: 1}
@@ -49875,9 +49813,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 1, b: 1, a: 0.02745098}
     lightColor: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
     darkColor: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 0.49803922}
-    hexagonSeed: 0
   - name: Mythical
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 6
     primarySpiral: {r: 1, g: 0, b: 0.8081136, a: 1}
     secondarySpiral: {r: 1, g: 0.7932249, b: 0, a: 1}
@@ -49887,10 +49825,14 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.7921569, b: 0, a: 0.02745098}
     lightColor: {r: 3.105423, g: 0.4540948, b: 1.3177848, a: 1}
     darkColor: {r: 0.32156864, g: 0.09019608, b: 0.16862746, a: 1}
-    hexagonSeed: 0
   schemeIndex: 0
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
+  proceduralGalaxy: 0
+  galaxySeed: 0
+  levelStatic: {fileID: 0}
+  specialTypes: 
+  galaxyRelativeDifficulty: 0
   outerSpiral: {fileID: 1012153013}
   innerSpiral: {fileID: 781110816}
   nebulaSpiral1: {fileID: 1116579851}
@@ -54885,6 +54827,42 @@ PrefabInstance:
       propertyPath: swirlSystem
       value: 
       objectReference: {fileID: 575841555}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].galaxyData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4ef0e331957670b4c8c3778ac3e0d360,
+        type: 2}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.data[0]
+      value: LevelGen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.data[1]
+      value: LevelGen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.data[2]
+      value: LevelGen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.data[3]
+      value: LevelGen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
+        type: 3}
+      propertyPath: schemes.Array.data[7].levelScenes.Array.data[4]
+      value: LevelGen
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -93836,7 +93814,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   schemes:
   - name: Earth
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 0
     primarySpiral: {r: 0, g: 1, b: 0.85122705, a: 1}
     secondarySpiral: {r: 0.9427508, g: 1, b: 0, a: 1}
@@ -93846,9 +93825,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.9411765, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.23072478, g: 0.7490195, b: 0.4748249, a: 0.09803922}
     darkColor: {r: 0.008677465, g: 0.027923634, b: 0.047169805, a: 0.13725491}
-    hexagonSeed: 0
   - name: Desert
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 1
     primarySpiral: {r: 1, g: 0.7671119, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
@@ -93858,9 +93837,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 1.9766746, g: 0.894836, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.03529412, b: 0, a: 0.49803922}
-    hexagonSeed: 0
   - name: Ice
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 2
     primarySpiral: {r: 0, g: 0.60784316, b: 1, a: 1}
     secondarySpiral: {r: 1, g: 0.4760489, b: 0, a: 1}
@@ -93870,9 +93849,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.4745098, b: 0, a: 0.02745098}
     lightColor: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
     darkColor: {r: 0, g: 0.015686275, b: 0.13333334, a: 0.49803922}
-    hexagonSeed: 0
   - name: Fire
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 3
     primarySpiral: {r: 1, g: 0.46619305, b: 0, a: 1}
     secondarySpiral: {r: 0, g: 0.60645056, b: 1, a: 1}
@@ -93882,9 +93861,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0, g: 0.60784316, b: 1, a: 0.02745098}
     lightColor: {r: 3.0222895, g: 0.6669438, b: 0, a: 1}
     darkColor: {r: 0.13333334, g: 0.047058824, b: 0, a: 0.49803922}
-    hexagonSeed: 0
   - name: Goop
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 4
     primarySpiral: {r: 0.5051341, g: 0, b: 1, a: 1}
     secondarySpiral: {r: 0.8460462, g: 1, b: 0, a: 1}
@@ -93894,9 +93873,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 0.84705883, g: 1, b: 0, a: 0.02745098}
     lightColor: {r: 0.4862745, g: 0.78431374, b: 0.1882353, a: 1}
     darkColor: {r: 0.07058824, g: 0.65882355, b: 0.3019608, a: 1}
-    hexagonSeed: 0
   - name: Waste
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 5
     primarySpiral: {r: 1, g: 0.6, b: 0, a: 1}
     secondarySpiral: {r: 1, g: 1, b: 1, a: 1}
@@ -93906,9 +93885,9 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 1, b: 1, a: 0.02745098}
     lightColor: {r: 1.3703748, g: 1.3703748, b: 1.3703748, a: 1}
     darkColor: {r: 0.05490196, g: 0.05490196, b: 0.05490196, a: 0.49803922}
-    hexagonSeed: 0
   - name: Mythical
-    levelScene: 
+    levelScenes: []
+    galaxyData: {fileID: 0}
     type: 6
     primarySpiral: {r: 1, g: 0, b: 0.8081136, a: 1}
     secondarySpiral: {r: 1, g: 0.7932249, b: 0, a: 1}
@@ -93918,10 +93897,14 @@ MonoBehaviour:
     secondaryTransparent: {r: 1, g: 0.7921569, b: 0, a: 0.02745098}
     lightColor: {r: 3.105423, g: 0.4540948, b: 1.3177848, a: 1}
     darkColor: {r: 0.32156864, g: 0.09019608, b: 0.16862746, a: 1}
-    hexagonSeed: 0
   schemeIndex: 1
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
+  proceduralGalaxy: 0
+  galaxySeed: 0
+  levelStatic: {fileID: 0}
+  specialTypes: 
+  galaxyRelativeDifficulty: 0
   outerSpiral: {fileID: 1723417716510690296}
   innerSpiral: {fileID: 8339006635513201523}
   nebulaSpiral1: {fileID: 2329945942626417616}

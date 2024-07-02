@@ -156,14 +156,14 @@ public class PointCardManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        ProceduralGalaxyGeneration.initProceduralGalaxy += SetProceduralGalaxyLevels;//Invoked by procedural galaxy generator in awake after creating the solar systems | (string[] levels, LevelParams[] levelParams, GalaxyData theme)
-        GalaxyLevels.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
+        GalaxyGenerator.initProceduralGalaxy += SetProceduralGalaxyLevels;//Invoked by procedural galaxy generator in awake after creating the solar systems | (string[] levels, LevelParams[] levelParams, GalaxyData theme)
+        GalaxyGenerator.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
         LevelScoring.onScore += OnScore;
     }
     private void OnDisable()
     {
-        GalaxyLevels.initGalaxy -= SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
-        ProceduralGalaxyGeneration.initProceduralGalaxy -= SetProceduralGalaxyLevels;
+        GalaxyGenerator.initGalaxy -= SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
+        GalaxyGenerator.initProceduralGalaxy -= SetProceduralGalaxyLevels;
         LevelScoring.onScore -= OnScore;
     }
 }
