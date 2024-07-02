@@ -110,10 +110,6 @@ public class PointCardManager : MonoBehaviour
             else if (totalShots > (totalShots - relPar)){
                 col = negative;
             }
-            if (totalShots == 1)
-            {
-                col = holeInOne;
-            }
             scoreTexts[i].color = col;
             shotsTexts[i].color = col;
 
