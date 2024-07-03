@@ -19,6 +19,8 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] TMP_InputField ngNameFld;
     [SerializeField] TMP_InputField ngSeedFld;
     [SerializeField] Slider ngDifficultySldr;
+    [SerializeField] TextMeshProUGUI difficultyNumber;
+    [SerializeField] Gradient difficultyColorGrad;
     [Header("Miscellaneous Params")]
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int minMaxGalaxies;
@@ -26,7 +28,8 @@ public class TitleScreenButtons : MonoBehaviour
     bool ngMenu;
     void Start()
     {
-        ngMenu = true;
+        UpdateDifficulty();
+        ngMenu = false;
         continueBtn.onClick.AddListener(() => Continue());
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
@@ -57,6 +60,16 @@ public class TitleScreenButtons : MonoBehaviour
     }
     #endregion
     #region New Game UI
+    public void UpdateDifficulty()
+    {
+        difficultyNumber.text = ngDifficultySldr.value.ToString();
+        difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
+    }
+    public void RandomizeSeed()
+    {
+        UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * System.DateTime.Now.Second * Time.time));
+        ngSeedFld.text = UnityEngine.Random.Range(-2147483647, 2147483647).ToString();
+    }
     void CreateNewProceduralUniverse() //create button in new game menu
     {
         LevelManager.UniverseParams universeParams = SynthesizeUniverseParams();
@@ -95,7 +108,7 @@ public class TitleScreenButtons : MonoBehaviour
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
-        return new LevelManager.UniverseParams(universeName, seed, 2, numGalaxies, levelStatic);
+        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, numGalaxies, levelStatic);
     }
     #endregion
 }
