@@ -32,6 +32,7 @@ Shader "Unlit/GolfBallFresnel"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float4 normal : TEXCOORD1;
+                float3 viewDir : TEXCOORD10;
             };
 
             fixed4 _MainColor;
@@ -46,17 +47,17 @@ Shader "Unlit/GolfBallFresnel"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
                 o.normal = v.normal;
+                o.viewDir = normalize(_WorldSpaceCameraPos.xyz - (mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1.0)).xyz));;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 //float fresnel = 1-abs(dot(i.normal, float3(0,0,1));
-                float fresnelVal = 1 - saturate(abs(dot(i.normal, float3(0,0,-1))));
+                float fresnelVal = 1 - saturate(abs(dot(i.normal, i.viewDir)));
                 float fresnel = pow(fresnelVal, _FresnelStrength);
                 
                 float4 col = lerp(_MainColor, _FresnelColor, pow(fresnel, _FresnelStrength));
-                col.a = saturate(1 - pow(fresnel, _FresnelMax) * _FresnellAlphaFalloff);
                 return col;
             }
             ENDCG
