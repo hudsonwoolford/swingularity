@@ -8,11 +8,21 @@ using UnityEngine.SceneManagement;
 public class TitleScreenButtons : MonoBehaviour
 {
     [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim;
+    [Header("Main Screen UI")]
     [SerializeField] Button continueBtn;
     [SerializeField] Button newGameBtn;
     [SerializeField] Button loadGameBtn;
     [SerializeField] Button settingsBtn;
+    [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
+    [SerializeField] Button ngCreateBtn;
+    [SerializeField] TMP_InputField ngNameFld;
+    [SerializeField] TMP_InputField ngSeedFld;
+    [SerializeField] Slider ngDifficultySldr;
+    [Header("Miscellaneous Params")]
+    [SerializeField] LevelGenStaticReferences levelStatic;
+    [SerializeField] Vector2Int minMaxGalaxies;
+    [SerializeField] string proceduralGalaxiesScene;
     bool ngMenu;
     void Start()
     {
@@ -22,6 +32,7 @@ public class TitleScreenButtons : MonoBehaviour
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         ngBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
+        ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
     }
     private void Update()
     {
@@ -30,6 +41,7 @@ public class TitleScreenButtons : MonoBehaviour
             StartCoroutine(EnableNewGameMenu(false));
         }
     }
+    #region Main Screen UI
     void Continue(){
         SceneManager.LoadScene("Galaxies");
 
@@ -42,6 +54,14 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void OpenSettings(){
         
+    }
+    #endregion
+    #region New Game UI
+    void CreateNewProceduralUniverse() //create button in new game menu
+    {
+        LevelManager.UniverseParams universeParams = SynthesizeUniverseParams();
+        LevelManager.setProceduralUniverse(universeParams);
+        SceneManager.LoadScene(proceduralGalaxiesScene);
     }
     IEnumerator EnableNewGameMenu(bool enable)
     {
@@ -65,4 +85,17 @@ public class TitleScreenButtons : MonoBehaviour
         }
         yield return null;
     }
+    LevelManager.UniverseParams SynthesizeUniverseParams()
+    {
+        UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * System.DateTime.Now.Second * Time.time));
+        string seedInput = ngSeedFld.text == string.Empty ? UnityEngine.Random.Range(-2147483647, 2147483647).ToString() : ngSeedFld.text; //failsafe if no seed input - randomizes
+        int seed = LevelSettingsManager.ConvertTextToSeed(seedInput); //seed field
+        UnityEngine.Random.InitState(seed);
+        int numGalaxies = UnityEngine.Random.Range(minMaxGalaxies.x, minMaxGalaxies.y); //random number of galaxies
+        numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
+        string universeName = ngNameFld.text; //save name of universe from field
+        universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
+        return new LevelManager.UniverseParams(universeName, seed, 2, numGalaxies, levelStatic);
+    }
+    #endregion
 }

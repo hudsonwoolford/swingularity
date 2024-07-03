@@ -14825,12 +14825,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!198 &575841555 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-    type: 3}
-  m_PrefabInstance: {fileID: 2108209471}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619129922
 GameObject:
   m_ObjectHideFlags: 0
@@ -14949,7 +14943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0836dbd8c009cb4b926605a2561a4d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  galaxyTypes: 0000000001000000020000000300000004000000050000000600000007000000
+  galaxyTypes: 00000000010000000200000003000000040000000500000006000000
   galaxy1: {fileID: 1809722134}
   galaxy2: {fileID: 1541881562}
   gGen1: {fileID: 1809722132}
@@ -49829,10 +49823,13 @@ MonoBehaviour:
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
   proceduralGalaxy: 0
-  galaxySeed: 0
-  levelStatic: {fileID: 0}
   specialTypes: 
-  galaxyRelativeDifficulty: 0
+  galaxyParams:
+    name: 
+    seed: 0
+    relativeDifficulty: 0
+    possibleTypes: 
+    levelStatic: {fileID: 0}
   outerSpiral: {fileID: 1012153013}
   innerSpiral: {fileID: 781110816}
   nebulaSpiral1: {fileID: 1116579851}
@@ -54697,40 +54694,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1723417716827423837, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.minMaxState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723417716827423837, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key0.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723417716827423837, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key0.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723417716827423837, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key1.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723417716827423837, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key1.r
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3014210141650674045, guid: 2a531f7865d38414e896f7fc2fac49e3,
         type: 3}
       propertyPath: m_Name
       value: Galaxy (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3014210141650674045, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5837770213781917697, guid: 2a531f7865d38414e896f7fc2fac49e3,
         type: 3}
@@ -54786,82 +54753,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.minMaxState
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key0.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key0.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key0.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key1.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key1.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5904881901543858417, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxGradient.key1.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: swirlSystem
-      value: 
-      objectReference: {fileID: 575841555}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].galaxyData
-      value: 
-      objectReference: {fileID: 11400000, guid: 4ef0e331957670b4c8c3778ac3e0d360,
-        type: 2}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.data[0]
-      value: LevelGen
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.data[1]
-      value: LevelGen
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.data[2]
-      value: LevelGen
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.data[3]
-      value: LevelGen
-      objectReference: {fileID: 0}
-    - target: {fileID: 6688122606030308696, guid: 2a531f7865d38414e896f7fc2fac49e3,
-        type: 3}
-      propertyPath: schemes.Array.data[7].levelScenes.Array.data[4]
-      value: LevelGen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -93901,10 +93792,13 @@ MonoBehaviour:
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
   proceduralGalaxy: 0
-  galaxySeed: 0
-  levelStatic: {fileID: 0}
   specialTypes: 
-  galaxyRelativeDifficulty: 0
+  galaxyParams:
+    name: 
+    seed: 0
+    relativeDifficulty: 0
+    possibleTypes: 
+    levelStatic: {fileID: 0}
   outerSpiral: {fileID: 1723417716510690296}
   innerSpiral: {fileID: 8339006635513201523}
   nebulaSpiral1: {fileID: 2329945942626417616}

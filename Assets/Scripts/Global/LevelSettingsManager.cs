@@ -15,6 +15,7 @@ public class LevelSettingsManager : MonoBehaviour
     [SerializeField] TMP_InputField seedInput;
     [SerializeField] Toggle randomSeedToggle;
     [SerializeField] LevelGenerator.SpecialType[] specialTypes;
+    [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] string levelGenScene = "LevelGen";
     public delegate void LevelSettingChange(LevelManager.LevelParams levelParams);
     public static LevelSettingChange onLevelSettingChange;
@@ -66,10 +67,11 @@ public class LevelSettingsManager : MonoBehaviour
         difficultyText.text = difficultySlider.value.ToString();
         seedInput.text = lp.seed.ToString();
         typeDropdown.value = (int)lp.themes[0];
+        onLevelSettingChange?.Invoke(lp);
     }
     LevelManager.LevelParams SynthesizeParams() //Synthesizes parameters from UI into levlel params
     {
-        return new LevelManager.LevelParams(ConvertTextToSeed(seedInput.text), (int)difficultySlider.value, GameManager.LevelManager.levelParams.levelPar, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes);
+        return new LevelManager.LevelParams(ConvertTextToSeed(seedInput.text), (int)difficultySlider.value, GameManager.LevelManager.levelParams.levelPar, new ColorSchemeStaticReference.PlanetType[] { (ColorSchemeStaticReference.PlanetType)(typeDropdown.value)}, specialTypes, levelStatic);
     }
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {

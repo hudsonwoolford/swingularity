@@ -14793,8 +14793,13 @@ MonoBehaviour:
     lightColor: {r: 0, g: 0, b: 0, a: 0}
     darkColor: {r: 0, g: 0, b: 0, a: 0}
   - name: Infinite
-    levelScenes: []
-    galaxyData: {fileID: 0}
+    levelScenes:
+    - LevelGen
+    - LevelGen
+    - LevelGen
+    - LevelGen
+    - LevelGen
+    galaxyData: {fileID: 11400000, guid: 4ef0e331957670b4c8c3778ac3e0d360, type: 2}
     type: 7
     primarySpiral: {r: 1, g: 0.67859125, b: 0, a: 1}
     secondarySpiral: {r: 0.34117648, g: 0, b: 1, a: 1}
@@ -14808,10 +14813,13 @@ MonoBehaviour:
   galaxyRotation: {x: 30, y: 0, z: -25}
   update: 0
   proceduralGalaxy: 0
-  galaxySeed: 0
-  levelStatic: {fileID: 0}
-  specialTypes: 
-  galaxyRelativeDifficulty: 0
+  specialTypes: 000000000100000002000000030000000400000005000000
+  galaxyParams:
+    name: 
+    seed: 0
+    relativeDifficulty: 0
+    possibleTypes: 
+    levelStatic: {fileID: 0}
   outerSpiral: {fileID: 1723417716827423837}
   innerSpiral: {fileID: 8339006634185641174}
   nebulaSpiral1: {fileID: 2329945944557958261}

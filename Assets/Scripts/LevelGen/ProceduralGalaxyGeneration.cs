@@ -33,12 +33,12 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(galaxyRelativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
 
-            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, levelStatic.difficultyPars[levelDifficulty], new ColorSchemeStaticReference.PlanetType[] { galaxyType }, specialTypes);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, levelStatic.difficultyPars[levelDifficulty], new ColorSchemeStaticReference.PlanetType[] { galaxyType }, specialTypes, levelStatic);
             solarSystems[i].InitSolarSystem(systemParams, "LevelGen", levelStatic, orbitSizeScalar, ringDifference, maxRings, basePlanetGap, planetGapVariance);
 
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        GalaxyGenerator.initProceduralGalaxy?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
+        GalaxyGenerator.initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
     }
 }

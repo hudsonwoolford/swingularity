@@ -61,8 +61,7 @@ public class LevelGenerator : MonoBehaviour
     public static LevelInit levelInit;
     public delegate void LevelGenerated();
     public static LevelGenerated levelGenerated; //Delegate called in the final generation of the level, this occurs after the level is actually generated
-    public delegate void ProceduralInit();
-    public static ProceduralInit proceduralInit;
+
     #endregion //Includes Delegates
     /*Level Gen settings
     0: minimum number of planets
@@ -104,7 +103,7 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
-        proceduralInit?.Invoke();
+        LevelManager.notifyProcedural?.Invoke();
         SetLevelParams();
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);
@@ -161,6 +160,8 @@ public class LevelGenerator : MonoBehaviour
         LevelManager.LevelParams levelParams = GameManager.LevelManager.levelParams;
         UnityEngine.Random.InitState(levelParams.seed);
         seed = levelParams.seed;
+
+        levelStatic = levelParams.levelStatic;
 
         float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1];
 

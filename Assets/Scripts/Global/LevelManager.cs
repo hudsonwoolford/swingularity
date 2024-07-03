@@ -12,7 +12,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public GalaxyData currentTheme { get; private set; }
     [SerializeField] public LevelParams levelParams { get; private set; }
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
-    [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural level or not
+    [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
+    [SerializeField] public UniverseParams currentUniverse { get; private set; }
     [Header("Parameters")]
     [SerializeField] GalaxyData backupTheme;
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
@@ -23,6 +24,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
     [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
+    [SerializeField] GalaxyParams[] currentProceduralUniverse; //An array of galaxy params in order that correspond to which universe you are in
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
 
@@ -34,14 +36,16 @@ public class LevelManager : MonoBehaviour
         public int difficulty; // Range 0-10 determining size of level and number of special objects
         public ColorSchemeStaticReference.PlanetType[] themes; // Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
+        public LevelGenStaticReferences levelStatic; //static references for level generation
 
-        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
+        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects, LevelGenStaticReferences levelStatic)
         {
             this.seed = seed;
             this.levelPar = par;
             this.difficulty = difficulty;
             this.themes = themes;
             this.specialObjects = specialObjects;
+            this.levelStatic = levelStatic;
         }
 
         public override bool Equals(object obj)
@@ -61,6 +65,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ difficulty.GetHashCode();
             hash = (hash * 397) ^ (themes != null ? themes.GetHashCode() : 0);
             hash = (hash * 397) ^ (specialObjects != null ? specialObjects.GetHashCode() : 0);
+            hash = (hash * 397) ^ (levelStatic != null ? levelStatic.GetHashCode() : 0);
             return hash;
         }
 
@@ -70,7 +75,8 @@ public class LevelManager : MonoBehaviour
                 && a.levelPar == b.levelPar
                 && a.difficulty == b.difficulty
                 && (a.themes == b.themes || (a.themes != null && b.themes != null && a.themes.SequenceEqual(b.themes)))
-                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)));
+                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)))
+                && a.levelStatic == b.levelStatic;
         }
 
         public static bool operator !=(LevelParams a, LevelParams b)
@@ -78,7 +84,51 @@ public class LevelManager : MonoBehaviour
             return !(a == b);
         }
     }
+    [Serializable]
+    public struct GalaxyParams
+    {
+        public string name; //namne of galaxy, appears in ui
+        public int seed; //galxy seed, determines levels
+        [Range(0, 10)]
+        public int relativeDifficulty; //relative difficulty of galaxy (1-10)
+        public ColorSchemeStaticReference.PlanetType[] possibleTypes;
+        public LevelGenStaticReferences levelStatic; //static references for level generation
 
+        public GalaxyParams(string name, int seed, int relativeDifficulty, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenStaticReferences levelStatic)
+        {
+            this.name = name;
+            this.seed = seed;
+            this.relativeDifficulty = relativeDifficulty;
+            this.possibleTypes = possibleTypes;
+            this.levelStatic = levelStatic;
+        }
+    }
+    [Serializable]
+    public struct UniverseParams
+    {
+        public string name; //name of the universe save, set in new game
+        public int seed; //master seed, determines everything else
+        [Range(0, 10)]
+        public int relativeDifficulty; //relative difficulty of universe (1-10)
+        public int numGalaxies; //number of galaxies in the universe
+        public LevelGenStaticReferences levelStatic; //static references for level generation
+        public UniverseParams(string name, int seed, int relativeDifficulty, int numGalaxies, LevelGenStaticReferences levelStatic)
+        {
+            this.name = name;
+            this.seed = seed;
+            this.relativeDifficulty = relativeDifficulty;
+            this.numGalaxies = numGalaxies;
+            this.levelStatic = levelStatic;
+        }
+    }
+
+    //events
+    public delegate void NotifyProcedural();
+    public static NotifyProcedural notifyProcedural;
+    public delegate void SetProceduralUniverse(UniverseParams universeParams);
+    public static SetProceduralUniverse setProceduralUniverse;
+    public delegate void SetProceduralGalaxies(GalaxyParams[] galaxyParams);
+    public static SetProceduralGalaxies setProceduralGalaxies;
 
     private void Awake()
     {
@@ -116,7 +166,7 @@ public class LevelManager : MonoBehaviour
 
         string name = SceneManager.GetActiveScene().name;
         levelIndex = Array.IndexOf(currentGalaxy, name);
-        string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Main Menu";
+        string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Galaxies";
 
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
         loadNextOp.allowSceneActivation = false;
@@ -162,7 +212,7 @@ public class LevelManager : MonoBehaviour
             }
         }
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Main Menu";
+        string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
@@ -212,11 +262,21 @@ public class LevelManager : MonoBehaviour
         currentGalaxy = galaxy;
         currentProceduralGalaxy = galaxyLevels;
     }
-    void LevelInitiation(GalaxyData theme) //Sets procedural to true
+    void SetProceduralGalaxiesEvent(GalaxyParams[] galaxyParams) //Sets the current universe
+    {
+        procedural = true;
+        currentProceduralUniverse = galaxyParams;
+    }
+    void SetProceduralUniverseEvent(UniverseParams universeParams) //Sets the current universe
+    {
+        procedural = true;
+        currentUniverse = universeParams;
+    }
+    void LevelInitiation(GalaxyData theme) //Just sets theme, called by procedural level generation in start before generation
     {
         currentTheme = theme;
     }
-    void ProceduralInitiation()
+    void IsProcedural() //Sets procedural to true
     {
         procedural = true;
     }
@@ -235,21 +295,26 @@ public class LevelManager : MonoBehaviour
     #endregion
     private void OnEnable()
     {
+        LevelManager.setProceduralUniverse += SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
+        LevelManager.setProceduralGalaxies += SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
         LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
         LevelGenerator.levelInit += LevelInitiation;        //Invoked by level generator in start when after generating the level
-        LevelGenerator.proceduralInit += ProceduralInitiation;//Invoked by level generator in start when after generating the level
-        GalaxyGenerator.initProceduralGalaxy += SetProceduralGalaxyLevels;//Invoked by procedural galaxy generator in awake after creating the solar systems | (string[] levels, LevelParams[] levelParams, GalaxyData theme)
-        GalaxyGenerator.initGalaxy += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels, GalaxyTheme currentTheme)
+        LevelManager.notifyProcedural += IsProcedural;//Invoked by level generator in start when after generating the level
+        GalaxyGenerator.initProceduralSystem += SetProceduralGalaxyLevels;//Invoked by procedural galaxy generator in awake after creating the solar systems | (string[] levels, LevelParams[] levelParams, GalaxyData theme)
+        GalaxyGenerator.initSystem += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels, GalaxyTheme currentTheme)
         ShootBall.onHole += CompleteCurrentLevel;           //Invoked by shoot ball on collision with the flag
         LevelSettingsManager.onLevelSettingChange += SetLevelParams;//Invoked by level setting params when the player changes a value to do with the level params | (LevelParams params)
     }
     private void OnDisable()
     {
+        LevelManager.setProceduralGalaxies -= SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
+        LevelManager.setProceduralUniverse -= SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
         LevelScoring.onScore -= OnScore;
         LevelGenerator.levelInit -= LevelInitiation;
-        GalaxyGenerator.initGalaxy -= SetGalaxyLevels;
+        LevelManager.notifyProcedural -= IsProcedural;
+        GalaxyGenerator.initSystem -= SetGalaxyLevels;
         ShootBall.onHole -= CompleteCurrentLevel;
-        GalaxyGenerator.initProceduralGalaxy -= SetProceduralGalaxyLevels;
+        GalaxyGenerator.initProceduralSystem -= SetProceduralGalaxyLevels;
         LevelSettingsManager.onLevelSettingChange -= SetLevelParams;
     }
 }
