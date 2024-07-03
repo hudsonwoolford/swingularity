@@ -7,11 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class TitleScreenButtons : MonoBehaviour
 {
-    [SerializeField] Animator cameraAnim, menuAnim;
+    [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim;
     [SerializeField] Button continueBtn;
     [SerializeField] Button newGameBtn;
     [SerializeField] Button loadGameBtn;
     [SerializeField] Button settingsBtn;
+    [SerializeField] Button ngBackBtn;
     bool ngMenu;
     void Start()
     {
@@ -20,12 +21,13 @@ public class TitleScreenButtons : MonoBehaviour
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
+        ngBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape) && ngMenu) 
         {
-            EnableNewGameMenu(false);
+            StartCoroutine(EnableNewGameMenu(false));
         }
     }
     void Continue(){
@@ -33,7 +35,7 @@ public class TitleScreenButtons : MonoBehaviour
 
     }
     void NewGame(){
-        EnableNewGameMenu(true);
+        StartCoroutine(EnableNewGameMenu(true));
     }
     void LoadGame(){
         
@@ -41,20 +43,26 @@ public class TitleScreenButtons : MonoBehaviour
     void OpenSettings(){
         
     }
-    void EnableNewGameMenu(bool enable)
+    IEnumerator EnableNewGameMenu(bool enable)
     {
         if(enable)
         {
-            cameraAnim.Play("MenuToNGMenu");
-            menuAnim.Play("ShowNGMenu");
             ngMenu = true;
+            menuAnim.Play("HideMenu");
+            // yield return new WaitForSeconds(menuAnim.GetCurrentAnimatorStateInfo(0).length/3);
+            cameraAnim.Play("MenuToNGMenu");
+            // yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length/3);
+            ngMenuAnim.Play("ShowNGMenu");
         }
         else if (!enable)
         {
-            cameraAnim.Play("NGMenuToMenu");
-            menuAnim.Play("HideNGMenu");
             ngMenu = false;
+            ngMenuAnim.Play("HideNGMenu");
+            // yield return new WaitForSeconds(ngMenuAnim.GetCurrentAnimatorStateInfo(0).length/3);
+            cameraAnim.Play("NGMenuToMenu");
+            // yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length/3);
+            menuAnim.Play("ShowMenu");
         }
-
+        yield return null;
     }
 }
