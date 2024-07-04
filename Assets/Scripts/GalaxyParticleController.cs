@@ -15,10 +15,14 @@ public class GalaxyParticleController : MonoBehaviour
     [SerializeField] float twistY = 0.25f;
     [SerializeField] float scatterX = 0.25f;
     [SerializeField] float scatterY = 0.25f;
+    [SerializeField] float scatterZ = 0.25f;
     [SerializeField] int numIterations = 40;
+    [SerializeField] int numSamples = 40;
     [SerializeField] float scalar = 0.25f;
+    [SerializeField] float speed = 0.25f;
 
-
+    Dictionary<int, (int, float)> particleIndexing =
+    new Dictionary<int, (int, float)>();
 
     private ParticleSystem.Particle[] particles;
 
@@ -27,9 +31,32 @@ public class GalaxyParticleController : MonoBehaviour
         public float theta;
     }
 
+    void Awake(){
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+        starParticles.Emit(emitParams, numSamples * numIterations);
+    }
+
     void Start()
     {
+        if (starParticles == null)
+        {
+            starParticles = GetComponent<ParticleSystem>();
+        }
         
+
+
+        particles = new ParticleSystem.Particle[starParticles.particleCount];
+        int numParticles = starParticles.GetParticles(particles);
+
+
+        for (int i = 0; i < numSamples * numIterations; i++){
+            int seed = (int)particles[i].randomSeed;
+            
+            Vector3 pos = particles[i].position;
+            Polar2 polarPos = Vector2Polar(pos);
+            particleIndexing.Add(seed, (i, polarPos.theta));
+        }
+
     }
 
     void Update()
@@ -44,20 +71,24 @@ public class GalaxyParticleController : MonoBehaviour
         int numParticles = starParticles.GetParticles(particles);
 
         for (int i = 0; i < numParticles; i++){
-            Vector3 pos = particles[i].position;
-            Polar2 polarPos = Vector2Polar(pos);
-
             int seed = (int)particles[i].randomSeed;
+
+            (int, float) indexedParticle = particleIndexing[seed];
+            int index = indexedParticle.Item1;
+
             UnityEngine.Random.InitState(seed);
 
-            float w = (i % numIterations) * twistX + UnityEngine.Random.Range(0, scatterX);
-            float h = (i % numIterations) * twistY + UnityEngine.Random.Range(0, scatterY);
-            float theta = polarPos.theta;
-            float r = (i % numIterations) * twistZ;
+            float w = (index % numIterations) * twistX + UnityEngine.Random.Range(0, scatterX);
+            float h = (index % numIterations) * twistY + UnityEngine.Random.Range(0, scatterY);
+            float r = (index % numIterations) * twistZ;
+            float theta = indexedParticle.Item2 - Time.time * speed;
 
             Vector2 newPos = ScatteredEllipse(w, h, theta, r) * scalar;
 
-            particles[i].position = new Vector3(newPos.x, newPos.y, 0f);
+            float newZ = ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed) + UnityEngine.Random.Range(0, scatterZ);
+
+
+            particles[i].position = new Vector3(newPos.x, newPos.y, newZ);
 
         }
 
@@ -71,6 +102,10 @@ public class GalaxyParticleController : MonoBehaviour
         ellipse.x = Rotate2DX(new Vector2(w * Mathf.Cos(theta), h * Mathf.Sin(theta)), r);
         ellipse.y = Rotate2DY(new Vector2(w * Mathf.Cos(theta), h * Mathf.Sin(theta)), r);
         return ellipse;
+    }
+
+    float ModifiedSin(float t, float a, float b, float c){
+        return a * Mathf.Sin(b * t + c);
     }
 
     Polar2 Vector2Polar(Vector2 vector){
