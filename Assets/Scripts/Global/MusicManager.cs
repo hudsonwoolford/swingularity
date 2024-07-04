@@ -63,6 +63,7 @@ public class MusicManager : MonoBehaviour
     void PlayGalaxyMusic(MusicData musicData)
     {
         StopMusic();
+        musicSource.time = 0;
         musicSource.clip = musicData.musicClip;
         musicSource.volume = musicData.volume;
         musicSource.Play();
