@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class SpaceShipManager : MonoBehaviour
 {
+    [Header("Animation")]
+    [SerializeField] AnimationClip[] possibleFlybys;
+    [SerializeField] Animator animControl;
+    [SerializeField] Vector2 minMaxAnimInterval;
     [Header("Colors and Thrust")]
     [SerializeField][ColorUsageAttribute(true,true)] Color glowCol;
     [SerializeField] Color thrustCol;
@@ -22,12 +26,15 @@ public class SpaceShipManager : MonoBehaviour
     [SerializeField] ThrustParticles sparkThrust;
     Vector3 velocity;
     Vector3 posLastUpdate;
+    float animTime, currentAnimInterval;
     #if UNITY_EDITOR
     Material startGlowMat;
     #endif
     // Start is called before the first frame update
     void Start()
     {
+        currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y);
+        animTime=0;
         #if UNITY_EDITOR
         startGlowMat = new Material(glowMat);
         #endif
@@ -37,11 +44,23 @@ public class SpaceShipManager : MonoBehaviour
     }
     void FixedUpdate()
     {
-
+        AnimationHandling();
 
         velocity = transform.position - posLastUpdate;
         SetParticleLifetime();
         posLastUpdate = transform.position;
+    }
+    void AnimationHandling()
+    {
+        animTime += Time.deltaTime;
+        if(animTime>=currentAnimInterval)
+        {
+            UnityEngine.Random.InitState((int)(Time.time + System.DateTime.Now.Millisecond));
+            int animIndex = UnityEngine.Random.Range(0, possibleFlybys.Length);
+            currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y) + possibleFlybys[animIndex].length;
+            animTime=0;
+            animControl.Play(possibleFlybys[animIndex].name);
+        }
     }
     void SetParticleColor() //Sets particle colors
     {

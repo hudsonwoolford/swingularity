@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015088633, g: 0.0014195043, b: 0.0013710489, a: 1}
+  m_IndirectSpecularColor: {r: 0.0017624606, g: 0.0017045179, b: 0.0016761807, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -31317,6 +31317,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68eb9be5399270f4b9a7612678f0762f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possibleFlybys:
+  - {fileID: 7400000, guid: 4287be9d4f4e2094888d93fb49121435, type: 2}
+  - {fileID: 7400000, guid: cd6a49694c7612d40afc4aae9b0e8d9f, type: 2}
+  animControl: {fileID: 1653161969}
+  minMaxAnimInterval: {x: 4, y: 10}
   glowCol: {r: 4, g: 1.4007294, b: 0, a: 1}
   thrustCol: {r: 0.8962264, g: 0.36801422, b: 0.08173125, a: 1}
   glowMat: {fileID: 2100000, guid: 0aeb27e46f071864bafe1ee01c3ce6d4, type: 2}
@@ -39793,7 +39798,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6238165322278482762}
-  m_LocalRotation: {x: 0.5883799, y: -0.39125544, z: 0.38977158, w: 0.59059834}
+  m_LocalRotation: {x: -0.5512679, y: 0.4430444, z: -0.44382983, w: -0.5503003}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5000, y: 5000, z: 4999.9995}
   m_ConstrainProportionsScale: 1
