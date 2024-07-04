@@ -95,7 +95,19 @@ public class GalaxyMenu : MonoBehaviour
     }
     void CreateProceduralGalaxies()
     {
-        string st = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        string lowerCase = "abcdefghijklmnopqrstuvwxyz";
+        string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        string numbers = "1234567890";
+        string[] startingLetters = new string[6]{
+            "NGC",
+            "IC",
+            "CGCG",
+            "UGC",
+            "PGC",
+            "LEDA",
+        };
+
         LevelManager.UniverseParams universe = GameManager.LevelManager.currentUniverse; //retrieves current universe
         UnityEngine.Random.InitState(universe.seed);
         LevelManager.GalaxyParams[] galaxies = new LevelManager.GalaxyParams[universe.numGalaxies]; //initialize galaxy array
@@ -104,10 +116,61 @@ public class GalaxyMenu : MonoBehaviour
             UnityEngine.Random.InitState(universe.seed + i); //different random values
             //random name, temporary
             string name = "";
-            for (int c = 0; c < UnityEngine.Random.Range(3,10); c++) 
-            {
-                name += st[UnityEngine.Random.Range(0, st.Length)];
+
+            int type = UnityEngine.Random.Range(0, 2);
+
+            if(type == 0){
+                int numParts = UnityEngine.Random.Range(2,3);
+                for (int c = 0; c < numParts; c++) 
+                {
+                    int roll = UnityEngine.Random.Range(0,160);
+                    if (roll < universe.levelStatic.GalaxyWords.Length){
+                        string addend = universe.levelStatic.GalaxyWords[UnityEngine.Random.Range(0, universe.levelStatic.GalaxyWords.Length)];
+                        if(c == 0){
+                            if (lowerCase.Contains(addend[0])){
+                                int index = lowerCase.IndexOf(addend[0]);
+                                char[] addendChars = addend.ToCharArray();
+                                addendChars[0] = upperCase[index];
+                                addend = new string(addendChars);
+                            }
+                        }
+                        name += addend;
+                        name += " ";
+                    }
+                    else if (roll > universe.levelStatic.GalaxyWords.Length && roll < 145){
+                        int numNumbers = UnityEngine.Random.Range(3,6);
+                        for (int k = 0; k < numNumbers; k++){
+                            name += numbers[UnityEngine.Random.Range(0,numbers.Length)];
+                        }
+                        name += " ";
+                    }
+                    else{       
+                        int numChars = UnityEngine.Random.Range(3,6);
+                        for (int k = 0; k < numChars; k++){
+                            bool letter = UnityEngine.Random.Range(0,2) == 1;
+                            if(letter){
+                                name += upperCase[UnityEngine.Random.Range(0,upperCase.Length)];
+                            }
+                            else{
+                                name += numbers[UnityEngine.Random.Range(0,numbers.Length)];
+                            }
+                        }
+                        name += " ";
+                    }
+                    
+                }
             }
+            if (type == 1){
+                name += startingLetters[UnityEngine.Random.Range(0,startingLetters.Length)];
+                name += " ";
+
+                int numNumbers = UnityEngine.Random.Range(3,7);
+                for (int c = 0; c < numNumbers; c++){
+                    name += numbers[UnityEngine.Random.Range(0,numbers.Length)];
+                }
+            }
+
+
             //random planet types
             ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[UnityEngine.Random.Range(1,3)];
             for (int t = 0; t < possibleTypes.Length; t++) 
