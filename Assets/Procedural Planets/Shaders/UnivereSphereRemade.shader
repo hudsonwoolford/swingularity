@@ -61,7 +61,7 @@ Shader "Custom/UniverseSphereRemade"
         {
             float3 parallaxOffset = IN.viewDir * _DepthScale;
             float3 worldDir = normalize(IN.localNormal + parallaxOffset);
-            float4 col = texCUBE(_Cube, IN.viewDir);
+            float4 col = texCUBE(_Cube, worldDir);
 
             float luminance = dot(float3(0.2126729, 0.7151522, 0.0721750), col.rgb);
 
