@@ -26,6 +26,9 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
     [SerializeField] string proceduralGalaxiesScene;
+    [SerializeField] Material skybox;
+    [SerializeField] float speed;
+    float rotation;
     bool ngMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     void Start()
@@ -48,6 +51,13 @@ public class TitleScreenButtons : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape) && ngMenu) 
         {
             StartCoroutine(EnableNewGameMenu(false));
+        }
+        if(ngMenu){
+            rotation += Time.deltaTime * speed;
+            if(rotation > 360){
+                rotation = 0;
+            }
+            skybox.SetFloat("_Rotation", rotation);
         }
     }
     #region Main Screen UI
