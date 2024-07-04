@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0014821443, g: 0.001356025, b: 0.0012915672, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014634514, g: 0.0012983385, b: 0.001162536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1008,6 +1008,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1934993308}
+  - component: {fileID: 1934993309}
   m_Layer: 0
   m_Name: SpaceShip
   m_TagString: Untagged
@@ -1023,7 +1024,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1934993307}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.256628, y: -0.44550037, z: 0.6032877}
+  m_LocalPosition: {x: -14.256628, y: -0.44550037, z: 17.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1032,6 +1033,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1934993309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934993307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68eb9be5399270f4b9a7612678f0762f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowCol: {r: 0, g: 0, b: 0, a: 0}
+  thrustCol: {r: 0, g: 0, b: 0, a: 0}
+  minMaxThrustVelocity: {x: 0, y: 0}
+  orbThrust:
+    thrustSystem: {fileID: 0}
+    minMaxLifetime: {x: 0, y: 0}
+  mainThrust:
+    thrustSystem: {fileID: 0}
+    minMaxLifetime: {x: 0, y: 0}
+  sparkThrust:
+    thrustSystem: {fileID: 0}
+    minMaxLifetime: {x: 0, y: 0}
 --- !u!1 &2015665065
 GameObject:
   m_ObjectHideFlags: 0

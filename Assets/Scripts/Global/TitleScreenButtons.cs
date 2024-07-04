@@ -28,7 +28,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] string proceduralGalaxiesScene;
     [SerializeField] Material skybox;
     [SerializeField] float speed;
-    float rotation;
+    float rotation = 0.02f;
     bool ngMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     void Start()
@@ -36,6 +36,7 @@ public class TitleScreenButtons : MonoBehaviour
         SetGalaxySize(1);
         UpdateDifficulty();
         ngMenu = false;
+        skybox.SetFloat("_Rotation", rotation);
         continueBtn.onClick.AddListener(() => Continue());
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
