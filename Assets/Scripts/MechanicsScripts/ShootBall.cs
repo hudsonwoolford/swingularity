@@ -675,7 +675,8 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
-        StartCoroutine(StartAnimation(hole, hitPoint, velocityDir));
+        Vector3 velocity = rb.velocity;
+        StartCoroutine(StartAnimation(hole, hitPoint, velocity));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         triggerReset?.Invoke();
@@ -686,9 +687,10 @@ public class ShootBall : MonoBehaviour
 
         GetComponent<TrailRenderer>().enabled = false;
 
-        Vector3 velocity = rb.velocity;
         float timeCounter = 0;
         Material mat = defaultBallMat;
+        Vector3 velocity = rb.velocity;
+
         float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         if(GameManager.LevelManager.currentTheme != null)
@@ -712,9 +714,10 @@ public class ShootBall : MonoBehaviour
     } 
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
-
+        velocity *= -1;
         if(holeDir.x > 0 && holeDir.y > 0){
-            if(Mathf.Atan2(velocity.x, velocity.y) > Mathf.PI/4){
+            print("1");
+            if(Mathf.Atan2(velocity.y, velocity.x) > Mathf.PI/4){
                 return true;
             }
             else{
@@ -722,7 +725,8 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x > 0 && holeDir.y < 0){
-            if(Mathf.Atan2(velocity.x, velocity.y) > 7 * Mathf.PI/4){
+            print("4");
+            if(Mathf.Atan2(velocity.y, velocity.x) > 7 * Mathf.PI/4){
                 return true;
             }
             else{
@@ -730,7 +734,9 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y > 0){
-            if(Mathf.Atan2(velocity.x, velocity.y) > 3 * Mathf.PI/4){
+            print("2");
+
+            if(Mathf.Atan2(velocity.y, velocity.x) > 3 * Mathf.PI/4){
                 return true;
             }
             else{
@@ -738,7 +744,8 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y < 0){
-            if(Mathf.Atan2(velocity.x, velocity.y) > 5 * Mathf.PI/4){
+            print("3");
+            if(Mathf.Atan2(velocity.y, velocity.x) > 5 * Mathf.PI/4){
                 return true;
             }
             else{
