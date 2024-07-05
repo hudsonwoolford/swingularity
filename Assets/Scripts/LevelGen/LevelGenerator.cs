@@ -103,7 +103,7 @@ public class LevelGenerator : MonoBehaviour
     #endregion
     void Start()
     {
-        LevelManager.notifyProcedural?.Invoke();
+        LevelManager.notifyProcedural?.Invoke(true);
         SetLevelParams();
         mainCam = Camera.main; //Cache camera
         frontTexture = new RenderTexture(resolution, resolution, 0);

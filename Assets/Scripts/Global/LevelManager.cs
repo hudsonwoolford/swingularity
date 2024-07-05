@@ -110,20 +110,62 @@ public class LevelManager : MonoBehaviour
         public int seed; //master seed, determines everything else
         [Range(0, 10)]
         public int relativeDifficulty; //relative difficulty of universe (1-10)
+        public string size; //the size of the universe (small, medium, large)
+        public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
         public LevelGenStaticReferences levelStatic; //static references for level generation
-        public UniverseParams(string name, int seed, int relativeDifficulty, int numGalaxies, LevelGenStaticReferences levelStatic)
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies, LevelGenStaticReferences levelStatic)
         {
             this.name = name;
             this.seed = seed;
             this.relativeDifficulty = relativeDifficulty;
+            this.size = size;
+            this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
             this.levelStatic = levelStatic;
+        }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is UniverseParams))
+            {
+                return false;
+            }
+            var other = (UniverseParams)obj;
+            return this == other;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = seed.GetHashCode();
+            hash = (hash * 397) ^ name.GetHashCode();
+            hash = (hash * 397) ^ seed.GetHashCode();
+            hash = (hash * 397) ^ relativeDifficulty.GetHashCode();
+            hash = (hash * 397) ^ size.GetHashCode();
+            hash = (hash * 397) ^ completedGalaxies.GetHashCode();
+            hash = (hash * 397) ^ numGalaxies.GetHashCode();
+            hash = (hash * 397) ^ levelStatic.GetHashCode();
+            return hash;
+        }
+
+        public static bool operator ==(UniverseParams a, UniverseParams b)
+        {
+            return a.name == b.name
+                && a.seed == b.seed
+                && a.relativeDifficulty == b.relativeDifficulty
+                && a.size == b.size
+                && a.completedGalaxies == b.completedGalaxies
+                && a.numGalaxies == b.numGalaxies
+                && a.levelStatic == b.levelStatic;
+        }
+
+        public static bool operator !=(UniverseParams a, UniverseParams b)
+        {
+            return !(a == b);
         }
     }
 
     //events
-    public delegate void NotifyProcedural();
+    public delegate void NotifyProcedural(bool procedural);
     public static NotifyProcedural notifyProcedural;
     public delegate void SetProceduralUniverse(UniverseParams universeParams);
     public static SetProceduralUniverse setProceduralUniverse;
@@ -137,6 +179,7 @@ public class LevelManager : MonoBehaviour
         levelCanvas.enabled = false;
         chosenOption = false;
         currentTheme = backupTheme;
+        currentUniverse = new UniverseParams();
     }
     // Start is called before the first frame update
     void Start()
@@ -276,9 +319,9 @@ public class LevelManager : MonoBehaviour
     {
         currentTheme = theme;
     }
-    void IsProcedural() //Sets procedural to true
+    void IsProcedural(bool procedural) //Sets procedural to bool
     {
-        procedural = true;
+        this.procedural = procedural;
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor) //Updates score text to the score invoked in the event by LevelScoring
     {

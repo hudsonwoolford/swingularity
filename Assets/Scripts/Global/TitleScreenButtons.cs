@@ -13,6 +13,15 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Button newGameBtn;
     [SerializeField] Button loadGameBtn;
     [SerializeField] Button settingsBtn;
+    [Header("Save Load UI")]
+    [SerializeField] Scrollbar slScrollBar;
+    [SerializeField] Button slBackBtn;
+    [SerializeField] Button slCreateBtn;
+    [SerializeField] Button slLoadBtn;
+    [SerializeField] float elementHeightJump;
+    [SerializeField] Transform saveElementParent;
+    [SerializeField] GameObject saveElementObj;
+    [SerializeField] int numSaves;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -31,17 +40,26 @@ public class TitleScreenButtons : MonoBehaviour
     float rotation = 0.02f;
     bool ngMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
+    SaveElement[] saveElements;
+    int currentSaveElement;
     void Start()
     {
         SetGalaxySize(1);
         UpdateDifficulty();
+        PopulateSaves();
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
+        //normal ui
         continueBtn.onClick.AddListener(() => Continue());
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
-        ngBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
+        //save load ui
+        slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
+        slCreateBtn.onClick.AddListener(() => ngMenuAnim.Play("ShowCreationMenu"));
+        slLoadBtn.onClick.AddListener(() => LoadProceduralUniverse());
+        //new game ui
+        ngBackBtn.onClick.AddListener(() => ngMenuAnim.Play("HideCreationMenu"));
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
         ngSizeBtns[0].onClick.AddListener(() => SetGalaxySize(0));
         ngSizeBtns[1].onClick.AddListener(() => SetGalaxySize(1));
@@ -76,6 +94,61 @@ public class TitleScreenButtons : MonoBehaviour
         
     }
     #endregion
+    #region Save Load UI
+    
+    void SelectSaveElement(int elementIndex)
+    {
+        currentSaveElement = elementIndex;
+    }
+    void DeleteSave(int elementIndex)
+    {
+        Destroy(saveElements[elementIndex].gameObject);
+        LevelManager.setProceduralUniverse?.Invoke(new LevelManager.UniverseParams());
+        LevelManager.notifyProcedural?.Invoke(false);
+        PopulateSaves();
+        currentSaveElement = 0;
+    }
+    void LoadProceduralUniverse()
+    {
+        if(saveElements[currentSaveElement] == null || currentSaveElement >= saveElements.Length) {return;}
+        LevelManager.setProceduralUniverse?.Invoke(saveElements[currentSaveElement].uniParams);
+        SceneManager.LoadScene(proceduralGalaxiesScene);
+    }
+    void PopulateSaves()
+    {
+        numSaves = GameManager.LevelManager.currentUniverse == new LevelManager.UniverseParams() ? 0 : 1;
+        saveElements = new SaveElement[numSaves];
+        for(int i = 0; i < numSaves; i++)
+        {
+            RectTransform tr = Instantiate(saveElementObj, saveElementParent).GetComponent<RectTransform>();
+            tr.position += new Vector3(0,elementHeightJump * i,0);
+
+            //Temporary bc no save load functionality
+            LevelManager.UniverseParams uni = GameManager.LevelManager.currentUniverse;
+            Color sizeColor = Color.white;
+            if (uni.numGalaxies >= minMaxGalaxies[0].x && uni.numGalaxies <= minMaxGalaxies[0].y)
+            {
+                sizeColor = difficultyColorGrad.Evaluate(0f);
+            }
+            else if (uni.numGalaxies >= minMaxGalaxies[1].x && uni.numGalaxies <= minMaxGalaxies[1].y)
+            {
+                sizeColor = difficultyColorGrad.Evaluate(0.5f);
+            }
+            else if (uni.numGalaxies >= minMaxGalaxies[2].x && uni.numGalaxies <= minMaxGalaxies[2].y)
+            {
+                sizeColor = difficultyColorGrad.Evaluate(1f);
+            }
+
+            //button listening
+            tr.GetComponent<Button>().onClick.AddListener(() => SelectSaveElement(i-1)); //wtf
+
+            //script setting
+            SaveElement seScript = tr.GetComponent<SaveElement>();
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor).onClick.AddListener(() => DeleteSave(i-1));
+            saveElements[i] = seScript;
+        }
+    }
+    #endregion
     #region New Game UI
     public void UpdateDifficulty()
     {
@@ -103,7 +176,7 @@ public class TitleScreenButtons : MonoBehaviour
     void CreateNewProceduralUniverse() //create button in new game menu
     {
         LevelManager.UniverseParams universeParams = SynthesizeUniverseParams();
-        LevelManager.setProceduralUniverse(universeParams);
+        LevelManager.setProceduralUniverse?.Invoke(universeParams);
         SceneManager.LoadScene(proceduralGalaxiesScene);
     }
     IEnumerator EnableNewGameMenu(bool enable)
@@ -138,7 +211,7 @@ public class TitleScreenButtons : MonoBehaviour
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
-        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, numGalaxies, levelStatic);
+        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, levelStatic);
     }
     #endregion
 }

@@ -77,4 +77,10 @@ public class UniverseGenerator : MonoBehaviour
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
         addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
     }
+    public void ChangeUniverse(int s)
+    {
+        UnityEngine.Random.InitState(s);
+        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
+        addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
+    }
 }
