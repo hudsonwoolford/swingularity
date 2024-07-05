@@ -711,31 +711,43 @@ public class ShootBall : MonoBehaviour
         }
     } 
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
+        Vector3 holeDir = hitPoint - hole.position;
 
-        Vector2 dif = (hitPoint - hole.position).normalized;
-        float angle = Vector3.Angle(dif, hole.up);
-        if(Vector3.Dot(hole.right, dif.normalized) < 0) { angle = -angle; }
-        float quadrant = 1;
-        if(angle < 0 && angle > -90)
-        {
-            quadrant = -1;
+        if(holeDir.x > 0 && holeDir.y > 0){
+            if(Mathf.Atan2(velocity.x, velocity.y) > Mathf.PI/4){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        else if(angle > 90 && angle < 180)
-        {
-            quadrant = -1;
+        else if(holeDir.x > 0 && holeDir.y < 0){
+            if(Mathf.Atan2(velocity.x, velocity.y) > 7 * Mathf.PI/4){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-
-        float dotProduct = Mathf.Abs(Vector3.Dot(velocity.normalized, hole.up));
-        bool dir = false;
-        if(dotProduct > 0.5)
-        {
-            dir = quadrant < 0 ? false : true;
+        else if(holeDir.x < 0 && holeDir.y > 0){
+            if(Mathf.Atan2(velocity.x, velocity.y) > 3 * Mathf.PI/4){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        else if(dotProduct < 0.5)
-        {
-            dir = quadrant < 0 ? true : false;
+        else if(holeDir.x < 0 && holeDir.y < 0){
+            if(Mathf.Atan2(velocity.x, velocity.y) > 5 * Mathf.PI/4){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        return dir;
+        else {
+            return true;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
