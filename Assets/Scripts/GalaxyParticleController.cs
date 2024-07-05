@@ -39,6 +39,8 @@ public class GalaxyParticleController : MonoBehaviour
     [SerializeField] float green;
     [SerializeField] float blue;
 
+    [SerializeField] int galaxySeed;
+
     Dictionary<int, (int, float)> particleIndexing =
     new Dictionary<int, (int, float)>();
 
@@ -60,7 +62,6 @@ public class GalaxyParticleController : MonoBehaviour
         {
             starParticles = GetComponent<ParticleSystem>();
         }
-        
 
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
@@ -81,12 +82,29 @@ public class GalaxyParticleController : MonoBehaviour
         starParticles.SetParticles(particles);
     }
 
+    public void RandomizeVars(int seed){
+        UnityEngine.Random.InitState(seed);
+        bulgeAmplitude = UnityEngine.Random.Range(0f, 0.35f);
+        bulgeWidth = UnityEngine.Random.Range(0f, 7.5f);
+        waveAmplitude = UnityEngine.Random.Range(0f, 0.2f);
+        waveFrequency = UnityEngine.Random.Range(1f, 2.75f);
+        twistZ = UnityEngine.Random.Range(0f, 0.7f);
+        twistX = UnityEngine.Random.Range(0f, 0.6f);
+        twistY = UnityEngine.Random.Range(0f, 0.6f);
+        scatterX = UnityEngine.Random.Range(-1f, 1.5f);
+        scatterY = UnityEngine.Random.Range(-1f, 1.5f);
+        scatterZ = UnityEngine.Random.Range(0f, 0.3f);
+        speed = UnityEngine.Random.Range(0.1f, 0.5f);
+    }
+
     void Update()
     {
         if (starParticles == null)
         {
             starParticles = GetComponent<ParticleSystem>();
         }
+        RandomizeVars(galaxySeed);
+
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
 
@@ -134,9 +152,10 @@ public class GalaxyParticleController : MonoBehaviour
     }
 
     //theta and r are the polar coords
-    //w and h are the displacements vertically and horizontally
+    //w and h are the dimensions
     Vector2 ScatteredEllipse(float w, float h, float theta, float r){
         Vector2 ellipse;
+        //parametric ellipse form
         ellipse.x = Rotate2DX(new Vector2(w * Mathf.Cos(theta), h * Mathf.Sin(theta)), r);
         ellipse.y = Rotate2DY(new Vector2(w * Mathf.Cos(theta), h * Mathf.Sin(theta)), r);
         return ellipse;
