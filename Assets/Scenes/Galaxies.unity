@@ -38,7 +38,8 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
+  m_IndirectSpecularColor: {r: 0.00092041085, g: 0.00084202364, b: 0.00077700615,
+    a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9999,7 +10000,7 @@ GameObject:
   - component: {fileID: 398433388}
   - component: {fileID: 398433387}
   m_Layer: 0
-  m_Name: GalaxyStars (1)
+  m_Name: GalaxyNebula
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64490,6 +64491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2114555473}
+  - component: {fileID: 2114555474}
   m_Layer: 0
   m_Name: NewGalaxy
   m_TagString: Untagged
@@ -64514,6 +64516,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &2114555474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114555470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 886c5deaf952a274782d961109d3c0e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stars: {fileID: 687167659}
+  nebula: {fileID: 398433389}
+  seed: 0
+  galaxyIcons:
+  - planetType: 0
+    possibleColors:
+    - {r: 0.60784316, g: 1, b: 0.6862745, a: 1}
+    - {r: 0, g: 0.8901961, b: 1, a: 1}
+    - {r: 0, g: 0.68195224, b: 1, a: 1}
+    - {r: 0, g: 1, b: 0.5810094, a: 1}
+    - {r: 0, g: 0.4830768, b: 1, a: 1}
+    - {r: 0, g: 0.74622583, b: 1, a: 1}
+    - {r: 0.23629406, g: 0.6928623, b: 0.8490566, a: 1}
+    - {r: 0.5385814, g: 0.5413622, b: 0.8584906, a: 1}
+  - planetType: 1
+    possibleColors:
+    - {r: 1, g: 0.9968537, b: 0.60784316, a: 1}
+    - {r: 1, g: 0.794463, b: 0, a: 1}
+    - {r: 0.8457229, g: 0.9528302, b: 0.38203096, a: 1}
+    - {r: 0.50487196, g: 1, b: 0, a: 1}
+    - {r: 0.7924528, g: 0.6463211, b: 0.063545756, a: 1}
+    - {r: 0.9150943, g: 0.8425325, b: 0.3237362, a: 1}
+    - {r: 0.8509804, g: 0.681414, b: 0.23529409, a: 1}
+    - {r: 0.78318745, g: 0.8490566, b: 0.20425417, a: 1}
+  galaxySchemeIndex: 1
 --- !u!198 &350261469239230117
 ParticleSystem:
   m_ObjectHideFlags: 0

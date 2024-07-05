@@ -35,7 +35,7 @@ public class GalaxyParticleController : MonoBehaviour
     [SerializeField] float speed = 0.25f;
     [SerializeField] bool stationary = false;
 
-    [SerializeField] Color col1, col2, col3;
+    [SerializeField] public Color col1, col2, col3;
 
     [SerializeField] int galaxySeed;
 
@@ -50,17 +50,27 @@ public class GalaxyParticleController : MonoBehaviour
     }
 
     void Awake(){
-        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
-        starParticles.Emit(emitParams, numSamples * numIterations);
+
     }
 
     void Start()
     {
+        Init(galaxySeed);
+    }
+
+    public void Init(int inputSeed){
         if (starParticles == null)
         {
             starParticles = GetComponent<ParticleSystem>();
         }
+        if(galaxySeed == inputSeed){return;}
+        galaxySeed = inputSeed;
 
+        particleIndexing.Clear();
+        starParticles.Clear();
+
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+        starParticles.Emit(emitParams, numSamples * numIterations);
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
         int numParticles = starParticles.GetParticles(particles);
@@ -77,6 +87,7 @@ public class GalaxyParticleController : MonoBehaviour
 
 
         }
+        
         starParticles.SetParticles(particles);
     }
 
@@ -87,10 +98,11 @@ public class GalaxyParticleController : MonoBehaviour
         waveAmplitude = UnityEngine.Random.Range(0f, 0.2f);
         waveFrequency = UnityEngine.Random.Range(1f, 2.75f);
         twistZ = UnityEngine.Random.Range(0f, 0.7f);
+        scatterY = UnityEngine.Random.Range(-1f, 1.5f);
         twistX = UnityEngine.Random.Range(0f, 0.6f);
+        UnityEngine.Random.InitState(seed+1);
         twistY = UnityEngine.Random.Range(0f, 0.6f);
         scatterX = UnityEngine.Random.Range(-1f, 1.5f);
-        scatterY = UnityEngine.Random.Range(-1f, 1.5f);
         scatterZ = UnityEngine.Random.Range(0f, 0.3f);
         speed = UnityEngine.Random.Range(0.1f, 0.5f);
     }
@@ -124,9 +136,9 @@ public class GalaxyParticleController : MonoBehaviour
                 theta -= Time.time * speed;;
             }
 
+            scalar = 1/CalculateMaxDistance();
             Vector2 newPos = ScatteredEllipse(w, h, theta, r) * scalar * size;
             
-
             float newZ = (Gaussian(w+h, bulgeAmplitude * 2f, 0, bulgeWidth * 2f)) * UnityEngine.Random.Range(-1f, 1f) + UnityEngine.Random.Range(-scatterZ, scatterZ);
 
             newZ += ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed);
@@ -138,7 +150,6 @@ public class GalaxyParticleController : MonoBehaviour
 
             particles[i].startColor = col;
 
-            scalar = 1/CalculateMaxDistance();
 
         }
 
