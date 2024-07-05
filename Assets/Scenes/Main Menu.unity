@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015215708, g: 0.0014066466, b: 0.0013705469, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -31320,21 +31320,22 @@ MonoBehaviour:
   possibleFlybys:
   - {fileID: 7400000, guid: 4287be9d4f4e2094888d93fb49121435, type: 2}
   - {fileID: 7400000, guid: cd6a49694c7612d40afc4aae9b0e8d9f, type: 2}
+  - {fileID: 7400000, guid: a8bbd3dbca879264cb6ac751896774c3, type: 2}
   animControl: {fileID: 1653161969}
-  minMaxAnimInterval: {x: 1, y: 3}
+  minMaxAnimInterval: {x: 5, y: 8}
   glowCol: {r: 4, g: 1.4007294, b: 0, a: 1}
   thrustCol: {r: 0.8962264, g: 0.36801422, b: 0.08173125, a: 1}
   glowMat: {fileID: 2100000, guid: 0aeb27e46f071864bafe1ee01c3ce6d4, type: 2}
-  minMaxThrustVelocity: {x: 0, y: 6}
+  minMaxThrustVelocity: {x: 0, y: 5}
   orbThrust:
     thrustSystem: {fileID: 566724125}
-    minMaxLifetime: {x: 3, y: 7}
+    minMaxLifetime: {x: 3, y: 14}
   mainThrust:
     thrustSystem: {fileID: 379922730}
-    minMaxLifetime: {x: 3, y: 7}
+    minMaxLifetime: {x: 3, y: 14}
   sparkThrust:
     thrustSystem: {fileID: 1581825169}
-    minMaxLifetime: {x: 3, y: 7}
+    minMaxLifetime: {x: 3, y: 14}
 --- !u!4 &1653161971
 Transform:
   m_ObjectHideFlags: 0
@@ -31342,15 +31343,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653161968}
-  m_LocalRotation: {x: -0.08852608, y: 0.8121947, z: -0.26714367, w: 0.5110158}
-  m_LocalPosition: {x: -18.39699, y: -2.9468005, z: 3.8671463}
+  m_LocalRotation: {x: -0.068922035, y: 0.6296183, z: -0.42495847, w: 0.64671546}
+  m_LocalPosition: {x: -48.99738, y: 20.76827, z: 33.587032}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 805561186}
   m_Father: {fileID: 0}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 20.088, y: 110.897, z: -26.349}
+  m_LocalEulerAnglesHint: {x: 26.486, y: 77.242, z: -45.322}
 --- !u!1 &1661670120
 GameObject:
   m_ObjectHideFlags: 0
@@ -39798,7 +39799,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6238165322278482762}
-  m_LocalRotation: {x: 0.30115563, y: -0.63981724, z: 0.63969535, w: 0.30121276}
+  m_LocalRotation: {x: 0.6020503, y: 0.37002432, z: -0.36904398, w: 0.6036754}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5000, y: 5000, z: 4999.9995}
   m_ConstrainProportionsScale: 1
