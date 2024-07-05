@@ -7,19 +7,37 @@ public class GalaxyParticleController : MonoBehaviour
 {   
     [SerializeField]
     ParticleSystem starParticles;
-    [SerializeField] float bulge = 0.5f;
+    [Range(0f, 0.35f)]
+    [SerializeField] float bulgeAmplitude = 0.5f;
+    [Range(0f, 7.5f)]
+    [SerializeField] float bulgeWidth = 0.5f;
+    [Range(0f, 0.2f)]
     [SerializeField] float waveAmplitude = 0.1f;
+    [Range(1f, 2.75f)]
     [SerializeField] float waveFrequency = 0.1f;
+    [Range(0f, 0.7f)]
     [SerializeField] float twistZ = 0.25f;
+    [Range(0f, 0.6f)]
     [SerializeField] float twistX = 0.25f;
+    [Range(0f, 0.6f)]
     [SerializeField] float twistY = 0.25f;
+    [Range(-1f, 1.5f)]
     [SerializeField] float scatterX = 0.25f;
+    [Range(-1f, 1.5f)]
     [SerializeField] float scatterY = 0.25f;
+    [Range(0f, 0.3f)]
     [SerializeField] float scatterZ = 0.25f;
     [SerializeField] int numIterations = 40;
+    [Range(25f, 75f)]
     [SerializeField] int numSamples = 40;
-    [SerializeField] float scalar = 0.25f;
+    [SerializeField] float size = 2f;
+    float scalar = 0.25f;
+    [Range(0.1f, 0.5f)]
     [SerializeField] float speed = 0.25f;
+
+    [SerializeField] float red;
+    [SerializeField] float green;
+    [SerializeField] float blue;
 
     Dictionary<int, (int, float)> particleIndexing =
     new Dictionary<int, (int, float)>();
@@ -48,15 +66,19 @@ public class GalaxyParticleController : MonoBehaviour
         particles = new ParticleSystem.Particle[starParticles.particleCount];
         int numParticles = starParticles.GetParticles(particles);
 
-
         for (int i = 0; i < numSamples * numIterations; i++){
             int seed = (int)particles[i].randomSeed;
             
             Vector3 pos = particles[i].position;
+
             Polar2 polarPos = Vector2Polar(pos);
             particleIndexing.Add(seed, (i, polarPos.theta));
-        }
 
+            UnityEngine.Random.InitState(seed);
+
+
+        }
+        starParticles.SetParticles(particles);
     }
 
     void Update()
@@ -83,16 +105,32 @@ public class GalaxyParticleController : MonoBehaviour
             float r = (index % numIterations) * twistZ;
             float theta = indexedParticle.Item2 - Time.time * speed;
 
-            Vector2 newPos = ScatteredEllipse(w, h, theta, r) * scalar;
+            Vector2 newPos = ScatteredEllipse(w, h, theta, r) * scalar * size;
+            
 
-            float newZ = ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed) + UnityEngine.Random.Range(0, scatterZ);
+            float newZ = (Gaussian(w+h, bulgeAmplitude * 2f, 0, bulgeWidth * 2f)) * UnityEngine.Random.Range(-1f, 1f) + UnityEngine.Random.Range(-scatterZ, scatterZ);
 
+            newZ += ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed);
+            Vector3 pos = new Vector3(newPos.x, newPos.y, newZ);
+            particles[i].position = pos;
+            // Vector3 particleCol = new Vector3 (126 * ((i % numIterations)/numIterations + red * UnityEngine.Random.value), 240 * ((i % numIterations)/numIterations + green * UnityEngine.Random.value), 240 * ((i % numIterations)/numIterations + blue * UnityEngine.Random.value));
+            // Color col = new Color(particleCol.x/255f, particleCol.y/255, particleCol.z/255);
 
-            particles[i].position = new Vector3(newPos.x, newPos.y, newZ);
+            // particles[i].startColor = col;
+
+            scalar = 1/CalculateMaxDistance();
 
         }
 
         starParticles.SetParticles(particles);
+    }
+
+    float CalculateMaxDistance()
+    {
+        float maxW = (numIterations - 1) * twistX + scatterX;
+        float maxH = (numIterations - 1) * twistY + scatterY;
+        float maxR = (numIterations - 1) * twistZ;
+        return new Vector2 (maxW, maxH).magnitude;
     }
 
     //theta and r are the polar coords
@@ -103,6 +141,12 @@ public class GalaxyParticleController : MonoBehaviour
         ellipse.y = Rotate2DY(new Vector2(w * Mathf.Cos(theta), h * Mathf.Sin(theta)), r);
         return ellipse;
     }
+
+    float Gaussian(float x, float amplitude, float mean, float stdDev)
+    {
+        return amplitude * Mathf.Exp(-(Mathf.Pow(x - mean, 2) / (2 * Mathf.Pow(stdDev, 2))));
+    }
+
 
     float ModifiedSin(float t, float a, float b, float c){
         return a * Mathf.Sin(b * t + c);
