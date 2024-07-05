@@ -94,7 +94,7 @@ public class GalaxyParticleController : MonoBehaviour
     public void RandomizeVars(int seed){
         UnityEngine.Random.InitState(seed);
         bulgeAmplitude = UnityEngine.Random.Range(0f, 0.35f);
-        bulgeWidth = UnityEngine.Random.Range(0f, 7.5f);
+        bulgeWidth = UnityEngine.Random.Range(2.5f, 7.5f);
         waveAmplitude = UnityEngine.Random.Range(0f, 0.2f);
         waveFrequency = UnityEngine.Random.Range(1f, 2.75f);
         twistZ = UnityEngine.Random.Range(0f, 0.7f);
