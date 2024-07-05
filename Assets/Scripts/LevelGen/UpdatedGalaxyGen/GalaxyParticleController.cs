@@ -28,16 +28,14 @@ public class GalaxyParticleController : MonoBehaviour
     [Range(0f, 0.3f)]
     [SerializeField] float scatterZ = 0.25f;
     [SerializeField] int numIterations = 40;
-    [Range(25f, 75f)]
     [SerializeField] int numSamples = 40;
     [SerializeField] float size = 2f;
     float scalar = 0.25f;
     [Range(0.1f, 0.5f)]
     [SerializeField] float speed = 0.25f;
+    [SerializeField] bool stationary = false;
 
-    [SerializeField] float red;
-    [SerializeField] float green;
-    [SerializeField] float blue;
+    [SerializeField] Color col1, col2, col3;
 
     [SerializeField] int galaxySeed;
 
@@ -121,7 +119,10 @@ public class GalaxyParticleController : MonoBehaviour
             float w = (index % numIterations) * twistX + UnityEngine.Random.Range(0, scatterX);
             float h = (index % numIterations) * twistY + UnityEngine.Random.Range(0, scatterY);
             float r = (index % numIterations) * twistZ;
-            float theta = indexedParticle.Item2 - Time.time * speed;
+            float theta = indexedParticle.Item2;
+            if (!stationary){
+                theta -= Time.time * speed;;
+            }
 
             Vector2 newPos = ScatteredEllipse(w, h, theta, r) * scalar * size;
             
@@ -131,10 +132,11 @@ public class GalaxyParticleController : MonoBehaviour
             newZ += ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed);
             Vector3 pos = new Vector3(newPos.x, newPos.y, newZ);
             particles[i].position = pos;
-            // Vector3 particleCol = new Vector3 (126 * ((i % numIterations)/numIterations + red * UnityEngine.Random.value), 240 * ((i % numIterations)/numIterations + green * UnityEngine.Random.value), 240 * ((i % numIterations)/numIterations + blue * UnityEngine.Random.value));
-            // Color col = new Color(particleCol.x/255f, particleCol.y/255, particleCol.z/255);
+            
+            Color particleCol = Color.Lerp(col1, col2, UnityEngine.Random.value);
+            Color col = Color.Lerp(particleCol, col3, UnityEngine.Random.value);
 
-            // particles[i].startColor = col;
+            particles[i].startColor = col;
 
             scalar = 1/CalculateMaxDistance();
 
