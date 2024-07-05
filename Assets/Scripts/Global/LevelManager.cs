@@ -242,11 +242,12 @@ public class LevelManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             yield break;
         }
+        //enable things
         levelCanvas.enabled = true;
         scoreText.enabled = true;
         streakText.enabled = false;
         hioStreakText.enabled = false;
-
+        //determine current level index
         for (int i = 0; i < currentProceduralGalaxy.Length; i++)
         {
             if (levelParams.seed == currentProceduralGalaxy[i].seed && levelParams.difficulty == currentProceduralGalaxy[i].difficulty) //OPERATOR DOESNT WORK IDK WHY SHOULD BE FIXED BUT THIS FOR NOW
@@ -254,6 +255,14 @@ public class LevelManager : MonoBehaviour
                 levelIndex = i; break;
             }
         }
+        //complete universe
+        if(levelIndex>=4) 
+        {
+            UniverseParams cU = currentUniverse;
+            cU.completedGalaxies++;
+            setProceduralUniverse?.Invoke(cU);
+        }
+        //determine next level string
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
@@ -270,7 +279,7 @@ public class LevelManager : MonoBehaviour
             }
             yield return new WaitForFixedUpdate();
         }
-        levelIndex++;
+        levelIndex = levelIndex < 4 ? levelIndex + 1 : 0;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;

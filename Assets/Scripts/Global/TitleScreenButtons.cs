@@ -84,14 +84,15 @@ public class TitleScreenButtons : MonoBehaviour
         GetLastGameObjectSelected();
     }
 
-void GetLastGameObjectSelected() {
-    if (eventSystem.currentSelectedGameObject != currentSelectedGameObject_Recent) {
+    void GetLastGameObjectSelected() {
+        if(eventSystem == null) {eventSystem = EventSystem.current;}
+        if (eventSystem.currentSelectedGameObject != currentSelectedGameObject_Recent) {
 
-        lastSelectedGameObject = currentSelectedGameObject_Recent;
+            lastSelectedGameObject = currentSelectedGameObject_Recent;
 
-        currentSelectedGameObject_Recent = eventSystem.currentSelectedGameObject;
+            currentSelectedGameObject_Recent = eventSystem.currentSelectedGameObject;
+        }
     }
- }
     #region Main Screen UI
     void Continue(){
         SceneManager.LoadScene("Galaxies");
@@ -101,7 +102,7 @@ void GetLastGameObjectSelected() {
         StartCoroutine(EnableNewGameMenu(true));
     }
     void LoadGame(){
-        
+        StartCoroutine(EnableNewGameMenu(true));
     }
     void OpenSettings(){
         
@@ -134,15 +135,15 @@ void GetLastGameObjectSelected() {
             //Temporary bc no save load functionality
             LevelManager.UniverseParams uni = GameManager.LevelManager.currentUniverse;
             Color sizeColor = Color.white;
-            if (uni.numGalaxies >= minMaxGalaxies[0].x && uni.numGalaxies <= minMaxGalaxies[0].y)
+            if (uni.size == "Small")
             {
                 sizeColor = difficultyColorGrad.Evaluate(0f);
             }
-            else if (uni.numGalaxies >= minMaxGalaxies[1].x && uni.numGalaxies <= minMaxGalaxies[1].y)
+            else if (uni.size == "Medium")
             {
                 sizeColor = difficultyColorGrad.Evaluate(0.5f);
             }
-            else if (uni.numGalaxies >= minMaxGalaxies[2].x && uni.numGalaxies <= minMaxGalaxies[2].y)
+            else if (uni.size == "Large")
             {
                 sizeColor = difficultyColorGrad.Evaluate(1f);
             }
