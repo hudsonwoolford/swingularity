@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+
 
 public class TitleScreenButtons : MonoBehaviour
 {
@@ -40,10 +42,11 @@ public class TitleScreenButtons : MonoBehaviour
     float rotation = 0.02f;
     bool ngMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
-    SaveElement[] saveElements;
-    int currentSaveElement;
+    EventSystem eventSystem;
+    GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
     void Start()
-    {
+    {   
+        eventSystem = EventSystem.current;
         SetGalaxySize(1);
         UpdateDifficulty();
         PopulateSaves();
@@ -78,7 +81,17 @@ public class TitleScreenButtons : MonoBehaviour
             }
             skybox.SetFloat("_Rotation", rotation);
         }
+        GetLastGameObjectSelected();
     }
+
+void GetLastGameObjectSelected() {
+    if (eventSystem.currentSelectedGameObject != currentSelectedGameObject_Recent) {
+
+        lastSelectedGameObject = currentSelectedGameObject_Recent;
+
+        currentSelectedGameObject_Recent = eventSystem.currentSelectedGameObject;
+    }
+ }
     #region Main Screen UI
     void Continue(){
         SceneManager.LoadScene("Galaxies");
@@ -96,28 +109,23 @@ public class TitleScreenButtons : MonoBehaviour
     #endregion
     #region Save Load UI
     
-    void SelectSaveElement(int elementIndex)
-    {
-        currentSaveElement = elementIndex;
-    }
     void DeleteSave(int elementIndex)
     {
-        Destroy(saveElements[elementIndex].gameObject);
+        Destroy(saveElementParent.GetChild(elementIndex).gameObject);
         LevelManager.setProceduralUniverse?.Invoke(new LevelManager.UniverseParams());
         LevelManager.notifyProcedural?.Invoke(false);
         PopulateSaves();
-        currentSaveElement = 0;
     }
     void LoadProceduralUniverse()
     {
-        if(saveElements[currentSaveElement] == null || currentSaveElement >= saveElements.Length) {return;}
-        LevelManager.setProceduralUniverse?.Invoke(saveElements[currentSaveElement].uniParams);
+        SaveElement se = null;
+        if(lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<SaveElement>(out se)) {return;}
+        LevelManager.setProceduralUniverse?.Invoke(se.uniParams);
         SceneManager.LoadScene(proceduralGalaxiesScene);
     }
     void PopulateSaves()
     {
         numSaves = GameManager.LevelManager.currentUniverse == new LevelManager.UniverseParams() ? 0 : 1;
-        saveElements = new SaveElement[numSaves];
         for(int i = 0; i < numSaves; i++)
         {
             RectTransform tr = Instantiate(saveElementObj, saveElementParent).GetComponent<RectTransform>();
@@ -139,13 +147,9 @@ public class TitleScreenButtons : MonoBehaviour
                 sizeColor = difficultyColorGrad.Evaluate(1f);
             }
 
-            //button listening
-            tr.GetComponent<Button>().onClick.AddListener(() => SelectSaveElement(i-1)); //wtf
-
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
             seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor).onClick.AddListener(() => DeleteSave(i-1));
-            saveElements[i] = seScript;
         }
     }
     #endregion
