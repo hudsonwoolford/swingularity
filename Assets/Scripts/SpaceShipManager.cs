@@ -34,7 +34,7 @@ public class SpaceShipManager : MonoBehaviour
     void Start()
     {
         currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y);
-        animTime=0;
+        animTime=currentAnimInterval-0.5f;
         #if UNITY_EDITOR
         startGlowMat = new Material(glowMat);
         #endif
