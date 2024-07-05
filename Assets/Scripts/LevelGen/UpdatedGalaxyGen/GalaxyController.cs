@@ -9,4 +9,9 @@ public class GalaxyController : MonoBehaviour
         public ColorSchemeStaticReference.PlanetType planetType;
         public Color[] possibleColors;
     }
+
+    void Update(){
+        ApplyGalaxyIconScheme();
+    }
+    void ApplyGalaxyIconScheme(){}
 }
