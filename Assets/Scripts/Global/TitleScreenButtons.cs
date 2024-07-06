@@ -41,6 +41,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] float speed;
     float rotation = 0.02f;
     bool ngMenu;
+    bool onlyCreateMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
@@ -62,7 +63,7 @@ public class TitleScreenButtons : MonoBehaviour
         slCreateBtn.onClick.AddListener(() => ngMenuAnim.Play("ShowCreationMenu"));
         slLoadBtn.onClick.AddListener(() => LoadProceduralUniverse());
         //new game ui
-        ngBackBtn.onClick.AddListener(() => ngMenuAnim.Play("HideCreationMenu"));
+        ngBackBtn.onClick.AddListener(() => NewGameBack());
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
         ngSizeBtns[0].onClick.AddListener(() => SetGalaxySize(0));
         ngSizeBtns[1].onClick.AddListener(() => SetGalaxySize(1));
@@ -99,10 +100,14 @@ public class TitleScreenButtons : MonoBehaviour
 
     }
     void NewGame(){
+        onlyCreateMenu = true;
         StartCoroutine(EnableNewGameMenu(true));
+        ngMenuAnim.Play("ShowCreationMenu");
     }
     void LoadGame(){
+        onlyCreateMenu = false;
         StartCoroutine(EnableNewGameMenu(true));
+        ngMenuAnim.Play("HideCreationMenu");
     }
     void OpenSettings(){
         
@@ -164,6 +169,11 @@ public class TitleScreenButtons : MonoBehaviour
     {
         UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * System.DateTime.Now.Second * Time.time));
         ngSeedFld.text = UnityEngine.Random.Range(-2147483647, 2147483647).ToString();
+    }
+    void NewGameBack()
+    {
+        if(onlyCreateMenu) {StartCoroutine(EnableNewGameMenu(false));}
+        else {ngMenuAnim.Play("HideCreationMenu");}
     }
     /// <param name="size">0, 1 or 2 | small, medium, or large</param>
     void SetGalaxySize(int size)
