@@ -154,7 +154,7 @@ public class ShootBall : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeAll;
             if(Input.GetMouseButtonDown(0) && !astronautFading)
             {
-                if(Vector2.Distance(mousePos, transform.position) < 0.5f * 2&& rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
+                if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
                     StartCoroutine(LineUpShot());
                     if(showBallPos)
@@ -715,10 +715,10 @@ public class ShootBall : MonoBehaviour
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
         velocity *= -1;
-        if(holeDir.x > 0 && holeDir.y > 0){
+       if(holeDir.x > 0 && holeDir.y > 0){
             print("1");
             if(Mathf.Atan2(velocity.y, velocity.x) > Mathf.PI/4){
-                return true;
+                 return true;
             }
             else{
                 return false;

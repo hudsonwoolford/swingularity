@@ -34,10 +34,12 @@ public class PointCardManager : MonoBehaviour
         for (int i = 0; i < 6; i++)
         {
             parTexts[i].text = "?";
+            scoreTexts[i].color = new Color(1,1,1,1);
             scoreTexts[i].text = "?";
+            shotsTexts[i].color = new Color(1,1,1,1);
             shotsTexts[i].text = "?";
             outlineScoreTexts[i].text = "?";
-            outlineScoreTexts[i].color = new Color(0,0,0,0);
+            outlineScoreTexts[i].color = new Color(1,1,1,1);
         }
     }
     void OnScore(string score, int relPar, int totalShots, Color scoreColor) //Called by onScore delegate from LevelScoring, sets the text required for the current level
@@ -51,7 +53,14 @@ public class PointCardManager : MonoBehaviour
                 if (sceneName == currentGalaxy[i])
                 {
                     //Setting text strings and colours
-                    scoreTexts[i].text = relPar.ToString();
+                    if(relPar > 0){
+                        scoreTexts[i].text = "+" + relPar.ToString();
+                        outlineScoreTexts[i].text = "+" + relPar.ToString();
+                    }
+                    else{
+                        scoreTexts[i].text = relPar.ToString();
+                        outlineScoreTexts[i].text = relPar.ToString();
+                    }
                     shotsTexts[i].text = totalShots.ToString();
                     Color col = neutral;
                     if(totalShots < (totalShots - relPar)){
@@ -62,8 +71,8 @@ public class PointCardManager : MonoBehaviour
                     }
 
                     shotsTexts[i].color = col;
-                    outlineScoreTexts[i].text = relPar.ToString();
                     scoreTexts[i].color = col;
+                    outlineScoreTexts[i].color = col;
                     parTexts[i].text = (totalShots - relPar).ToString();
                     
                     int scoreSum = 0, shotSum = 0, parSum = 0;
@@ -79,7 +88,6 @@ public class PointCardManager : MonoBehaviour
                         }
                     }
 
-                    scoreTexts[5].text = scoreSum.ToString();
                     Color scoreCol = neutral;
                     if(shotSum < parSum){
                         scoreCol = positive;
@@ -89,7 +97,16 @@ public class PointCardManager : MonoBehaviour
                     }
                     
                     scoreTexts[5].color = scoreCol;
+                    if (scoreSum > 0){
+                        scoreTexts[5].text = "+" + scoreSum.ToString();
+                        outlineScoreTexts[5].text = "+" +scoreSum.ToString();
+                    }
+                    else{
+                        outlineScoreTexts[5].text = scoreSum.ToString();
+                        scoreTexts[5].text = scoreSum.ToString();
+                    }
                     shotsTexts[5].text = shotSum.ToString();
+                    outlineScoreTexts[5].color = scoreCol;
                     shotsTexts[5].color = scoreCol;
                     parTexts[5].text = parSum.ToString();
                     break;
@@ -101,8 +118,16 @@ public class PointCardManager : MonoBehaviour
             int i = GameManager.LevelManager.levelIndex;
             //Setting text strings and colours
             shotsTexts[i].text = totalShots.ToString();
-            scoreTexts[i].text = relPar.ToString();
-            outlineScoreTexts[i].text = relPar.ToString();
+
+            if(relPar > 0){
+                scoreTexts[i].text = "+" + relPar.ToString();
+                outlineScoreTexts[i].text = "+" + relPar.ToString();
+            }
+            else{
+                scoreTexts[i].text = relPar.ToString();
+                outlineScoreTexts[i].text = relPar.ToString();
+            }
+
             Color col = neutral;
             if(totalShots < (totalShots - relPar)){
                 col = positive;
@@ -112,6 +137,8 @@ public class PointCardManager : MonoBehaviour
             }
             scoreTexts[i].color = col;
             shotsTexts[i].color = col;
+            outlineScoreTexts[i].color = col;
+
 
             parTexts[i].text = (totalShots - relPar).ToString();
 
@@ -139,7 +166,16 @@ public class PointCardManager : MonoBehaviour
 
             scoreTexts[5].color = scoreCol;
             shotsTexts[5].color = scoreCol;
-            scoreTexts[5].text = scoreSum.ToString();
+            if (scoreSum > 0){
+                scoreTexts[5].text = "+" + scoreSum.ToString();
+                outlineScoreTexts[5].text = "+" +scoreSum.ToString();
+            }
+            else{
+                outlineScoreTexts[5].text = scoreSum.ToString();
+                scoreTexts[5].text = scoreSum.ToString();
+            }
+
+            outlineScoreTexts[5].color = scoreCol;
             shotsTexts[5].text = shotSum.ToString();
             parTexts[5].text = parSum.ToString();
         }
@@ -151,6 +187,7 @@ public class PointCardManager : MonoBehaviour
     }
     void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
+        ClearPointCard();
         currentProceduralGalaxy = galaxyLevels;
         currentGalaxy = galaxy;
     }
