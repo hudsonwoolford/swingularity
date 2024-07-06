@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8789179663183544448}
   - component: {fileID: 9218012452673868532}
   m_Layer: 0
-  m_Name: NewGalaxy
+  m_Name: Galaxy 3.0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,16 +24,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27201910259651697}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 32.5, y: 0, z: 0}
+  m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2015253348241840270}
   - {fileID: 6007135487915079415}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
 --- !u!114 &9218012452673868532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,11 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886c5deaf952a274782d961109d3c0e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stars: {fileID: 8545549618748677836}
-  nebula: {fileID: 3517034428561176518}
-  seed: 0
   galaxyIcons:
-  - planetType: 0
+  - name: Earth
+    type: 0
     possibleStarColors:
     - {r: 0.5330188, g: 0.94347066, b: 1, a: 1}
     - {r: 0.25, g: 1, b: 0.617647, a: 1}
@@ -58,7 +56,8 @@ MonoBehaviour:
     possibleNebulaColors:
     - {r: 0.1254902, g: 0.6039216, b: 1, a: 0.003921569}
     - {r: 0.27058825, g: 0.8784314, b: 0.5568628, a: 0.003921569}
-  - planetType: 1
+  - name: Desert
+    type: 1
     possibleStarColors:
     - {r: 0.8352941, g: 0.85882354, b: 0.49019608, a: 1}
     - {r: 0.1254902, g: 1, b: 0.64705884, a: 1}
@@ -66,7 +65,8 @@ MonoBehaviour:
     possibleNebulaColors:
     - {r: 0.78431374, g: 0.7254902, b: 0.39607844, a: 0.003921569}
     - {r: 0.9339623, g: 0.90986586, b: 0.41852084, a: 0.003921569}
-  - planetType: 2
+  - name: Ice
+    type: 2
     possibleStarColors:
     - {r: 0.43529412, g: 0.7019608, b: 0.99215686, a: 1}
     - {r: 0.23921569, g: 0.28627452, b: 0.85882354, a: 1}
@@ -75,7 +75,8 @@ MonoBehaviour:
     - {r: 0.2627451, g: 0.39607844, b: 0.5019608, a: 0.02745098}
     - {r: 0.3019608, g: 0.3019608, b: 0.3019608, a: 0.02745098}
     - {r: 0.32549024, g: 0.733988, b: 0.8980392, a: 0.003921569}
-  - planetType: 3
+  - name: Fire
+    type: 3
     possibleStarColors:
     - {r: 1, g: 0.54509807, b: 0.1254902, a: 1}
     - {r: 1, g: 0.1254902, b: 0.29411766, a: 1}
@@ -83,7 +84,8 @@ MonoBehaviour:
     - {r: 0.8784314, g: 0.7882353, b: 0.27058825, a: 0.003921569}
     - {r: 0.9137255, g: 0.28627452, b: 0.16862746, a: 0.003921569}
     - {r: 0.8980392, g: 0.48667902, b: 0.32549024, a: 0.003921569}
-  - planetType: 4
+  - name: Goop
+    type: 4
     possibleStarColors:
     - {r: 0.90622056, g: 0.5093005, b: 0.990566, a: 1}
     - {r: 0.5896226, g: 1, b: 0.65180105, a: 1}
@@ -91,7 +93,8 @@ MonoBehaviour:
     possibleNebulaColors:
     - {r: 0.5568628, g: 0, b: 0.8666667, a: 0.003921569}
     - {r: 0.8980392, g: 0.32549024, b: 0.8848838, a: 0.003921569}
-  - planetType: 5
+  - name: Waste
+    type: 5
     possibleStarColors:
     - {r: 0.48235294, g: 0.14509805, b: 0.003921569, a: 1}
     - {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
@@ -100,7 +103,8 @@ MonoBehaviour:
     - {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 0.02745098}
     - {r: 0.29411766, g: 0.16470589, b: 0.07450981, a: 0.02745098}
     - {r: 0.48235294, g: 0.046850592, b: 0.0039215647, a: 0.019607844}
-  - planetType: 6
+  - name: Mythical
+    type: 6
     possibleStarColors:
     - {r: 1, g: 0.1254902, b: 0.5764706, a: 1}
     - {r: 1, g: 0.88235295, b: 0.1254902, a: 1}
@@ -109,6 +113,16 @@ MonoBehaviour:
     - {r: 0.9137255, g: 0.16862746, b: 0.84313726, a: 0.003921569}
     - {r: 0.8784314, g: 0.6901961, b: 0.27058825, a: 0.003921569}
   galaxySchemeIndex: 1
+  galaxyParams:
+    name: 
+    seed: 0
+    relativeDifficulty: 0
+    possibleTypes: 
+    levelStatic: {fileID: 0}
+  proceduralGalaxy: 0
+  seed: 0
+  stars: {fileID: 8545549618748677836}
+  nebula: {fileID: 3517034428561176518}
 --- !u!1 &945606278530566181
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +264,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -5111,7 +5125,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
