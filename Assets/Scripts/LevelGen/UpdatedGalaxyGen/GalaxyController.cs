@@ -20,9 +20,12 @@ public class GalaxyController : MonoBehaviour
     [SerializeField] int seed;
     [SerializeField] GalaxyParticleController stars, nebula;
 
-    void Update()
+    void Start()
     {
         ApplyGalaxyIconScheme();
+    }
+    void Update()
+    {
     }
     void ApplyGalaxyIconScheme()
     {

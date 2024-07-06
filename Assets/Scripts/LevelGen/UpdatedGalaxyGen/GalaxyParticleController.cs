@@ -63,7 +63,6 @@ public class GalaxyParticleController : MonoBehaviour
         {
             starParticles = GetComponent<ParticleSystem>();
         }
-        if(galaxySeed == inputSeed){return;}
         galaxySeed = inputSeed;
 
         particleIndexing.Clear();
@@ -71,6 +70,7 @@ public class GalaxyParticleController : MonoBehaviour
 
         ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         starParticles.Emit(emitParams, numSamples * numIterations);
+        Debug.Log("emit particles");
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
         int numParticles = starParticles.GetParticles(particles);
@@ -196,5 +196,15 @@ public class GalaxyParticleController : MonoBehaviour
     }
     float Rotate2DY(Vector2 pos, float angle){
         return Mathf.Sqrt(pos.x * pos.x + pos.y * pos.y) * Mathf.Sin(angle + Mathf.Atan2(pos.y, pos.x));
+    }
+    void OnEnable()
+    {
+        starParticles.Clear();
+        starParticles.Play();
+        Init(galaxySeed);
+    }
+    void OnDisable()
+    {
+        starParticles.Stop();
     }
 }

@@ -11,7 +11,9 @@ public class GalaxyMenu : MonoBehaviour
 {
 
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
-    [SerializeField] Vector3[] focusPositions; //offscreen left, left, focused centre, right, offscreen right
+    [SerializeField] Vector3 focusPosition; //focused centre, not zoomed in
+    [SerializeField] Vector3 linePos; //Position of galaxy line
+    [SerializeField] float distInterval;
     [SerializeField] int focusedGalaxy;
     [SerializeField] float sizeScalar;
     [SerializeField] Button right, left;
@@ -28,53 +30,38 @@ public class GalaxyMenu : MonoBehaviour
     void Start()
     {
         CreateControllers();
-        right.onClick.AddListener(() => StartCoroutine(MoveGalaxies(-1)));
-        left.onClick.AddListener(() => StartCoroutine(MoveGalaxies(1)));
+        right.onClick.AddListener(() => StartCoroutine(MoveGalaxies(1)));
+        left.onClick.AddListener(() => StartCoroutine(MoveGalaxies(-1)));
     }
     void Update()
     {
         SetGalaxyPositions();
     }
-    IEnumerator MoveGalaxies(int direction)
+    IEnumerator MoveGalaxies(int dir)
     {
-        if (isMoving) yield break;
-
-        isMoving = true;
-        int previousFocusedGalaxyIndex = focusedGalaxy;
-        focusedGalaxy = LoopValue(focusedGalaxy + direction, 0, galaxyCons.Length);
-
-        // float elapsedTime = 0f;
-        // while (elapsedTime < transitionDuration)
-        // {
-        //     elapsedTime += Time.deltaTime;
-        //     float t = Mathf.Clamp01(elapsedTime / transitionDuration);
-
-        //     for (int i = 0; i < galaxyCons.Length; i++)
-        //     {
-        //         int targetIndex = LoopValue(previousFocusedGalaxyIndex - 2 + i + direction, 0, galaxyCons.Length);
-        //         galaxyCons[i].transform.position = Vector3.Lerp(
-        //             focusPositions[LoopValue(i - direction, 0, focusPositions.Length)],
-        //             focusPositions[i],
-        //             t
-        //         );
-        //     }
-
-        //     yield return null;
-        // }
-
-        SetGalaxyPositions();
-        isMoving = false;
+        focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
+        yield return null;
     }
-
     void SetGalaxyPositions()
     {
-        for (int i = 0; i < focusPositions.Length; i++)
+        for (int i = 0; i < galaxyCons.Length; i++)
         {
-            int galaxyIndex = LoopValue(focusedGalaxy - 2 + i, 0, galaxyCons.Length);
-            galaxyCons[galaxyIndex].transform.position = focusPositions[i];
+            galaxyCons[i].transform.position = new Vector3((i-focusedGalaxy) * distInterval + focusPosition.x, linePos.y, linePos.z);
+            if(i == focusedGalaxy)
+            {
+                galaxyCons[i].transform.position = focusPosition;
+            }
+            if(Mathf.Abs(i-focusedGalaxy)<=1)
+            {
+                galaxyCons[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                galaxyCons[i].gameObject.SetActive(false);
+
+            }
         }
     }
-
     void CreateControllers()
     {
         galaxyCons = new GalaxyController[galaxyList.Length];
@@ -177,10 +164,13 @@ public class GalaxyMenu : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        for (int i = 0; i < focusPositions.Length; i++)
-        {
-            Gizmos.DrawCube(focusPositions[i], Vector3.one);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(new Vector3(-1000, linePos.y, linePos.z), new Vector3(1000, linePos.y, linePos.z));
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(focusPosition, Vector3.one);
+        Gizmos.DrawCube(new Vector3(focusPosition.x-distInterval, linePos.y, linePos.z), Vector3.one);
+        Gizmos.DrawCube(new Vector3(focusPosition.x+distInterval, linePos.y, linePos.z), Vector3.one);
+        
     }
     int LoopValue(int value, int min, int max)
     {
