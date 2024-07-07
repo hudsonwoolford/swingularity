@@ -9,18 +9,10 @@ public class UniverseGenerator : MonoBehaviour
 {
     [Serializable]
     public struct Universe{
-        public Cubemap cubemap;
-        public Vector3 cubeOffset;
-        public float depthScale;
-        public float emmissionPower;
         [ColorUsageAttribute(true, true)]
-        public Color color;
+        public Color nebulaColorA, nebulaColorB;
         [ColorUsageAttribute(true, true)]
-        public Color fresnelColor;
-        [Range(0, 1)]
-        public float smoothness, metallic;
-        bool isCustom;
-        int seed;
+        public Color fresnelColor, glitterColor, volumetricStarColor;
     }
     [SerializeField] int universeIndex;
     [SerializeField] int indexSeed;
@@ -30,6 +22,8 @@ public class UniverseGenerator : MonoBehaviour
     [SerializeField] bool rotate = false;
     MeshRenderer meshRenderer;
     MaterialPropertyBlock pBlock;
+
+    Vector3 offset, warpOffset;
 
     void Awake(){
         meshRenderer = GetComponent<MeshRenderer>();
@@ -45,19 +39,19 @@ public class UniverseGenerator : MonoBehaviour
         ChangeMaterialBlock();
         if (rotate)
         {
-            transform.rotation = Quaternion.Euler(transform.eulerAngles + rotSpeed * Time.deltaTime);
+            transform.Rotate(rotSpeed * Time.deltaTime);
         }
     }
     void ChangeMaterialBlock(){
         Universe universe = possibleUniverses[universeIndex];
-        pBlock.SetTexture("_Cube", universe.cubemap);
-        pBlock.SetVector("_CubeOffset", universe.cubeOffset);
-        pBlock.SetFloat("_DepthScale", universe.depthScale);
-        pBlock.SetFloat("_EmissionPower", universe.emmissionPower);
-        pBlock.SetColor("_Emission", universe.color);
+        pBlock.SetColor("_NebulaColorA", universe.nebulaColorA);
+        pBlock.SetColor("_NebulaColorB", universe.nebulaColorB);
         pBlock.SetColor("_FresnelColor", universe.fresnelColor);
-        pBlock.SetFloat("_Glossiness", universe.smoothness);
-        pBlock.SetFloat("_Metallic", universe.metallic);
+        pBlock.SetColor("_StarColor", universe.glitterColor);
+        pBlock.SetColor("_VolumetricStarsColor", universe.volumetricStarColor);
+
+        pBlock.SetVector("_Offset", offset);
+        pBlock.SetVector("_WarpOffset", warpOffset);
 
         meshRenderer.SetPropertyBlock(pBlock);
     }
@@ -70,10 +64,14 @@ public class UniverseGenerator : MonoBehaviour
         this.indexSeed = indexSeed;
         UnityEngine.Random.InitState(indexSeed);
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
+        offset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
+        warpOffset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
     }
     public void ChangeUniverse(string s)
     {
         UnityEngine.Random.InitState(LevelSettingsManager.ConvertTextToSeed(s));
+        offset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
+        warpOffset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
         addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
     }
