@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class GalaxyData : ScriptableObject
 {
+    public Color mainColor = Color.white;
     [ColorUsage(true, true)]
     [SerializeField] public Color portalColor = new Color(0.3f, 1, 1, 1);
     [SerializeField] public Color portalParticleColor = new Color(0.3f, 1, 1, 1);

@@ -12,22 +12,30 @@ public class GalaxyMenu : MonoBehaviour
 {
 
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
+    [Header("Important Positions and Rotations")]
     [SerializeField] Vector3 focusPosition; //focused centre, not zoomed in
     [SerializeField] Vector3 zoomGalaxyPos; //zoomed position of galaxy
     [SerializeField] Vector3 zoomCameraPos; //zoomed position of camera
     [SerializeField] Vector3 linePos; //position of galaxy line, x does not matter
     [SerializeField] Vector3 minRotation; //minimum rotation of galaxies
     [SerializeField] Vector3 maxRotation; //maximum rotation of galaxies
-    [SerializeField] float distInterval; //distance between galaxies
-    [SerializeField] int focusedGalaxy; //index of focused galaxy
+    [Header("Animations")]
     [SerializeField] float transitionDuration = 0.5f;
     [SerializeField] AnimationCurve transitionCurve;
-    [SerializeField] float sizeScalar; //scales galaxy size
-    [SerializeField] Canvas galaxyMenuCanvas;
-    [SerializeField] Button rightBtn, leftBtn; //move buttons
+    [Header("Main UI")]
+    [SerializeField] Button rightBtn; //move buttons
+    [SerializeField] Button leftBtn; //move buttons
     [SerializeField] Button zoomBtn; //move buttons
+    [SerializeField] GameObject dotButton; //created in create galaxy funciton, one dot per galaxy
+    [SerializeField] Vector3 dotMiddle;
+    [SerializeField] float dotDistanceInterval;
+    [SerializeField] Canvas galaxyMenuCanvas;
+    [Header("Galaxy Obj")]
+    [SerializeField] float distInterval; //distance between galaxies
+    [SerializeField] float sizeScalar; //scales galaxy size
     [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
     [SerializeField] GameObject galaxyObj; //prefab for instantiation
+    [Header("Miscellaneous")]
     [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes; //possible types for galaxies
     [SerializeField] LevelGenerator.SpecialType[] specialTypes; //possible special types for levels
     [SerializeField] GalaxyData[] possibleGalaxyData; //possible galaxy data
@@ -35,13 +43,18 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Animator infoCardAnim;
     [SerializeField] TextMeshProUGUI galaxyTitle;
     [SerializeField] Button playGalaxyBtn, infoBackBtn;
+    [SerializeField] TextMeshProUGUI seedNum;
+    [SerializeField] TextMeshProUGUI difficultyNum;
+    [SerializeField] Slider difficultySlider;
+    [SerializeField] Gradient difficultyGradient;
+    [SerializeField] TextMeshProUGUI astroBiomeTxt;
+    Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
-    EventSystem eventSystem; //ev
+    int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
-    float timeOfTransition;
     // Start is called before the first frame update
     void Start()
     {
@@ -87,6 +100,30 @@ public class GalaxyMenu : MonoBehaviour
         SetProceduralGalaxy(galaxyList[focusedGalaxy]);
         SceneManager.LoadScene("LevelGen");
     }
+    void DotButton(int dotIndex)
+    {
+        int movement = dotIndex - focusedGalaxy;
+        StartCoroutine(MoveGalaxies(movement));
+    }
+    void MenuInput()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            MoveButton(1);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            MoveButton(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.Q) && zoomedIn)
+        {
+            ZoomButton(false);
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
+        {
+            ZoomButton(true);
+        }
+    }
     void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
     {
         LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
@@ -113,6 +150,15 @@ public class GalaxyMenu : MonoBehaviour
         {
             infoCardAnim.Play("ShowInfoCard");
             galaxyTitle.text = gp.name;
+            seedNum.text = gp.seed.ToString();
+            difficultyNum.text = gp.relativeDifficulty.ToString();
+            difficultyNum.color = difficultyGradient.Evaluate(gp.relativeDifficulty / difficultySlider.maxValue);
+            difficultySlider.value = gp.relativeDifficulty;
+            ColorBlock cB = difficultySlider.colors;
+            cB.disabledColor = difficultyNum.color;
+            difficultySlider.colors = cB;
+            astroBiomeTxt.text = gp.possibleTypes[0].ToString();
+            astroBiomeTxt.color = gp.galaxyData.mainColor;
         }
         else
         {
@@ -171,6 +217,7 @@ public class GalaxyMenu : MonoBehaviour
         isMoving = false;
     }
     #endregion
+    #region Galaxy Configuration
     Vector3[] GalaxyPositions(int numGalaxies, int focus) //returns positions of the galaxies based on the focus
     {
         Vector3[] targetPositions = new Vector3[numGalaxies];
@@ -196,13 +243,15 @@ public class GalaxyMenu : MonoBehaviour
             {
                 galaxyCons[i].gameObject.SetActive(false);
             }
+            if (i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
+            else { dotSelectedImgs[i].enabled = true; }
         }
     }
     void CreateControllers() //Instantiates all galaxies
     {
         galaxyCons = new GalaxyController[galaxyList.Length];
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
-        for (int i = 0; i < galaxyList.Length; i++)
+        for (int i = 0; i < galaxyList.Length; i++) //dots
         {
             UnityEngine.Random.InitState(galaxyList[i].seed);
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
@@ -211,26 +260,21 @@ public class GalaxyMenu : MonoBehaviour
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
         }
-    }
-    void MenuInput()
-    {
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        float halfLength = ((galaxyList.Length - 1) / 2) * dotDistanceInterval;
+        dotSelectedImgs = new Image[galaxyList.Length];
+        for (int i = 0; i < galaxyList.Length; i++) //dot button creation
         {
-            MoveButton(1);
-        }
-        if(Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            MoveButton(-1);
-        }
-        if(Input.GetKeyDown(KeyCode.Q) && zoomedIn)
-        {
-            ZoomButton(false);
-        }
-        if(Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
-        {
-            ZoomButton(true);
+            RectTransform t = Instantiate(dotButton, transform).GetComponent<RectTransform>();
+            t.position = new Vector3(t.position.x + dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
+            int callIndex = i;
+            t.gameObject.GetComponent<Button>().onClick.AddListener(() => DotButton(callIndex));
+            dotSelectedImgs[i] = t.GetChild(0).GetComponent<Image>();
+            if(i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
+            else { dotSelectedImgs[i].enabled = true; }
         }
     }
+    #endregion
+    #region Utility
     void CreateProceduralGalaxies()
     {
         string lowerCase = "abcdefghijklmnopqrstuvwxyz";
@@ -252,11 +296,11 @@ public class GalaxyMenu : MonoBehaviour
         for (int i = 0; i < galaxies.Length; i++) //for each galaxy index, create one
         {
             UnityEngine.Random.InitState(universe.seed + i); //different random values
+
             //random name, temporary
+            #region Random Name
             string name = "";
-
-            int type = UnityEngine.Random.Range(0, 2);
-
+            int type = UnityEngine.Random.Range(0, 2); //nametype
             if(type == 0){
                 int numParts = UnityEngine.Random.Range(2,3);
                 for (int c = 0; c < numParts; c++) 
@@ -307,7 +351,7 @@ public class GalaxyMenu : MonoBehaviour
                     name += numbers[UnityEngine.Random.Range(0,numbers.Length)];
                 }
             }
-
+            #endregion
 
             //random planet types
             ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[UnityEngine.Random.Range(1,1)];
@@ -349,6 +393,7 @@ public class GalaxyMenu : MonoBehaviour
 
         return min + loopedValue;
     }
+    #endregion
 }
 
 // public class GalaxyMenu : MonoBehaviour
@@ -501,7 +546,7 @@ public class GalaxyMenu : MonoBehaviour
 //                         }
 //                         name += " ";
 //                     }
-                    
+
 //                 }
 //             }
 //             if (type == 1){
