@@ -1,4 +1,4 @@
-Shader "Unlit/RayMarchingUniverse"
+Shader "Custom/RayMarchingUniverse"
 {
     Properties
     {
@@ -14,35 +14,62 @@ Shader "Unlit/RayMarchingUniverse"
         _Multiplier("Multiplier", Range(0,5)) = 1
         _Gain("Gain", Range(0, 5)) = 1
         _Subtraction("Subtraction", float) = 1
+        _Power("Power", float) = 1
+
+        [IntRange]_WarpOctaves("Warp Octaves", Range(0,5)) = 1
+        _WarpOffset("Warp Offset", vector) = (0,0,0)
+        _WarpScale("Warp Scale", Range(0,5)) = 1
+        _WarpPersistence("Warp Persistence", Range(0, 5)) = 1
+        _WarpLacunarity("Warp Lacunarity", Range(0,5)) = 1
+        _WarpMultiplier("Warp Multiplier", Range(0,5)) = 1
+        _WarpGain("Warp Gain", Range(0, 5)) = 1
+
+        [HDR]_NebulaColorA ("Nebula Color A", Color) = (0.5,0.5,0.5)
+        [HDR]_NebulaColorB ("Nebula Color B", Color) = (0.5,0.5,0.5)
+
+        _FresnelStrength("Fresnel Strength", float) = 0
+        [HDR]_FresnelColor("Fresnel Color", Color) = (1,1,1,1)
+        [HDR]_StarColor("Star Color", Color) = (1,1,1,1)
+        _StarNoiseScale("Star Scale", float) = 0
+        _TriplanarScale("Triplanar Scale", float) = 0
+        _AngleOffset("Voronoi Angle Offset", float) = 0
+        _VoronoiScale("Voronoi Scale", float) = 0
+        [HDR]_VoronoiStarColor("Voronoi Star Color", Color) = (1, 1, 1, 1)
+        _Metallic("Metallic", float) = 0
+        _Smoothness("Smoothness", float) = 0
+        _RidgeBlendHeight("Ridge Blend Height", float) = 0
+        _RidgeBlendIntensity("Ridge Blend Intensity", float) = 0
+
+        _VolumetricStarsScale("Volumetric Star Scale", float) = 0
+        _VolumetricStarsPower("Volumetric Star Power", float) = 0
+        _VolumetricStarsSubtraction("Volumetric Star Subtraction", float) = 0
+
+        [HDR]_VolumetricStarsColor("Volumetric Star Color", Color) = (1,1,1,1)
+
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-        Pass
-        {
             CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
+            #pragma target 3.5
+            #pragma surface surf Standard vertex:vert
 
             #include "UnityCG.cginc"
             #include "Includes/FractalNoise.cginc"
+            #include "Includes/ShaderGraphNodes.cginc"
+            #include "Includes/TriplanarMapping.cginc"
 
-            struct appdata
+            struct Input
             {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float2 uv : TEXCOORD0;
+                float3 viewDir : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float3 ro : TEXCOORD1;
                 float3 hitPos : TEXCOORD2;
+                float3 worldNormal : TEXCOORD3;
+                float3 normal;
+                INTERNAL_DATA
             };
 
             sampler2D _MainTex;
@@ -54,23 +81,57 @@ Shader "Unlit/RayMarchingUniverse"
             int _Octaves;
             float3 _Offset;
             float _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain;
-            float _Subtraction;
-            v2f vert (appdata v)
+            float _Subtraction, _Power;
+
+            int _WarpOctaves;
+            float3 _WarpOffset;
+            float _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain;
+
+            float4 _NebulaColorA;
+            float4 _NebulaColorB;
+
+            float4 _FresnelColor;
+            float _FresnelStrength;
+            float4 _StarColor;
+            float _StarNoiseScale;
+            float _TriplanarScale;
+            float _AngleOffset;
+            float _VoronoiScale;
+            float4 _VoronoiStarColor;
+
+            float _Metallic;
+            float _Smoothness;
+
+            float _RidgeBlendHeight;
+            float _RidgeBlendIntensity;
+
+            float _VolumetricStarsScale;
+            float _VolumetricStarsPower;
+            float _VolumetricStarsSubtraction;
+            float4 _VolumetricStarsColor;
+
+            void vert (inout appdata_full v, out Input o)
             {
-                v2f o;
+                UNITY_INITIALIZE_OUTPUT(Input, o);
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 
-                // o.ro = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1));
-                o.ro = float3(0, 0, 0);
+                o.ro = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1));
+                // o.ro = float3(0, 0, 0);
                 o.hitPos = v.vertex;
-                return o;
-            }
-            
-            float GetDist(float3 p){
-                float d = SimpleNoise(p, _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset);
+                o.normal = v.normal;
+                o.worldNormal = UnityObjectToWorldNormal(v.normal) * 2;
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
-                return saturate(d - _Subtraction);
+                float3 viewDir = normalize(_WorldSpaceCameraPos - worldPos);
+                o.viewDir = viewDir;
+            }
+
+            float GetDist(float3 p){
+                float warp = SimpleNoise(p, _WarpOctaves, _WarpScale, _WarpPersistence, _WarpLacunarity, _WarpMultiplier, _WarpGain, _WarpOffset);
+                float d = pow(SimpleNoise(p + float3(warp, 0, 0), _Octaves, _Scale, _Persistence, _Lacunarity, _Multiplier, _Gain, _Offset), _Power);
+
+                return clamp(d - _Subtraction, 0, 1000000);
             }
 
             float Raymarch(float3 ro, float3 rd){
@@ -88,34 +149,91 @@ Shader "Unlit/RayMarchingUniverse"
                 return dO;
             }
 
+            float GetDistStars(float3 p){
+                float d, cells;
+                voronoi3D_float(p, _VolumetricStarsScale, d, cells);
+                d = pow(saturate(d), _VolumetricStarsPower) * 0.1;
+                return clamp(d - _VolumetricStarsSubtraction, 0, 1000000);
+            }
+
+            float Raymarch(float3 ro, float3 rd, bool stars){
+                float dO = 0;
+                float dS;
+
+                for (int i = 0; i < _MaxSteps; i++){
+                    float3 p = ro + dO * rd;
+                    dS = GetDistStars(p);
+                    dO += dS;
+
+                    if(dS < _SurfaceDistance || dO > _MaxDistance) break;
+                }
+
+                return dO;
+            }
+
             float3 GetNormal(float3 p){
                 float2 e = float2(1e-2, 0);
                 float3 n = GetDist(p) - float3(GetDist(p-e.xyy),GetDist(p-e.yxy),GetDist(p-e.yyx));
                 return normalize(n);
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            void surf (Input i, inout SurfaceOutputStandard o)
             {
-                float2 uv = i.uv - 0.5;
-                float3 ro = i.ro;
-                float3 rd = normalize(i.hitPos - ro);
+                float3 ro = i.hitPos;
+                float3 rd = normalize(i.ro - ro) * -1;
 
                 float d = Raymarch(ro, rd);
 
                 fixed4 col = 0;
+                float3 p = ro + rd * d;
+                float3 n = GetNormal(p);
 
                 if (d < _MaxDistance){
-                    float3 p = ro + rd * d;
-                    float3 n = GetNormal(p);
-                    col.rgb = n;
+
+
+                    float grad = d;
+                    col.rgb = lerp(_NebulaColorA, _NebulaColorB, grad);
+
                 }
                 else{
                     discard;
                 }
-                return col;
+
+                float starDist = Raymarch(ro, rd, true);
+                float3 starPoint = ro + rd * starDist;
+                starPoint = (starPoint - ro)/rd;
+
+                float starPointBW = dot(float3(0.2126729, 0.7151522, 0.0721750), starPoint.xyz);
+                starPointBW = (starPointBW + 1)/1.5;
+
+                // starPointBW = pow(starPointBW, Unity_Remap_float4(d, float2(0, 8), float2(30, 10)));
+                if(starDist < d){
+                    col += saturate(1-starPointBW) * _VolumetricStarsColor;
+                }
+
+                col += pow(saturate(TriplanarNoise(ro, n, _TriplanarScale, _StarNoiseScale)), 20) * _StarColor;
+
+
+                float v,cells;
+                voronoi3D_float(i.hitPos, _VoronoiScale, 0.5, v, cells);
+                float3 voronoiSquares = float3(cells, cells, cells);
+                voronoiSquares = voronoiSquares * 2 - float3(1, 1, 1);
+                float voronoiOutput = (dot(voronoiSquares, rd) * .5 + float3(.5, .5, .5), 10) * clamp(1-v, 0, 0.8);
+
+                col += voronoiOutput * _VoronoiStarColor * float4(saturate(voronoiSquares.xyz), 1);
+
+                float fresnelVal = 1 - saturate(abs(dot(i.worldNormal, i.viewDir)));
+                float fresnel = pow(fresnelVal, _FresnelStrength);
+
+                // float blendVal = clamp(0,1,pow(length(ro)/_RidgeBlendHeight, _RidgeBlendIntensity));
+                // col = lerp(col, _FresnelColor, blendVal);
+                col = lerp(col, _FresnelColor, pow(fresnel, _FresnelStrength));
+
+                o.Albedo = col.rgb;
+                o.Smoothness = _Smoothness;
+                o.Metallic = _Metallic;
 
             }
             ENDCG
-        }
     }
 }
