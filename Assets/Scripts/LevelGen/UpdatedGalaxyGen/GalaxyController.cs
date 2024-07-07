@@ -15,8 +15,6 @@ public class GalaxyController : MonoBehaviour
     }
     [SerializeField] GalaxyIcon[] galaxyIcons;
     [SerializeField] int galaxySchemeIndex;
-    [SerializeField] LevelManager.GalaxyParams galaxyParams;
-    [SerializeField]bool proceduralGalaxy;
     [SerializeField] int seed;
     [SerializeField] GalaxyParticleController stars, nebula;
 
@@ -67,7 +65,6 @@ public class GalaxyController : MonoBehaviour
     }
     public void SetProceduralScheme(LevelManager.GalaxyParams galaxyParams)
     {
-        proceduralGalaxy = true;
         for (int i = 0; i < galaxyIcons.Length; i++)
         {
             for (int x = 0; x < galaxyParams.possibleTypes.Length; x++)
@@ -79,11 +76,9 @@ public class GalaxyController : MonoBehaviour
             }
         }
         seed = galaxyParams.seed;
-        this.galaxyParams = galaxyParams;
     }
     public GalaxyIcon SetScheme(ColorSchemeStaticReference.PlanetType type)
     {
-        proceduralGalaxy = false;
         for (int i = 0; i < galaxyIcons.Length; i++)
         {
             if (galaxyIcons[i].type == type)

@@ -3,7 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
-using static UnityEngine.Timeline.AnimationPlayableAsset;
+using UnityEngine.SceneManagement;
+using static GalaxyGenerator;
+using static LevelGenerator;
+using static LevelManager;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -20,15 +23,18 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] float transitionDuration = 0.5f;
     [SerializeField] AnimationCurve transitionCurve;
     [SerializeField] float sizeScalar; //scales galaxy size
+    [SerializeField] Canvas galaxyMenuCanvas;
     [SerializeField] Button rightBtn, leftBtn; //move buttons
     [SerializeField] Button zoomBtn; //move buttons
     [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
     [SerializeField] GameObject galaxyObj; //prefab for instantiation
     [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes; //possible types for galaxies
+    [SerializeField] LevelGenerator.SpecialType[] specialTypes; //possible special types for levels
+    [SerializeField] GalaxyData[] possibleGalaxyData; //possible galaxy data
     [Header("Info Menu")]
     [SerializeField] Animator infoCardAnim;
     [SerializeField] TextMeshProUGUI galaxyTitle;
-    [SerializeField] Button playGalaxy;
+    [SerializeField] Button playGalaxyBtn, infoBackBtn;
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
@@ -50,11 +56,14 @@ public class GalaxyMenu : MonoBehaviour
         rightBtn.onClick.AddListener(() => MoveButton(1));
         leftBtn.onClick.AddListener(() => MoveButton(-1));
         zoomBtn.onClick.AddListener(() => ZoomButton(true));
+        playGalaxyBtn.onClick.AddListener(() => PlayGalaxy());
+        infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
     }
     void Update()
     {
         MenuInput();
     }
+    #region Buttons
     void MoveButton(int dir)
     {
         if(!isMoving)
@@ -69,12 +78,40 @@ public class GalaxyMenu : MonoBehaviour
             StartCoroutine(ZoomGalaxy(zoomIn));
         }
     }
+    void InfoCardBackButton()
+    {
+        ZoomButton(false);
+    }
+    void PlayGalaxy()
+    {
+        SetProceduralGalaxy(galaxyList[focusedGalaxy]);
+        SceneManager.LoadScene("LevelGen");
+    }
+    void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
+    {
+        LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
+        string[] galaxyLevels = new string[5];
+        for (int i = 0; i < 5; i++) //Creating levels as level params
+        {
+            UnityEngine.Random.InitState(i * 120523 + gp.seed);
+            int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
+            int levelDifficulty = Mathf.Clamp(gp.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1], gp.possibleTypes, specialTypes, gp.levelStatic);
+
+            galaxyLevelParams[i] = systemParams;
+            galaxyLevels[i] = "LevelGen";
+        }
+        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, gp.galaxyData);
+        LevelSettingsManager.onLevelSettingChange?.Invoke(galaxyLevelParams[0]);
+        GameManager.LevelSettingsManager.UIMatchParams();
+    }//Sets the procedural galaxy in level manager through event
+    #endregion
+    #region Transitions
     void EnableAndSetInfoCard(bool enable, LevelManager.GalaxyParams gp)
     {
-        if(enable)
+        if (enable)
         {
             infoCardAnim.Play("ShowInfoCard");
-
             galaxyTitle.text = gp.name;
         }
         else
@@ -86,6 +123,7 @@ public class GalaxyMenu : MonoBehaviour
     {
         isMoving = true;
         zoomedIn = zoomIn;
+        galaxyMenuCanvas.enabled = !zoomIn;
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
 
@@ -106,8 +144,6 @@ public class GalaxyMenu : MonoBehaviour
             yield return null;
         }
 
-        rightBtn.interactable = !zoomIn;
-        leftBtn.interactable = !zoomIn;
         isMoving = false;
         if (zoomIn)
         {
@@ -134,6 +170,7 @@ public class GalaxyMenu : MonoBehaviour
         }
         isMoving = false;
     }
+    #endregion
     Vector3[] GalaxyPositions(int numGalaxies, int focus) //returns positions of the galaxies based on the focus
     {
         Vector3[] targetPositions = new Vector3[numGalaxies];
@@ -273,17 +310,23 @@ public class GalaxyMenu : MonoBehaviour
 
 
             //random planet types
-            ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[UnityEngine.Random.Range(1,3)];
+            ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[UnityEngine.Random.Range(1,1)];
+            GalaxyData gData = null;
             for (int t = 0; t < possibleTypes.Length; t++) 
             {
-                possibleTypes[t] = galaxyTypes[UnityEngine.Random.Range(0, galaxyTypes.Length)];
+                int chosenIndex = UnityEngine.Random.Range(0, galaxyTypes.Length);
+                possibleTypes[t] = galaxyTypes[chosenIndex];
+                for (int x = 0; x < possibleGalaxyData.Length; x++)
+                {
+                    if (possibleGalaxyData[x].type == possibleTypes[t]) { gData = possibleGalaxyData[x]; }
+                }
             }
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), universe.relativeDifficulty, possibleTypes, universe.levelStatic); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), universe.relativeDifficulty, gData, possibleTypes, universe.levelStatic); //setting galaxy at index
         }
         LevelManager.setProceduralGalaxies(galaxies);
         galaxyList = galaxies;
     }
-    void OnDrawGizmosSelected() //Visual aid
+    void OnDrawGizmos() //Visual aid
     {
         Gizmos.color = new Color(1,0,0,0.25f);
         Gizmos.DrawLine(new Vector3(-1000, linePos.y, linePos.z), new Vector3(1000, linePos.y, linePos.z));
