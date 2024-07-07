@@ -70,7 +70,6 @@ public class GalaxyParticleController : MonoBehaviour
 
         ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         starParticles.Emit(emitParams, numSamples * numIterations);
-        Debug.Log("emit particles");
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
         int numParticles = starParticles.GetParticles(particles);

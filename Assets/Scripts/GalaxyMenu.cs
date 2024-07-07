@@ -12,45 +12,102 @@ public class GalaxyMenu : MonoBehaviour
 
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
     [SerializeField] Vector3 focusPosition; //focused centre, not zoomed in
-    [SerializeField] Vector3 linePos; //Position of galaxy line
-    [SerializeField] float distInterval;
-    [SerializeField] int focusedGalaxy;
-    [SerializeField] float sizeScalar;
-    [SerializeField] Button right, left;
-    [SerializeField] Transform galaxyObjParent;
-    [SerializeField] GameObject galaxyObj;
-    [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes;
-    GalaxyController[] galaxyCons;
-    EventSystem eventSystem;
-    //List<LineRenderer> hexagons = new List<LineRenderer>();
-    int currentGalaxy;
-    float transitionDuration = 0.5f;
-    bool swap, isMoving;
+    [SerializeField] Vector3 zoomGalaxyPos; //zoomed position of galaxy
+    [SerializeField] Vector3 zoomCameraPos; //zoomed position of camera
+    [SerializeField] Vector3 linePos; //position of galaxy line, x does not matter
+    [SerializeField] float distInterval; //distance between galaxies
+    [SerializeField] int focusedGalaxy; //index of focused galaxy
+    [SerializeField] float transitionDuration = 0.5f;
+    [SerializeField] AnimationCurve transitionCurve;
+    [SerializeField] float sizeScalar; //scales galaxy size
+    [SerializeField] Button rightBtn, leftBtn; //move buttons
+    [SerializeField] Button zoomBtn; //move buttons
+    [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
+    [SerializeField] GameObject galaxyObj; //prefab for instantiation
+    [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes; //possible types for galaxies
+    Vector3 cameraOrigin;
+    Transform mainCam;
+    GalaxyController[] galaxyCons; //array of controllers in the scene
+    EventSystem eventSystem; //ev
+    bool isMoving; //whether it is in transition
+    bool zoomedIn;
     // Start is called before the first frame update
     void Start()
     {
+        mainCam = Camera.main.transform;
+        cameraOrigin = mainCam.position;
         CreateControllers();
-        right.onClick.AddListener(() => StartCoroutine(MoveGalaxies(1)));
-        left.onClick.AddListener(() => StartCoroutine(MoveGalaxies(-1)));
+        rightBtn.onClick.AddListener(() => MoveButton(1));
+        leftBtn.onClick.AddListener(() => MoveButton(-1));
+        zoomBtn.onClick.AddListener(() => ZoomGalaxy(true));
     }
     void Update()
     {
-        SetGalaxyPositions();
+        MenuInput();
+    }
+    void MoveButton(int dir)
+    {
+        if(!isMoving)
+        {
+            StartCoroutine(MoveGalaxies(dir));
+        }
+    }
+    IEnumerator ZoomGalaxy(bool zoomIn)
+    {
+        isMoving = true;
+        zoomedIn = zoomIn;
+        Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
+        Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
+
+        float timeOfTransition = 0f; //timer
+        while(timeOfTransition < transitionDuration)
+        {
+            float progress = timeOfTransition / transitionDuration;
+            mainCam.position = Vector3.Lerp(mainCam.position, cameraTarget, transitionCurve.Evaluate(progress));
+            galaxyCons[focusedGalaxy].transform.position = Vector3.Lerp(galaxyCons[focusedGalaxy].transform.position , galaxyTarget, transitionCurve.Evaluate(progress));
+
+            timeOfTransition += Time.deltaTime;
+            yield return null;
+        }
+
+        rightBtn.interactable = !zoomIn;
+        leftBtn.interactable = !zoomIn;
+        isMoving = false;
     }
     IEnumerator MoveGalaxies(int dir)
     {
+        isMoving = true;
         focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
-        yield return null;
+        Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
+        float timeOfTransition = 0f; //timer
+        while(timeOfTransition < transitionDuration) //loop to move galaxies in a certain timeframe
+        {
+            for (int i = 0; i < galaxyCons.Length; i++) //move each galaxy
+            {
+                galaxyCons[i].transform.position = Vector3.Lerp(galaxyCons[i].transform.position, targetPositions[i], transitionCurve.Evaluate(timeOfTransition/transitionDuration));
+            }
+            timeOfTransition += Time.deltaTime;
+            yield return null;
+        }
+        isMoving = false;
     }
-    void SetGalaxyPositions()
+    Vector3[] GalaxyPositions(int numGalaxies, int focus) //returns positions of the galaxies based on the focus
+    {
+        Vector3[] targetPositions = new Vector3[numGalaxies];
+        for (int i = 0; i < numGalaxies; i++)
+        {
+            targetPositions[i] = new Vector3((i-focus) * distInterval + focusPosition.x, linePos.y, linePos.z);
+            if(i == focus)
+            {
+                targetPositions[i] = focusPosition;
+            }
+        }
+        return targetPositions;
+    }
+    void EnableGalaxies() //enables or disables galaxies, onscreen or offscreen
     {
         for (int i = 0; i < galaxyCons.Length; i++)
         {
-            galaxyCons[i].transform.position = new Vector3((i-focusedGalaxy) * distInterval + focusPosition.x, linePos.y, linePos.z);
-            if(i == focusedGalaxy)
-            {
-                galaxyCons[i].transform.position = focusPosition;
-            }
             if(Mathf.Abs(i-focusedGalaxy)<=1)
             {
                 galaxyCons[i].gameObject.SetActive(true);
@@ -58,20 +115,39 @@ public class GalaxyMenu : MonoBehaviour
             else
             {
                 galaxyCons[i].gameObject.SetActive(false);
-
             }
         }
     }
-    void CreateControllers()
+    void CreateControllers() //Instantiates all galaxies
     {
         galaxyCons = new GalaxyController[galaxyList.Length];
+        Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
         for (int i = 0; i < galaxyList.Length; i++)
         {
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
+            galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
         }
-        SetGalaxyPositions();
+    }
+    void MenuInput()
+    {
+        if(Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            StartCoroutine(MoveGalaxies(1));
+        }
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            StartCoroutine(MoveGalaxies(-1));
+        }
+        if(Input.GetKeyDown(KeyCode.Q) && zoomedIn)
+        {
+            StartCoroutine(ZoomGalaxy(false));
+        }
+        if(Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
+        {
+            StartCoroutine(ZoomGalaxy(true));
+        }
     }
     void CreateProceduralGalaxies()
     {
@@ -162,17 +238,19 @@ public class GalaxyMenu : MonoBehaviour
         LevelManager.setProceduralGalaxies(galaxies);
         galaxyList = galaxies;
     }
-    void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected() //Visual aid
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = new Color(1,0,0,0.25f);
         Gizmos.DrawLine(new Vector3(-1000, linePos.y, linePos.z), new Vector3(1000, linePos.y, linePos.z));
-        Gizmos.color = Color.green;
+        Gizmos.color = new Color(0,1,0,0.25f);
         Gizmos.DrawCube(focusPosition, Vector3.one);
         Gizmos.DrawCube(new Vector3(focusPosition.x-distInterval, linePos.y, linePos.z), Vector3.one);
         Gizmos.DrawCube(new Vector3(focusPosition.x+distInterval, linePos.y, linePos.z), Vector3.one);
-        
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(zoomGalaxyPos, Vector3.one);
+        Gizmos.DrawSphere(zoomCameraPos, 1);
     }
-    int LoopValue(int value, int min, int max)
+    int LoopValue(int value, int min, int max) //utility to loop values
     {
         int range = max - min;
         if (range <= 0) return min; // Handle edge case if min and max are equal or max is less than min
