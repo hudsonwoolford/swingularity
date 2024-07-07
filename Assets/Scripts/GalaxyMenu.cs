@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -15,6 +13,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Vector3 zoomGalaxyPos; //zoomed position of galaxy
     [SerializeField] Vector3 zoomCameraPos; //zoomed position of camera
     [SerializeField] Vector3 linePos; //position of galaxy line, x does not matter
+    [SerializeField] Vector3 minRotation; //minimum rotation of galaxies
+    [SerializeField] Vector3 maxRotation; //maximum rotation of galaxies
     [SerializeField] float distInterval; //distance between galaxies
     [SerializeField] int focusedGalaxy; //index of focused galaxy
     [SerializeField] float transitionDuration = 0.5f;
@@ -25,21 +25,31 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
     [SerializeField] GameObject galaxyObj; //prefab for instantiation
     [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes; //possible types for galaxies
+    [Header("Info Menu")]
+    [SerializeField] Animator infoCardAnim;
+    [SerializeField] TextMeshProUGUI galaxyTitle;
+    [SerializeField] Button playGalaxy;
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
     EventSystem eventSystem; //ev
     bool isMoving; //whether it is in transition
     bool zoomedIn;
+    float timeOfTransition;
     // Start is called before the first frame update
     void Start()
     {
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
+        if(GameManager.LevelManager.procedural)
+        {
+            CreateProceduralGalaxies();
+        }
         CreateControllers();
+        EnableDisableGalaxies(false);
         rightBtn.onClick.AddListener(() => MoveButton(1));
         leftBtn.onClick.AddListener(() => MoveButton(-1));
-        zoomBtn.onClick.AddListener(() => ZoomGalaxy(true));
+        zoomBtn.onClick.AddListener(() => ZoomButton(true));
     }
     void Update()
     {
@@ -52,12 +62,38 @@ public class GalaxyMenu : MonoBehaviour
             StartCoroutine(MoveGalaxies(dir));
         }
     }
+    void ZoomButton(bool zoomIn)
+    {
+        if (!isMoving)
+        {
+            StartCoroutine(ZoomGalaxy(zoomIn));
+        }
+    }
+    void EnableAndSetInfoCard(bool enable, LevelManager.GalaxyParams gp)
+    {
+        if(enable)
+        {
+            infoCardAnim.Play("ShowInfoCard");
+
+            galaxyTitle.text = gp.name;
+        }
+        else
+        {
+            infoCardAnim.Play("HideInfoCard");
+        }
+    }
     IEnumerator ZoomGalaxy(bool zoomIn)
     {
         isMoving = true;
         zoomedIn = zoomIn;
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
+
+        if(!zoomIn)
+        {
+            EnableAndSetInfoCard(zoomIn, galaxyList[focusedGalaxy]);
+            yield return new WaitForSeconds(infoCardAnim.GetCurrentAnimatorStateInfo(0).length/2);
+        }
 
         float timeOfTransition = 0f; //timer
         while(timeOfTransition < transitionDuration)
@@ -73,15 +109,22 @@ public class GalaxyMenu : MonoBehaviour
         rightBtn.interactable = !zoomIn;
         leftBtn.interactable = !zoomIn;
         isMoving = false;
+        if (zoomIn)
+        {
+            EnableAndSetInfoCard(zoomIn, galaxyList[focusedGalaxy]);
+            yield return new WaitForSeconds(infoCardAnim.GetCurrentAnimatorStateInfo(0).length);
+        }
     }
     IEnumerator MoveGalaxies(int dir)
     {
         isMoving = true;
+        bool loopMove = focusedGalaxy + dir <= 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
         focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
         Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
         float timeOfTransition = 0f; //timer
         while(timeOfTransition < transitionDuration) //loop to move galaxies in a certain timeframe
         {
+            if(timeOfTransition >= transitionDuration/2) { EnableDisableGalaxies(loopMove); }
             for (int i = 0; i < galaxyCons.Length; i++) //move each galaxy
             {
                 galaxyCons[i].transform.position = Vector3.Lerp(galaxyCons[i].transform.position, targetPositions[i], transitionCurve.Evaluate(timeOfTransition/transitionDuration));
@@ -104,11 +147,11 @@ public class GalaxyMenu : MonoBehaviour
         }
         return targetPositions;
     }
-    void EnableGalaxies() //enables or disables galaxies, onscreen or offscreen
+    void EnableDisableGalaxies(bool enableAll) //enables or disables galaxies, onscreen or offscreen
     {
         for (int i = 0; i < galaxyCons.Length; i++)
         {
-            if(Mathf.Abs(i-focusedGalaxy)<=1)
+            if(Mathf.Abs(i-focusedGalaxy)<=1 || enableAll)
             {
                 galaxyCons[i].gameObject.SetActive(true);
             }
@@ -124,8 +167,10 @@ public class GalaxyMenu : MonoBehaviour
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
         for (int i = 0; i < galaxyList.Length; i++)
         {
+            UnityEngine.Random.InitState(galaxyList[i].seed);
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
+            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation,UnityEngine.Random.value));
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
         }
@@ -134,19 +179,19 @@ public class GalaxyMenu : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.RightArrow))
         {
-            StartCoroutine(MoveGalaxies(1));
+            MoveButton(1);
         }
         if(Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            StartCoroutine(MoveGalaxies(-1));
+            MoveButton(-1);
         }
         if(Input.GetKeyDown(KeyCode.Q) && zoomedIn)
         {
-            StartCoroutine(ZoomGalaxy(false));
+            ZoomButton(false);
         }
         if(Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
         {
-            StartCoroutine(ZoomGalaxy(true));
+            ZoomButton(true);
         }
     }
     void CreateProceduralGalaxies()
@@ -246,7 +291,7 @@ public class GalaxyMenu : MonoBehaviour
         Gizmos.DrawCube(focusPosition, Vector3.one);
         Gizmos.DrawCube(new Vector3(focusPosition.x-distInterval, linePos.y, linePos.z), Vector3.one);
         Gizmos.DrawCube(new Vector3(focusPosition.x+distInterval, linePos.y, linePos.z), Vector3.one);
-        Gizmos.color = Color.red;
+        Gizmos.color = new Color(1, 0, 0, 0.25f);
         Gizmos.DrawCube(zoomGalaxyPos, Vector3.one);
         Gizmos.DrawSphere(zoomCameraPos, 1);
     }

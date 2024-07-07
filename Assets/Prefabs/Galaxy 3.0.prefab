@@ -60,10 +60,10 @@ MonoBehaviour:
     type: 1
     possibleStarColors:
     - {r: 0.8352941, g: 0.85882354, b: 0.49019608, a: 1}
-    - {r: 0.1254902, g: 1, b: 0.64705884, a: 1}
+    - {r: 1, g: 0.46423173, b: 0.12549019, a: 1}
     - {r: 0.9254902, g: 0.75127995, b: 0.4156863, a: 1}
     possibleNebulaColors:
-    - {r: 0.78431374, g: 0.7254902, b: 0.39607844, a: 0.003921569}
+    - {r: 0.78431374, g: 0.6021354, b: 0.39607844, a: 0.003921569}
     - {r: 0.9339623, g: 0.90986586, b: 0.41852084, a: 0.003921569}
   - name: Ice
     type: 2
@@ -189,6 +189,7 @@ MonoBehaviour:
   col2: {r: 0, g: 0.89161587, b: 1, a: 0.003921569}
   col3: {r: 0, g: 0, b: 0, a: 0}
   galaxySeed: 44
+  calculateUpdate: 0
 --- !u!198 &7992838839271195242
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5050,6 +5051,7 @@ MonoBehaviour:
   col2: {r: 0, g: 0.89161587, b: 1, a: 1}
   col3: {r: 0, g: 0, b: 0, a: 0}
   galaxySeed: 44
+  calculateUpdate: 1
 --- !u!198 &6936607390479402351
 ParticleSystem:
   m_ObjectHideFlags: 0

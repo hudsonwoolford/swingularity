@@ -38,6 +38,7 @@ public class GalaxyParticleController : MonoBehaviour
     [SerializeField] public Color col1, col2, col3;
 
     [SerializeField] int galaxySeed;
+    [SerializeField] bool calculateUpdate;
 
     Dictionary<int, (int, float)> particleIndexing =
     new Dictionary<int, (int, float)>();
@@ -48,6 +49,7 @@ public class GalaxyParticleController : MonoBehaviour
         public float r;
         public float theta;
     }
+    bool hasUpdated;
 
     void Awake(){
 
@@ -108,6 +110,8 @@ public class GalaxyParticleController : MonoBehaviour
 
     void Update()
     {
+        if(hasUpdated && !calculateUpdate) { return; }
+        hasUpdated = true;
         if (starParticles == null)
         {
             starParticles = GetComponent<ParticleSystem>();
@@ -204,6 +208,7 @@ public class GalaxyParticleController : MonoBehaviour
     }
     void OnDisable()
     {
+        hasUpdated = false;
         starParticles.Stop();
     }
 }
