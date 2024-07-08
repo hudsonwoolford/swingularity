@@ -200,13 +200,13 @@ public class GalaxyMenu : MonoBehaviour
     IEnumerator MoveGalaxies(int dir)
     {
         isMoving = true;
-        bool loopMove = focusedGalaxy + dir <= 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
+        bool loopMove = focusedGalaxy + dir < 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
         focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
         Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
         float timeOfTransition = 0f; //timer
         while(timeOfTransition < transitionDuration) //loop to move galaxies in a certain timeframe
         {
-            if(timeOfTransition >= transitionDuration/2) { EnableDisableGalaxies(loopMove); }
+            if (timeOfTransition > transitionDuration / 3) { EnableDisableGalaxies(loopMove); }
             for (int i = 0; i < galaxyCons.Length; i++) //move each galaxy
             {
                 galaxyCons[i].transform.position = Vector3.Lerp(galaxyCons[i].transform.position, targetPositions[i], transitionCurve.Evaluate(timeOfTransition/transitionDuration));
@@ -215,6 +215,7 @@ public class GalaxyMenu : MonoBehaviour
             yield return null;
         }
         isMoving = false;
+        EnableDisableGalaxies(false);
     }
     #endregion
     #region Galaxy Configuration
@@ -265,7 +266,7 @@ public class GalaxyMenu : MonoBehaviour
         for (int i = 0; i < galaxyList.Length; i++) //dot button creation
         {
             RectTransform t = Instantiate(dotButton, transform).GetComponent<RectTransform>();
-            t.position = new Vector3(t.position.x + dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
+            t.localPosition = new Vector3(dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
             int callIndex = i;
             t.gameObject.GetComponent<Button>().onClick.AddListener(() => DotButton(callIndex));
             dotSelectedImgs[i] = t.GetChild(0).GetComponent<Image>();
