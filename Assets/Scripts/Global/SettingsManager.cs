@@ -18,6 +18,12 @@ public class SettingsManager : MonoBehaviour
     struct SettingsChoice
     {
     }
+    [SerializeField] Button applySettings;
+    [Header("Main Settings")]
+    [SerializeField] Button audioTabBtn;
+    [SerializeField] Button gameTabBtn;
+    [SerializeField] Button graphicsTabBtn;
+    [SerializeField] CanvasGroup[] settingsTabs;
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider sfxVolElement;
     [SerializeField] SettingsSlider interfaceVolElement;
@@ -31,6 +37,10 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Toggle vsyncTgl;
 
     Canvas settingsCanvas;
+    Animator settingsAnim;
+    bool menuOpen = false;
+    int currentTab;
+    float transitionDuration = 0.3f;
 
 
     public static float sfxVolume;
@@ -43,12 +53,23 @@ public class SettingsManager : MonoBehaviour
 
     public static int frameLimit;
     public static bool vsync;
-    
+
+    public delegate void EnableSettingsMenu(bool enable);
+    public static EnableSettingsMenu enableSettingsMenu;
+    public delegate void ApplySettings();
+    public static ApplySettings applySettingsVar;
+
     // Start is called before the first frame update
     void Start()
     {
+        if(!Application.isPlaying) { return; }
         settingsCanvas = GetComponent<Canvas>();
         settingsCanvas.enabled = false;
+        settingsAnim = GetComponent<Animator>();
+        currentTab = 0;
+
+        SetAllVariables();
+        SetButtonFunctions();
     }
 
     // Update is called once per frame
@@ -62,7 +83,10 @@ public class SettingsManager : MonoBehaviour
         }
         else
         {
-
+            if(menuOpen && Input.GetKeyDown(KeyCode.Escape))
+            {
+                enableSettingsMenu?.Invoke(false);
+            }
         }
     }
 
@@ -70,7 +94,7 @@ public class SettingsManager : MonoBehaviour
     {
         SetAudioVariables();
         SetGameVariables();
-        SetGraphicVariables();
+        applySettingsVar?.Invoke();
     }
     void SetAudioVariables()
     {
@@ -88,5 +112,62 @@ public class SettingsManager : MonoBehaviour
     {
         vsync = vsyncTgl.isOn;
         frameLimit = Mathf.RoundToInt(frameLimitElement.slider.value);
+    }
+    void EnableMenu(bool enable)
+    {
+        menuOpen = enable;
+        if(enable) { settingsAnim.Play("ShowSettingsMenu"); }
+        else { settingsAnim.Play("HideSettingsMenu"); }
+    }
+    void ResetSlider(SettingsSlider ss)
+    {
+        ss.slider.value = ss.defaultValue;
+    }
+    IEnumerator ChangeTab(int tabIndex)
+    {
+        int prevIndex = currentTab;
+        currentTab = tabIndex;
+        float timeOfTransition = 0;
+        while(timeOfTransition<transitionDuration)
+        {
+            float alpha = Mathf.Lerp(0, 1, timeOfTransition / transitionDuration);
+            settingsTabs[prevIndex].alpha = 1 - alpha;
+            settingsTabs[currentTab].alpha = alpha;
+
+            timeOfTransition += Time.deltaTime;
+            yield return null;
+        }
+        settingsTabs[prevIndex].alpha = 0;
+        settingsTabs[currentTab].alpha = 1;
+        settingsTabs[prevIndex].interactable = false;
+        settingsTabs[prevIndex].blocksRaycasts = false;
+        settingsTabs[currentTab].interactable = true;
+        settingsTabs[currentTab].blocksRaycasts = true;
+    }
+    void SetButtonFunctions()
+    {
+        applySettings.onClick.AddListener(() => SetAllVariables());
+
+        SettingsSlider[] sSliders = new SettingsSlider[] { sfxVolElement, interfaceVolElement, musicVolElement, frameLimitElement };
+        for (int i = 0; i < sSliders.Length; i++)
+        {
+            for (int x = 0; x < sSliders[i].resetBtns.Length; x++)
+            {
+                int currentIndex = i;
+                sSliders[i].resetBtns[x].onClick.AddListener(() => ResetSlider(sSliders[currentIndex]));
+            }
+        }
+
+        audioTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(0)));
+        gameTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(1)));
+        graphicsTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(2)));
+    }
+    private void OnEnable()
+    {
+        enableSettingsMenu += EnableMenu;
+    }
+    private void OnDisable()
+    {
+        enableSettingsMenu -= EnableMenu;
     }
 }

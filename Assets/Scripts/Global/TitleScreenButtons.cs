@@ -41,6 +41,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] float speed;
     float rotation = 0.02f;
     bool ngMenu;
+    bool settingsMenu;
     bool onlyCreateMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
@@ -75,7 +76,12 @@ public class TitleScreenButtons : MonoBehaviour
         {
             StartCoroutine(EnableNewGameMenu(false));
         }
-        if(ngMenu){
+        if (Input.GetKeyDown(KeyCode.Escape) && settingsMenu)
+        {
+            settingsMenu = false;
+            cameraAnim.Play("SettingsToMenu");
+        }
+        if (ngMenu){
             rotation += Time.deltaTime * speed;
             if(rotation > 360){
                 rotation = 0;
@@ -110,7 +116,9 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideCreationMenu");
     }
     void OpenSettings(){
-        
+        settingsMenu = true;
+        cameraAnim.Play("MenuToSettings");
+        SettingsManager.enableSettingsMenu?.Invoke(true);
     }
     #endregion
     #region Save Load UI

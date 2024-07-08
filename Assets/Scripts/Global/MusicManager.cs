@@ -27,7 +27,7 @@ public class MusicManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdateSourceVolume();
     }
 
     // Update is called once per frame
@@ -91,12 +91,18 @@ public class MusicManager : MonoBehaviour
             PlayGalaxyMusic(currentMusic);
         }
     }
+    void UpdateSourceVolume()
+    {
+        musicSource.volume = SettingsManager.musicVolume;
+    }
     void OnEnable()
     {
+        SettingsManager.applySettingsVar += UpdateSourceVolume;
         SceneManager.sceneLoaded += OnLoadScene;
     }
     void OnDisable()
     {
+        SettingsManager.applySettingsVar -= UpdateSourceVolume;
         SceneManager.sceneLoaded -= OnLoadScene;
     }
 }
