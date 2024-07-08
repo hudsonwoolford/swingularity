@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+[ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
 {
     [System.Serializable]
     struct SettingsSlider
     {
-        public TextMeshProUGUI label;
         public Slider slider;
-        public Button resetBtn;
+        public Button[] resetBtns;
         public float defaultValue;
     }
     [System.Serializable]
@@ -21,7 +21,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider sfxVolElement;
     [SerializeField] SettingsSlider interfaceVolElement;
-    [SerializeField] SettingsSlider muiscVolElement;
+    [SerializeField] SettingsSlider musicVolElement;
     [Header("Game Elements")]
     [SerializeField] Toggle customCursorTgl;
     [SerializeField] Toggle hintsTgl;
@@ -45,6 +45,15 @@ public class SettingsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(!Application.isPlaying)
+        {
+            if (sfxVolElement.slider != null) { sfxVolElement.slider.value = sfxVolElement.defaultValue; }
+            if (interfaceVolElement.slider != null) { interfaceVolElement.slider.value = interfaceVolElement.defaultValue; }
+            if (musicVolElement.slider != null) { musicVolElement.slider.value = musicVolElement.defaultValue; }
+        }
+        else
+        {
+
+        }
     }
 }
