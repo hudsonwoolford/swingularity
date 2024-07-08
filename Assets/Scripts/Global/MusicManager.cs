@@ -33,11 +33,7 @@ public class MusicManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        currentMusic = CurrentMusic();
-        if(currentMusic.musicClip != musicSource.clip)
-        {
-            PlayGalaxyMusic(currentMusic);
-        }
+        
     }
     void Update()
     {
@@ -65,6 +61,7 @@ public class MusicManager : MonoBehaviour
     void PlayGalaxyMusic(MusicData musicData)
     {
         StopMusic();
+        currentMusic = musicData;
         musicSource.time = 0;
         musicSource.clip = musicData.musicClip;
         musicSource.volume = musicData.volume;
@@ -78,10 +75,20 @@ public class MusicManager : MonoBehaviour
     {
         for(int i = 0; i < menuScenes.Length; i++)
         {
-            if(menuScenes[i] == scene.name)
+            if(menuScenes[i] == scene.name && musicSource.clip != menuMusic.musicClip)
             {
                 PlayGalaxyMusic(menuMusic);
+                return;
             }
+            else if (menuScenes[i] == scene.name && musicSource.clip == menuMusic.musicClip)
+            {
+                return;
+            }
+        }
+        currentMusic = CurrentMusic();
+        if (currentMusic.musicClip != musicSource.clip)
+        {
+            PlayGalaxyMusic(currentMusic);
         }
     }
     void OnEnable()
