@@ -119,7 +119,7 @@ public class GalaxyParticleController : MonoBehaviour
         RandomizeVars(galaxySeed);
 
 
-        particles = new ParticleSystem.Particle[starParticles.particleCount];
+        //particles = new ParticleSystem.Particle[starParticles.particleCount]; //ENABLING THIS CAUSES ISSUES W ITH GARBAGE COLLECTOR
 
         int numParticles = starParticles.GetParticles(particles);
 

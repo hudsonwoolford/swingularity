@@ -27,19 +27,28 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Toggle hintsTgl;
     [SerializeField] Toggle uiGlowTgl;
     [Header("Graphics Elements")]
+    [SerializeField] SettingsSlider frameLimitElement;
     [SerializeField] Toggle vsyncTgl;
-    [SerializeField] SettingsSlider frameLimit;
 
-
+    Canvas settingsCanvas;
 
 
     public static float sfxVolume;
+    public static float interfaceVolume;
     public static float musicVolume;
+
+    public static bool customCursor;
+    public static bool hints;
+    public static bool uiGlow;
+
+    public static int frameLimit;
+    public static bool vsync;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        settingsCanvas = GetComponent<Canvas>();
+        settingsCanvas.enabled = false;
     }
 
     // Update is called once per frame
@@ -55,5 +64,29 @@ public class SettingsManager : MonoBehaviour
         {
 
         }
+    }
+
+    void SetAllVariables()
+    {
+        SetAudioVariables();
+        SetGameVariables();
+        SetGraphicVariables();
+    }
+    void SetAudioVariables()
+    {
+        sfxVolume = sfxVolElement.slider.value;
+        interfaceVolume = interfaceVolElement.slider.value;
+        musicVolume = musicVolElement.slider.value;
+    }
+    void SetGameVariables()
+    {
+        customCursor = customCursorTgl.isOn;
+        hints = hintsTgl.isOn;
+        uiGlow = uiGlowTgl.isOn;
+    }
+    void SetGraphicVariables()
+    {
+        vsync = vsyncTgl.isOn;
+        frameLimit = Mathf.RoundToInt(frameLimitElement.slider.value);
     }
 }
