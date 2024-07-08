@@ -16,6 +16,12 @@ public class MappingHandling : MonoBehaviour
     BoxCollider2D camAreaSmaller;
     PolygonCollider2D boundaries;
     Camera mainCam;
+
+    int deathMessageIndex;
+
+    [SerializeField] TextMeshProUGUI deathMessageTxt;
+
+    readonly string[] deathMessages = new string[3] { "Out of bounds!", "Burnt to a crisp", "Fried by X-rays!"};
     private void Awake()
     {
         if(ball == null) { ball = GameObject.FindGameObjectWithTag("Player").transform; }
@@ -109,15 +115,21 @@ public class MappingHandling : MonoBehaviour
     }
     void ShowOOB()
     {
+        deathMessageTxt.text = deathMessages[deathMessageIndex];
         canvasAnimator.Play("ShowOOB");
+    }
+    void SetDeathMessage(int index){
+        deathMessageIndex = index;
+        ShowOOB();
     }
     private void OnEnable()
     {
-        ShootBall.boundsReset += ShowOOB;
+        ShootBall.death += SetDeathMessage;
     }
     private void OnDisable()
     {
-        ShootBall.boundsReset -= ShowOOB;
+        ShootBall.death -= SetDeathMessage;
+
     }
     private void OnDrawGizmosSelected()
     {

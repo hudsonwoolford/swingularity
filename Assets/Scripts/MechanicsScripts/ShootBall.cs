@@ -78,6 +78,8 @@ public class ShootBall : MonoBehaviour
     public static BoundsReset boundsReset;
     public delegate void StopGravity();
     public static StopGravity stopGravity;
+    public delegate void Death(int index);
+    public static Death death;
 
     public void Init(Transform env, Vector3 originPos){
         planetTransform = env;
@@ -771,6 +773,7 @@ public class ShootBall : MonoBehaviour
         deathDelay = true;
         if(objCol.GetComponent<QuasarGenerator>()!=null)
         {
+            death.Invoke(2);
             if (GameManager.LevelManager.currentTheme != null)
             {
                 defaultBallMat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
@@ -794,6 +797,12 @@ public class ShootBall : MonoBehaviour
             BallReset();
             deathDelay = false;
             yield break;
+        }
+        else if(objCol.GetComponent<SunGenerator>() != null){
+            death.Invoke(1);
+        }
+        else{
+            death.Invoke(0);
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         childObj.GetComponent<MeshRenderer>().enabled = false;
