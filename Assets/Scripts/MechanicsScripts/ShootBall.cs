@@ -718,7 +718,6 @@ public class ShootBall : MonoBehaviour
         Vector3 holeDir = hitPoint - hole.position;
         velocity *= -1;
        if(holeDir.x > 0 && holeDir.y > 0){
-            print("1");
             if(Mathf.Atan2(velocity.y, velocity.x) > Mathf.PI/4){
                  return true;
             }
@@ -727,7 +726,6 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x > 0 && holeDir.y < 0){
-            print("4");
             if(Mathf.Atan2(velocity.y, velocity.x) > 7 * Mathf.PI/4){
                 return true;
             }
@@ -736,7 +734,6 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y > 0){
-            print("2");
 
             if(Mathf.Atan2(velocity.y, velocity.x) > 3 * Mathf.PI/4){
                 return true;
@@ -746,7 +743,6 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y < 0){
-            print("3");
             if(Mathf.Atan2(velocity.y, velocity.x) > 5 * Mathf.PI/4){
                 return true;
             }

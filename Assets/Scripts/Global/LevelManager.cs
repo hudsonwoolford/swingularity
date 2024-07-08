@@ -250,13 +250,7 @@ public class LevelManager : MonoBehaviour
         streakText.enabled = false;
         hioStreakText.enabled = false;
         //determine current level index
-        for (int i = 0; i < currentProceduralGalaxy.Length; i++)
-        {
-            if (levelParams.seed == currentProceduralGalaxy[i].seed && levelParams.difficulty == currentProceduralGalaxy[i].difficulty) //OPERATOR DOESNT WORK IDK WHY SHOULD BE FIXED BUT THIS FOR NOW
-            {
-                levelIndex = i; break;
-            }
-        }
+        DetermineCurrentLevelIndex();
         //complete universe
         if(levelIndex>=4) 
         {
@@ -285,6 +279,16 @@ public class LevelManager : MonoBehaviour
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
         levelCanvas.enabled = false;
+    }
+    void DetermineCurrentLevelIndex()
+    {
+        for (int i = 0; i < currentProceduralGalaxy.Length; i++)
+        {
+            if (levelParams == currentProceduralGalaxy[i]) //OPERATOR DOESNT WORK IDK WHY SHOULD BE FIXED BUT THIS FOR NOW
+            {
+                levelIndex = i; break;
+            }
+        }
     }
     #endregion
     #region EventFunctions
@@ -315,6 +319,7 @@ public class LevelManager : MonoBehaviour
         procedural = true;
         currentGalaxy = galaxy;
         currentProceduralGalaxy = galaxyLevels;
+        levelIndex = 0;
     }
     void SetProceduralGalaxiesEvent(GalaxyParams[] galaxyParams) //Sets the current universe
     {
