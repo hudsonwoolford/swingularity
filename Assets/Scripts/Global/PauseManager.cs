@@ -35,14 +35,19 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            foreach (string s in dontPauseScene)
-            {
-                if (SceneManager.GetActiveScene().name == s)
+            if(pausecanvas.enabled == false){
+                foreach (string s in dontPauseScene)
                 {
-                    return;
+                    if (SceneManager.GetActiveScene().name == s)
+                    {
+                        return;
+                    }
                 }
+                pauseGame?.Invoke();
             }
-            pauseGame?.Invoke();
+            else{
+                unpauseGame?.Invoke();
+            }
         }
     }
     void Pause()

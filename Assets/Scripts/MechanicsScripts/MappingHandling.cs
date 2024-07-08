@@ -51,6 +51,8 @@ public class MappingHandling : MonoBehaviour
         if(!boundaries.OverlapPoint(ball.position))
         {
             ShootBall.boundsReset?.Invoke();
+            ShootBall.death.Invoke(0);
+
         }
         ArrowToObject(flag, flagArrow, flagDistText);
         if (CameraFollow.panning) { return; }
