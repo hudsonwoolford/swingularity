@@ -21,7 +21,8 @@ Shader "Custom/Dissolve"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent"}
         LOD 200
-
+        
+        ZTest Always
         CGPROGRAM
 
         #pragma surface surf Standard vertex:vert fullforwardshadows alpha:blend
