@@ -115,7 +115,7 @@ public class GalaxyMenu : MonoBehaviour
         {
             MoveButton(-1);
         }
-        if (Input.GetKeyDown(KeyCode.Q) && zoomedIn)
+        if (Input.GetKeyDown(KeyCode.Escape) && zoomedIn)
         {
             ZoomButton(false);
         }
