@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class MusicManager : MonoBehaviour
         public float loopBeginOffset;
         public float volume;
     }
+    [SerializeField] string[] menuScenes;
     [SerializeField] MusicData menuMusic;
     [SerializeField] MusicData[] galaxyClips;
     MusicData currentMusic;
@@ -71,5 +73,23 @@ public class MusicManager : MonoBehaviour
     void StopMusic()
     {
         musicSource.Stop();
+    }
+    void OnLoadScene(Scene scene, LoadSceneMode mode)
+    {
+        for(int i = 0; i < menuScenes.Length; i++)
+        {
+            if(menuScenes[i] == scene.name)
+            {
+                PlayGalaxyMusic(menuMusic);
+            }
+        }
+    }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLoadScene;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLoadScene;
     }
 }
