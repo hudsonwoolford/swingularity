@@ -133,7 +133,7 @@ public class QuasarGenerator : MonoBehaviour
         for (int i = 0; i < 5 && !stop; i++)
         {
             intervals.Add(UnityEngine.Random.Range(0.5f, 1.5f));
-            stop = (UnityEngine.Random.value+1)/2 > 0.8f ? true : false;
+            stop = UnityEngine.Random.value > 0.5f && i != 0 ? true : false;
         }
     }
     //Master function

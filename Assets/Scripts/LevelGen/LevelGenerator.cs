@@ -173,7 +173,7 @@ public class LevelGenerator : MonoBehaviour
         int[] numPerObj = new int[levelParams.specialObjects.Length];   
 
         for (int i = 0; i < numSpecialObj; i++){
-            UnityEngine.Random.InitState(levelParams.seed + i);
+            UnityEngine.Random.InitState(levelParams.seed + i*UnityEngine.Random.Range(-100, 100));
             int index = UnityEngine.Random.Range(0,levelParams.specialObjects.Length);
             numPerObj[index]++;
             

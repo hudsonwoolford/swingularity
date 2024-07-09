@@ -302,6 +302,8 @@ public class GalaxyMenu : MonoBehaviour
         LevelManager.UniverseParams universe = GameManager.LevelManager.currentUniverse; //retrieves current universe
         UnityEngine.Random.InitState(universe.seed);
         LevelManager.GalaxyParams[] galaxies = new LevelManager.GalaxyParams[universe.numGalaxies]; //initialize galaxy array
+        float galaxyDifficultyStep = (float)universe.relativeDifficulty / (float)universe.numGalaxies;
+        float galaxyDifficultyTracker = galaxyDifficultyStep;
         for (int i = 0; i < galaxies.Length; i++) //for each galaxy index, create one
         {
             UnityEngine.Random.InitState(universe.seed + i); //different random values
@@ -386,8 +388,8 @@ public class GalaxyMenu : MonoBehaviour
                 }
             }
 
-
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), universe.relativeDifficulty, gData, possibleTypes, specialTypes, universe.levelStatic); //setting galaxy at index
+            galaxyDifficultyTracker += galaxyDifficultyStep;
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic); //setting galaxy at index
         }
         LevelManager.setProceduralGalaxies(galaxies);
         galaxyList = galaxies;

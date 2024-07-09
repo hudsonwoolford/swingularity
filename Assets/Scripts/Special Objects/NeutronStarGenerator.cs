@@ -36,6 +36,7 @@ public class NeutronStarGenerator : SunGenerator
         InitializeParticleArrays();
         InitializeParticles();
         //DrawMagneticField();
+        particleSpeed = transform.localScale.x / 10;
     }
     // Update is called once per frame
     private void Update()
@@ -61,6 +62,7 @@ public class NeutronStarGenerator : SunGenerator
         {
             UpdateParticleSystem(particleSystems[i], ref allParticles[i]);
         }
+        particleSpeed = transform.localScale.x / 10;
     }
     public override void RandomSun(int seed, ColorSchemeStaticReference.PlanetType type)
     {
@@ -84,7 +86,7 @@ public class NeutronStarGenerator : SunGenerator
             main = particleSystems[i].main;
             main.startColor = gradient;
             float lifetimeMult = i == 0 || i == 1 ? 2.2f : 2.8f;
-            main.startLifetime = transform.localScale.x * lifetimeMult;
+            main.startLifetime = lifetimeMult;
         }
         atmosphericParticles.Clear();
         atmosphericParticles.Play();
@@ -105,7 +107,8 @@ public class NeutronStarGenerator : SunGenerator
             Vector2 wSum = WeightedSum(pos, pole1, pole2);
             float distance = wSum.magnitude;
             Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
-            allP[i].velocity = polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
+            //allP[i].velocity = polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
+            allP[i].position = new Vector2(wSum.x * particleSpeed / distance + pos.x, wSum.y * particleSpeed / distance + pos.y);
             //allP[i].velocity = Vector3.one * 10;
         }
 
