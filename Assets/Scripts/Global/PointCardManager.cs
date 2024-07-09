@@ -33,12 +33,12 @@ public class PointCardManager : MonoBehaviour
     {
         for (int i = 0; i < 6; i++)
         {
-            parTexts[i].text = "?";
+            parTexts[i].text = "—";
             scoreTexts[i].color = new Color(1,1,1,1);
-            scoreTexts[i].text = "?";
+            scoreTexts[i].text = "—";
             shotsTexts[i].color = new Color(1,1,1,1);
-            shotsTexts[i].text = "?";
-            outlineScoreTexts[i].text = "?";
+            shotsTexts[i].text = "—";
+            outlineScoreTexts[i].text = "—";
             outlineScoreTexts[i].color = new Color(1,1,1,1);
         }
     }
@@ -77,13 +77,13 @@ public class PointCardManager : MonoBehaviour
                     
                     int scoreSum = 0, shotSum = 0, parSum = 0;
                     for(int j = 0; j < 5; j++){
-                        if (scoreTexts[j].text != "?"){
+                        if (scoreTexts[j].text != "—"){
                             scoreSum += int.Parse(scoreTexts[j].text);
                         }
-                        if (shotsTexts[j].text != "?"){
+                        if (shotsTexts[j].text != "—"){
                             shotSum += int.Parse(shotsTexts[j].text);
                         }
-                        if (parTexts[j].text != "?"){
+                        if (parTexts[j].text != "—"){
                             parSum += int.Parse(parTexts[j].text);
                         }
                     }
@@ -144,13 +144,13 @@ public class PointCardManager : MonoBehaviour
 
             int scoreSum = 0, shotSum = 0, parSum = 0;
             for(int j = 0; j < 5; j++){
-                if (scoreTexts[j].text != "?"){
+                if (scoreTexts[j].text != "—"){
                     scoreSum += int.Parse(scoreTexts[j].text);
                 }
-                if (shotsTexts[j].text != "?"){
+                if (shotsTexts[j].text != "—"){
                     shotSum += int.Parse(shotsTexts[j].text);
                 }
-                if (parTexts[j].text != "?"){
+                if (parTexts[j].text != "—"){
                     parSum += int.Parse(parTexts[j].text);
                 }
             }
