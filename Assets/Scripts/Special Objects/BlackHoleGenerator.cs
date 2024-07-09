@@ -82,12 +82,11 @@ public class BlackHoleGenerator : MonoBehaviour
         CreateLine();
     }
     [ContextMenu("Random Color")]
-    void RandomHole()
+    public void RandomHole(int index)
     {
-        schemeIndex = UnityEngine.Random.Range(0, schemePool.Length);
+        schemeIndex = index;
+        NullChecks();
 
-        //Applying
-        RandomRotation();
         Coloring();
 
         //Reset system

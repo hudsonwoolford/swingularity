@@ -131,7 +131,6 @@ Shader "Custom/FinalTerrestrial"
     }
     SubShader
     {
-        ZTest Always
 
         Tags
         {

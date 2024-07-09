@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015495324, g: 0.0014565224, b: 0.0013786333, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -17938,22 +17938,22 @@ PrefabInstance:
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.10602189
+      value: 0.12324291
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.47829777
+      value: -0.50503653
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.8416578
+      value: -0.8263387
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.22716247
+      value: -0.21659556
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -32409,6 +32409,7 @@ GameObject:
   - component: {fileID: 1638519298}
   - component: {fileID: 1638519297}
   - component: {fileID: 1638519296}
+  - component: {fileID: 1638519303}
   m_Layer: 0
   m_Name: Black Hole (1)
   m_TagString: Untagged
@@ -32674,6 +32675,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1638519303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638519295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb15cfe0d67d39e4483f964f9f0ca7c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blackHole: {fileID: 1638519299}
+  thrust1: {fileID: 0}
+  thrust2: {fileID: 0}
+  thrust3: {fileID: 0}
+  spaceShipEmission: {fileID: 0}
 --- !u!1 &1647196128
 GameObject:
   m_ObjectHideFlags: 0
