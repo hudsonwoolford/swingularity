@@ -64,7 +64,7 @@ public class PauseManager : MonoBehaviour
     }
     public void SettingsButton()
     {
-        settingsCanvas.enabled = true;
+        SettingsManager.enableSettingsMenu?.Invoke(true);
         pausecanvas.enabled = false;
     }
     public void ResumeButton()
