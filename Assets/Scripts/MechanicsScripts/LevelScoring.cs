@@ -16,7 +16,6 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI parText;
     [SerializeField] TextMeshProUGUI numShotsText;
     [SerializeField] TextMeshProUGUI holeNoText;
-    [SerializeField] TextMeshProUGUI GalaxyText;
     [Serializable]
     struct Score
     {
@@ -33,13 +32,13 @@ public class LevelScoring : MonoBehaviour
     {
         CheckPar();
         SetGalaxyAndHole();
-        parText.text = "Par: " + par.ToString();
-        numShotsText.text = "Shots: " + numShots.ToString();
+        parText.text = par.ToString();
+        numShotsText.text = numShots.ToString();
     }
     void SetGalaxyAndHole(){
         if(GameManager.LevelManager.procedural) //Procedural level pars
         {
-            holeNoText.text = "Hole: " + (GameManager.LevelManager.levelIndex + 1).ToString();
+            holeNoText.text = "#" + (GameManager.LevelManager.levelIndex + 1).ToString();
             //Need something here to determine name of galaxy
         }
     }
@@ -78,13 +77,21 @@ public class LevelScoring : MonoBehaviour
     void IncrementScore()
     {
         numShots++;
-        numShotsText.text = "Shots: " + numShots.ToString();
+        numShotsText.text = numShots.ToString();
     }
     void ResetHole()
     {
         numShots = 0;
-        numShotsText.text = "Shots: " + numShots.ToString();
+        numShotsText.text = numShots.ToString();
     }
+
+    void Pause(){
+
+    }
+    void UnPause(){
+        
+    }
+    
     private void OnEnable()
     {
         LevelGenerator.levelGenerated+=CheckPar;
