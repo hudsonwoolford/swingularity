@@ -36,7 +36,7 @@ public class LevelGenStaticReferences : ScriptableObject
     [SerializeField] public Material invisOcean; //Invisble ocean material used for imaging
     [SerializeField] public PhysicMaterial superBouncyMoon;
     [SerializeField] public GalaxyData[] possibleGalaxySchemes; //Filters which planet types are chosen
-    public readonly string[] GalaxyWords = new string[129]{
+    public readonly string[] GalaxyWords = new string[128]{
         "nova",
         "photon",
         "Virgo",
@@ -80,8 +80,8 @@ public class LevelGenStaticReferences : ScriptableObject
         "lenticular",
         "Leo",
         "dark",
+        "ultra",
         "compact",
-        "ultra-compact",
         "Coma",
         "radius",
         "Fornax",
@@ -164,7 +164,6 @@ public class LevelGenStaticReferences : ScriptableObject
         "flocculent",
         "dense",
         "object",
-        "ultra-diffuse",
         "diffuse",
     };
 }
