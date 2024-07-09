@@ -29,7 +29,7 @@ public class GalaxyGenerator : MonoBehaviour
     [SerializeField] ParticleSystem coreTwinkle;
     [SerializeField] ParticleSystem swirlSystem;
 
-    public delegate void InitProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyData theme);
+    public delegate void InitProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyParams galaxyParams, GalaxyData theme);
     public static InitProceduralSystem initProceduralSystem;
     public delegate void InitSystem(string[] galaxyLevels, GalaxyData theme);
     public static InitSystem initSystem;
@@ -59,7 +59,7 @@ public class GalaxyGenerator : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, schemes[schemeIndex].galaxyData);
+        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyParams, schemes[schemeIndex].galaxyData);
         LevelSettingsManager.onLevelSettingChange?.Invoke(galaxyLevelParams[0]);
         GameManager.LevelSettingsManager.UIMatchParams();
     }//Sets the procedural galaxy in level manager through event

@@ -15,6 +15,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     string[] dontPauseScene;
     Canvas pausecanvas;
+    bool settingsMenu;
     private void Awake()
     {
         pausecanvas = GetComponent<Canvas>();
@@ -67,6 +68,15 @@ public class PauseManager : MonoBehaviour
         //settingsCanvas.enabled = true;
         SettingsManager.enableSettingsMenu?.Invoke(true);
         pausecanvas.enabled = false;
+        settingsMenu = true;
+    }
+    void SettingsBackButton(bool enable)
+    {
+        //if(SceneManager.GetActiveScene().name == "Main Menu" || SceneManager.GetActiveScene().name == "Galaxies") { return; }
+        if(enable || !settingsMenu) { return; }
+        //settingsCanvas.enabled = true;
+        pausecanvas.enabled = true;
+        settingsMenu = false;
     }
     public void ResumeButton()
     {
@@ -78,11 +88,13 @@ public class PauseManager : MonoBehaviour
     }
     private void OnEnable()
     {
+        SettingsManager.enableSettingsMenu += SettingsBackButton;
         pauseGame += Pause;
         unpauseGame += Unpause;
     }
     private void OnDisable()
     {
+        SettingsManager.enableSettingsMenu -= SettingsBackButton;
         pauseGame -= Pause;
         unpauseGame -= Unpause;
     }

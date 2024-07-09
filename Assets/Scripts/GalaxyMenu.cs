@@ -161,7 +161,7 @@ public class GalaxyMenu : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, gp.galaxyData);
+        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyList[focusedGalaxy], gp.galaxyData);
         LevelSettingsManager.onLevelSettingChange?.Invoke(galaxyLevelParams[0]);
         GameManager.LevelSettingsManager.UIMatchParams();
     }//Sets the procedural galaxy in level manager through event
@@ -323,6 +323,7 @@ public class GalaxyMenu : MonoBehaviour
 
             //instantiating UI for galaxies
             galaxySummaries[i] = Instantiate(galaxyUISummary, galaxyCons[i].transform).GetComponent<GalaxySummary>();
+            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars);
             galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
         float halfLength = ((galaxyList.Length - 1) / 2) * dotDistanceInterval;
@@ -360,6 +361,7 @@ public class GalaxyMenu : MonoBehaviour
         LevelManager.GalaxyParams[] galaxies = new LevelManager.GalaxyParams[universe.numGalaxies]; //initialize galaxy array
         float galaxyDifficultyStep = (float)universe.relativeDifficulty / (float)universe.numGalaxies;
         float galaxyDifficultyTracker = galaxyDifficultyStep;
+        bool alreadyLMSet = false;
         for (int i = 0; i < galaxies.Length; i++) //for each galaxy index, create one
         {
             UnityEngine.Random.InitState(universe.seed + i); //different random values
@@ -447,9 +449,13 @@ public class GalaxyMenu : MonoBehaviour
 
             galaxyDifficultyTracker += galaxyDifficultyStep;
             galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5]); //setting galaxy at index
+            if (GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
+            {
+                alreadyLMSet |= galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
+            }
         }
-        LevelManager.setProceduralGalaxies(galaxies);
-        galaxyList = galaxies;
+        if (!alreadyLMSet) { LevelManager.setProceduralGalaxies?.Invoke(galaxies); }
+        galaxyList = GameManager.LevelManager.currentProceduralUniverse;
     }
     void OnDrawGizmos() //Visual aid
     {

@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] public GalaxyData currentTheme { get; private set; }
     [SerializeField] public LevelParams levelParams { get; private set; }
+    [SerializeField] public GalaxyParams[] currentProceduralUniverse { get; private set; } //An array of galaxy params in order that correspond to which universe you are in
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
@@ -24,9 +25,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
     [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
-    [SerializeField] GalaxyParams[] currentProceduralUniverse; //An array of galaxy params in order that correspond to which universe you are in
     Canvas levelCanvas; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
+    int currentGalaxyIndex;
 
     [Serializable]
     public struct LevelParams
@@ -107,6 +108,54 @@ public class LevelManager : MonoBehaviour
             this.possibleSpecial = possibleSpecial;
             this.levelStatic = levelStatic;
             this.collectedStars = collectedStars;
+        }
+        public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
+        {
+            return a.name == b.name
+            && a.seed == b.seed
+            && a.relativeDifficulty == b.relativeDifficulty
+            && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
+            && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
+            && a.levelStatic == b.levelStatic;
+        }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is GalaxyParams))
+            {
+                return false;
+            }
+            var other = (GalaxyParams)obj;
+            return this == other;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = seed.GetHashCode();
+            hash = (hash * 397) ^ name.GetHashCode();
+            hash = (hash * 397) ^ seed.GetHashCode();
+            hash = (hash * 397) ^ relativeDifficulty.GetHashCode();
+            hash = (hash * 397) ^ galaxyData.GetHashCode();
+            hash = (hash * 397) ^ possibleTypes.GetHashCode();
+            hash = (hash * 397) ^ possibleSpecial.GetHashCode();
+            hash = (hash * 397) ^ levelStatic.GetHashCode();
+            hash = (hash * 397) ^ collectedStars.GetHashCode();
+            return hash;
+        }
+
+        public static bool operator ==(GalaxyParams a, GalaxyParams b)
+        {
+            return a.name == b.name
+                && a.seed == b.seed
+                && a.relativeDifficulty == b.relativeDifficulty
+                && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
+                && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
+                && a.levelStatic == b.levelStatic
+                && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)));
+        }
+
+        public static bool operator !=(GalaxyParams a, GalaxyParams b)
+        {
+            return !(a == b);
         }
     }
     [Serializable]
@@ -317,13 +366,18 @@ public class LevelManager : MonoBehaviour
         procedural = false;
         currentGalaxy = galaxy;
     }
-    void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
+    void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyParams galaxyParams, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
         currentTheme = theme;
         procedural = true;
         currentGalaxy = galaxy;
         currentProceduralGalaxy = galaxyLevels;
         levelIndex = 0;
+
+        for (int i = 0; i < currentProceduralGalaxy.Length; i++)
+        {
+            if (currentProceduralUniverse[i] == galaxyParams) { currentGalaxyIndex = i; break; }
+        }
     }
     void SetProceduralGalaxiesEvent(GalaxyParams[] galaxyParams) //Sets the current universe
     {
@@ -334,6 +388,21 @@ public class LevelManager : MonoBehaviour
     {
         procedural = true;
         currentUniverse = universeParams;
+    }
+    void ScoreGalaxy(int scoreSum, int shotsSum, int parSum)
+    {
+        bool[] starScore = new bool[]
+        {
+            true,
+            scoreSum <= 0,
+            scoreSum < 0,
+            shotsSum == 5,
+            shotsSum == 5
+        };
+        for (int i = 0; i < currentProceduralUniverse[currentGalaxyIndex].collectedStars.Length; i++)
+        {
+            currentProceduralUniverse[currentGalaxyIndex].collectedStars[i] |= starScore[i]; 
+        }
     }
     void LevelInitiation(GalaxyData theme) //Just sets theme, called by procedural level generation in start before generation
     {
@@ -358,6 +427,7 @@ public class LevelManager : MonoBehaviour
     #endregion
     private void OnEnable()
     {
+        PointCardManager.onGalaxyScore += ScoreGalaxy;
         LevelManager.setProceduralUniverse += SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
         LevelManager.setProceduralGalaxies += SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
         LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
@@ -370,6 +440,7 @@ public class LevelManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        PointCardManager.onGalaxyScore -= ScoreGalaxy;
         LevelManager.setProceduralGalaxies -= SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
         LevelManager.setProceduralUniverse -= SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
         LevelScoring.onScore -= OnScore;

@@ -13,11 +13,11 @@ public class PointCardManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] scoreTexts; //Text that displays play relative score for a level, 5 in array
     [SerializeField] TextMeshProUGUI[] shotsTexts; //Text that displays play shots for a level, 5 in array
     [SerializeField] TextMeshProUGUI[] outlineScoreTexts; //Text that provides coloured outlines to the score text, 5 in array
-    string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
-    LevelManager.LevelParams[] currentProceduralGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] Color positive, neutral, negative;
     [SerializeField] Color holeInOne;
 
+    public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum);
+    public static GalaxyScoring onGalaxyScore;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,163 +44,117 @@ public class PointCardManager : MonoBehaviour
     }
     void OnScore(string score, int relPar, int totalShots, Color scoreColor) //Called by onScore delegate from LevelScoring, sets the text required for the current level
     {
-        if(currentGalaxy == null) { return; }
         if (!GameManager.LevelManager.procedural) //Procedural processes differently because the scene name is always the same
         {
-            string sceneName = SceneManager.GetActiveScene().name;
-            for (int i = 0; i < currentGalaxy.Length; i++)
-            {
-                if (sceneName == currentGalaxy[i])
-                {
-                    //Setting text strings and colours
-                    if(relPar > 0){
-                        scoreTexts[i].text = "+" + relPar.ToString();
-                        outlineScoreTexts[i].text = "+" + relPar.ToString();
-                    }
-                    else{
-                        scoreTexts[i].text = relPar.ToString();
-                        outlineScoreTexts[i].text = relPar.ToString();
-                    }
-                    shotsTexts[i].text = totalShots.ToString();
-                    Color col = neutral;
-                    if(totalShots < (totalShots - relPar)){
-                        col = positive;
-                    }
-                    else if (totalShots > (totalShots - relPar)){
-                        col = negative;
-                    }
+            int i = GameManager.LevelManager.levelIndex;
 
-                    shotsTexts[i].color = col;
-                    scoreTexts[i].color = col;
-                    outlineScoreTexts[i].color = col;
-                    parTexts[i].text = (totalShots - relPar).ToString();
-                    
-                    int scoreSum = 0, shotSum = 0, parSum = 0;
-                    for(int j = 0; j < 5; j++){
-                        if (scoreTexts[j].text != "—"){
-                            scoreSum += int.Parse(scoreTexts[j].text);
-                        }
-                        if (shotsTexts[j].text != "—"){
-                            shotSum += int.Parse(shotsTexts[j].text);
-                        }
-                        if (parTexts[j].text != "—"){
-                            parSum += int.Parse(parTexts[j].text);
-                        }
-                    }
-
-                    Color scoreCol = neutral;
-                    if(shotSum < parSum){
-                        scoreCol = positive;
-                    }
-                    else if (shotSum > parSum){
-                        scoreCol = negative;
-                    }
-                    
-                    scoreTexts[5].color = scoreCol;
-                    if (scoreSum > 0){
-                        scoreTexts[5].text = "+" + scoreSum.ToString();
-                        outlineScoreTexts[5].text = "+" +scoreSum.ToString();
-                    }
-                    else{
-                        outlineScoreTexts[5].text = scoreSum.ToString();
-                        scoreTexts[5].text = scoreSum.ToString();
-                    }
-                    shotsTexts[5].text = shotSum.ToString();
-                    outlineScoreTexts[5].color = scoreCol;
-                    shotsTexts[5].color = scoreCol;
-                    parTexts[5].text = parSum.ToString();
-                    break;
-                }
-            }
+            SetPointCardVar(i, relPar, totalShots);
         }
         else //Procedural processing
         {
             int i = GameManager.LevelManager.levelIndex;
-            //Setting text strings and colours
-            shotsTexts[i].text = totalShots.ToString();
+            SetPointCardVar (i, relPar, totalShots);
 
-            if(relPar > 0){
-                scoreTexts[i].text = "+" + relPar.ToString();
-                outlineScoreTexts[i].text = "+" + relPar.ToString();
-            }
-            else{
-                scoreTexts[i].text = relPar.ToString();
-                outlineScoreTexts[i].text = relPar.ToString();
-            }
-
-            Color col = neutral;
-            if(totalShots < (totalShots - relPar)){
-                col = positive;
-            }
-            else if (totalShots > (totalShots - relPar)){
-                col = negative;
-            }
-            scoreTexts[i].color = col;
-            shotsTexts[i].color = col;
-            outlineScoreTexts[i].color = col;
-
-
-            parTexts[i].text = (totalShots - relPar).ToString();
-
-            int scoreSum = 0, shotSum = 0, parSum = 0;
-            for(int j = 0; j < 5; j++){
-                if (scoreTexts[j].text != "—"){
-                    scoreSum += int.Parse(scoreTexts[j].text);
+            if(i == 4)
+            {
+                int scoreSum = 0, shotSum = 0, parSum = 0;
+                for (int j = 0; j < 5; j++)
+                {
+                    if (scoreTexts[j].text != "—")
+                    {
+                        scoreSum += int.Parse(scoreTexts[j].text);
+                    }
+                    if (shotsTexts[j].text != "—")
+                    {
+                        shotSum += int.Parse(shotsTexts[j].text);
+                    }
+                    if (parTexts[j].text != "—")
+                    {
+                        parSum += int.Parse(parTexts[j].text);
+                    }
                 }
-                if (shotsTexts[j].text != "—"){
-                    shotSum += int.Parse(shotsTexts[j].text);
-                }
-                if (parTexts[j].text != "—"){
-                    parSum += int.Parse(parTexts[j].text);
-                }
+                onGalaxyScore?.Invoke(scoreSum, shotSum, parSum);
             }
-
-            Color scoreCol = neutral;
-            if(shotSum < parSum){
-                scoreCol = positive;
-            }
-            else if (shotSum > parSum){
-                scoreCol = negative;
-            }
-
-
-            scoreTexts[5].color = scoreCol;
-            shotsTexts[5].color = scoreCol;
-            if (scoreSum > 0){
-                scoreTexts[5].text = "+" + scoreSum.ToString();
-                outlineScoreTexts[5].text = "+" +scoreSum.ToString();
-            }
-            else{
-                outlineScoreTexts[5].text = scoreSum.ToString();
-                scoreTexts[5].text = scoreSum.ToString();
-            }
-
-            outlineScoreTexts[5].color = scoreCol;
-            shotsTexts[5].text = shotSum.ToString();
-            parTexts[5].text = parSum.ToString();
         }
     }
-    void SetGalaxyLevels(string[] galaxy, GalaxyData theme) //Sets the current galaxy levels
+    void SetPointCardVar(int i, int relPar, int totalShots)
     {
-        ClearPointCard();
-        currentGalaxy = galaxy;
-    }
-    void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
-    {
-        ClearPointCard();
-        currentProceduralGalaxy = galaxyLevels;
-        currentGalaxy = galaxy;
+        //Setting text strings and colours
+        if (relPar > 0)
+        {
+            scoreTexts[i].text = "+" + relPar.ToString();
+            outlineScoreTexts[i].text = "+" + relPar.ToString();
+        }
+        else
+        {
+            scoreTexts[i].text = relPar.ToString();
+            outlineScoreTexts[i].text = relPar.ToString();
+        }
+        shotsTexts[i].text = totalShots.ToString();
+        Color col = neutral;
+        if (totalShots < (totalShots - relPar))
+        {
+            col = positive;
+        }
+        else if (totalShots > (totalShots - relPar))
+        {
+            col = negative;
+        }
+
+        shotsTexts[i].color = col;
+        scoreTexts[i].color = col;
+        outlineScoreTexts[i].color = col;
+        parTexts[i].text = (totalShots - relPar).ToString();
+
+        int scoreSum = 0, shotSum = 0, parSum = 0;
+        for (int j = 0; j < 5; j++)
+        {
+            if (scoreTexts[j].text != "—")
+            {
+                scoreSum += int.Parse(scoreTexts[j].text);
+            }
+            if (shotsTexts[j].text != "—")
+            {
+                shotSum += int.Parse(shotsTexts[j].text);
+            }
+            if (parTexts[j].text != "—")
+            {
+                parSum += int.Parse(parTexts[j].text);
+            }
+        }
+
+        Color scoreCol = neutral;
+        if (shotSum < parSum)
+        {
+            scoreCol = positive;
+        }
+        else if (shotSum > parSum)
+        {
+            scoreCol = negative;
+        }
+
+        scoreTexts[5].color = scoreCol;
+        if (scoreSum > 0)
+        {
+            scoreTexts[5].text = "+" + scoreSum.ToString();
+            outlineScoreTexts[5].text = "+" + scoreSum.ToString();
+        }
+        else
+        {
+            outlineScoreTexts[5].text = scoreSum.ToString();
+            scoreTexts[5].text = scoreSum.ToString();
+        }
+        shotsTexts[5].text = shotSum.ToString();
+        outlineScoreTexts[5].color = scoreCol;
+        shotsTexts[5].color = scoreCol;
+        parTexts[5].text = parSum.ToString();
     }
     private void OnEnable()
     {
-        GalaxyGenerator.initProceduralSystem += SetProceduralGalaxyLevels;//Invoked by procedural galaxy generator in awake after creating the solar systems | (string[] levels, LevelParams[] levelParams, GalaxyData theme)
-        GalaxyGenerator.initSystem += SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
         LevelScoring.onScore += OnScore;
     }
     private void OnDisable()
     {
-        GalaxyGenerator.initSystem -= SetGalaxyLevels;         //Invoked by galaxy levels in start | (string[] levels)
-        GalaxyGenerator.initProceduralSystem -= SetProceduralGalaxyLevels;
         LevelScoring.onScore -= OnScore;
     }
 }

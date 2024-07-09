@@ -39,6 +39,6 @@ public class ProceduralGalaxyGeneration : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        GalaxyGenerator.initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyTheme);
+        //GalaxyGenerator.initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams,galaxyParams, galaxyTheme);
     }
 }
