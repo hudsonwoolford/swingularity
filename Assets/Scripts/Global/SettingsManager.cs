@@ -115,6 +115,7 @@ public class SettingsManager : MonoBehaviour
             if (sfxVolElement.slider != null) { sfxVolElement.slider.value = sfxVolElement.defaultValue; }
             if (interfaceVolElement.slider != null) { interfaceVolElement.slider.value = interfaceVolElement.defaultValue; }
             if (musicVolElement.slider != null) { musicVolElement.slider.value = musicVolElement.defaultValue; }
+            if (masterVolElement.slider != null) { masterVolElement.slider.value = masterVolElement.defaultValue; }
 
             //default game values
             if (customCursorTgl.toggleImg != null) { customCursorTgl.toggleImg.enabled = customCursorTgl.defaultValue; }
