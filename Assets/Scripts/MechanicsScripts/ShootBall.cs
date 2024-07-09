@@ -360,6 +360,7 @@ public class ShootBall : MonoBehaviour
        
         if(force.magnitude < 1f)
         {
+            liningUpShot = false;
             yield break;
         }
         StopCoroutine(BallStillTiming(ballStillTimeVal));
