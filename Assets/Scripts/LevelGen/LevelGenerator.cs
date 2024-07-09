@@ -7,6 +7,7 @@ using System;
 using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
+using System.Reflection;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -164,16 +165,25 @@ public class LevelGenerator : MonoBehaviour
 
         levelStatic = levelParams.levelStatic;
 
-        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1];
+        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 2.25f;
 
         possiblePlanetTypes = levelParams.themes;
 
-        specialObjects = new SpecialObject[levelParams.specialObjects.Length];
 
-        for(int i = 0; i < levelParams.specialObjects.Length; i++){
+        int numSpecialObj = Mathf.RoundToInt((UnityEngine.Random.value/2 + 0.75f) * specialObjMultiplier);
+        int[] numPerObj = new int[levelParams.specialObjects.Length];   
+
+        for (int i = 0; i < numSpecialObj; i++){
             UnityEngine.Random.InitState(levelParams.seed + i);
-            int num = Mathf.RoundToInt(UnityEngine.Random.value * specialObjMultiplier);
-            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
+            int index = UnityEngine.Random.Range(0,levelParams.specialObjects.Length);
+            numPerObj[index]++;
+            
+        }
+        specialObjects = new SpecialObject[levelParams.specialObjects.Length];
+        for (int i = 0; i < levelParams.specialObjects.Length; i++)
+        {
+            int typeIndex = UnityEngine.Random.Range(0, UnityEngine.Random.Range(0, levelParams.specialObjects.Length));
+            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[typeIndex], numPerObj[i], GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
 
