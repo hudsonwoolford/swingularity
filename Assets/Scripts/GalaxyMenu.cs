@@ -371,7 +371,7 @@ public class GalaxyMenu : MonoBehaviour
                 int numParts = UnityEngine.Random.Range(2,4);
                 for (int c = 0; c < numParts; c++) 
                 {
-                    if(name.Length < 30){
+                    if(name.Length < 24){
                         int roll = UnityEngine.Random.Range(0,160);
                         if (roll < universe.levelStatic.GalaxyWords.Length){
                             string addend = universe.levelStatic.GalaxyWords[UnityEngine.Random.Range(0, universe.levelStatic.GalaxyWords.Length)];

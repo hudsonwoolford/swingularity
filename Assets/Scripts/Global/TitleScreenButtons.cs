@@ -177,6 +177,7 @@ public class TitleScreenButtons : MonoBehaviour
     public void UpdateDifficulty()
     {
         difficultyNumber.text = ngDifficultySldr.value.ToString();
+        ngDifficultySldr.targetGraphic.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
         difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
     }
     public void RandomizeSeed()
