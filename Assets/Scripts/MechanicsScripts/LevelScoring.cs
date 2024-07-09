@@ -130,10 +130,12 @@ public class LevelScoring : MonoBehaviour
     }
 
     void Pause(){
-
+        angleText.transform.parent.gameObject.SetActive(false);
+        numShotsText.transform.parent.gameObject.SetActive(false);
     }
     void UnPause(){
-        
+        angleText.transform.parent.gameObject.SetActive(true);
+        numShotsText.transform.parent.gameObject.SetActive(true);
     }
     
     private void OnEnable()
@@ -142,6 +144,8 @@ public class LevelScoring : MonoBehaviour
         ShootBall.onShoot += IncrementScore;
         ShootBall.onHole += HoleEnd;
         ShootBall.triggerReset += ResetHole;
+        PauseManager.pauseGame += Pause;
+        PauseManager.unpauseGame += UnPause;
     }
     private void OnDisable()
     {
@@ -149,6 +153,7 @@ public class LevelScoring : MonoBehaviour
         ShootBall.onShoot -= IncrementScore;
         ShootBall.onHole -= HoleEnd;
         ShootBall.triggerReset -= ResetHole;
-
+        PauseManager.pauseGame -= Pause;
+        PauseManager.unpauseGame -= UnPause;
     }
 }
