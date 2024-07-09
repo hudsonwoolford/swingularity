@@ -5,8 +5,7 @@ using UnityEngine;
 public class TitleScreenColorRandomiser : MonoBehaviour
 {
     [SerializeField] BlackHoleGenerator blackHole;
-    [SerializeField] ParticleSystem thrust1, thrust2, thrust3;
-    [SerializeField] Material spaceShipEmission;
+    [SerializeField] SpaceShipManager spaceShip;
 
     void Start(){
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
@@ -15,5 +14,6 @@ public class TitleScreenColorRandomiser : MonoBehaviour
             index = UnityEngine.Random.Range(0, 9);
         }
         blackHole.RandomHole(index);
+        spaceShip.RandomIndex(index);
     }
 }

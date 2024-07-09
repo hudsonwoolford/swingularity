@@ -17938,22 +17938,22 @@ PrefabInstance:
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.12324291
+      value: 0.90095556
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.50503653
+      value: -0.2120183
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.8263387
+      value: 0.15431647
       objectReference: {fileID: 0}
     - target: {fileID: 5578117417945093754, guid: a5c1ca14c943ce44cb4a7e7723a23118,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.21659556
+      value: 0.34570765
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -32605,7 +32605,7 @@ MonoBehaviour:
   - planetType: 7
     darkColor: {r: 0.22821617, g: 0, b: 1, a: 1}
     lightColor: {r: 0.3647999, g: 0.054901935, b: 0.7490196, a: 1}
-    fresnel: {r: 0.93132585, g: 0.17427474, b: 5.278032, a: 1}
+    fresnel: {r: 0.7476492, g: 0.13990417, b: 4.237095, a: 1}
   schemeIndex: 0
   systemRotSpeed: 0.3
   blackHoleTimer: 0.25
@@ -32688,10 +32688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackHole: {fileID: 1638519299}
-  thrust1: {fileID: 0}
-  thrust2: {fileID: 0}
-  thrust3: {fileID: 0}
-  spaceShipEmission: {fileID: 0}
+  spaceShip: {fileID: 1653161970}
 --- !u!1 &1647196128
 GameObject:
   m_ObjectHideFlags: 0
@@ -32846,6 +32843,25 @@ MonoBehaviour:
   sparkThrust:
     thrustSystem: {fileID: 1581825169}
     minMaxLifetime: {x: 3, y: 14}
+  spaceShipThemes:
+  - glowCol: {r: 4, g: 1.4007294, b: 0, a: 1}
+    thrustCol: {r: 0.8980392, g: 0.36862746, b: 0.08235294, a: 1}
+  - glowCol: {r: 3.0222898, g: 1.3681836, b: 0, a: 1}
+    thrustCol: {r: 1, g: 0.92208767, b: 0, a: 1}
+  - glowCol: {r: 3.0222886, g: 0.52197284, b: 0, a: 1}
+    thrustCol: {r: 1, g: 0.23993552, b: 0, a: 1}
+  - glowCol: {r: 0, g: 2.0233154, b: 3.0222888, a: 1}
+    thrustCol: {r: 0.026178002, g: 0.7466986, b: 1, a: 1}
+  - glowCol: {r: 0.31942114, g: 1.8632753, b: 0.026367055, a: 1}
+    thrustCol: {r: 0.17142992, g: 1, b: 0.0141509175, a: 1}
+  - glowCol: {r: 1.9053557, g: 1.9053557, b: 1.9053557, a: 1}
+    thrustCol: {r: 1, g: 1, b: 1, a: 1}
+  - glowCol: {r: 0.6431373, g: 0.46666667, b: 0.22745098, a: 1}
+    thrustCol: {r: 1, g: 0.58557296, b: 0.08376962, a: 1}
+  - glowCol: {r: 4.2370944, g: 0.81943804, b: 1.9327654, a: 1}
+    thrustCol: {r: 1, g: 0.2783019, b: 0.5130288, a: 1}
+  - glowCol: {r: 0.7476492, g: 0.13990417, b: 4.237095, a: 1}
+    thrustCol: {r: 0.3647059, g: 0.05490196, b: 0.7490196, a: 1}
 --- !u!4 &1653161971
 Transform:
   m_ObjectHideFlags: 0

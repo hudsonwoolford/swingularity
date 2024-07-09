@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,15 @@ public class SpaceShipManager : MonoBehaviour
     Vector3 velocity;
     Vector3 posLastUpdate;
     float animTime, currentAnimInterval;
+
+    [Serializable]
+    public struct SpaceShipTheme{
+        [ColorUsageAttribute(true,true)] public Color glowCol;
+        public Color thrustCol;
+    }
+
+    public SpaceShipTheme[] spaceShipThemes;
+
     #if UNITY_EDITOR
     Material startGlowMat;
     #endif
@@ -49,6 +59,14 @@ public class SpaceShipManager : MonoBehaviour
         velocity = transform.position - posLastUpdate;
         SetParticleLifetime();
         posLastUpdate = transform.position;
+    }
+    public void RandomIndex(int index){
+        SpaceShipTheme theme = spaceShipThemes[index];
+        glowCol = theme.glowCol;
+        thrustCol = theme.thrustCol;
+
+        SetParticleColor();
+        SetMatColor();
     }
     void AnimationHandling()
     {
