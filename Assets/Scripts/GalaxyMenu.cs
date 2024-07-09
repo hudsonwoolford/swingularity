@@ -18,6 +18,14 @@ public class GalaxyMenu : MonoBehaviour
         public ColorSchemeStaticReference.PlanetType type;
         public LevelGenerator.SpecialType specialType;
     }
+    [System.Serializable]
+    struct SpecialObjectIcon
+    {
+        public SpecialType specialType;
+        public Sprite icon;
+        public Color color;
+    }
+
 
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
     [Header("Important Positions and Rotations")]
@@ -56,6 +64,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Slider difficultySlider;
     [SerializeField] Gradient difficultyGradient;
     [SerializeField] TextMeshProUGUI astroBiomeTxt;
+    [SerializeField] Image[] iconImgs;
+    [SerializeField] SpecialObjectIcon[] iconSprites;
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
@@ -167,6 +177,28 @@ public class GalaxyMenu : MonoBehaviour
             difficultySlider.colors = cB;
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
             astroBiomeTxt.color = gp.galaxyData.mainColor;
+            SpecialObjectIcon[] icons = new SpecialObjectIcon[gp.possibleSpecial.Length];
+            for (int i = 0; i < icons.Length; i++)
+            {
+                for (int x = 0; x < iconSprites.Length; x++)
+                {
+                    if (iconSprites[x].specialType == gp.possibleSpecial[i])
+                    {
+                        icons[i] = iconSprites[x];
+                    }
+                }
+            }
+            for (int i = 0; i < iconImgs.Length; i++)
+            {
+                if(i>=icons.Length)
+                {
+                    iconImgs[i].gameObject.SetActive(false);
+                    continue;
+                }
+                iconImgs[i].gameObject.SetActive(true);
+                iconImgs[i].color = icons[i].color;
+                iconImgs[i].sprite = icons[i].icon;
+            }
         }
         else
         {

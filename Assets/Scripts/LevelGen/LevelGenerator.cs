@@ -31,12 +31,12 @@ public class LevelGenerator : MonoBehaviour
     [Serializable]
     public enum SpecialType
     {
+        Moon,
         Star,
         NeutronStar,
-        BlackHole,
-        Quasar,
         DarkMatter,
-        Moon
+        BlackHole,
+        Quasar
     }
     [Serializable]
     public struct Planet
