@@ -16,6 +16,8 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI parText;
     [SerializeField] TextMeshProUGUI numShotsText;
     [SerializeField] TextMeshProUGUI holeNoText;
+    [SerializeField] TextMeshProUGUI powerText;
+    [SerializeField] TextMeshProUGUI angleText;
     [SerializeField] Color positive, neutral, negative;
 
     [Serializable]
@@ -38,6 +40,34 @@ public class LevelScoring : MonoBehaviour
         numShotsText.text = numShots.ToString();
         numShotsText.color = positive;
     }
+    private void Update(){
+        if(ShootBall.liningUpShot){
+            powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString() + "%";
+            if(ShootBall.shootPower < 25){
+                powerText.color = negative;
+            }
+            else{
+                powerText.color = new Color (1, 1, 1, 1);
+            }
+            if(ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140){
+                angleText.color = negative;
+            }
+            else{
+                angleText.color = new Color (1, 1, 1, 1);
+            }
+            if(ShootBall.shootAngle + 90 > 180){
+                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString() + "°";
+            }
+            else{
+                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle + 90).ToString() + "°";
+            }
+        }
+        else{
+            angleText.text = "——°";
+            powerText.text = "——%";
+        }
+    }
+
     void SetGalaxyAndHole(){
         if(GameManager.LevelManager.procedural) //Procedural level pars
         {
@@ -80,6 +110,7 @@ public class LevelScoring : MonoBehaviour
     void IncrementScore()
     {
         numShots++;
+
         numShotsText.text = numShots.ToString();
         if(numShots < par){
             numShotsText.color = positive;

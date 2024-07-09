@@ -42,6 +42,9 @@ public class ShootBall : MonoBehaviour
     [SerializeField] Material[] astronautFadeMats;
     [SerializeField] Shader emmisionShader;
 
+    [HideInInspector] public static float shootPower;
+    [HideInInspector] public static float shootAngle;
+
     MeshRenderer ballRenderer;
     Material defaultBallMat;
     Scene simulationScene;
@@ -55,7 +58,7 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
-    bool liningUpShot;
+    public static bool liningUpShot;
     bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
@@ -284,6 +287,7 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
+            shootPower = dist/maxPower * 100;
             force = dist * dir.normalized;
             //RaycastHit hit;
             //if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
@@ -298,10 +302,13 @@ public class ShootBall : MonoBehaviour
             //    }
             //}
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass), out hit, 1f, obstacles)) //this happens if the player is about to shoot directly onto a planet
+            bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass), out hit, 1f, obstacles);
+            Vector2 normal = (transform.position - hit.transform.position).normalized;
+            Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
+
+            shootAngle = -Vector2.SignedAngle(normal, -mouseNormal);
+            if (rayHit) //this happens if the player is about to shoot directly onto a planet
             {
-                Vector2 normal = (transform.position - hit.transform.position).normalized;
-                Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
                 if(Vector3.Dot(mouseNormal, normal) > 0)
                 {
                     float right = -Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)) / Mathf.Abs(Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)));
