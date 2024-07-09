@@ -27,7 +27,7 @@ public class LevelGenStaticReferences : ScriptableObject
     };
     [SerializeField]
     public readonly int[] difficultyPars = new int[10]{
-        2, 3, 3, 4, 4, 5, 5, 6, 6, 7
+        3, 3, 3, 4, 4, 5, 5, 6, 6, 7
     };
     [SerializeField] public RegionSizesWrapper[] regionSizes = new RegionSizesWrapper[10];
     [SerializeField] public float planetScale; //Scale of planets multiplier

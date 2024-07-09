@@ -151,7 +151,7 @@ public class GalaxyMenu : MonoBehaviour
             UnityEngine.Random.InitState(i * 120523 + gp.seed);
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(gp.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
-            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1], gp.possibleTypes, gp.possibleSpecial, gp.levelStatic);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1] + UnityEngine.Random.Range(-1, 2), gp.possibleTypes, gp.possibleSpecial, gp.levelStatic);
 
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";

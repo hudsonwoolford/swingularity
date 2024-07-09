@@ -47,13 +47,13 @@ public class LevelScoring : MonoBehaviour
                 powerText.color = negative;
             }
             else{
-                powerText.color = new Color (1, 1, 1, 1);
+                powerText.color = Color.white;
             }
             if(ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140){
                 angleText.color = negative;
             }
             else{
-                angleText.color = new Color (1, 1, 1, 1);
+                angleText.color = Color.white;
             }
             if(ShootBall.shootAngle + 90 > 180){
                 angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString() + "°";
@@ -63,6 +63,8 @@ public class LevelScoring : MonoBehaviour
             }
         }
         else{
+            angleText.color = Color.white;
+            powerText.color = Color.white;
             angleText.text = "——°";
             powerText.text = "——%";
         }
