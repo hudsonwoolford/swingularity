@@ -78,8 +78,7 @@ public class TitleScreenButtons : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Escape) && settingsMenu)
         {
-            settingsMenu = false;
-            cameraAnim.Play("SettingsToMenu");
+            DisableSettings(false);
         }
         if (ngMenu){
             rotation += Time.deltaTime * speed;
@@ -90,6 +89,7 @@ public class TitleScreenButtons : MonoBehaviour
         }
         GetLastGameObjectSelected();
     }
+
 
     void GetLastGameObjectSelected() {
         if(eventSystem == null) {eventSystem = EventSystem.current;}
@@ -120,6 +120,12 @@ public class TitleScreenButtons : MonoBehaviour
         cameraAnim.Play("MenuToSettings");
         SettingsManager.enableSettingsMenu?.Invoke(true);
     }
+    void DisableSettings(bool enable){
+        if (enable){return;}
+        settingsMenu = false;
+        cameraAnim.Play("SettingsToMenu");
+    }
+
     #endregion
     #region Save Load UI
     
@@ -235,6 +241,14 @@ public class TitleScreenButtons : MonoBehaviour
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
         return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, levelStatic);
+    }
+
+    void OnEnable(){
+        SettingsManager.enableSettingsMenu += DisableSettings;
+    }
+
+    void OnDisable(){
+        SettingsManager.enableSettingsMenu -= DisableSettings;
     }
     #endregion
 }

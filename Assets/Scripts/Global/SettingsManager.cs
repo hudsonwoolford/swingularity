@@ -37,6 +37,7 @@ public class SettingsManager : MonoBehaviour
         public Button[] resetBtns;
     }
     [SerializeField] Button applySettings;
+    [SerializeField] Button backBtn;
     [Header("Main Settings")]
     [SerializeField] Button audioTabBtn;
     [SerializeField] Button gameTabBtn;
@@ -268,6 +269,7 @@ public class SettingsManager : MonoBehaviour
     void SetButtonFunctions() //Sets all listener functions for buttons
     {
         applySettings.onClick.AddListener(() => SetAllVariables());
+        backBtn.onClick.AddListener(() => enableSettingsMenu?.Invoke(false));
 
         //Slider buttons
         SettingsSlider[] sSliders = new SettingsSlider[] { masterVolElement, sfxVolElement, interfaceVolElement, musicVolElement, frameLimitElement };
