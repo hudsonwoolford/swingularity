@@ -364,7 +364,7 @@ public class GalaxyMenu : MonoBehaviour
 
             //random planet types
             ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[1];
-            int numSpecial = UnityEngine.Random.Range(1, 4);
+            int numSpecial = UnityEngine.Random.Range(2, 5);
             LevelGenerator.SpecialType[] specialTypes = new LevelGenerator.SpecialType[numSpecial];
             List<LevelGenerator.SpecialType> allSpecial = allSpecialTypes.ToList();
             GalaxyData gData = null;

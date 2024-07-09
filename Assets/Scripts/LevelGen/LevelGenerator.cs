@@ -165,10 +165,9 @@ public class LevelGenerator : MonoBehaviour
 
         levelStatic = levelParams.levelStatic;
 
-        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 2.25f;
+        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 1.75f;
 
         possiblePlanetTypes = levelParams.themes;
-
 
         int numSpecialObj = Mathf.RoundToInt((UnityEngine.Random.value/2 + 0.75f) * specialObjMultiplier);
         int[] numPerObj = new int[levelParams.specialObjects.Length];   
@@ -180,10 +179,13 @@ public class LevelGenerator : MonoBehaviour
             
         }
         specialObjects = new SpecialObject[levelParams.specialObjects.Length];
+        LevelGenStaticReferences.SpecialObjectMultWrapper[] inherentMult = levelStatic.inherentSpecialMultipliers;
         for (int i = 0; i < levelParams.specialObjects.Length; i++)
         {
-            int typeIndex = UnityEngine.Random.Range(0, UnityEngine.Random.Range(0, levelParams.specialObjects.Length));
-            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[typeIndex], numPerObj[i], GenerateStar, GenerateQuasar);
+            int typeIndex = UnityEngine.Random.Range(0, levelParams.specialObjects.Length);
+
+            Vector2 inherentMultiplier = Array.Find(inherentMult, t => t.specialType == levelParams.specialObjects[typeIndex]).minMaxMultiplier;
+            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[typeIndex], Mathf.RoundToInt(numPerObj[i] * UnityEngine.Random.Range(inherentMultiplier.x, inherentMultiplier.y)), GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
 
