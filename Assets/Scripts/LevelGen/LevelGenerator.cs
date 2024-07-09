@@ -182,11 +182,11 @@ public class LevelGenerator : MonoBehaviour
         LevelGenStaticReferences.SpecialObjectMultWrapper[] inherentMult = levelStatic.inherentSpecialMultipliers;
         for (int i = 0; i < levelParams.specialObjects.Length; i++)
         {
-            int typeIndex = UnityEngine.Random.Range(0, levelParams.specialObjects.Length);
 
-            Vector2 inherentMultiplier = Array.Find(inherentMult, t => t.specialType == levelParams.specialObjects[typeIndex]).minMaxMultiplier;
-            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[typeIndex], Mathf.RoundToInt(numPerObj[i] * UnityEngine.Random.Range(inherentMultiplier.x, inherentMultiplier.y)), GenerateStar, GenerateQuasar);
+            Vector2 inherentMultiplier = Array.Find(inherentMult, t => t.specialType == levelParams.specialObjects[i]).minMaxMultiplier;
+            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], Mathf.RoundToInt(numPerObj[i] * UnityEngine.Random.Range(inherentMultiplier.x, inherentMultiplier.y)), GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
+            print(i);
         }
 
         int randIndex = UnityEngine.Random.Range(0, levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes.Count);
