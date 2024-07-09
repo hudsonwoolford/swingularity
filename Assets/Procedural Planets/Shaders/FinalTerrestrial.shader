@@ -131,6 +131,8 @@ Shader "Custom/FinalTerrestrial"
     }
     SubShader
     {
+        ZTest Always
+
         Tags
         {
             "RenderType" = "Opaque"
@@ -138,6 +140,7 @@ Shader "Custom/FinalTerrestrial"
 
         LOD 200
         CGPROGRAM
+
         #pragma target 3.5
         #pragma surface surf Standard vertex:vert 
         #include "Includes/FractalNoise.cginc"
