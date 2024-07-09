@@ -21,7 +21,7 @@ public class MappingHandling : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI deathMessageTxt;
 
-    readonly string[] deathMessages = new string[3] { "Out of bounds!", "Burnt to a crisp!", "Fried by X-rays!"};
+    readonly string[] deathMessages = new string[3] { "Lost in space!", "Burnt to a crisp!", "Fried by X-rays!"};
     private void Awake()
     {
         if(ball == null) { ball = GameObject.FindGameObjectWithTag("Player").transform; }
