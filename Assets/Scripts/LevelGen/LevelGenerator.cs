@@ -169,7 +169,7 @@ public class LevelGenerator : MonoBehaviour
 
         possiblePlanetTypes = levelParams.themes;
 
-        int numSpecialObj = Mathf.RoundToInt((UnityEngine.Random.value/2 + 0.75f) * specialObjMultiplier);
+        int numSpecialObj = Mathf.RoundToInt((UnityEngine.Random.value/4 + 0.8825f) * specialObjMultiplier);
         int[] numPerObj = new int[levelParams.specialObjects.Length];   
 
         for (int i = 0; i < numSpecialObj; i++){
