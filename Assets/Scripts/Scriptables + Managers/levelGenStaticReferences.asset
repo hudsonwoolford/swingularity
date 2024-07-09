@@ -13,11 +13,24 @@ MonoBehaviour:
   m_Name: levelGenStaticReferences
   m_EditorClassIdentifier: 
   minSize: 3
-  maxSize: 9
+  maxSize: 8
   sizeBias: 0.02
   sizeScale: 1
   samplesBeforeRejection: 500
   offsetScale: 100
+  inherentSpecialMultipliers:
+  - specialType: 0
+    minMaxMultiplier: {x: 0.6, y: 0.9}
+  - specialType: 1
+    minMaxMultiplier: {x: 0.75, y: 1}
+  - specialType: 2
+    minMaxMultiplier: {x: 0.5, y: 0.75}
+  - specialType: 3
+    minMaxMultiplier: {x: 1.5, y: 2}
+  - specialType: 4
+    minMaxMultiplier: {x: 1.25, y: 1.6}
+  - specialType: 5
+    minMaxMultiplier: {x: 1.25, y: 1.5}
   regionSizes:
   - baseMultiplier: 1
     nestedRegionSizes:
@@ -50,7 +63,7 @@ MonoBehaviour:
     nestedRegionSizes:
     - {x: 120, y: 20}
   planetScale: 0.55
-  moonCutoffSize: 7
+  moonCutoffSize: 6.5
   moonDstScale: 1.8
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
   invisOcean: {fileID: 2100000, guid: 00dfc60bd61e6674882ef420402a3698, type: 2}

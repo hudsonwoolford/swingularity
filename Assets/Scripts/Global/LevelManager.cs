@@ -93,15 +93,17 @@ public class LevelManager : MonoBehaviour
         public int relativeDifficulty; //relative difficulty of galaxy (1-10)
         public GalaxyData galaxyData;
         public ColorSchemeStaticReference.PlanetType[] possibleTypes;
+        public LevelGenerator.SpecialType[] possibleSpecial;
         public LevelGenStaticReferences levelStatic; //static references for level generation
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenStaticReferences levelStatic)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic)
         {
             this.name = name;
             this.seed = seed;
             this.galaxyData = galaxyData;
             this.relativeDifficulty = relativeDifficulty;
             this.possibleTypes = possibleTypes;
+            this.possibleSpecial = possibleSpecial;
             this.levelStatic = levelStatic;
         }
     }

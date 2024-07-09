@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.001079696, g: 0.0009565635, b: 0.0008772452, a: 1}
+  m_IndirectSpecularColor: {r: 0.0013678705, g: 0.0012532853, b: 0.0011655155, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9056604, g: 0, b: 0, a: 0.88235295}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1210,42 +1210,49 @@ MonoBehaviour:
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: b8af5211c2bafe244ad601cde008e828, type: 2}
     possibleTypes: 00000000
+    possibleSpecial: 0000000001000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Desert
     seed: -46
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: f1c0c5ab6be919c428067c4d5a77c909, type: 2}
     possibleTypes: 01000000
+    possibleSpecial: 0500000003000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Ice
     seed: -1154
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: c270e7429153a33489b3729fac49cbb1, type: 2}
     possibleTypes: 02000000
+    possibleSpecial: 0100000004000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Fire
     seed: -449
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: 562032449723d844395e1b68ee5def13, type: 2}
     possibleTypes: 03000000
+    possibleSpecial: 0100000005000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Goop
     seed: 778
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: 5947fe9ae93cebb42a7e421ff0c9b50b, type: 2}
     possibleTypes: 04000000
+    possibleSpecial: 0400000002000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Waste
     seed: 83
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: dac488bf68863c545a3ded4d76028fde, type: 2}
     possibleTypes: 05000000
+    possibleSpecial: 0200000001000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   - name: Mythical
     seed: 442
     relativeDifficulty: 2
     galaxyData: {fileID: 11400000, guid: bd6c9f42365c1584498252ecae265dbd, type: 2}
     possibleTypes: 06000000
+    possibleSpecial: 0300000002000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   focusPosition: {x: 0, y: 1, z: 0}
   zoomGalaxyPos: {x: -2, y: 0.25, z: 0}
@@ -1290,8 +1297,22 @@ MonoBehaviour:
   sizeScalar: 0.5
   galaxyObjParent: {fileID: 1523440279}
   galaxyObj: {fileID: 27201910259651697, guid: 0bf42010aa37e0540ac80ddc6dba8869, type: 3}
-  galaxyTypes: 00000000010000000200000003000000040000000500000006000000
-  specialTypes: 000000000100000002000000030000000400000005000000
+  galaxyTypes:
+  - type: 0
+    specialType: 0
+  - type: 1
+    specialType: 5
+  - type: 2
+    specialType: 1
+  - type: 3
+    specialType: 0
+  - type: 4
+    specialType: 4
+  - type: 5
+    specialType: 2
+  - type: 6
+    specialType: 3
+  allSpecialTypes: 000000000100000002000000030000000400000005000000
   possibleGalaxyData:
   - {fileID: 11400000, guid: b8af5211c2bafe244ad601cde008e828, type: 2}
   - {fileID: 11400000, guid: f1c0c5ab6be919c428067c4d5a77c909, type: 2}
@@ -2118,7 +2139,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 55658ba9023482548993811f69d508c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6838142734803164cac705a9af06dcce, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2704,7 +2725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 55658ba9023482548993811f69d508c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6838142734803164cac705a9af06dcce, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3835,13 +3856,14 @@ GameObject:
   - component: {fileID: 1764161703}
   - component: {fileID: 1764161702}
   - component: {fileID: 1764161701}
+  - component: {fileID: 1764161704}
   m_Layer: 15
   m_Name: Resume Button (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1764161700
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3929,7 +3951,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1764161704}
         m_TargetAssemblyTypeName: SceneButton, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 1
@@ -3949,6 +3971,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764161699}
   m_CullTransparentMesh: 1
+--- !u!114 &1764161704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764161699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f71ded8a9206f4cb658e084c7fa50a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unlocked: 1
+  sceneName: Main Menu
+  requiredScene: Main Menu
+  stringName: Menu
+  color: {r: 1, g: 1, b: 1, a: 1}
+  scaleText: 0
 --- !u!1 &1850539930
 GameObject:
   m_ObjectHideFlags: 0
@@ -4278,7 +4318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6cece7192d849da4ea695541d072b75b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eb7e5a5092a807741bc686f1b0f8a0ad, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4415,7 +4455,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6cece7192d849da4ea695541d072b75b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eb7e5a5092a807741bc686f1b0f8a0ad, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4491,7 +4531,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MENu
+  m_text: Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 819e2a6f40c495b428bc0172a9c0b303, type: 2}
   m_sharedMaterial: {fileID: -7329213707470504239, guid: 819e2a6f40c495b428bc0172a9c0b303,

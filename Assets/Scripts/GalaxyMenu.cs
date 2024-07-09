@@ -4,12 +4,20 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
 
 public class GalaxyMenu : MonoBehaviour
 {
+    [System.Serializable]
+    struct GalaxyInfoType
+    {
+        public ColorSchemeStaticReference.PlanetType type;
+        public LevelGenerator.SpecialType specialType;
+    }
 
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
     [Header("Important Positions and Rotations")]
@@ -36,8 +44,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
     [SerializeField] GameObject galaxyObj; //prefab for instantiation
     [Header("Miscellaneous")]
-    [SerializeField] ColorSchemeStaticReference.PlanetType[] galaxyTypes; //possible types for galaxies
-    [SerializeField] LevelGenerator.SpecialType[] specialTypes; //possible special types for levels
+    [SerializeField] GalaxyInfoType[] galaxyTypes; //possible types for galaxies
+    [SerializeField] SpecialType[] allSpecialTypes;
     [SerializeField] GalaxyData[] possibleGalaxyData; //possible galaxy data
     [Header("Info Menu")]
     [SerializeField] Animator infoCardAnim;
@@ -133,7 +141,7 @@ public class GalaxyMenu : MonoBehaviour
             UnityEngine.Random.InitState(i * 120523 + gp.seed);
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(gp.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
-            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1], gp.possibleTypes, specialTypes, gp.levelStatic);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1], gp.possibleTypes, gp.possibleSpecial, gp.levelStatic);
 
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
@@ -355,18 +363,31 @@ public class GalaxyMenu : MonoBehaviour
             #endregion
 
             //random planet types
-            ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[UnityEngine.Random.Range(1,1)];
+            ColorSchemeStaticReference.PlanetType[] possibleTypes = new ColorSchemeStaticReference.PlanetType[1];
+            int numSpecial = UnityEngine.Random.Range(2, 5);
+            LevelGenerator.SpecialType[] specialTypes = new LevelGenerator.SpecialType[numSpecial];
+            List<LevelGenerator.SpecialType> allSpecial = allSpecialTypes.ToList();
             GalaxyData gData = null;
             for (int t = 0; t < possibleTypes.Length; t++) 
             {
                 int chosenIndex = UnityEngine.Random.Range(0, galaxyTypes.Length);
-                possibleTypes[t] = galaxyTypes[chosenIndex];
+                possibleTypes[0] = galaxyTypes[chosenIndex].type;
+                specialTypes[0] = galaxyTypes[chosenIndex].specialType;
+                allSpecial.Remove(specialTypes[0]);
+                for (int x = 1; x < numSpecial; x++)
+                {
+                    int chosenSpecial = UnityEngine.Random.Range(0, allSpecial.Count);
+                    specialTypes[x] = allSpecial[chosenSpecial];
+                    allSpecial.Remove(specialTypes[x]);
+                }
                 for (int x = 0; x < possibleGalaxyData.Length; x++)
                 {
                     if (possibleGalaxyData[x].type == possibleTypes[t]) { gData = possibleGalaxyData[x]; }
                 }
             }
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), universe.relativeDifficulty, gData, possibleTypes, universe.levelStatic); //setting galaxy at index
+
+
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), universe.relativeDifficulty, gData, possibleTypes, specialTypes, universe.levelStatic); //setting galaxy at index
         }
         LevelManager.setProceduralGalaxies(galaxies);
         galaxyList = galaxies;

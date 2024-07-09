@@ -7,6 +7,7 @@ using System;
 using Unity.VisualScripting;
 using System.Linq;
 using static ProceduralLevelGeneration;
+using System.Reflection;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -164,16 +165,27 @@ public class LevelGenerator : MonoBehaviour
 
         levelStatic = levelParams.levelStatic;
 
-        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1];
+        float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 1.75f;
 
         possiblePlanetTypes = levelParams.themes;
 
-        specialObjects = new SpecialObject[levelParams.specialObjects.Length];
+        int numSpecialObj = Mathf.RoundToInt((UnityEngine.Random.value/4 + 0.8825f) * specialObjMultiplier);
+        int[] numPerObj = new int[levelParams.specialObjects.Length];   
 
-        for(int i = 0; i < levelParams.specialObjects.Length; i++){
+        for (int i = 0; i < numSpecialObj; i++){
             UnityEngine.Random.InitState(levelParams.seed + i);
-            int num = Mathf.RoundToInt(UnityEngine.Random.value * specialObjMultiplier);
-            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], num, GenerateStar, GenerateQuasar);
+            int index = UnityEngine.Random.Range(0,levelParams.specialObjects.Length);
+            numPerObj[index]++;
+            
+        }
+        specialObjects = new SpecialObject[levelParams.specialObjects.Length];
+        LevelGenStaticReferences.SpecialObjectMultWrapper[] inherentMult = levelStatic.inherentSpecialMultipliers;
+        for (int i = 0; i < levelParams.specialObjects.Length; i++)
+        {
+            int typeIndex = UnityEngine.Random.Range(0, levelParams.specialObjects.Length);
+
+            Vector2 inherentMultiplier = Array.Find(inherentMult, t => t.specialType == levelParams.specialObjects[typeIndex]).minMaxMultiplier;
+            SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[typeIndex], Mathf.RoundToInt(numPerObj[i] * UnityEngine.Random.Range(inherentMultiplier.x, inherentMultiplier.y)), GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
         }
 
