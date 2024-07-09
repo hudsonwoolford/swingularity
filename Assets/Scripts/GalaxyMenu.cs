@@ -60,7 +60,6 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Animator infoCardAnim;
     [SerializeField] TextMeshProUGUI galaxyTitle;
     [SerializeField] Button playGalaxyBtn, infoBackBtn;
-    [SerializeField] TextMeshProUGUI seedNum;
     [SerializeField] TextMeshProUGUI difficultyNum;
     [SerializeField] Slider difficultySlider;
     [SerializeField] Gradient difficultyGradient;
@@ -72,12 +71,14 @@ public class GalaxyMenu : MonoBehaviour
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
     GalaxySummary[] galaxySummaries; //array of summary ui
+    Animator menuAnim;
     int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
     // Start is called before the first frame update
     void Start()
     {
+        menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
         if(GameManager.LevelManager.procedural)
@@ -155,6 +156,7 @@ public class GalaxyMenu : MonoBehaviour
             int levelDifficulty = Mathf.Clamp(gp.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
             LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1] + UnityEngine.Random.Range(-1, 2), gp.possibleTypes, gp.possibleSpecial, gp.levelStatic);
 
+
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
@@ -170,7 +172,6 @@ public class GalaxyMenu : MonoBehaviour
         {
             infoCardAnim.Play("ShowInfoCard");
             galaxyTitle.text = gp.name;
-            seedNum.text = gp.seed.ToString();
             difficultyNum.text = gp.relativeDifficulty.ToString();
             difficultyNum.color = difficultyGradient.Evaluate(gp.relativeDifficulty / difficultySlider.maxValue);
             difficultySlider.value = gp.relativeDifficulty;
@@ -215,16 +216,26 @@ public class GalaxyMenu : MonoBehaviour
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
 
-        if(!zoomIn)
+        if(zoomIn)
+        {
+            menuAnim.Play("HideMenu");
+            galaxySummaries[focusedGalaxy].EnableSummary(false);
+        }
+        if (!zoomIn)
         {
             EnableAndSetInfoCard(zoomIn, galaxyList[focusedGalaxy]);
-            yield return new WaitForSeconds(infoCardAnim.GetCurrentAnimatorStateInfo(0).length/2);
+            yield return new WaitForSeconds(infoCardAnim.GetCurrentAnimatorStateInfo(0).length / 2);
         }
 
         float timeOfTransition = 0f; //timer
         while(timeOfTransition < transitionDuration)
         {
             float progress = timeOfTransition / transitionDuration;
+            if(!zoomIn && progress > 0.5f)
+            {
+                menuAnim.Play("ShowMenu");
+                galaxySummaries[focusedGalaxy].EnableSummary(true);
+            }
             mainCam.position = Vector3.Lerp(mainCam.position, cameraTarget, transitionCurve.Evaluate(progress));
             galaxyCons[focusedGalaxy].transform.position = Vector3.Lerp(galaxyCons[focusedGalaxy].transform.position , galaxyTarget, transitionCurve.Evaluate(progress));
 
@@ -233,6 +244,9 @@ public class GalaxyMenu : MonoBehaviour
         }
 
         isMoving = false;
+        if(!zoomIn)
+        {
+        }
         if (zoomIn)
         {
             EnableAndSetInfoCard(zoomIn, galaxyList[focusedGalaxy]);

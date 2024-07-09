@@ -8,9 +8,11 @@ public class GalaxySummary : MonoBehaviour
 {
     [SerializeField] bool[] collectedStars;
     [SerializeField] Image[] starImgs;
+    Animator animator;
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();    
         GetComponent<Canvas>().worldCamera = Camera.main;
     }
 
@@ -28,11 +30,15 @@ public class GalaxySummary : MonoBehaviour
         this.collectedStars = collectedStars;
         UpdateStars();
     }
-    public void EnableStars()
+    public void EnableSummary(bool enable)
     {
-        for (int i = 0; i < starImgs.Length; i++)
+        if(enable)
         {
-            starImgs[i].enabled = false;
+            animator.Play("ShowMenu");
+        }
+        else
+        {
+            animator.Play("HideMenu");
         }
     }
     void UpdateStars()

@@ -1264,6 +1264,8 @@ GameObject:
   - component: {fileID: 619129925}
   - component: {fileID: 619129924}
   - component: {fileID: 619129923}
+  - component: {fileID: 619129929}
+  - component: {fileID: 619129928}
   m_Layer: 5
   m_Name: Galaxy Canvas
   m_TagString: Untagged
@@ -1502,7 +1504,6 @@ MonoBehaviour:
   galaxyTitle: {fileID: 1034310058}
   playGalaxyBtn: {fileID: 2090936741}
   infoBackBtn: {fileID: 1875605645}
-  seedNum: {fileID: 0}
   difficultyNum: {fileID: 763935461}
   difficultySlider: {fileID: 1850539932}
   difficultyGradient:
@@ -1562,6 +1563,39 @@ MonoBehaviour:
   - specialType: 5
     icon: {fileID: 21300000, guid: 9901f46f8548e154a87af4cc2ced6182, type: 3}
     color: {r: 0.9529412, g: 0.21960784, b: 0.45490196, a: 1}
+--- !u!225 &619129928
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619129922}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!95 &619129929
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619129922}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 208ec8ac37126184e868b3289f1dea57, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &676095619
 GameObject:
   m_ObjectHideFlags: 0

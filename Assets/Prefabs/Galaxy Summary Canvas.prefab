@@ -241,6 +241,8 @@ GameObject:
   - component: {fileID: 1459751708075195225}
   - component: {fileID: 6382843958111877864}
   - component: {fileID: 2727700593387736666}
+  - component: {fileID: 2890192377364604631}
+  - component: {fileID: 860529257781272542}
   m_Layer: 5
   m_Name: Galaxy Summary Canvas
   m_TagString: Untagged
@@ -311,6 +313,39 @@ MonoBehaviour:
   - {fileID: 1313048409581689028}
   - {fileID: 7759042464423565706}
   - {fileID: 2059970796720234316}
+--- !u!95 &2890192377364604631
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2277851632014010455}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 208ec8ac37126184e868b3289f1dea57, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &860529257781272542
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2277851632014010455}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3879827915667502078
 GameObject:
   m_ObjectHideFlags: 0
