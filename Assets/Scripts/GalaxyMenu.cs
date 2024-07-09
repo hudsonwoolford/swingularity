@@ -78,10 +78,11 @@ public class GalaxyMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        focusedGalaxy = 0;
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
-        if(GameManager.LevelManager.procedural)
+        if(GameManager.LevelManager.procedural && GameManager.LevelManager.currentUniverse != new UniverseParams())
         {
             CreateProceduralGalaxies();
         }
