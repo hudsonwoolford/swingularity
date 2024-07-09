@@ -51,6 +51,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] float sizeScalar; //scales galaxy size
     [SerializeField] Transform galaxyObjParent; //parent of galaxy controllers
     [SerializeField] GameObject galaxyObj; //prefab for instantiation
+    [SerializeField] GameObject galaxyUISummary; //prefab for instantiation
     [Header("Miscellaneous")]
     [SerializeField] GalaxyInfoType[] galaxyTypes; //possible types for galaxies
     [SerializeField] SpecialType[] allSpecialTypes;
@@ -70,6 +71,7 @@ public class GalaxyMenu : MonoBehaviour
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
+    GalaxySummary[] galaxySummaries; //array of summary ui
     int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
@@ -291,15 +293,22 @@ public class GalaxyMenu : MonoBehaviour
     void CreateControllers() //Instantiates all galaxies
     {
         galaxyCons = new GalaxyController[galaxyList.Length];
+        galaxySummaries = new GalaxySummary[galaxyList.Length];
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
         for (int i = 0; i < galaxyList.Length; i++) //dots
         {
             UnityEngine.Random.InitState(galaxyList[i].seed);
+
+            //instantiating galaxies
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
             galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation,UnityEngine.Random.value));
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
+
+            //instantiating UI for galaxies
+            galaxySummaries[i] = Instantiate(galaxyUISummary, galaxyCons[i].transform).GetComponent<GalaxySummary>();
+            galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
         float halfLength = ((galaxyList.Length - 1) / 2) * dotDistanceInterval;
         dotSelectedImgs = new Image[galaxyList.Length];
@@ -422,7 +431,7 @@ public class GalaxyMenu : MonoBehaviour
             }
 
             galaxyDifficultyTracker += galaxyDifficultyStep;
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5]); //setting galaxy at index
         }
         LevelManager.setProceduralGalaxies(galaxies);
         galaxyList = galaxies;
