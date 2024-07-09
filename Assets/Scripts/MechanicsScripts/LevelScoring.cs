@@ -140,7 +140,7 @@ public class LevelScoring : MonoBehaviour
     
     private void OnEnable()
     {
-        LevelGenerator.levelGenerated+=CheckPar;
+        LevelGenerator.levelGenerated += CheckPar;
         ShootBall.onShoot += IncrementScore;
         ShootBall.onHole += HoleEnd;
         ShootBall.triggerReset += ResetHole;
@@ -149,7 +149,7 @@ public class LevelScoring : MonoBehaviour
     }
     private void OnDisable()
     {
-        LevelGenerator.levelGenerated+=CheckPar;
+        LevelGenerator.levelGenerated -= CheckPar;
         ShootBall.onShoot -= IncrementScore;
         ShootBall.onHole -= HoleEnd;
         ShootBall.triggerReset -= ResetHole;
