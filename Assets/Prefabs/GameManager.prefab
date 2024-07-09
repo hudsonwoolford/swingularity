@@ -3320,8 +3320,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 455, y: -3}
-  m_SizeDelta: {x: 370, y: 20}
+  m_AnchoredPosition: {x: 447.5, y: -3}
+  m_SizeDelta: {x: 355, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3756658511656000603
 MonoBehaviour:
@@ -3367,10 +3367,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 3263220199360192144}
   m_HandleRect: {fileID: 4774247101347931497}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 240
+  m_MinValue: 30
+  m_MaxValue: 360
   m_WholeNumbers: 1
-  m_Value: 144
+  m_Value: 298
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -13374,7 +13374,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 144
+  m_text: 298
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 819e2a6f40c495b428bc0172a9c0b303, type: 2}
   m_sharedMaterial: {fileID: -7329213707470504239, guid: 819e2a6f40c495b428bc0172a9c0b303,
@@ -17133,7 +17133,6 @@ MonoBehaviour:
     options:
     - Fullscreen
     - Windowed
-    - Windowed Borderless
   customCursorTgl:
     toggleBtn: {fileID: 5031553324215088684}
     toggleImg: {fileID: 2496759717858530200}
@@ -17164,7 +17163,7 @@ MonoBehaviour:
     - {fileID: 4823515115064658541}
     - {fileID: 2661057462545051361}
     valueText: {fileID: 1530466562761733485}
-    defaultValue: 144
+    defaultValue: 297.9
   screenResElement:
     leftBtn: {fileID: 8878197020639539923}
     rightBtn: {fileID: 139127825017533606}
@@ -17187,6 +17186,7 @@ MonoBehaviour:
     currentValue: 0
     defaultValueIndex: 3
     options:
+    - 128
     - 256
     - 512
     - 1024
@@ -21416,7 +21416,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2048
+  m_text: 1024
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 819e2a6f40c495b428bc0172a9c0b303, type: 2}
   m_sharedMaterial: {fileID: -7329213707470504239, guid: 819e2a6f40c495b428bc0172a9c0b303,
@@ -22616,7 +22616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2285459504616217377
 RectTransform:
   m_ObjectHideFlags: 0

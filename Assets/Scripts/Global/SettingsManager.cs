@@ -8,7 +8,7 @@ using TMPro;
 public class SettingsManager : MonoBehaviour
 {
     [System.Serializable]
-    struct SettingsSlider 
+    class SettingsSlider 
     {
         public Slider slider;
         public Button[] resetBtns;
@@ -17,7 +17,7 @@ public class SettingsManager : MonoBehaviour
         public float defaultValue;
     }
     [System.Serializable]
-    struct OptionScroll
+    class OptionScroll
     {
         public Button leftBtn;
         public Button rightBtn;
@@ -28,7 +28,7 @@ public class SettingsManager : MonoBehaviour
         public string[] options;
     }
     [System.Serializable]
-    struct SettingsToggle
+    class SettingsToggle
     {
         public Button toggleBtn;
         public Image toggleImg;
@@ -96,8 +96,8 @@ public class SettingsManager : MonoBehaviour
         settingsAnim = GetComponent<Animator>();
         currentTab = 0;
 
-        SetAllVariables();
         SetButtonFunctions();
+        SetAllVariables();
         for (int i = 0; i < tabBtnSelected.Length; i++)
         {
             if (i == currentTab) { tabBtnSelected[i].enabled = true; }
@@ -149,17 +149,58 @@ public class SettingsManager : MonoBehaviour
         interfaceVolume = interfaceVolElement.slider.value * masterVolElement.slider.value;
         musicVolume = musicVolElement.slider.value * masterVolElement.slider.value;
     }
-    void SetGameVariables() //Applies ony game variables
+    void SetGameVariables() //Applies only game variables
     {
+        windowMode = windowModeElement.currentValue;
+        switch (windowMode)
+        {
+            case 0:
+                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+                Screen.fullScreen = true;
+                break;
+            case 1:
+                Screen.fullScreenMode = FullScreenMode.Windowed;
+                Screen.fullScreen = false;
+                break;
+            default:
+                break;
+        }
         customCursor = customCursorTgl.currentValue;
         hints = hintsTgl.currentValue;
         uiGlow = uiGlowTgl.currentValue;
     }
+
     void SetGraphicVariables() //Applies only graphic variables
     {
+        planetRes = int.Parse(planetResElement.options[planetResElement.currentValue]);
+
+        char[] screenResString = screenResElement.options[screenResElement.currentValue].ToCharArray();
+        string width = "";
+        string height = "";
+        ref string currentEdit = ref width;
+        for (int i = 0; i < screenResString.Length; i++)
+        {
+            if (screenResString[i] == '/' || screenResString[i] == ' ')
+            {
+                currentEdit = ref height;
+                continue;
+            }
+            currentEdit += screenResString[i];
+        }
+
+        screenRes = new Vector2Int(int.Parse(width), int.Parse(height));
+        Screen.SetResolution(screenRes.x, screenRes.y, Screen.fullScreenMode);
+
         frameLimit = Mathf.RoundToInt(frameLimitElement.slider.value);
+        Application.targetFrameRate = frameLimit;
+
+        antiAliasing = antiAliasingElement.currentValue;
+        QualitySettings.antiAliasing = antiAliasing;
+
         vsync = vsyncTgl.currentValue;
+        QualitySettings.vSyncCount = vsync ? 1 : 0;
     }
+
     #endregion
     #region Element Functions
     void EnableMenu(bool enable) //Enables the settings menu by animation
