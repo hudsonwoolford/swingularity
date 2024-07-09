@@ -16,6 +16,8 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI parText;
     [SerializeField] TextMeshProUGUI numShotsText;
     [SerializeField] TextMeshProUGUI holeNoText;
+    [SerializeField] Color positive, neutral, negative;
+
     [Serializable]
     struct Score
     {
@@ -34,6 +36,7 @@ public class LevelScoring : MonoBehaviour
         SetGalaxyAndHole();
         parText.text = par.ToString();
         numShotsText.text = numShots.ToString();
+        numShotsText.color = positive;
     }
     void SetGalaxyAndHole(){
         if(GameManager.LevelManager.procedural) //Procedural level pars
@@ -78,11 +81,21 @@ public class LevelScoring : MonoBehaviour
     {
         numShots++;
         numShotsText.text = numShots.ToString();
+        if(numShots < par){
+            numShotsText.color = positive;
+        }
+        else if(numShots > par){
+            numShotsText.color = negative;
+        }
+        else{
+            numShotsText.color = neutral;
+        }
     }
     void ResetHole()
     {
         numShots = 0;
         numShotsText.text = numShots.ToString();
+        numShotsText.color = positive;
     }
 
     void Pause(){
