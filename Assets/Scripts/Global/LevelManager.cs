@@ -409,7 +409,7 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < currentProceduralUniverse[currentGalaxyIndex].collectedStars.Length; i++)
         {
             currentProceduralUniverse[currentGalaxyIndex].collectedStars[i] |= starScore[i]; 
-            starTotal++;
+            if (starScore[i]){starTotal++;}
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
