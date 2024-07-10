@@ -97,8 +97,9 @@ public class LevelManager : MonoBehaviour
         public LevelGenerator.SpecialType[] possibleSpecial;
         public LevelGenStaticReferences levelStatic; //static references for level generation
         public bool[] collectedStars;
+        public int numStars;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic, bool[] collectedStars)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic, bool[] collectedStars, int numStars)
         {
             this.name = name;
             this.seed = seed;
@@ -108,6 +109,7 @@ public class LevelManager : MonoBehaviour
             this.possibleSpecial = possibleSpecial;
             this.levelStatic = levelStatic;
             this.collectedStars = collectedStars;
+            this.numStars = numStars;
         }
         public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
         {
