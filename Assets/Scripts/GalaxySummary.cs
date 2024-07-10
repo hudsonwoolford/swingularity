@@ -31,7 +31,7 @@ public class GalaxySummary : MonoBehaviour
     {
         if(GameManager.LevelManager.currentUniverse.numStars < lockStars){
             lockImage.SetActive(true);
-            lockImage.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (lockStars - GameManager.LevelManager.currentUniverse.numStars).ToString();
+            lockImage.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (lockStars).ToString();
             stars.SetActive(false);
         }
         else{
