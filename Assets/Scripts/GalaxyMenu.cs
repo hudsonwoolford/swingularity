@@ -186,7 +186,7 @@ public class GalaxyMenu : MonoBehaviour
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
             astroBiomeTxt.color = gp.galaxyData.mainColor;
             bestScoreTxt.text = gp.bestScore;
-            if(gp.bestScore != "—"){
+            if(gp.bestScore != "——"){
                 if(float.Parse(gp.bestScore) > 0){
                     bestScoreTxt.color = difficultyGradient.Evaluate(1f);
                 }
@@ -485,7 +485,7 @@ public class GalaxyMenu : MonoBehaviour
 
             galaxyDifficultyTracker += galaxyDifficultyStep;
 
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], galaxyStarLockTracker, "—"); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], galaxyStarLockTracker, "——"); //setting galaxy at index
             galaxyStarLockTracker += UnityEngine.Random.Range(2, 4);
 
 

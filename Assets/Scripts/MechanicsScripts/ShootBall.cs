@@ -708,7 +708,7 @@ public class ShootBall : MonoBehaviour
         {
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
         }
-        bool clockwise = CheckSpiralDir(velocityDir, hitPoint, hole);
+        bool clockwise = CheckSpiralDirOLD(velocityDir, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
@@ -727,9 +727,31 @@ public class ShootBall : MonoBehaviour
     } 
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
+        float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
+        if(angle < 0){
+            angle += 360;
+        }
+        else if(angle > 360){
+            angle = angle % 360;
+        }
+        print(angle);
+            if(((angle > 45)  && (angle < 90)) || ((angle < 315) && (angle > 270)) || ((angle < 135) && (angle < 90)) || ((angle > 225) && (angle < 270))){
+                 return true;
+            }
+            else{
+                return false;
+            }
+    }
+    private bool CheckSpiralDirOLD(Vector3 velocity, Vector3 hitPoint, Transform hole){
+        Vector3 holeDir = hitPoint - hole.position;
         velocity *= -1;
-       if(holeDir.x > 0 && holeDir.y > 0){
-            if(Mathf.Atan2(velocity.y, velocity.x) > Mathf.PI/4){
+        float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
+        if(angle < 0){
+            angle = 360 + angle;
+        }
+        print(angle);
+        if(holeDir.x > 0 && holeDir.y > 0){
+            if((angle > 45)){
                  return true;
             }
             else{
@@ -737,7 +759,7 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x > 0 && holeDir.y < 0){
-            if(Mathf.Atan2(velocity.y, velocity.x) > 7 * Mathf.PI/4){
+            if((angle > 315)){
                 return true;
             }
             else{
@@ -745,8 +767,7 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y > 0){
-
-            if(Mathf.Atan2(velocity.y, velocity.x) > 3 * Mathf.PI/4){
+            if((angle > 135)){
                 return true;
             }
             else{
@@ -754,10 +775,10 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y < 0){
-            if(Mathf.Atan2(velocity.y, velocity.x) > 5 * Mathf.PI/4){
+            if((angle > 225)){
                 return true;
             }
-            else{
+            else {
                 return false;
             }
         }
