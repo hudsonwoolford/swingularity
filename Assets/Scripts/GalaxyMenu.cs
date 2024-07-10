@@ -320,14 +320,14 @@ public class GalaxyMenu : MonoBehaviour
         galaxyCons = new GalaxyController[galaxyList.Length];
         galaxySummaries = new GalaxySummary[galaxyList.Length];
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
-        for (int i = 0; i < galaxyList.Length; i++) //dots
+        for (int i = 0; i < galaxyList.Length; i++) //galaxy obj
         {
-            UnityEngine.Random.InitState(galaxyList[i].seed);
+            UnityEngine.Random.InitState(galaxyList[i].seed + i);
 
             //instantiating galaxies
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
-            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation,UnityEngine.Random.value));
+            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, UnityEngine.Random.value));
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
 
@@ -462,7 +462,11 @@ public class GalaxyMenu : MonoBehaviour
             galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], 10); //setting galaxy at index
             if (GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
             {
-                alreadyLMSet |= galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
+                if(i >= GameManager.LevelManager.currentProceduralUniverse.Length)
+                {
+                    alreadyLMSet |= galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
+                }
+                else { alreadyLMSet = false; }
             }
         }
         if (!alreadyLMSet) { LevelManager.setProceduralGalaxies?.Invoke(galaxies); }
