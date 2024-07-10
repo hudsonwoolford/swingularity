@@ -324,7 +324,7 @@ public class GalaxyMenu : MonoBehaviour
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
         for (int i = 0; i < galaxyList.Length; i++) //galaxy obj
         {
-            UnityEngine.Random.InitState(galaxyList[i].seed + i);
+            UnityEngine.Random.InitState(galaxyList[i].seed);
 
             //instantiating galaxies
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
@@ -466,7 +466,7 @@ public class GalaxyMenu : MonoBehaviour
             galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], 10); //setting galaxy at index
             if (GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
             {
-                if(i >= GameManager.LevelManager.currentProceduralUniverse.Length)
+                if(i < GameManager.LevelManager.currentProceduralUniverse.Length)
                 {
                     alreadyLMSet |= galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
                 }
