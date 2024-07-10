@@ -325,12 +325,14 @@ public class GalaxyMenu : MonoBehaviour
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
         for (int i = 0; i < galaxyList.Length; i++) //galaxy obj
         {
-            UnityEngine.Random.InitState(galaxyList[i].seed);
 
             //instantiating galaxies
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
-            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, UnityEngine.Random.value));
+            UnityEngine.Random.InitState(galaxyList[i].seed);
+            float randomValue = UnityEngine.Random.Range(0f, 1f);
+            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, randomValue));
+            print(galaxyCons[i].transform.rotation + " | " + galaxyList[i].seed);
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
 
