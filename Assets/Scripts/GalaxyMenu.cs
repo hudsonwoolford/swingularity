@@ -9,6 +9,7 @@ using System.Linq;
 using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
+using Unity.Mathematics;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Vector3 maxRotation; //maximum rotation of galaxies
     [Header("Animations")]
     [SerializeField] float transitionDuration = 0.5f;
+    [SerializeField] float scrollSpeed; //scales scrolling speed
     [SerializeField] AnimationCurve transitionCurve;
     [Header("Main UI")]
     [SerializeField] Button rightBtn; //move buttons
@@ -149,6 +151,19 @@ public class GalaxyMenu : MonoBehaviour
         {
             ZoomButton(true);
         }
+        if(Input.mouseScrollDelta.y != 0){
+            if(Input.mouseScrollDelta.y < 0){
+                MoveButton(1);
+            }
+            else{
+                MoveButton(-1);
+            }
+            transitionDuration = 0.3f;
+
+
+            // transitionDuration = 1/Mathf.Abs(Input.mouseScrollDelta.y) * scrollSpeed;
+        }
+        else{ transitionDuration = 0.5f;}
     }
     void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
     {
