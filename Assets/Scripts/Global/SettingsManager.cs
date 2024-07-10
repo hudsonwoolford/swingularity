@@ -127,16 +127,15 @@ public class SettingsManager : MonoBehaviour
     #region Setting Variables
     public void LoadUIElements(UserSettings userSettings)
     {
-        SetSliderValue(userSettings.masterVolume, ref masterVolElement);
-        SetSliderValue(userSettings.sfxVolume / userSettings.masterVolume, ref sfxVolElement);
-        SetSliderValue(userSettings.interfaceVolume / userSettings.masterVolume, ref interfaceVolElement);
-        SetSliderValue(userSettings.musicVolume / userSettings.masterVolume, ref musicVolElement);
+        SetSlider(userSettings.masterVolume, ref masterVolElement);
+        SetSlider(userSettings.sfxVolume / userSettings.masterVolume, ref sfxVolElement);
+        SetSlider(userSettings.interfaceVolume / userSettings.masterVolume, ref interfaceVolElement);
+        SetSlider(userSettings.musicVolume / userSettings.masterVolume, ref musicVolElement);
 
         SetScrollOption(userSettings.windowMode, ref windowModeElement);
-        windowModeElement.currentValue = userSettings.windowMode;
-        customCursorTgl.currentValue = userSettings.customCursor;
-        hintsTgl.currentValue = userSettings.hints;
-        uiGlowTgl.currentValue = userSettings.uiGlow;
+        SetToggleButton(userSettings.customCursor, ref customCursorTgl);
+        SetToggleButton(userSettings.hints, ref hintsTgl);
+        SetToggleButton(userSettings.uiGlow, ref uiGlowTgl);
 
         int planetResIndex = planetResElement.defaultValueIndex;
         for (int i = 0; i < planetResElement.options.Length; i++)
@@ -147,7 +146,7 @@ public class SettingsManager : MonoBehaviour
                 break;
             }
         }
-        planetResElement.currentValue = planetResIndex;
+        SetScrollOption(planetResIndex, ref planetResElement);
         int screenResIndex = screenResElement.defaultValueIndex;
         for (int i = 0; i < screenResElement.options.Length; i++)
         {
@@ -157,10 +156,12 @@ public class SettingsManager : MonoBehaviour
                 break;
             }
         }
-        screenResElement.currentValue = screenResIndex;
-        frameLimitElement.slider.value = userSettings.frameLimit;
-        antiAliasingElement.currentValue = userSettings.antiAliasing;
-        vsyncTgl.currentValue = userSettings.vsync;
+        SetScrollOption(screenResIndex, ref screenResElement);
+        SetScrollOption(userSettings.antiAliasing, ref antiAliasingElement);
+        SetSliderValue(userSettings.frameLimit, ref frameLimitElement);
+        SetSlider(userSettings.frameLimit, ref frameLimitElement);
+        SetToggleButton(userSettings.vsync, ref vsyncTgl);
+
         SetAllVariables();
     }
     void SetAllVariables() //Applies all variables from settings menu into public static variables
@@ -201,7 +202,6 @@ public class SettingsManager : MonoBehaviour
     void SetGraphicVariables() //Applies only graphic variables
     {
         userSettings.planetRes = int.Parse(planetResElement.options[planetResElement.currentValue]);
-        print(userSettings.planetRes); 
 
         userSettings.screenRes = ConvertScreenRes(screenResElement.options[screenResElement.currentValue]);
         Screen.SetResolution(userSettings.screenRes.x, userSettings.screenRes.y, Screen.fullScreenMode);
@@ -258,6 +258,10 @@ public class SettingsManager : MonoBehaviour
     {
         ss.valueText.text = value.ToString();
     }
+    void SetSlider(float value, ref SettingsSlider ss)
+    {
+        ss.slider.value = value;
+    }
     void ScrollOption(bool right, ref OptionScroll os)
     {
         os.currentValue += right ? 1 : -1;
@@ -273,6 +277,11 @@ public class SettingsManager : MonoBehaviour
     void ToggleButton(ref SettingsToggle tg)
     {
         tg.currentValue = !tg.currentValue;
+        tg.toggleImg.enabled = tg.currentValue;
+    }
+    void SetToggleButton(bool value, ref SettingsToggle tg)
+    {
+        tg.currentValue = value;
         tg.toggleImg.enabled = tg.currentValue;
     }
     IEnumerator ChangeTab(int tabIndex) //Changes the tab with a transition animation

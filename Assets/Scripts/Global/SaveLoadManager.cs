@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using static LevelManager;
 
 public class SaveLoadManager : MonoBehaviour
@@ -20,7 +23,7 @@ public class SaveLoadManager : MonoBehaviour
 
     private void Awake()
     {
-
+        LoadSettings();
 
     }
     void Start()
@@ -48,6 +51,10 @@ public class SaveLoadManager : MonoBehaviour
         string jsonSave = JsonUtility.ToJson(settingsSave, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + "UserSettings.txt", jsonSave);
+
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
     }
     void LoadSettings()
     {
