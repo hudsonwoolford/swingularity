@@ -272,7 +272,7 @@ public class LevelManager : MonoBehaviour
         levelIndex = Array.IndexOf(currentGalaxy, name);
         string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Galaxies";
 
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName, LoadSceneMode.Additive);
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
@@ -322,7 +322,7 @@ public class LevelManager : MonoBehaviour
         string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
+        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
