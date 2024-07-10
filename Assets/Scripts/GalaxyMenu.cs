@@ -222,6 +222,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     IEnumerator ZoomGalaxy(bool zoomIn)
     {
+        if(galaxyList[focusedGalaxy].numStars > GameManager.LevelManager.currentUniverse.numStars){galaxySummaries[focusedGalaxy].Shake(); yield break; }
         isMoving = true;
         zoomedIn = zoomIn;
         galaxyMenuCanvas.enabled = !zoomIn;

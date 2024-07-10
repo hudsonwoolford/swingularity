@@ -27,6 +27,9 @@ public class GalaxySummary : MonoBehaviour
     {
         UpdateStars();
     }
+    public void Shake(){
+        animator.Play("ShakeLock");
+    }
     public void InitSummary(bool[] collectedStars, int lockStars)
     {
         if(GameManager.LevelManager.currentUniverse.numStars < lockStars){
