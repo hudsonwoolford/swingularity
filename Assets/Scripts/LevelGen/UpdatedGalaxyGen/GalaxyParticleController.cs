@@ -69,9 +69,9 @@ public class GalaxyParticleController : MonoBehaviour
 
         particleIndexing.Clear();
         starParticles.Clear();
-        starParticles.GetComponent<Renderer>().enabled = false;
 
         ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+        emitParams.startColor = new Color(0, 0, 0, 0);
         starParticles.Emit(emitParams, numSamples * numIterations);
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
@@ -89,7 +89,6 @@ public class GalaxyParticleController : MonoBehaviour
         }
         
         starParticles.SetParticles(particles);
-        starParticles.GetComponent<Renderer>().enabled = true;
     }
 
     public void RandomizeVars(int seed){

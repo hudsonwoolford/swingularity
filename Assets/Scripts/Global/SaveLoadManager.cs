@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -9,22 +10,24 @@ using static LevelManager;
 
 public class SaveLoadManager : MonoBehaviour
 {
-    class UniverseSave
-    { 
-        public UniverseParams universeParams = new UniverseParams();
-        public GalaxyParams[] allGalaxies = new GalaxyParams[0];
+    public class UniverseSave
+    {
+        public UniverseParams universeParams;
+        public GalaxyParams[] allGalaxies;
     }
     class SettingsSave
-    { 
+    {
         public UserSettings userSettings = new UserSettings();
     }
     [SerializeField] string saveFolder; //Folder containing saves
+    [SerializeField] string settingsSaveFolder; //Folder containing settings
 
+    public static FileInfo[] saves {get;private set;}
 
     private void Awake()
     {
+        RetrieveUniverseSaves();
         LoadSettings();
-
     }
     void Start()
     {
@@ -34,6 +37,20 @@ public class SaveLoadManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Tab)) { SaveSettings(); }
 
+    }
+    void RetrieveUniverseSaves()
+    {
+        DirectoryInfo saveInfo = new DirectoryInfo(Application.dataPath + saveFolder);
+        FileInfo[] saveFiles = saveInfo.GetFiles();
+        List<FileInfo> trackRealSave = new List<FileInfo>();
+        for (int i = 0; i < saveFiles.Length; i++)
+        {
+            if (saveFiles[i].Name == "UserSettings.txt") { continue; }
+            if (saveFiles[i].Extension == ".meta" ){ continue; }
+            if (!saveFiles[i].Exists) { continue; }
+            trackRealSave.Add(saveFiles[i]);
+        }
+        saves = trackRealSave.ToArray();
     }
     #region Setting Saving
     void SettingsEnabled(bool enable)
@@ -50,7 +67,7 @@ public class SaveLoadManager : MonoBehaviour
 
         string jsonSave = JsonUtility.ToJson(settingsSave, true);
 
-        File.WriteAllText(Application.dataPath + saveFolder + "UserSettings.txt", jsonSave);
+        File.WriteAllText(Application.dataPath + settingsSaveFolder + "UserSettings.txt", jsonSave);
 
         #if UNITY_EDITOR
         AssetDatabase.Refresh();
@@ -58,7 +75,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void LoadSettings()
     {
-        string path = Application.dataPath + saveFolder + "UserSettings.txt";
+        string path = Application.dataPath + settingsSaveFolder + "UserSettings.txt";
         if (File.Exists(path))
         {
             string jsonSave = File.ReadAllText(path);
@@ -73,31 +90,37 @@ public class SaveLoadManager : MonoBehaviour
     }
     #endregion
     #region Universe Saving
-    void Save()
+    public void Save()
     {
         UniverseSave save = new UniverseSave
         {
             universeParams = GameManager.LevelManager.currentUniverse,
             allGalaxies = GameManager.LevelManager.currentProceduralUniverse
         };
-
+        if(save.universeParams == new UniverseParams()) { return; }
         string jsonSave = JsonUtility.ToJson(save, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + save.universeParams.name + ".txt", jsonSave);
+        #if UNITY_EDITOR
+                AssetDatabase.Refresh();
+        #endif
     }
-    void Load()
+    public void CreateSave(string fileName, UniverseSave save)
     {
-        string name = "Test";
+        string jsonSave = JsonUtility.ToJson(save, true);
 
-        string jsonSave = File.ReadAllText(Application.dataPath + saveFolder + name + ".txt");
-        UniverseSave loadedSave = JsonUtility.FromJson<UniverseSave>(jsonSave);
+        File.WriteAllText(Application.dataPath + saveFolder + fileName, jsonSave);
+        #if UNITY_EDITOR
+                AssetDatabase.Refresh();
+#endif
 
-        setProceduralUniverse?.Invoke(loadedSave.universeParams);
-        setProceduralGalaxies?.Invoke(loadedSave.allGalaxies);
+        setProceduralUniverse?.Invoke(save.universeParams);
+        setProceduralGalaxies?.Invoke(save.allGalaxies);
+        RetrieveUniverseSaves();
     }
-    public void Load(string saveName)
+    public void Load(string fileName)
     {
-        string path = Application.dataPath + saveFolder + name + ".txt";
+        string path = Application.dataPath + saveFolder + fileName;
         if (File.Exists(path))
         {
             string jsonSave = File.ReadAllText(path);
@@ -112,14 +135,41 @@ public class SaveLoadManager : MonoBehaviour
         }
     }
     #endregion
-
+    public UniverseSave RetrieveSave(string fileName)
+    {
+        string path = Application.dataPath + saveFolder + fileName;
+        if (File.Exists(path))
+        {
+            string jsonSave = File.ReadAllText(path);
+            return JsonUtility.FromJson<UniverseSave>(jsonSave);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public void DeleteSave(string fileName)
+    {
+        File.Delete(Application.dataPath + saveFolder + fileName);
+        File.Delete(Application.dataPath + saveFolder + fileName + ".meta");
+        #if UNITY_EDITOR
+                AssetDatabase.Refresh();
+        #endif
+        RetrieveUniverseSaves();
+    }
+    void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
+    {
+        Save();
+    }
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsEnabled;
         SettingsManager.applySettingsVar += SaveSettings;
     }
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsEnabled;
         SettingsManager.applySettingsVar -= SaveSettings;
 

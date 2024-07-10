@@ -734,7 +734,6 @@ public class ShootBall : MonoBehaviour
         else if(angle > 360){
             angle = angle % 360;
         }
-        print(angle);
             if(((angle > 45)  && (angle < 90)) || ((angle < 315) && (angle > 270)) || ((angle < 135) && (angle < 90)) || ((angle > 225) && (angle < 270))){
                  return true;
             }
@@ -749,7 +748,6 @@ public class ShootBall : MonoBehaviour
         if(angle < 0){
             angle = 360 + angle;
         }
-        print(angle);
         if(holeDir.x > 0 && holeDir.y > 0){
             if((angle > 45)){
                  return true;

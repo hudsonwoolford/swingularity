@@ -93,12 +93,12 @@ public class GalaxyMenu : MonoBehaviour
             CreateProceduralGalaxies();
         }
         CreateControllers();
-        EnableDisableGalaxies(false);
         rightBtn.onClick.AddListener(() => MoveButton(1));
         leftBtn.onClick.AddListener(() => MoveButton(-1));
         zoomBtn.onClick.AddListener(() => ZoomButton(true));
         playGalaxyBtn.onClick.AddListener(() => PlayGalaxy());
         infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
+        EnableDisableGalaxies(false);
     }
     void Update()
     {
@@ -340,11 +340,11 @@ public class GalaxyMenu : MonoBehaviour
         {
             if(Mathf.Abs(i-focusedGalaxy)<=1 || enableAll)
             {
-                galaxyCons[i].transform.GetChild(0).GetComponent<GalaxyParticleController>().stationary = false;
+                galaxyCons[i].gameObject.SetActive(true);
             }
             else
             {
-                galaxyCons[i].transform.GetChild(0).GetComponent<GalaxyParticleController>().stationary = true;
+                galaxyCons[i].gameObject.SetActive(false);
             }
             if (i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
             else { dotSelectedImgs[i].enabled = true; }
@@ -515,6 +515,7 @@ public class GalaxyMenu : MonoBehaviour
         }
         if (!alreadyLMSet) { LevelManager.setProceduralGalaxies?.Invoke(galaxies); }
         galaxyList = GameManager.LevelManager.currentProceduralUniverse;
+        GameManager.SaveLoadManager.Save();
     }
     void OnDrawGizmos() //Visual aid
     {

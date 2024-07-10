@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.IO;
+using System.Linq;
 
 
 public class TitleScreenButtons : MonoBehaviour
@@ -24,7 +26,6 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] float elementHeightJump;
     [SerializeField] Transform saveElementParent;
     [SerializeField] GameObject saveElementObj;
-    [SerializeField] int numSaves;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -40,6 +41,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] string proceduralGalaxiesScene;
     [SerializeField] Material skybox;
     [SerializeField] float speed;
+    Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
     bool ngMenu;
     bool settingsMenu;
@@ -48,11 +50,11 @@ public class TitleScreenButtons : MonoBehaviour
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
     void Start()
-    {   
+    {
+        saveElementParentOrigin = saveElementParent.localPosition;
         eventSystem = EventSystem.current;
         SetGalaxySize(1);
         UpdateDifficulty();
-        PopulateSaves();
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
         //normal ui
@@ -65,6 +67,7 @@ public class TitleScreenButtons : MonoBehaviour
         slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
         slCreateBtn.onClick.AddListener(() => ngMenuAnim.Play("ShowCreationMenu"));
         slLoadBtn.onClick.AddListener(() => LoadProceduralUniverse());
+        slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
         //new game ui
         ngBackBtn.onClick.AddListener(() => NewGameBack());
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
@@ -133,31 +136,42 @@ public class TitleScreenButtons : MonoBehaviour
 
     #endregion
     #region Save Load UI
-    
-    void DeleteSave(int elementIndex)
+    void OnSaveLoadScrollbar(float value)
     {
-        Destroy(saveElementParent.GetChild(elementIndex).gameObject);
-        LevelManager.setProceduralUniverse?.Invoke(new LevelManager.UniverseParams());
-        LevelManager.notifyProcedural?.Invoke(false);
+        float maxValue = -(SaveLoadManager.saves.Length-1) * elementHeightJump;
+        saveElementParent.localPosition = Vector3.Lerp(saveElementParentOrigin, saveElementParentOrigin + new Vector3(0, maxValue, 0), value);
+    }
+    void DeleteSave(SaveElement se)
+    {
+        GameManager.SaveLoadManager.DeleteSave(se.uniParams.name + ".txt");
+        Destroy(se.gameObject);
         PopulateSaves();
     }
     void LoadProceduralUniverse()
     {
-        SaveElement se = null;
+        SaveElement se;
         if(lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<SaveElement>(out se)) {return;}
-        LevelManager.setProceduralUniverse?.Invoke(se.uniParams);
+        GameManager.SaveLoadManager.Load(se.uniParams.name + ".txt");
         SceneManager.LoadScene(proceduralGalaxiesScene);
     }
     void PopulateSaves()
     {
-        numSaves = GameManager.LevelManager.currentUniverse == new LevelManager.UniverseParams() ? 0 : 1;
-        for(int i = 0; i < numSaves; i++)
+        if (SaveLoadManager.saves == null || SaveLoadManager.saves.Length == 0) { return; }
+        FileInfo[] saveInfos = SaveLoadManager.saves;
+
+        SaveElement[] allElements = saveElementParent.GetComponentsInChildren<SaveElement>(true);
+        for (int i = 0; i < allElements.Length; i++)
+        {
+            Destroy(allElements[i].gameObject);
+        }
+        for(int i = 0; i < saveInfos.Length; i++)
         {
             RectTransform tr = Instantiate(saveElementObj, saveElementParent).GetComponent<RectTransform>();
-            tr.position += new Vector3(0,elementHeightJump * i,0);
+            tr.localPosition += new Vector3(0,elementHeightJump * i,0);
 
             //Temporary bc no save load functionality
-            LevelManager.UniverseParams uni = GameManager.LevelManager.currentUniverse;
+            LevelManager.UniverseParams uni = GameManager.SaveLoadManager.RetrieveSave(saveInfos[i].Name).universeParams;
+            if(uni == null) { continue; }
             Color sizeColor = Color.white;
             if (uni.size == "Small")
             {
@@ -174,7 +188,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor).onClick.AddListener(() => DeleteSave(i-1));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion
@@ -213,9 +227,38 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void CreateNewProceduralUniverse() //create button in new game menu
     {
-        LevelManager.UniverseParams universeParams = SynthesizeUniverseParams();
-        LevelManager.setProceduralUniverse?.Invoke(universeParams);
+        LevelManager.UniverseParams up = SynthesizeUniverseParams();
+        up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
+        up.name = up.name.Substring(0,up.name.LastIndexOf(".txt"));
+        GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });
+        LevelManager.notifyProcedural?.Invoke(true);
         SceneManager.LoadScene(proceduralGalaxiesScene);
+    }
+    string EnsureUniqueFileName(FileInfo[] existingFiles, string newFileName)
+    {
+        // Extract existing file names
+        var existingFileNames = existingFiles.Select(file => file.Name).ToHashSet();
+
+        // Get file name without extension and its extension
+        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(newFileName);
+        string extension = Path.GetExtension(newFileName);
+
+        // Check if the new file name already exists
+        if (!existingFileNames.Contains(newFileName))
+        {
+            return newFileName;
+        }
+
+        // If it exists, append a number to the new file name
+        int counter = 1;
+        string uniqueFileName;
+        do
+        {
+            uniqueFileName = $"{fileNameWithoutExtension}({counter}){extension}";
+            counter++;
+        } while (existingFileNames.Contains(uniqueFileName));
+
+        return uniqueFileName;
     }
     IEnumerator EnableNewGameMenu(bool enable)
     {
