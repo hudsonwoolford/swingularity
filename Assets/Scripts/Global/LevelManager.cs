@@ -98,8 +98,9 @@ public class LevelManager : MonoBehaviour
         public LevelGenStaticReferences levelStatic; //static references for level generation
         public bool[] collectedStars;
         public int numStars;
+        public string bestScore;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic, bool[] collectedStars, int numStars)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic, bool[] collectedStars, int numStars, string bestScore)
         {
             this.name = name;
             this.seed = seed;
@@ -110,6 +111,7 @@ public class LevelManager : MonoBehaviour
             this.levelStatic = levelStatic;
             this.collectedStars = collectedStars;
             this.numStars = numStars;
+            this.bestScore = bestScore;
         }
         public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
         {
@@ -410,6 +412,12 @@ public class LevelManager : MonoBehaviour
         {
             currentProceduralUniverse[currentGalaxyIndex].collectedStars[i] |= starScore[i]; 
             if (starScore[i]){starTotal++;}
+        }
+        if(scoreSum > 0){
+            currentProceduralUniverse[currentGalaxyIndex].bestScore = "+" + scoreSum.ToString();
+        }
+        else{
+            currentProceduralUniverse[currentGalaxyIndex].bestScore = scoreSum.ToString();  
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;

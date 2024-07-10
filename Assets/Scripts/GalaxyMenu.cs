@@ -69,6 +69,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Image[] starImgs;
     [SerializeField] Sprite[] starIcon;
     [SerializeField] SpecialObjectIcon[] iconSprites;
+    [SerializeField] TextMeshProUGUI bestScoreTxt;
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
@@ -184,6 +185,22 @@ public class GalaxyMenu : MonoBehaviour
             difficultySlider.colors = cB;
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
             astroBiomeTxt.color = gp.galaxyData.mainColor;
+            bestScoreTxt.text = gp.bestScore;
+            if(gp.bestScore != "—"){
+                if(float.Parse(gp.bestScore) > 0){
+                    bestScoreTxt.color = difficultyGradient.Evaluate(1f);
+                }
+                else if (float.Parse(gp.bestScore) < 0) {
+                    bestScoreTxt.color = difficultyGradient.Evaluate(0f);
+                }
+                else{
+                    bestScoreTxt.color = difficultyGradient.Evaluate(0.5f);
+                }
+            }
+            else{
+                bestScoreTxt.color = new Color(1,1,1,1);
+            }
+
             SpecialObjectIcon[] icons = new SpecialObjectIcon[gp.possibleSpecial.Length];
             for (int i = 0; i < icons.Length; i++)
             {
@@ -468,7 +485,7 @@ public class GalaxyMenu : MonoBehaviour
 
             galaxyDifficultyTracker += galaxyDifficultyStep;
 
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], galaxyStarLockTracker); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], galaxyStarLockTracker, "—"); //setting galaxy at index
             galaxyStarLockTracker += UnityEngine.Random.Range(2, 4);
 
 

@@ -176,6 +176,9 @@ public class TitleScreenButtons : MonoBehaviour
     #region New Game UI
     public void UpdateDifficulty()
     {
+        if(ngDifficultySldr.value <= 0){
+            ngDifficultySldr.value = 1;
+        } 
         difficultyNumber.text = ngDifficultySldr.value.ToString();
         ngDifficultySldr.targetGraphic.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
         difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015346071, g: 0.0014087377, b: 0.001345563, a: 1}
+  m_IndirectSpecularColor: {r: 0.00096303574, g: 0.0009004274, b: 0.0008813455, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -234,7 +234,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -90}
+  m_AnchoredPosition: {x: 5.1, y: -99.5}
   m_SizeDelta: {x: 660, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &74558317
@@ -1520,6 +1520,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Desert
     seed: -46
     relativeDifficulty: 2
@@ -1529,6 +1530,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Ice
     seed: -1154
     relativeDifficulty: 2
@@ -1538,6 +1540,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Fire
     seed: -449
     relativeDifficulty: 2
@@ -1547,6 +1550,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Goop
     seed: 778
     relativeDifficulty: 2
@@ -1556,6 +1560,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Waste
     seed: 83
     relativeDifficulty: 2
@@ -1565,6 +1570,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   - name: Mythical
     seed: 442
     relativeDifficulty: 2
@@ -1574,6 +1580,7 @@ MonoBehaviour:
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
     numStars: 0
+    bestScore: 
   focusPosition: {x: 0, y: 1, z: 0}
   zoomGalaxyPos: {x: -2, y: 0.25, z: 0}
   zoomCameraPos: {x: 0, y: 0, z: -5}
@@ -1720,6 +1727,7 @@ MonoBehaviour:
   - specialType: 5
     icon: {fileID: 21300000, guid: 9901f46f8548e154a87af4cc2ced6182, type: 3}
     color: {r: 0.9529412, g: 0.21960784, b: 0.45490196, a: 1}
+  bestScoreTxt: {fileID: 74558317}
 --- !u!225 &619129928
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2116,7 +2124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -90}
+  m_AnchoredPosition: {x: 5.1, y: -99.5}
   m_SizeDelta: {x: 660, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &764174264
@@ -3517,7 +3525,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260454881}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 1714477967}
