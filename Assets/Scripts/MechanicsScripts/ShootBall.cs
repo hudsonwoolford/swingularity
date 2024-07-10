@@ -685,6 +685,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
+        StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
         StartCoroutine(StartAnimation(hole, hitPoint, velocity));
         yield return new WaitForSeconds(animLength);
@@ -711,11 +712,13 @@ public class ShootBall : MonoBehaviour
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
+            Vector3 holeDir = hitPoint - hole.position;
+            float angle = Mathf.Atan2(holeDir.y, holeDir.x) * Mathf.Rad2Deg;
             if(clockwise){
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360 + angle)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
             }
             else{
-                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
+                transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (progress-1) * 360 + angle)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
             }
             
             mat.SetFloat("_Cutoff", 1 - progress);
@@ -774,6 +777,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
+        StopCoroutine(nameof(BallStillTiming));
         deathDelay = true;
         if(objCol.GetComponent<QuasarGenerator>()!=null)
         {

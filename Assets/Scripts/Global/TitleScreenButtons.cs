@@ -15,6 +15,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Button newGameBtn;
     [SerializeField] Button loadGameBtn;
     [SerializeField] Button settingsBtn;
+    [SerializeField] Button quitBtn;
     [Header("Save Load UI")]
     [SerializeField] Scrollbar slScrollBar;
     [SerializeField] Button slBackBtn;
@@ -59,6 +60,7 @@ public class TitleScreenButtons : MonoBehaviour
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
+        quitBtn.onClick.AddListener(() => QuitGame());
         //save load ui
         slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
         slCreateBtn.onClick.AddListener(() => ngMenuAnim.Play("ShowCreationMenu"));
@@ -124,6 +126,9 @@ public class TitleScreenButtons : MonoBehaviour
         if (enable){return;}
         settingsMenu = false;
         cameraAnim.Play("SettingsToMenu");
+    }
+    void QuitGame(){
+        Application.Quit();
     }
 
     #endregion
