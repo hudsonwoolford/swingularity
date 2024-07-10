@@ -33,7 +33,7 @@ public class GalaxyParticleController : MonoBehaviour
     float scalar = 0.25f;
     [Range(0.1f, 0.5f)]
     [SerializeField] float speed = 0.25f;
-    [SerializeField] bool stationary = false;
+    [SerializeField] public bool stationary = false;
 
     [SerializeField] public Color col1, col2, col3;
 

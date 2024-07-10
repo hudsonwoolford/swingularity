@@ -340,11 +340,11 @@ public class GalaxyMenu : MonoBehaviour
         {
             if(Mathf.Abs(i-focusedGalaxy)<=1 || enableAll)
             {
-                galaxyCons[i].gameObject.SetActive(true);
+                galaxyCons[i].transform.GetChild(0).GetComponent<GalaxyParticleController>().stationary = false;
             }
             else
             {
-                galaxyCons[i].gameObject.SetActive(false);
+                galaxyCons[i].transform.GetChild(0).GetComponent<GalaxyParticleController>().stationary = true;
             }
             if (i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
             else { dotSelectedImgs[i].enabled = true; }
