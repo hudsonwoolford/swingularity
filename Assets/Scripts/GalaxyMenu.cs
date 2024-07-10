@@ -65,6 +65,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Gradient difficultyGradient;
     [SerializeField] TextMeshProUGUI astroBiomeTxt;
     [SerializeField] Image[] iconImgs;
+    [SerializeField] Image[] starImgs;
+    [SerializeField] Sprite[] starIcon;
     [SerializeField] SpecialObjectIcon[] iconSprites;
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
@@ -202,6 +204,14 @@ public class GalaxyMenu : MonoBehaviour
                 iconImgs[i].gameObject.SetActive(true);
                 iconImgs[i].color = icons[i].color;
                 iconImgs[i].sprite = icons[i].icon;
+            }
+            for(int i = 0; i < starImgs.Length; i++){
+                if(gp.collectedStars[i]){
+                    starImgs[i].sprite = starIcon[i];
+                }
+                else{
+                    starImgs[i].sprite = starIcon[starImgs.Length];
+                }
             }
         }
         else
@@ -374,7 +384,7 @@ public class GalaxyMenu : MonoBehaviour
                 int numParts = UnityEngine.Random.Range(2,4);
                 for (int c = 0; c < numParts; c++) 
                 {
-                    if(name.Length < 24){
+                    if(name.Length < 12){
                         int roll = UnityEngine.Random.Range(0,160);
                         if (roll < universe.levelStatic.GalaxyWords.Length){
                             string addend = universe.levelStatic.GalaxyWords[UnityEngine.Random.Range(0, universe.levelStatic.GalaxyWords.Length)];
