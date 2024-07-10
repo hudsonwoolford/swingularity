@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.Rendering;
 
 [ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
@@ -98,23 +97,7 @@ public class SettingsManager : MonoBehaviour
     {
         if(!Application.isPlaying)
         {
-            //default audio values
-            if (sfxVolElement.slider != null) { sfxVolElement.slider.value = sfxVolElement.defaultValue; }
-            if (interfaceVolElement.slider != null) { interfaceVolElement.slider.value = interfaceVolElement.defaultValue; }
-            if (musicVolElement.slider != null) { musicVolElement.slider.value = musicVolElement.defaultValue; }
-            if (masterVolElement.slider != null) { masterVolElement.slider.value = masterVolElement.defaultValue; }
-
-            //default game values
-            if (customCursorTgl.toggleImg != null) { customCursorTgl.toggleImg.enabled = customCursorTgl.defaultValue; }
-            if (hintsTgl.toggleImg != null) { hintsTgl.toggleImg.enabled = hintsTgl.defaultValue; }
-            if (uiGlowTgl.toggleImg != null) { uiGlowTgl.toggleImg.enabled = uiGlowTgl.defaultValue; }
-
-            //default graphic values
-            if (frameLimitElement.slider != null) { frameLimitElement.slider.value = frameLimitElement.defaultValue; if (frameLimitElement.valueText != null) { frameLimitElement.valueText.text = frameLimitElement.slider.value.ToString(); } }
-            if (planetResElement.optionTxt != null) { planetResElement.optionTxt.text = planetResElement.options[planetResElement.defaultValueIndex]; }
-            if (screenResElement.optionTxt != null) { screenResElement.optionTxt.text = screenResElement.options[screenResElement.defaultValueIndex]; }
-            if (antiAliasingElement.optionTxt != null) { antiAliasingElement.optionTxt.text = antiAliasingElement.options[antiAliasingElement.defaultValueIndex]; }
-            if (vsyncTgl.toggleImg != null) { vsyncTgl.toggleImg.enabled = vsyncTgl.defaultValue; }
+            SetDefaultVariables();
         }
         else
         {
@@ -125,12 +108,34 @@ public class SettingsManager : MonoBehaviour
         }
     }
     #region Setting Variables
+    public void SetDefaultVariables()
+    {
+        SetSlider(masterVolElement.defaultValue, ref masterVolElement);
+        SetSlider(sfxVolElement.defaultValue, ref sfxVolElement);
+        SetSlider(interfaceVolElement.defaultValue, ref interfaceVolElement);
+        SetSlider(musicVolElement.defaultValue, ref musicVolElement);
+
+        SetScrollOption(windowModeElement.defaultValueIndex, ref windowModeElement);
+        SetToggleButton(customCursorTgl.defaultValue, ref customCursorTgl);
+        SetToggleButton(hintsTgl.defaultValue, ref hintsTgl);
+        SetToggleButton(uiGlowTgl.defaultValue, ref uiGlowTgl);
+
+        SetScrollOption(planetResElement.defaultValueIndex, ref planetResElement);
+        SetScrollOption(screenResElement.defaultValueIndex, ref screenResElement);
+        SetScrollOption(antiAliasingElement.defaultValueIndex, ref antiAliasingElement);
+        SetSliderValue(frameLimitElement.defaultValue, ref frameLimitElement);
+        SetSlider(frameLimitElement.defaultValue, ref frameLimitElement);
+        SetToggleButton(vsyncTgl.defaultValue, ref vsyncTgl);
+
+        SetAllVariables();
+    }
     public void LoadUIElements(UserSettings userSettings)
     {
         SetSlider(userSettings.masterVolume, ref masterVolElement);
-        SetSlider(userSettings.sfxVolume / userSettings.masterVolume, ref sfxVolElement);
-        SetSlider(userSettings.interfaceVolume / userSettings.masterVolume, ref interfaceVolElement);
-        SetSlider(userSettings.musicVolume / userSettings.masterVolume, ref musicVolElement);
+        float div = userSettings.masterVolume == 0 ? 1 : userSettings.masterVolume;
+        SetSlider(userSettings.sfxVolume / div, ref sfxVolElement);
+        SetSlider(userSettings.interfaceVolume / div, ref interfaceVolElement);
+        SetSlider(userSettings.musicVolume / div, ref musicVolElement);
 
         SetScrollOption(userSettings.windowMode, ref windowModeElement);
         SetToggleButton(userSettings.customCursor, ref customCursorTgl);

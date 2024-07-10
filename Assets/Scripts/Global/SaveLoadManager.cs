@@ -26,6 +26,16 @@ public class SaveLoadManager : MonoBehaviour
 
     private void Awake()
     {
+        if(!Directory.Exists(Application.dataPath + saveFolder))
+        {
+            Directory.CreateDirectory(Application.dataPath + saveFolder);
+        }
+        if (!Directory.Exists(Application.dataPath + settingsSaveFolder))
+        {
+            Directory.CreateDirectory(Application.dataPath + settingsSaveFolder);
+            GameManager.SettingsManager.SetDefaultVariables();
+            SaveSettings();
+        }
         RetrieveUniverseSaves();
         LoadSettings();
     }
@@ -35,7 +45,6 @@ public class SaveLoadManager : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab)) { SaveSettings(); }
 
     }
     void RetrieveUniverseSaves()
