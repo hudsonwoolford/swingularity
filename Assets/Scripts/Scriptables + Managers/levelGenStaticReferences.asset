@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c774d5dc97286704caae55aca30f52af, type: 3}
   m_Name: levelGenStaticReferences
   m_EditorClassIdentifier: 
-  minSize: 4
+  minSize: 3
   maxSize: 9
-  sizeBias: 0.5
+  sizeBias: 0.25
   sizeScale: 1
   samplesBeforeRejection: 500
   offsetScale: 100
@@ -34,13 +34,13 @@ MonoBehaviour:
   regionSizes:
   - baseMultiplier: 1
     nestedRegionSizes:
-    - {x: 30, y: 15}
+    - {x: 20, y: 10}
   - baseMultiplier: 1
     nestedRegionSizes:
-    - {x: 35, y: 15}
+    - {x: 30, y: 12.5}
   - baseMultiplier: 1
     nestedRegionSizes:
-    - {x: 40, y: 15}
+    - {x: 37.5, y: 12.5}
   - baseMultiplier: 1
     nestedRegionSizes:
     - {x: 45, y: 15}
@@ -52,7 +52,7 @@ MonoBehaviour:
     - {x: 55, y: 15}
   - baseMultiplier: 1
     nestedRegionSizes:
-    - {x: 60, y: 20}
+    - {x: 60, y: 15}
   - baseMultiplier: 1
     nestedRegionSizes:
     - {x: 65, y: 20}
@@ -62,7 +62,7 @@ MonoBehaviour:
   - baseMultiplier: 1
     nestedRegionSizes:
     - {x: 75, y: 20}
-  planetScale: 0.45
+  planetScale: 0.55
   moonCutoffSize: 6.5
   moonDstScale: 1.8
   moonLine: {fileID: 2100000, guid: b4bf56f6e29f6184783417d66b90669e, type: 2}
