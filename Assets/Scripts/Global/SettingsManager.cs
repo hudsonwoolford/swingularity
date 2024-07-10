@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Rendering;
 
 [ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
@@ -67,21 +68,7 @@ public class SettingsManager : MonoBehaviour
     int currentTab;
     float transitionDuration = 0.05f;
 
-    public static float masterVolume;
-    public static float sfxVolume;
-    public static float interfaceVolume;
-    public static float musicVolume;
-
-    public static int windowMode;
-    public static bool customCursor;
-    public static bool hints;
-    public static bool uiGlow;
-
-    public static int frameLimit;
-    public static Vector2Int screenRes;
-    public static int planetRes;
-    public static int antiAliasing;
-    public static bool vsync;
+    public static UserSettings userSettings = new UserSettings();
 
     public delegate void EnableSettingsMenu(bool enable);
     public static EnableSettingsMenu enableSettingsMenu;
@@ -91,6 +78,7 @@ public class SettingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(userSettings == null) { userSettings = new UserSettings(); }
         if(!Application.isPlaying) { return; }
         settingsCanvas = GetComponent<Canvas>();
         settingsCanvas.enabled = false;
@@ -98,7 +86,6 @@ public class SettingsManager : MonoBehaviour
         currentTab = 0;
 
         SetButtonFunctions();
-        SetAllVariables();
         for (int i = 0; i < tabBtnSelected.Length; i++)
         {
             if (i == currentTab) { tabBtnSelected[i].enabled = true; }
@@ -138,6 +125,45 @@ public class SettingsManager : MonoBehaviour
         }
     }
     #region Setting Variables
+    public void LoadUIElements(UserSettings userSettings)
+    {
+        SetSlider(userSettings.masterVolume, ref masterVolElement);
+        SetSlider(userSettings.sfxVolume / userSettings.masterVolume, ref sfxVolElement);
+        SetSlider(userSettings.interfaceVolume / userSettings.masterVolume, ref interfaceVolElement);
+        SetSlider(userSettings.musicVolume / userSettings.masterVolume, ref musicVolElement);
+
+        SetScrollOption(userSettings.windowMode, ref windowModeElement);
+        SetToggleButton(userSettings.customCursor, ref customCursorTgl);
+        SetToggleButton(userSettings.hints, ref hintsTgl);
+        SetToggleButton(userSettings.uiGlow, ref uiGlowTgl);
+
+        int planetResIndex = planetResElement.defaultValueIndex;
+        for (int i = 0; i < planetResElement.options.Length; i++)
+        {
+            if (userSettings.planetRes == int.Parse(planetResElement.options[i]))
+            {
+                planetResIndex = i;
+                break;
+            }
+        }
+        SetScrollOption(planetResIndex, ref planetResElement);
+        int screenResIndex = screenResElement.defaultValueIndex;
+        for (int i = 0; i < screenResElement.options.Length; i++)
+        {
+            if(userSettings.screenRes == ConvertScreenRes(screenResElement.options[i]))
+            {
+                screenResIndex = i;
+                break;
+            }
+        }
+        SetScrollOption(screenResIndex, ref screenResElement);
+        SetScrollOption(userSettings.antiAliasing, ref antiAliasingElement);
+        SetSliderValue(userSettings.frameLimit, ref frameLimitElement);
+        SetSlider(userSettings.frameLimit, ref frameLimitElement);
+        SetToggleButton(userSettings.vsync, ref vsyncTgl);
+
+        SetAllVariables();
+    }
     void SetAllVariables() //Applies all variables from settings menu into public static variables
     {
         SetAudioVariables();
@@ -147,14 +173,15 @@ public class SettingsManager : MonoBehaviour
     }
     void SetAudioVariables() //Applies only audio variables
     {
-        sfxVolume = sfxVolElement.slider.value * masterVolElement.slider.value;
-        interfaceVolume = interfaceVolElement.slider.value * masterVolElement.slider.value;
-        musicVolume = musicVolElement.slider.value * masterVolElement.slider.value;
+        userSettings.masterVolume = masterVolElement.slider.value;
+        userSettings.sfxVolume = sfxVolElement.slider.value * masterVolElement.slider.value;
+        userSettings.interfaceVolume = interfaceVolElement.slider.value * masterVolElement.slider.value;
+        userSettings.musicVolume = musicVolElement.slider.value * masterVolElement.slider.value;
     }
     void SetGameVariables() //Applies only game variables
     {
-        windowMode = windowModeElement.currentValue;
-        switch (windowMode)
+        userSettings.windowMode = windowModeElement.currentValue;
+        switch (userSettings.windowMode)
         {
             case 0:
                 Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
@@ -167,16 +194,30 @@ public class SettingsManager : MonoBehaviour
             default:
                 break;
         }
-        customCursor = customCursorTgl.currentValue;
-        hints = hintsTgl.currentValue;
-        uiGlow = uiGlowTgl.currentValue;
+        userSettings.customCursor = customCursorTgl.currentValue;
+        userSettings.hints = hintsTgl.currentValue;
+        userSettings.uiGlow = uiGlowTgl.currentValue;
     }
 
     void SetGraphicVariables() //Applies only graphic variables
     {
-        planetRes = int.Parse(planetResElement.options[planetResElement.currentValue]);
+        userSettings.planetRes = int.Parse(planetResElement.options[planetResElement.currentValue]);
 
-        char[] screenResString = screenResElement.options[screenResElement.currentValue].ToCharArray();
+        userSettings.screenRes = ConvertScreenRes(screenResElement.options[screenResElement.currentValue]);
+        Screen.SetResolution(userSettings.screenRes.x, userSettings.screenRes.y, Screen.fullScreenMode);
+
+        userSettings.frameLimit = Mathf.RoundToInt(frameLimitElement.slider.value);
+        Application.targetFrameRate = userSettings.frameLimit;
+
+        userSettings.antiAliasing = antiAliasingElement.currentValue;
+        QualitySettings.antiAliasing = userSettings.antiAliasing;
+
+        userSettings.vsync = vsyncTgl.currentValue;
+        QualitySettings.vSyncCount = userSettings.vsync ? 1 : 0;
+    }
+    Vector2Int ConvertScreenRes(string option)
+    {
+        char[] screenResString = option.ToCharArray();
         string width = "";
         string height = "";
         ref string currentEdit = ref width;
@@ -189,20 +230,8 @@ public class SettingsManager : MonoBehaviour
             }
             currentEdit += screenResString[i];
         }
-
-        screenRes = new Vector2Int(int.Parse(width), int.Parse(height));
-        Screen.SetResolution(screenRes.x, screenRes.y, Screen.fullScreenMode);
-
-        frameLimit = Mathf.RoundToInt(frameLimitElement.slider.value);
-        Application.targetFrameRate = frameLimit;
-
-        antiAliasing = antiAliasingElement.currentValue;
-        QualitySettings.antiAliasing = antiAliasing;
-
-        vsync = vsyncTgl.currentValue;
-        QualitySettings.vSyncCount = vsync ? 1 : 0;
+        return new Vector2Int(int.Parse(width), int.Parse(height));
     }
-
     #endregion
     #region Element Functions
     void EnableMenu(bool enable) //Enables the settings menu by animation
@@ -229,15 +258,30 @@ public class SettingsManager : MonoBehaviour
     {
         ss.valueText.text = value.ToString();
     }
+    void SetSlider(float value, ref SettingsSlider ss)
+    {
+        ss.slider.value = value;
+    }
     void ScrollOption(bool right, ref OptionScroll os)
     {
         os.currentValue += right ? 1 : -1;
         os.currentValue = LoopValue(os.currentValue, 0, os.options.Length);
         os.optionTxt.text = os.options[os.currentValue];
     }
+    void SetScrollOption(int value, ref OptionScroll os)
+    {
+        os.currentValue = value;
+        os.currentValue = LoopValue(os.currentValue, 0, os.options.Length);
+        os.optionTxt.text = os.options[os.currentValue];
+    }
     void ToggleButton(ref SettingsToggle tg)
     {
         tg.currentValue = !tg.currentValue;
+        tg.toggleImg.enabled = tg.currentValue;
+    }
+    void SetToggleButton(bool value, ref SettingsToggle tg)
+    {
+        tg.currentValue = value;
         tg.toggleImg.enabled = tg.currentValue;
     }
     IEnumerator ChangeTab(int tabIndex) //Changes the tab with a transition animation
@@ -344,3 +388,45 @@ public class SettingsManager : MonoBehaviour
         return min + loopedValue;
     }
 }
+[System.Serializable]
+public class UserSettings
+{
+    public float masterVolume;
+    public float sfxVolume;
+    public float interfaceVolume;
+    public float musicVolume;
+
+    public int windowMode;
+    public bool customCursor;
+    public bool hints;
+    public bool uiGlow;
+
+    public int frameLimit;
+    public Vector2Int screenRes;
+    public int planetRes;
+    public int antiAliasing;
+    public bool vsync;
+    public UserSettings DeepCopy()
+    {
+        return new UserSettings
+        {
+            masterVolume = this.masterVolume,
+            sfxVolume = this.sfxVolume,
+            interfaceVolume = this.interfaceVolume,
+            musicVolume = this.musicVolume,
+
+            windowMode = this.windowMode,
+            customCursor = this.customCursor,
+            hints = this.hints,
+            uiGlow = this.uiGlow,
+
+            frameLimit = this.frameLimit,
+            screenRes = this.screenRes,
+            planetRes = this.planetRes,
+            antiAliasing = this.antiAliasing,
+            vsync = this.vsync
+        };
+    }
+}
+
+
