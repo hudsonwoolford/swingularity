@@ -149,12 +149,18 @@ public class PointCardManager : MonoBehaviour
         shotsTexts[5].color = scoreCol;
         parTexts[5].text = parSum.ToString();
     }
+    void NewProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyParams galaxyParams, GalaxyData theme)
+    {
+        ClearPointCard();
+    }
     private void OnEnable()
     {
+        GalaxyGenerator.initProceduralSystem += NewProceduralSystem;
         LevelScoring.onScore += OnScore;
     }
     private void OnDisable()
     {
+        GalaxyGenerator.initProceduralSystem -= NewProceduralSystem;
         LevelScoring.onScore -= OnScore;
     }
 }

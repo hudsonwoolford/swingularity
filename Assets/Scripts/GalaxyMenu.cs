@@ -207,6 +207,7 @@ public class GalaxyMenu : MonoBehaviour
                 iconImgs[i].sprite = icons[i].icon;
             }
             for(int i = 0; i < starImgs.Length; i++){
+                if(i >= gp.collectedStars.Length) { continue; }
                 if(gp.collectedStars[i]){
                     starImgs[i].sprite = starIcon[i];
                 }
@@ -332,7 +333,6 @@ public class GalaxyMenu : MonoBehaviour
             UnityEngine.Random.InitState(galaxyList[i].seed);
             float randomValue = UnityEngine.Random.Range(0f, 1f);
             galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, randomValue));
-            print(galaxyCons[i].transform.rotation + " | " + galaxyList[i].seed);
             galaxyCons[i].transform.position = positions[i];
             galaxyCons[i].SetProceduralScheme(galaxyList[i]);
 
