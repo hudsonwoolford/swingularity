@@ -111,7 +111,6 @@ public static class ProceduralLevelGeneration
             bool candidateAccepted = false;
 
             float radius = Mathf.Lerp(minRadius, maxRadius, ApplyBias(UnityEngine.Random.value, sizeBias));
-            radius = Mathf.Lerp(minRadius, maxRadius, UnityEngine.Random.value);
 
             for (int i = 0; i < numSamplesBeforeRejection; i++){
                 float angle = UnityEngine.Random.value * Mathf.PI * 2;
