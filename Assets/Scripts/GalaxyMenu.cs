@@ -42,6 +42,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Button rightBtn; //move buttons
     [SerializeField] Button leftBtn; //move buttons
     [SerializeField] Button zoomBtn; //move buttons
+    [SerializeField] TextMeshProUGUI starCount;
     [SerializeField] GameObject dotButton; //created in create galaxy funciton, one dot per galaxy
     [SerializeField] Vector3 dotMiddle;
     [SerializeField] float dotDistanceInterval;
@@ -317,6 +318,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     void CreateControllers() //Instantiates all galaxies
     {
+        starCount.text = GameManager.LevelManager.currentUniverse.numStars.ToString();
         galaxyCons = new GalaxyController[galaxyList.Length];
         galaxySummaries = new GalaxySummary[galaxyList.Length];
         Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
@@ -333,9 +335,11 @@ public class GalaxyMenu : MonoBehaviour
 
             //instantiating UI for galaxies
             galaxySummaries[i] = Instantiate(galaxyUISummary, galaxyCons[i].transform).GetComponent<GalaxySummary>();
-            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars);
+            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].numStars);
+
             galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
+
         float halfLength = ((galaxyList.Length - 1) / 2) * dotDistanceInterval;
         dotSelectedImgs = new Image[galaxyList.Length];
         for (int i = 0; i < galaxyList.Length; i++) //dot button creation

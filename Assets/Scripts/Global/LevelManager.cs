@@ -170,8 +170,9 @@ public class LevelManager : MonoBehaviour
         public string size; //the size of the universe (small, medium, large)
         public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
+        public int numStars;
         public LevelGenStaticReferences levelStatic; //static references for level generation
-        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies, LevelGenStaticReferences levelStatic)
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies, LevelGenStaticReferences levelStatic, int numStars)
         {
             this.name = name;
             this.seed = seed;
@@ -180,6 +181,7 @@ public class LevelManager : MonoBehaviour
             this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
             this.levelStatic = levelStatic;
+            this.numStars = numStars;
         }
         public override bool Equals(object obj)
         {
@@ -201,6 +203,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ completedGalaxies.GetHashCode();
             hash = (hash * 397) ^ numGalaxies.GetHashCode();
             hash = (hash * 397) ^ levelStatic.GetHashCode();
+            hash = (hash * 397) ^ numStars.GetHashCode();
             return hash;
         }
 
@@ -212,7 +215,8 @@ public class LevelManager : MonoBehaviour
                 && a.size == b.size
                 && a.completedGalaxies == b.completedGalaxies
                 && a.numGalaxies == b.numGalaxies
-                && a.levelStatic == b.levelStatic;
+                && a.levelStatic == b.levelStatic
+                && a.numStars == b.numStars;
         }
 
         public static bool operator !=(UniverseParams a, UniverseParams b)
@@ -401,10 +405,15 @@ public class LevelManager : MonoBehaviour
             shotsSum == 5,
             shotsSum == 5
         };
+        int starTotal = 0;
         for (int i = 0; i < currentProceduralUniverse[currentGalaxyIndex].collectedStars.Length; i++)
         {
             currentProceduralUniverse[currentGalaxyIndex].collectedStars[i] |= starScore[i]; 
+            starTotal++;
         }
+        UniverseParams universeParams = currentUniverse;
+        universeParams.numStars += starTotal;
+        setProceduralUniverse?.Invoke(universeParams);
     }
     void LevelInitiation(GalaxyData theme) //Just sets theme, called by procedural level generation in start before generation
     {

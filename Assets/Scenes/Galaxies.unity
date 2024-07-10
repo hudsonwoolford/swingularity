@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.001535976, g: 0.0014092327, b: 0.00134435, a: 1}
+  m_IndirectSpecularColor: {r: 0.0010599983, g: 0.0009498271, b: 0.0009159058, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1519,6 +1519,7 @@ MonoBehaviour:
     possibleSpecial: 000000000100000002000000030000000400000005000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Desert
     seed: -46
     relativeDifficulty: 2
@@ -1527,6 +1528,7 @@ MonoBehaviour:
     possibleSpecial: 0500000003000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Ice
     seed: -1154
     relativeDifficulty: 2
@@ -1535,6 +1537,7 @@ MonoBehaviour:
     possibleSpecial: 0100000004000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Fire
     seed: -449
     relativeDifficulty: 2
@@ -1543,6 +1546,7 @@ MonoBehaviour:
     possibleSpecial: 0100000005000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Goop
     seed: 778
     relativeDifficulty: 2
@@ -1551,6 +1555,7 @@ MonoBehaviour:
     possibleSpecial: 0400000002000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Waste
     seed: 83
     relativeDifficulty: 2
@@ -1559,6 +1564,7 @@ MonoBehaviour:
     possibleSpecial: 0200000001000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   - name: Mythical
     seed: 442
     relativeDifficulty: 2
@@ -1567,6 +1573,7 @@ MonoBehaviour:
     possibleSpecial: 0300000002000000
     levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
     collectedStars: 
+    numStars: 0
   focusPosition: {x: 0, y: 1, z: 0}
   zoomGalaxyPos: {x: -2, y: 0.25, z: 0}
   zoomCameraPos: {x: 0, y: 0, z: -5}
@@ -1601,6 +1608,7 @@ MonoBehaviour:
   rightBtn: {fileID: 1250875657}
   leftBtn: {fileID: 1869764377}
   zoomBtn: {fileID: 1035580959}
+  starCount: {fileID: 1327940527}
   dotButton: {fileID: 8994554953293396767, guid: 3b6d8ca131ba9c340966903ce7d58cec,
     type: 3}
   dotMiddle: {x: 0, y: -440, z: 0}
@@ -4118,7 +4126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -243.7, y: -262}
+  m_AnchoredPosition: {x: -263.8, y: -262}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1327940527
@@ -4176,7 +4184,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -4205,7 +4213,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 98.237915, w: 0}
+  m_margin: {x: 0, y: 0, z: 167.62451, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

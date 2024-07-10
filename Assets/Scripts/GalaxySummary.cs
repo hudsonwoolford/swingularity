@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 [ExecuteInEditMode()]
 public class GalaxySummary : MonoBehaviour
 {
     [SerializeField] bool[] collectedStars;
     [SerializeField] Image[] starImgs;
+    [SerializeField] GameObject lockImage, stars;
     Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -25,10 +27,19 @@ public class GalaxySummary : MonoBehaviour
     {
         UpdateStars();
     }
-    public void InitSummary(bool[] collectedStars)
+    public void InitSummary(bool[] collectedStars, int lockStars)
     {
-        this.collectedStars = collectedStars;
-        UpdateStars();
+        if(GameManager.LevelManager.currentUniverse.numStars < lockStars){
+            lockImage.SetActive(true);
+            lockImage.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (lockStars - GameManager.LevelManager.currentUniverse.numStars).ToString();
+            stars.SetActive(false);
+        }
+        else{
+            stars.SetActive(true);
+            lockImage.SetActive(false);
+            this.collectedStars = collectedStars;
+            UpdateStars();
+        }
     }
     public void EnableSummary(bool enable)
     {
