@@ -131,7 +131,7 @@ public class SettingsManager : MonoBehaviour
         }
         else
         {
-            if(menuOpen && Input.GetKeyDown(KeyCode.Escape))
+            if(menuOpen && Input.GetKeyDown(KeyCode.Escape) && !PauseManager.paused) //pause manager handles this itself
             {
                 enableSettingsMenu?.Invoke(false);
             }

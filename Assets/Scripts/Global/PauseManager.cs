@@ -16,15 +16,19 @@ public class PauseManager : MonoBehaviour
     string[] dontPauseScene;
     Canvas pausecanvas;
     bool settingsMenu;
+
+    Animator pauseAnim;
+
+    public static bool paused;
     private void Awake()
     {
         pausecanvas = GetComponent<Canvas>();
+        pauseAnim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
     {
         settingsCanvas.enabled = false;
-        pausecanvas.enabled = false;
     }
 
     // Update is called once per frame
@@ -36,7 +40,8 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(pausecanvas.enabled == false){
+            if(!paused)
+            {
                 foreach (string s in dontPauseScene)
                 {
                     if (SceneManager.GetActiveScene().name == s)
@@ -47,35 +52,48 @@ public class PauseManager : MonoBehaviour
                 pauseGame?.Invoke();
             }
             else{
-                unpauseGame?.Invoke();
+                if(!settingsMenu)
+                {
+                    unpauseGame?.Invoke();
+                }
+                else if(settingsMenu)
+                {
+                    EscapeSettings();
+                }
             }
         }
     }
     void Pause()
     {
+        paused = true;
         Time.timeScale = 0;
-        pausecanvas.enabled = true;
-        settingsCanvas.enabled = false;
+        pauseAnim.Play("ShowMenu");
+        settingsMenu = false;
     }
     void Unpause()
     {
+        paused = false;
         Time.timeScale = 1;
-        pausecanvas.enabled = false;
-        settingsCanvas.enabled = false;
+        pauseAnim.Play("HideMenu");
+        settingsMenu = false;
     }
     public void SettingsButton()
     {
         //settingsCanvas.enabled = true;
         SettingsManager.enableSettingsMenu?.Invoke(true);
-        pausecanvas.enabled = false;
+        pauseAnim.Play("HideMenu");
         settingsMenu = true;
     }
     void SettingsBackButton(bool enable)
     {
-        //if(SceneManager.GetActiveScene().name == "Main Menu" || SceneManager.GetActiveScene().name == "Galaxies") { return; }
         if(enable || !settingsMenu) { return; }
-        //settingsCanvas.enabled = true;
-        pausecanvas.enabled = true;
+        pauseAnim.Play("ShowMenu");
+        settingsMenu = false;
+    }
+    void EscapeSettings()
+    {
+        SettingsManager.enableSettingsMenu?.Invoke(false);
+        pauseAnim.Play("ShowMenu");
         settingsMenu = false;
     }
     public void ResumeButton()

@@ -3424,6 +3424,8 @@ GameObject:
   - component: {fileID: 9012570178583760871}
   - component: {fileID: 5863063448433946396}
   - component: {fileID: 8858524323910309654}
+  - component: {fileID: 4271790713425141484}
+  - component: {fileID: 7400793577967714256}
   m_Layer: 15
   m_Name: Pause Menu
   m_TagString: Untagged
@@ -3477,7 +3479,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922801260414449045}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 4637973041945488885}
@@ -3533,6 +3535,39 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!95 &4271790713425141484
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922801260414449045}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 208ec8ac37126184e868b3289f1dea57, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &7400793577967714256
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922801260414449045}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &962420585114925154
 GameObject:
   m_ObjectHideFlags: 0
@@ -9051,7 +9086,6 @@ MonoBehaviour:
   completedLevels: []
   currentGalaxy: []
   currentProceduralGalaxy: []
-  currentProceduralUniverse: []
 --- !u!114 &1088446557815662456
 MonoBehaviour:
   m_ObjectHideFlags: 0
