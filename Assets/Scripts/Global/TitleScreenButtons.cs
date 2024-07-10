@@ -221,6 +221,7 @@ public class TitleScreenButtons : MonoBehaviour
     {
         if(enable)
         {
+            PopulateSaves();
             ngMenu = true;
             menuAnim.Play("HideMenu");
             // yield return new WaitForSeconds(menuAnim.GetCurrentAnimatorStateInfo(0).length/3);

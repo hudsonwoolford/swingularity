@@ -93,7 +93,7 @@ public class MusicManager : MonoBehaviour
     }
     void UpdateSourceVolume()
     {
-        musicSource.volume = SettingsManager.musicVolume;
+        musicSource.volume = SettingsManager.userSettings.musicVolume;
     }
     void OnEnable()
     {

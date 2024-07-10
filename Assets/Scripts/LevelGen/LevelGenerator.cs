@@ -107,7 +107,7 @@ public class LevelGenerator : MonoBehaviour
         LevelManager.notifyProcedural?.Invoke(true);
         SetLevelParams();
         mainCam = Camera.main; //Cache camera
-        resolution = SettingsManager.planetRes;
+        resolution = SettingsManager.userSettings.planetRes;
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
