@@ -214,7 +214,6 @@ public class ShootBall : MonoBehaviour
         yield break;
     }
     IEnumerator AstronautFade(){
-        // astronaut.GetComponent<AstronautMatController>().StartFade();
         astronautFading = true;
         if(movedAstronaut || Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
             astronautFading = false;
@@ -266,7 +265,6 @@ public class ShootBall : MonoBehaviour
         }
         origin = transform.position; //Ball reset position
         astronautFading = false;
-        // astronaut.GetComponent<AstronautMatController>().EndFade();
         yield break;
 
     }
