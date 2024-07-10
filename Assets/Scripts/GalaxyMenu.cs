@@ -10,6 +10,7 @@ using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
 using Unity.Mathematics;
+using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class GalaxyMenu : MonoBehaviour
     [Header("Animations")]
     [SerializeField] float transitionDuration = 0.5f;
     [SerializeField] float scrollSpeed; //scales scrolling speed
+    [SerializeField] float buttonThresholdTime; //time holding down key before starts scrolling smoothly
     [SerializeField] AnimationCurve transitionCurve;
     [Header("Main UI")]
     [SerializeField] Button rightBtn; //move buttons
@@ -81,6 +83,8 @@ public class GalaxyMenu : MonoBehaviour
     int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
+    float buttonTime;
+    float smoothProgress;
     // Start is called before the first frame update
     void Start()
     {
@@ -139,17 +143,9 @@ public class GalaxyMenu : MonoBehaviour
         {
             MoveButton(1);
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             MoveButton(-1);
-        }
-        if (Input.GetKeyDown(KeyCode.Escape) && zoomedIn)
-        {
-            ZoomButton(false);
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
-        {
-            ZoomButton(true);
         }
         if(Input.mouseScrollDelta.y != 0){
             if(Input.mouseScrollDelta.y < 0){
@@ -164,6 +160,14 @@ public class GalaxyMenu : MonoBehaviour
             // transitionDuration = 1/Mathf.Abs(Input.mouseScrollDelta.y) * scrollSpeed;
         }
         else{ transitionDuration = 0.5f;}
+        if (Input.GetKeyDown(KeyCode.Escape) && zoomedIn)
+        {
+            ZoomButton(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
+        {
+            ZoomButton(true);
+        }
     }
     void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
     {
