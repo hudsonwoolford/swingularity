@@ -64,6 +64,7 @@ public class ShootBall : MonoBehaviour
     bool deathDelay;
     float ballStillTimer = 0f;
     float ballStillTimeVal = 0.2f;
+    bool inPortal;
 
     bool astronautFading = false, movedAstronaut = false;
     GameObject childObj;
@@ -146,7 +147,7 @@ public class ShootBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(LevelManager.levelComplete) { return; }
+        if(LevelManager.levelComplete || inPortal) { return; }
         if(planets.Count != planetTransform.childCount){
             planets.Clear();
             foreach (Transform t in planetTransform)
@@ -697,11 +698,13 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
+        inPortal = true;
         StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
         StartCoroutine(StartAnimation(hole, hitPoint, velocity));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
+        inPortal = false;
         triggerReset?.Invoke();
     }
     IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir){

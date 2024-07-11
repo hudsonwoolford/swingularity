@@ -560,7 +560,7 @@ public class LevelGenerator : MonoBehaviour
                 break;
             }
         }
-        if(!foundPlanet) { print("No Quasar Eligible Planets"); return; }
+        if(!foundPlanet) { Debug.Log("No quasar eligible planets."); return; }
 
         Vector3 dir = planets[index2].planet.transform.position - planets[index1].planet.transform.position;
         float distance = dir.magnitude - (planets[index2].forceField.transform.localScale.x + planets[index1].forceField.transform.localScale.x);
@@ -663,36 +663,38 @@ public class LevelGenerator : MonoBehaviour
         Physics.SyncTransforms();
         //Flag position
         UnityEngine.Random.InitState(seed);
+        float flagRad = flag.GetComponent<SphereCollider>().radius * flag.localScale.x;
         int rot = UnityEngine.Random.Range(0, 360);
         Vector3 predictedFlagPos = Vector3.zero;
         for (int u = 0; u < 6; u++)
         {
             flag.eulerAngles = new Vector3(0, 0, rot);
-            predictedFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + flag.up * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + 1.2f); //maybe scale with radius
-            if (!Physics.CheckSphere(predictedFlagPos, 1.15f, 12))
+            predictedFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + flag.up * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + flagRad + 0.05f); //maybe scale with radius
+            if (!Physics.CheckSphere(predictedFlagPos, flagRad))
             {
                 break;
             }
+            Debug.LogFormat("Flag position intercepted collider. Rotation #{0} | Current rotation: {1}", u, rot);
             rot += 360 / 7;
         }
         flag.position = predictedFlagPos;
         UnityEngine.Random.InitState(seed + 9);
         //Ball position
-        float flagAng = UnityEngine.Random.Range(0, 2 * Mathf.PI);
-        Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x);
-        Vector3 closestPoint = candidates[farthestPlanets[1]].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
+        float ballRad = ball.GetComponent<SphereCollider>().radius * ball.localScale.x;
+        int ballRot = UnityEngine.Random.Range(0, 360);
+        Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(ballRot), Mathf.Sin(ballRot)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
         for (int u = 0; u < 6; u++)
         {
-            flagAng = UnityEngine.Random.Range(0, 2 * Mathf.PI);
-            initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(flagAng), Mathf.Sin(flagAng)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x);
-            closestPoint = candidates[farthestPlanets[1]].forceField.GetComponent<Collider>().ClosestPoint(initBallPos);
-            if (!Physics.CheckSphere(closestPoint, 1.5f))
+            ball.eulerAngles = new Vector3(0, 0, rot);
+            initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + ball.up * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
+            if (!Physics.CheckSphere(initBallPos, ballRad - 0.05f))
             {
                 break;
             }
-            rot += 360 / 7;
+            Debug.LogFormat("Ball position intercepted collider. Rotation #{0} | Current rotation: {1}", u, ballRot);
+            ballRot += 360 / 7;
         }
-        ball.GetComponent<Rigidbody>().position = closestPoint + (closestPoint - candidates[farthestPlanets[1]].planet.transform.position).normalized * (0.22f);
+        ball.GetComponent<Rigidbody>().position = initBallPos;
     }
     
     int[] FarthestIndices(Level level){

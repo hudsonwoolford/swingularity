@@ -85,6 +85,11 @@ public class TitleScreenButtons : MonoBehaviour
         {
             DisableSettings(false);
         }
+        if(ngMenu && !onlyCreateMenu)
+        {
+            slScrollBar.value += -Input.mouseScrollDelta.y/15;
+            slScrollBar.value = Mathf.Clamp(slScrollBar.value, 0f, 1f);
+        }
         if (ngMenu){
             rotation += Time.deltaTime * speed;
             if(rotation > 360){
