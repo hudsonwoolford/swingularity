@@ -61,6 +61,11 @@ public class HackMode : MonoBehaviour
         EnableFabric(hackMode);
         if(hackMode && updateInPlaymode) { UpdateFabric(planets); }
     }
+    public void EnterHackMode(){
+        hackMode = !hackMode;
+        onHackMode?.Invoke(hackMode, whiteMat);
+        RegenFabric();
+    }
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         if (blurEffect == null || edgeEffect == null) { Graphics.Blit(source, destination); return; }

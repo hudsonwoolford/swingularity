@@ -34,6 +34,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
     [SerializeField] float animScale; //Scale of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
+    [SerializeField] Material ballHackModeMat;
 
     [SerializeField] LayerMask ignoreStill;
 
@@ -861,7 +862,7 @@ public class ShootBall : MonoBehaviour
     #endregion
     void OnHackMode(bool enable, Material whiteMat)
     {
-        ballRenderer.material = enable ? whiteMat : defaultBallMat; 
+        ballRenderer.material = enable ? ballHackModeMat : defaultBallMat; 
     }
     private void OnEnable()
     {
