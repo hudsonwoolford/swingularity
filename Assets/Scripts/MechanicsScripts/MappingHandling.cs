@@ -52,7 +52,7 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            ShootBall.boundsReset?.Invoke();
+            ShootBall.triggerReset?.Invoke();
             ShootBall.death.Invoke(0);
 
         }

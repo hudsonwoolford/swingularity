@@ -79,8 +79,6 @@ public class ShootBall : MonoBehaviour
     public static HoleAnim holeAnim;
     public delegate void TriggerReset();
     public static TriggerReset triggerReset;
-    public delegate void BoundsReset();
-    public static BoundsReset boundsReset;
     public delegate void StopGravity();
     public static StopGravity stopGravity;
     public delegate void Death(int index);
@@ -189,8 +187,8 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { BallReset(); } //reset
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; BallReset(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
@@ -842,7 +840,7 @@ public class ShootBall : MonoBehaviour
             defaultBallMat.SetFloat("_Cutoff", 1);
             rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
 
-            BallReset();
+            triggerReset?.Invoke();
             deathDelay = false;
             yield break;
         }
@@ -857,7 +855,7 @@ public class ShootBall : MonoBehaviour
         yield return new WaitForSeconds(delay);
         rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
         deathDelay = false;
-        BallReset();
+        triggerReset?.Invoke();
 
     }
     private void OnDrawGizmosSelected() {
@@ -875,14 +873,12 @@ public class ShootBall : MonoBehaviour
     {
         onHole += DeleteSimulation;
         triggerReset += BallReset;
-        boundsReset += BallReset;
         HackMode.onHackMode += OnHackMode;
     }
     private void OnDisable()
     {
         onHole -= DeleteSimulation;
         triggerReset -= BallReset;
-        boundsReset -= BallReset;
         HackMode.onHackMode -= OnHackMode;
     }
 }

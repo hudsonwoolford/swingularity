@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015352116, g: 0.0014092539, b: 0.0013459168, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -358,6 +358,7 @@ MonoBehaviour:
     amount: 1
   - type: 2
     amount: 1
+  generateCollectible: 1
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
@@ -376,6 +377,8 @@ MonoBehaviour:
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
   astronaut: {fileID: 919132149153254394}
+  starCollectiblePrefab: {fileID: 1558331757705019381, guid: 08e5b33348adeba42b32fb8323822936,
+    type: 3}
 --- !u!4 &866247461
 Transform:
   m_ObjectHideFlags: 0

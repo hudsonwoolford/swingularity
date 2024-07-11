@@ -99,8 +99,9 @@ public class LevelManager : MonoBehaviour
         public bool[] collectedStars;
         public int numStars;
         public string bestScore;
+        public bool hasCollectedCollectible;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore, bool hasCollectedCollectible)
         {
             this.name = name;
             this.seed = seed;
@@ -111,6 +112,7 @@ public class LevelManager : MonoBehaviour
             this.collectedStars = collectedStars;
             this.numStars = numStars;
             this.bestScore = bestScore;
+            this.hasCollectedCollectible = hasCollectedCollectible;
         }
         public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
         {
@@ -140,6 +142,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ possibleTypes.GetHashCode();
             hash = (hash * 397) ^ possibleSpecial.GetHashCode();
             hash = (hash * 397) ^ collectedStars.GetHashCode();
+            hash = (hash * 397) ^ hasCollectedCollectible.GetHashCode();
             return hash;
         }
 
@@ -150,7 +153,10 @@ public class LevelManager : MonoBehaviour
                 && a.relativeDifficulty == b.relativeDifficulty
                 && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
                 && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
-                && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)));
+                && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)))
+                && a.numStars == b.numStars
+                && a.bestScore == b.bestScore
+                && a.hasCollectedCollectible == b.hasCollectedCollectible;
         }
 
         public static bool operator !=(GalaxyParams a, GalaxyParams b)

@@ -85,12 +85,13 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] Vector2 regionSize;
     [SerializeField] ColorSchemeStaticReference.PlanetType[] possiblePlanetTypes; //Filters which planet types are chosen
     [SerializeField] SpecialObject[] specialObjects;
+    [SerializeField] bool generateCollectible;
 
     [Header("Constant Variables")]
     [SerializeField] LevelGenStaticReferences levelStatic;
     [Header("Special Prefabs")]
     [SerializeField] GameObject planetGeneratorPrefab;
-    [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab, astronaut; //Needed prefabs
+    [SerializeField] GameObject forcefieldPrefab, starPrefab, neutronStarPrefab, blackHolePrefab, quasarPrefab, darkMatterPrefab, audioSrcPrefab, astronaut, starCollectiblePrefab; //Needed prefabs
 
     //Private variables
     Transform specialObjectsParent;
@@ -433,6 +434,11 @@ public class LevelGenerator : MonoBehaviour
         float maxZoom = Mathf.Min(CameraFollow.innerShape.bounds.extents.x / (mainCam.aspect), CameraFollow.innerShape.bounds.extents.y) - 5;
         mainCam.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
 
+        if(generateCollectible)
+        {
+            GenerateCollectible((startPos + endPos) / 2);
+        }
+
         Time.timeScale = 1;
         levelGenerated?.Invoke();
     }
@@ -492,6 +498,11 @@ public class LevelGenerator : MonoBehaviour
         return forcefield;
     }
     #region Special Generation
+    void GenerateCollectible(Vector3 midPoint)
+    {
+        StarCollectible sc = Instantiate(starCollectiblePrefab, specialObjectsParent).GetComponent<StarCollectible>();
+        sc.Init(midPoint, seed);
+    }
     List<Planet> cachedBlackHoles = new List<Planet>();
     void CacheBlackHole(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
