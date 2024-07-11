@@ -181,13 +181,6 @@ public class LevelScoring : MonoBehaviour
         yield return new WaitForSeconds(1.25f);
         ShootBall.onHole?.Invoke();
     }
-    void ResetHole()
-    {
-        numShots = 0;
-        numShotsText.text = numShots.ToString();
-        numShotsText.color = positive;
-    }
-
     void Pause(){
         canvasAnimator.Play("Slide Out");
     }
@@ -209,7 +202,6 @@ public class LevelScoring : MonoBehaviour
         LevelGenerator.levelGenerated += CheckPar;
         ShootBall.onShoot += IncrementScore;
         ShootBall.onHole += HoleEnd;
-        ShootBall.triggerReset += ResetHole;
         PauseManager.pauseGame += Pause;
         PauseManager.unpauseGame += UnPause;
         HackMode.onHackMode += HackModeButton;
@@ -220,7 +212,6 @@ public class LevelScoring : MonoBehaviour
         LevelGenerator.levelGenerated -= CheckPar;
         ShootBall.onShoot -= IncrementScore;
         ShootBall.onHole -= HoleEnd;
-        ShootBall.triggerReset -= ResetHole;
         PauseManager.pauseGame -= Pause;
         PauseManager.unpauseGame -= UnPause;
         HackMode.onHackMode -= HackModeButton;

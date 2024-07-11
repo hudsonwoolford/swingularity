@@ -28,7 +28,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
     Animator levelMenuAnimator; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
-    int currentGalaxyIndex;
+    int galaxyIndex;
 
     [Serializable]
     public struct LevelParams
@@ -99,7 +99,6 @@ public class LevelManager : MonoBehaviour
         public bool[] collectedStars;
         public int numStars;
         public string bestScore;
-        public bool hasCollectedCollectible;
 
         public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore, bool hasCollectedCollectible)
         {
@@ -112,7 +111,6 @@ public class LevelManager : MonoBehaviour
             this.collectedStars = collectedStars;
             this.numStars = numStars;
             this.bestScore = bestScore;
-            this.hasCollectedCollectible = hasCollectedCollectible;
         }
         public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
         {
@@ -142,7 +140,6 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ possibleTypes.GetHashCode();
             hash = (hash * 397) ^ possibleSpecial.GetHashCode();
             hash = (hash * 397) ^ collectedStars.GetHashCode();
-            hash = (hash * 397) ^ hasCollectedCollectible.GetHashCode();
             return hash;
         }
 
@@ -155,8 +152,7 @@ public class LevelManager : MonoBehaviour
                 && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
                 && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)))
                 && a.numStars == b.numStars
-                && a.bestScore == b.bestScore
-                && a.hasCollectedCollectible == b.hasCollectedCollectible;
+                && a.bestScore == b.bestScore;
         }
 
         public static bool operator !=(GalaxyParams a, GalaxyParams b)
@@ -390,7 +386,7 @@ public class LevelManager : MonoBehaviour
 
         for (int i = 0; i < currentProceduralGalaxy.Length; i++)
         {
-            if (currentProceduralUniverse[i] == galaxyParams) { currentGalaxyIndex = i; break; }
+            if (currentProceduralUniverse[i] == galaxyParams) { galaxyIndex = i; break; }
         }
     }
     void SetProceduralGalaxiesEvent(GalaxyParams[] galaxyParams) //Sets the current universe
@@ -403,7 +399,7 @@ public class LevelManager : MonoBehaviour
         procedural = true;
         currentUniverse = universeParams;
     }
-    void ScoreGalaxy(int scoreSum, int shotsSum, int parSum)
+    void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar)
     {
         bool[] starScore = new bool[]
         {
@@ -411,19 +407,19 @@ public class LevelManager : MonoBehaviour
             scoreSum <= 0,
             scoreSum < 0,
             shotsSum == 5,
-            shotsSum == 5
+            collectedStar
         };
         int starTotal = 0;
-        for (int i = 0; i < currentProceduralUniverse[currentGalaxyIndex].collectedStars.Length; i++)
+        for (int i = 0; i < currentProceduralUniverse[galaxyIndex].collectedStars.Length; i++)
         {
-            currentProceduralUniverse[currentGalaxyIndex].collectedStars[i] |= starScore[i]; 
+            currentProceduralUniverse[galaxyIndex].collectedStars[i] |= starScore[i]; 
             if (starScore[i]){starTotal++;}
         }
         if(scoreSum > 0){
-            currentProceduralUniverse[currentGalaxyIndex].bestScore = "+" + scoreSum.ToString();
+            currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();
         }
         else{
-            currentProceduralUniverse[currentGalaxyIndex].bestScore = scoreSum.ToString();  
+            currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();  
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;

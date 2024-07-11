@@ -192,6 +192,8 @@ public class LevelGenerator : MonoBehaviour
         int randIndex = UnityEngine.Random.Range(0, levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes.Count);
         regionSize = levelStatic.regionSizes[levelParams.difficulty - 1].nestedRegionSizes[randIndex] * levelStatic.regionSizes[levelParams.difficulty - 1].baseMultiplier; //Random region size from difficulty
         if(regionSize.magnitude < 2.5f) { regionSize = Vector2.one * 10; }
+
+        generateCollectible = levelParams.hasCollectible;
     }
 
     #endregion

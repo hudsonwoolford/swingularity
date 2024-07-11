@@ -14,8 +14,9 @@ public class PointCardManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] shotsTexts; //Text that displays play shots for a level, 5 in array
     [SerializeField] Color positive, neutral, negative;
     [SerializeField] Color holeInOne;
-    public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum);
+    public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum, bool starCollected);
     public static GalaxyScoring onGalaxyScore;
+    bool galaxyStarCollected;
     // Start is called before the first frame update
     void Start()
     {
@@ -70,7 +71,7 @@ public class PointCardManager : MonoBehaviour
                         parSum += int.Parse(parTexts[j].text);
                     }
                 }
-                onGalaxyScore?.Invoke(scoreSum, shotSum, parSum);
+                onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
             }
         }
     }
@@ -146,15 +147,22 @@ public class PointCardManager : MonoBehaviour
     }
     void NewProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyParams galaxyParams, GalaxyData theme)
     {
+        galaxyStarCollected = false;
         ClearPointCard();
+    }
+    void CollectibleCollected()
+    {
+        galaxyStarCollected = true;
     }
     private void OnEnable()
     {
+        StarCollectible.onStarCollected += CollectibleCollected;
         GalaxyGenerator.initProceduralSystem += NewProceduralSystem;
         LevelScoring.onScore += OnScore;
     }
     private void OnDisable()
     {
+        StarCollectible.onStarCollected -= CollectibleCollected;
         GalaxyGenerator.initProceduralSystem -= NewProceduralSystem;
         LevelScoring.onScore -= OnScore;
     }
