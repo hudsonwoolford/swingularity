@@ -22,6 +22,8 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Button hackModeBtn;
     [SerializeField] Color positive, neutral, negative;
 
+    bool hackMode;
+
     [Serializable]
     struct Score
     {
@@ -41,7 +43,7 @@ public class LevelScoring : MonoBehaviour
         parText.text = par.ToString();
         numShotsText.text = numShots.ToString();
         numShotsText.color = positive;
-        hackModeBtn.onClick.AddListener(() => Camera.main.GetComponent<HackMode>().EnterHackMode());
+        hackModeBtn.onClick.AddListener(() => HackModeButton());
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
@@ -72,6 +74,22 @@ public class LevelScoring : MonoBehaviour
             angleText.text = "——°";
             powerText.text = "——%";
         }
+    }
+    void HackModeButton(){
+        if(!hackMode){
+            ColorBlock colors = hackModeBtn.colors;
+            colors.normalColor = GameManager.LevelManager.currentTheme.hackModeColor;
+            hackModeBtn.colors = colors;
+            hackMode = true;
+        }
+        else{
+            ColorBlock colors = hackModeBtn.colors;
+            colors.normalColor = new Color (1, 1, 1, 123f/255f);
+            hackModeBtn.colors = colors;
+            hackMode = false;
+        }
+
+        Camera.main.GetComponent<HackMode>().EnterHackMode();
     }
 
     void SetGalaxyAndHole(){
