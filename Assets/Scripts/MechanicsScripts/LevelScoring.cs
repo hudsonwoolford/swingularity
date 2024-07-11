@@ -22,9 +22,9 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Button hackModeBtn;
     [SerializeField] Button resetBtn;
     [SerializeField] Color positive, neutral, negative;
-    
-    Coroutine coroutineStore;
+    float ballNotifTime = 5f;
     bool hackMode, ballStill;
+    bool resetUI;
 
     [Serializable]
     struct Score
@@ -79,10 +79,13 @@ public class LevelScoring : MonoBehaviour
         }
     }
     IEnumerator ResetNotification(){
-        while(ballStill){
+        float timeOffset = Time.time;
+        while(Time.time - timeOffset < ballNotifTime)
+        {
+            if(ballStill && Time.time - timeOffset > 0.1f) {  yield break; }
+            else { ballStill = false; }
             yield return null;
         }
-        yield return new WaitForSeconds(1f);
         EnableOrDisableResetUI(true);
     }
     void ResetButton(){
@@ -91,6 +94,7 @@ public class LevelScoring : MonoBehaviour
         }
     }
     void EnableOrDisableResetUI(bool enable){
+        resetUI = enable;
         if(enable){
             canvasAnimator.Play("ResetUI");
         }
@@ -156,7 +160,7 @@ public class LevelScoring : MonoBehaviour
     void IncrementScore()
     {
         ballStill = false;
-        coroutineStore = StartCoroutine(ResetNotification());
+        StartCoroutine(ResetNotification());
         numShots++;
 
         numShotsText.text = numShots.ToString();
@@ -193,11 +197,8 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
-        if(coroutineStore != null){
-            StopCoroutine(coroutineStore);    
-        }
-
-        if(hackModeBtn.enabled != true){
+        ballStill = true;
+        if(resetUI){
             EnableOrDisableResetUI(false);
         }
         if(numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
