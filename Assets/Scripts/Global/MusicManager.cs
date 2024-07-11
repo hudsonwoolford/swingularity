@@ -48,6 +48,16 @@ public class MusicManager : MonoBehaviour
     }
     MusicData CurrentMusic()
     {
+        //check if menu music
+        string scene = SceneManager.GetActiveScene().name;
+        for (int i = 0; i < menuScenes.Length; i++)
+        {
+            if (menuScenes[i] == scene)
+            {
+                return menuMusic;
+            }
+        }
+        //check for galaxy type music
         for (int i = 0; i<galaxyClips.Length; i++)
         {
             if(galaxyClips[i].type == GameManager.LevelManager.currentTheme.type)
