@@ -625,6 +625,16 @@ public class ShootBall : MonoBehaviour
         for (int s = 0; s < cols.Count; s++) //iterates through colliders
         {
             cols[s].transform.position = colPos[s]; //sets the positions of the objects
+            Vector3 closestPoint = new Vector3(1000, 1000);
+            int index = 0;
+            for(int j = 0; j < slr.positionCount; j++){
+                if((slr.GetPosition(j) - colPos[s]).sqrMagnitude < (closestPoint - colPos[s]).sqrMagnitude){
+                    closestPoint = slr.GetPosition(j);
+                    index = j;
+                }
+            }
+            cols[s].transform.GetChild(0).GetComponent<SpriteRenderer>().color = slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
+
         }
         colPos.Clear(); //clears all collision positions
     }
