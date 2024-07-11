@@ -83,8 +83,6 @@ public class GalaxyMenu : MonoBehaviour
     int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
-    float buttonTime;
-    float smoothProgress;
     // Start is called before the first frame update
     void Start()
     {
@@ -178,7 +176,7 @@ public class GalaxyMenu : MonoBehaviour
             UnityEngine.Random.InitState(i * 120523 + gp.seed);
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(gp.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
-            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, gp.levelStatic.difficultyPars[levelDifficulty - 1] + UnityEngine.Random.Range(-1, 2), gp.possibleTypes, gp.possibleSpecial, gp.levelStatic);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, LevelManager.levelStatic.difficultyPars[levelDifficulty - 1] + UnityEngine.Random.Range(-1, 2), gp.possibleTypes, gp.possibleSpecial);
 
 
             galaxyLevelParams[i] = systemParams;
@@ -430,8 +428,8 @@ public class GalaxyMenu : MonoBehaviour
                 {
                     if(name.Length < 12){
                         int roll = UnityEngine.Random.Range(0,160);
-                        if (roll < universe.levelStatic.GalaxyWords.Length){
-                            string addend = universe.levelStatic.GalaxyWords[UnityEngine.Random.Range(0, universe.levelStatic.GalaxyWords.Length)];
+                        if (roll <= LevelManager.levelStatic.GalaxyWords.Length){
+                            string addend = LevelManager.levelStatic.GalaxyWords[UnityEngine.Random.Range(0, LevelManager.levelStatic.GalaxyWords.Length)];
                             if(c == 0){
                                 if (lowerCase.Contains(addend[0])){
                                     int index = lowerCase.IndexOf(addend[0]);
@@ -443,7 +441,7 @@ public class GalaxyMenu : MonoBehaviour
                             name += addend;
                             name += " ";
                         }
-                        else if (roll > universe.levelStatic.GalaxyWords.Length && roll < 145){
+                        else if (roll > LevelManager.levelStatic.GalaxyWords.Length && roll < 145){
                             int numNumbers = UnityEngine.Random.Range(3,6);
                             for (int k = 0; k < numNumbers; k++){
                                 name += numbers[UnityEngine.Random.Range(0,numbers.Length)];
@@ -504,7 +502,7 @@ public class GalaxyMenu : MonoBehaviour
 
             galaxyDifficultyTracker += galaxyDifficultyStep;
 
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, universe.levelStatic, new bool[5], galaxyStarLockTracker, "——"); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(Mathf.CeilToInt(galaxyDifficultyTracker),0,10), gData, possibleTypes, specialTypes, new bool[5], galaxyStarLockTracker, "——"); //setting galaxy at index
             galaxyStarLockTracker += UnityEngine.Random.Range(2, 4);
 
 

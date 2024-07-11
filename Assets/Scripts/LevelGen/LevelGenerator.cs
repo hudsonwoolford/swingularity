@@ -163,7 +163,7 @@ public class LevelGenerator : MonoBehaviour
         UnityEngine.Random.InitState(levelParams.seed);
         seed = levelParams.seed;
 
-        levelStatic = levelParams.levelStatic;
+        levelStatic = LevelManager.levelStatic;
 
         float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 1.75f;
 
