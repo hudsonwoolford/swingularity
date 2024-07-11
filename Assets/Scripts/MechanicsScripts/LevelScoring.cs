@@ -20,6 +20,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI powerText;
     [SerializeField] TextMeshProUGUI angleText;
     [SerializeField] Button hackModeBtn;
+    [SerializeField] Button resetBtn;
     [SerializeField] Color positive, neutral, negative;
 
     Coroutine corountineStore;
@@ -45,6 +46,7 @@ public class LevelScoring : MonoBehaviour
         numShotsText.text = numShots.ToString();
         numShotsText.color = positive;
         hackModeBtn.onClick.AddListener(() => Camera.main.GetComponent<HackMode>().EnterHackMode());
+        resetBtn.onClick.AddListener(() => ResetButton());
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
@@ -77,8 +79,13 @@ public class LevelScoring : MonoBehaviour
         }
     }
     IEnumerator ResetNotification(){
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(1.5f);
         EnableOrDisableResetUI(true);
+    }
+    void ResetButton(){
+        if(LevelManager.ballInput){
+            ShootBall.triggerReset?.Invoke();
+        }
     }
     void EnableOrDisableResetUI(bool enable){
         if(enable){
