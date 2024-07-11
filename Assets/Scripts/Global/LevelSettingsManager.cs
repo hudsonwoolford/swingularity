@@ -94,6 +94,8 @@ public static int ConvertTextToSeed(string text)
     int signMult = 1;
     int multiplier = 1;
 
+    text = text.ToUpper();
+
     for (int i = text.Length - 1; i >= 0; i--)
     {
         char currentChar = text[i];
