@@ -11,7 +11,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] int par;
     [SerializeField] List<Score> scores = new List<Score>();
     [Header("UI")]
-    //[SerializeField] Animator canvasAnimator;
+    [SerializeField] Animator canvasAnimator;
     [SerializeField] Gradient scoreGradient;
     [SerializeField] Canvas levelCanvas;
     [SerializeField] TextMeshProUGUI parText;
@@ -22,6 +22,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Button hackModeBtn;
     [SerializeField] Color positive, neutral, negative;
 
+    Coroutine corountineStore;
     bool hackMode;
 
     [Serializable]
@@ -73,6 +74,18 @@ public class LevelScoring : MonoBehaviour
             powerText.color = Color.white;
             angleText.text = "——°";
             powerText.text = "——%";
+        }
+    }
+    IEnumerator ResetNotification(){
+        yield return new WaitForSeconds(10f);
+        EnableOrDisableResetUI(true);
+    }
+    void EnableOrDisableResetUI(bool enable){
+        if(enable){
+            canvasAnimator.Play("ResetUI");
+        }
+        else{
+            canvasAnimator.Play("NormalUI");
         }
     }
     void HackModeButton(bool enable, Material mat){
@@ -131,6 +144,8 @@ public class LevelScoring : MonoBehaviour
     }
     void IncrementScore()
     {
+        
+        corountineStore = StartCoroutine(ResetNotification());
         numShots++;
 
         numShotsText.text = numShots.ToString();
@@ -168,6 +183,13 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
+        if(corountineStore != null){
+            StopCoroutine(corountineStore);    
+        }
+
+        if(hackModeBtn.enabled != true){
+            EnableOrDisableResetUI(false);
+        }
         if(numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
     }
     private void OnEnable()

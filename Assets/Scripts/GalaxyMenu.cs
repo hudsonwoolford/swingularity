@@ -438,8 +438,6 @@ public class GalaxyMenu : MonoBehaviour
         float galaxyDifficultyMin = galaxyDifficulties.Item1;
         float galaxyDifficultyMax = galaxyDifficulties.Item2;
 
-
-
         int galaxyStarLockTracker = 0;
         bool alreadyLMSet = false;
         for (int i = 0; i < galaxies.Length; i++) //for each galaxy index, create one

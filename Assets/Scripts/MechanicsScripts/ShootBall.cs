@@ -815,6 +815,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
+        GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
         deathDelay = true;
         if(objCol.GetComponent<QuasarGenerator>()!=null)
