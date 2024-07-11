@@ -170,7 +170,8 @@ public class GalaxyMenu : MonoBehaviour
     {
         LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
         string[] galaxyLevels = new string[5];
-        int collectibleIndex = UnityEngine.Random.Range(0, 6);
+        UnityEngine.Random.InitState(gp.seed);
+        int collectibleIndex = UnityEngine.Random.Range(0, 5);
         for (int i = 0; i < 5; i++) //Creating levels as level params
         {
             UnityEngine.Random.InitState(i * 120523 + gp.seed);

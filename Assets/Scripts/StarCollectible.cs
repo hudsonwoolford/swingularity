@@ -17,13 +17,15 @@ public class StarCollectible : MonoBehaviour
     Rigidbody rb;
     Vector3 chosenPos;
     Coroutine collectionAnimRoutine;
-
+    SpriteRenderer spr;
     public delegate void StarCollected();
     public static StarCollected onStarCollected;
     public void Init(Vector2 midPoint, int seed)
     {
         sCol = GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
+        spr = GetComponent<SpriteRenderer>();
+        spr.enabled = false;
         sCol.enabled = false;
         Physics.SyncTransforms();
         StartCoroutine(RandomPointAlgorithm(midPoint, seed));
@@ -69,14 +71,15 @@ public class StarCollectible : MonoBehaviour
     }
     IEnumerator CollectionAnimation()
     {
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        sCol = GetComponent<SphereCollider>();
+        rb = GetComponent<Rigidbody>();
+        spr = GetComponent<SpriteRenderer>();
         rb.constraints = RigidbodyConstraints.None;
         rb.useGravity = true;
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
-
         rb.AddForce(Vector3.Lerp(minVel, maxVel, UnityEngine.Random.value), ForceMode.VelocityChange);
         rb.AddTorque(Vector3.Lerp(minAngVel, maxAngVel, UnityEngine.Random.value), ForceMode.VelocityChange);
         float timer = 0;
-        SpriteRenderer spr = GetComponent<SpriteRenderer>();
         while (timer < fadeDuration)
         {
             spr.color = new Color(spr.color.r, spr.color.g, spr.color.b, Mathf.Lerp(1, 0, fadeCurve.Evaluate(timer/fadeDuration)));
@@ -97,7 +100,6 @@ public class StarCollectible : MonoBehaviour
     {
         if(LevelManager.levelComplete) { return; }
         if(collectionAnimRoutine != null) { StopCoroutine(collectionAnimRoutine); }
-        SpriteRenderer spr = GetComponent<SpriteRenderer>();
         spr.color = Color.white;
         transform.position = chosenPos;
         rb.constraints = RigidbodyConstraints.FreezeAll;

@@ -113,6 +113,7 @@ public static class ArtificialGravity
         Vector2 totalForceNormalized= Vector2.zero;
         foreach (CelestialMass rbAttracting in attractors)
         {
+            if(rbAttracting.doNotAffect) { continue; }
             Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance
 
@@ -129,7 +130,8 @@ public static class ArtificialGravity
         Vector2 totalForce = Vector2.zero;
         Vector2 totalForceNormalized= Vector2.zero;
         foreach (CelestialMass rbAttracting in attractors)
-        {   
+        {
+            if (rbAttracting.doNotAffect) { continue; }
             if (ignoreSimulation && ((1 << rbAttracting.gameObject.layer) & LayerMask.GetMask("IgnoreSimulation")) != 0){continue;}
             Vector3 direction = rbAttracting.transform.position - worldPos; //direction vector
             float distance = direction.magnitude; //distance

@@ -191,9 +191,8 @@ public class ShootBall : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
-        rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));
+        if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
         posLastFrame = transform.position;
-
     }
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
@@ -861,7 +860,7 @@ public class ShootBall : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         childObj.GetComponent<MeshRenderer>().enabled = false;
         yield return new WaitForSeconds(delay);
-        rb.constraints = RigidbodyConstraints.None;//will stay still, no gravity
+        rb.constraints = RigidbodyConstraints.None;//will move
         deathDelay = false;
         triggerReset?.Invoke();
 

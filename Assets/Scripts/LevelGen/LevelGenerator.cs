@@ -502,7 +502,7 @@ public class LevelGenerator : MonoBehaviour
     #region Special Generation
     void GenerateCollectible(Vector3 midPoint)
     {
-        StarCollectible sc = Instantiate(starCollectiblePrefab, specialObjectsParent).GetComponent<StarCollectible>();
+        StarCollectible sc = Instantiate(starCollectiblePrefab, environment).GetComponent<StarCollectible>();
         sc.Init(midPoint, seed);
     }
     List<Planet> cachedBlackHoles = new List<Planet>();

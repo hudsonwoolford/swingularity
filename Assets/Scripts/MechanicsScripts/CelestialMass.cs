@@ -5,4 +5,5 @@ using UnityEngine;
 public class CelestialMass : MonoBehaviour
 {
     public float mass;
+    public bool doNotAffect = false;
 }
