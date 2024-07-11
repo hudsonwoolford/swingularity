@@ -236,6 +236,7 @@ public class LevelManager : MonoBehaviour
     public static SetProceduralGalaxies setProceduralGalaxies;
 
     public static bool ballInput { get; private set; }
+    public static bool levelComplete { get; private set; }
 
     private void Awake()
     {
@@ -361,6 +362,7 @@ public class LevelManager : MonoBehaviour
     void CompleteCurrentLevel() //Adds the current level to completed level array
     {
         ballInput = false;
+        levelComplete = true;
         if (procedural) { StartCoroutine(ProceduralNextLevelUI()); return; }
 
         string name = SceneManager.GetActiveScene().name;
@@ -435,7 +437,9 @@ public class LevelManager : MonoBehaviour
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor) //Updates score text to the score invoked in the event by LevelScoring
     {
-        if(scoreText == null) { return; }
+        ballInput = false;
+        levelComplete = true;
+        if (scoreText == null) { return; }
         scoreText.text = score;
         // if(procedural)
         // {
@@ -447,12 +451,7 @@ public class LevelManager : MonoBehaviour
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         ballInput = true;
-    }
-    IEnumerator DeathMessageInput(int index)
-    {
-        ballInput = false;
-        yield return new WaitForSeconds(1.25f);
-        ballInput = true;
+        levelComplete = false;
     }
 
     #endregion
@@ -460,7 +459,6 @@ public class LevelManager : MonoBehaviour
     {
         PauseManager.pauseGame += () => ballInput = false;
         PauseManager.unpauseGame += () => ballInput = true;
-        ShootBall.death += (i) => StartCoroutine(DeathMessageInput(i));
         SceneManager.sceneLoaded += OnSceneLoad;
         PointCardManager.onGalaxyScore += ScoreGalaxy;
         LevelManager.setProceduralUniverse += SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
@@ -477,7 +475,6 @@ public class LevelManager : MonoBehaviour
     {
         PauseManager.pauseGame -= () => ballInput = false;
         PauseManager.unpauseGame -= () => ballInput = true;
-        ShootBall.death -= (i) => StartCoroutine(DeathMessageInput(i));
         SceneManager.sceneLoaded -= OnSceneLoad;
         PointCardManager.onGalaxyScore -= ScoreGalaxy;
         LevelManager.setProceduralGalaxies -= SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)

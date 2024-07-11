@@ -13,6 +13,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] Transform ball, flag;
     [SerializeField] Transform ballArrow, flagArrow;
     [SerializeField] Animator canvasAnimator;
+    [SerializeField] Canvas mappingCanvas;
     BoxCollider2D camAreaSmaller;
     PolygonCollider2D boundaries;
     Camera mainCam;
@@ -46,6 +47,7 @@ public class MappingHandling : MonoBehaviour
     }
     void LateUpdate()
     {
+        mappingCanvas.enabled = !LevelManager.levelComplete;
         MatchCameraColliders();
 
         if(!boundaries.OverlapPoint(ball.position))
@@ -121,7 +123,7 @@ public class MappingHandling : MonoBehaviour
         canvasAnimator.Play("ShowOOB");
     }
     void SetDeathMessage(int index){
-        deathMessageIndex = index;
+        deathMessageIndex                       = index;
         ShowDeathMessage();
     }
     private void OnEnable()

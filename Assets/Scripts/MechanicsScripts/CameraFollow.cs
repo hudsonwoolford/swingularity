@@ -74,6 +74,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     public void LateUpdate()
     {
+        if(LevelManager.levelComplete) { return; }
         CamBehaviour();
     }
     void CamBehaviour(){

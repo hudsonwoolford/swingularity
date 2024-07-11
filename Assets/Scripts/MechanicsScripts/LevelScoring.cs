@@ -13,6 +13,7 @@ public class LevelScoring : MonoBehaviour
     [Header("UI")]
     //[SerializeField] Animator canvasAnimator;
     [SerializeField] Gradient scoreGradient;
+    [SerializeField] Canvas levelCanvas;
     [SerializeField] TextMeshProUGUI parText;
     [SerializeField] TextMeshProUGUI numShotsText;
     [SerializeField] TextMeshProUGUI holeNoText;
@@ -41,6 +42,7 @@ public class LevelScoring : MonoBehaviour
         numShotsText.color = positive;
     }
     private void Update(){
+        levelCanvas.enabled = !LevelManager.levelComplete;
         if(ShootBall.liningUpShot){
             powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString() + "%";
             if(ShootBall.shootPower < 25){
@@ -86,7 +88,7 @@ public class LevelScoring : MonoBehaviour
     }
     void HoleEnd()
     {
-        if(numShots == 1)
+        if (numShots == 1)
         {
             currentScore = "Hole in One!";
             onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate(0));
@@ -123,17 +125,13 @@ public class LevelScoring : MonoBehaviour
         else{
             numShotsText.color = neutral;
         }
-        if(numShots == 12)
-        {
-            StartCoroutine(LevelFailed());
-        }
     }
     IEnumerator LevelFailed()
     {
         ShootBall.death?.Invoke(3);
+        HoleEnd();
         yield return new WaitForSeconds(1.25f);
         ShootBall.onHole?.Invoke();
-        HoleEnd();
     }
     void ResetHole()
     {
@@ -150,9 +148,13 @@ public class LevelScoring : MonoBehaviour
         angleText.transform.parent.gameObject.SetActive(true);
         numShotsText.transform.parent.gameObject.SetActive(true);
     }
-    
+    void OnBallStill()
+    {
+        if(numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
+    }
     private void OnEnable()
     {
+        ShootBall.onStill += OnBallStill;
         LevelGenerator.levelGenerated += CheckPar;
         ShootBall.onShoot += IncrementScore;
         ShootBall.onHole += HoleEnd;
@@ -162,6 +164,7 @@ public class LevelScoring : MonoBehaviour
     }
     private void OnDisable()
     {
+        ShootBall.onStill -= OnBallStill;
         LevelGenerator.levelGenerated -= CheckPar;
         ShootBall.onShoot -= IncrementScore;
         ShootBall.onHole -= HoleEnd;

@@ -145,6 +145,7 @@ public class ShootBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(LevelManager.levelComplete) { return; }
         if(planets.Count != planetTransform.childCount){
             planets.Clear();
             foreach (Transform t in planetTransform)
