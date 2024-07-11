@@ -700,13 +700,14 @@ public class ShootBall : MonoBehaviour
         inPortal = true;
         StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
-        StartCoroutine(StartAnimation(hole, hitPoint, velocity));
+        bool clockwise = DetermineOrbitType(velocity, hitPoint - hole.position);
+        StartCoroutine(StartAnimation(hole, hitPoint, velocity, clockwise));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         inPortal = false;
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir){
+    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir, bool clockwise){
         holeAnim?.Invoke();
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
@@ -722,15 +723,11 @@ public class ShootBall : MonoBehaviour
         {
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
         }
-        bool clockwise = CheckSpiralDirOLD(velocityDir, hitPoint, hole);
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             Vector3 holeDir = hitPoint - hole.position;
             float angle = Mathf.Atan2(holeDir.y, holeDir.x) * Mathf.Rad2Deg;
-            if(angle < 0){
-                angle += 360;
-            }   
             if(clockwise){
                 transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360 + angle)) * Vector3.up * (1-progress) * distance * animScale, ref velocity, animSmoothing);
             }
@@ -742,6 +739,18 @@ public class ShootBall : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     } 
+    private bool DetermineOrbitType(Vector3 velocity, Vector3 hitPosition)
+    {
+        float product = hitPosition.x * velocity.y - hitPosition.y * velocity.x;
+        if (product > 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
         velocity *= -1;
@@ -759,13 +768,13 @@ public class ShootBall : MonoBehaviour
                 return false;
             }
     }
+
     private bool CheckSpiralDirOLD(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
         velocity *= -1;
         float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
-        if(angle < 0){
-            angle = 360 + angle;
-        }
+        print(angle);
+
         if(holeDir.x > 0 && holeDir.y > 0){
             if((angle > 45)){
                  return true;
@@ -775,7 +784,7 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x > 0 && holeDir.y < 0){
-            if((angle > 315)){
+            if((angle > -45)){
                 return true;
             }
             else{
@@ -791,7 +800,7 @@ public class ShootBall : MonoBehaviour
             }
         }
         else if(holeDir.x < 0 && holeDir.y < 0){
-            if((angle > 225)){
+            if((angle > -135)){
                 return true;
             }
             else {
