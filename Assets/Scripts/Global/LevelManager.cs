@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
     [Header("Parameters")]
     [SerializeField] LevelGenStaticReferences levelStaticValue;
-    [SerializeField] GalaxyData backupTheme;
+    [SerializeField] GalaxyData[] galaxyDatas;
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
     [Space()]
     [SerializeField] TextMeshProUGUI streakText; //Text that displays under par streak
@@ -89,18 +89,18 @@ public class LevelManager : MonoBehaviour
         public int seed; //galxy seed, determines levels
         [Range(0, 10)]
         public int relativeDifficulty; //relative difficulty of galaxy (1-10)
-        public GalaxyData galaxyData;
+        public int galaxyDataIndex;
         public ColorSchemeStaticReference.PlanetType[] possibleTypes;
         public LevelGenerator.SpecialType[] possibleSpecial;
         public bool[] collectedStars;
         public int numStars;
         public string bestScore;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore)
         {
             this.name = name;
             this.seed = seed;
-            this.galaxyData = galaxyData;
+            this.galaxyDataIndex = galaxyDataIndex;
             this.relativeDifficulty = relativeDifficulty;
             this.possibleTypes = possibleTypes;
             this.possibleSpecial = possibleSpecial;
@@ -132,7 +132,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ name.GetHashCode();
             hash = (hash * 397) ^ seed.GetHashCode();
             hash = (hash * 397) ^ relativeDifficulty.GetHashCode();
-            hash = (hash * 397) ^ galaxyData.GetHashCode();
+            hash = (hash * 397) ^ galaxyDataIndex.GetHashCode();
             hash = (hash * 397) ^ possibleTypes.GetHashCode();
             hash = (hash * 397) ^ possibleSpecial.GetHashCode();
             hash = (hash * 397) ^ collectedStars.GetHashCode();
@@ -225,16 +225,18 @@ public class LevelManager : MonoBehaviour
 
     public static bool ballInput { get; private set; }
     public static bool levelComplete { get; private set; }
-    public static LevelGenStaticReferences levelStatic { get; private set; }
+    public static LevelGenStaticReferences levelStatic { get; private set; } //global level static references
+    public static GalaxyData[] allGalaxyData { get; private set; } //all possible galaxy data
 
     private void Awake()
     {
         levelStatic = levelStaticValue;
+        allGalaxyData = galaxyDatas;
         completedLevels = new List<string>();
         levelMenuAnimator = GetComponent<Animator>();
         levelMenuAnimator.Play("DisableMenu");
         chosenOption = false;
-        currentTheme = backupTheme;
+        currentTheme = allGalaxyData[0];
         currentUniverse = new UniverseParams();
     }
     // Start is called before the first frame update

@@ -60,7 +60,6 @@ public class GalaxyMenu : MonoBehaviour
     [Header("Miscellaneous")]
     [SerializeField] GalaxyInfoType[] galaxyTypes; //possible types for galaxies
     [SerializeField] SpecialType[] allSpecialTypes;
-    [SerializeField] GalaxyData[] possibleGalaxyData; //possible galaxy data
     [Header("Info Menu")]
     [SerializeField] Animator infoCardAnim;
     [SerializeField] TextMeshProUGUI galaxyTitle;
@@ -182,7 +181,7 @@ public class GalaxyMenu : MonoBehaviour
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
         }
-        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyList[focusedGalaxy], gp.galaxyData);
+        initProceduralSystem?.Invoke(galaxyLevels, galaxyLevelParams, galaxyList[focusedGalaxy], LevelManager.allGalaxyData[gp.galaxyDataIndex]);
         LevelSettingsManager.onLevelSettingChange?.Invoke(galaxyLevelParams[0]);
         GameManager.LevelSettingsManager.UIMatchParams();
     }//Sets the procedural galaxy in level manager through event
@@ -201,7 +200,7 @@ public class GalaxyMenu : MonoBehaviour
             cB.disabledColor = difficultyNum.color;
             difficultySlider.colors = cB;
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
-            astroBiomeTxt.color = gp.galaxyData.mainColor;
+            astroBiomeTxt.color = LevelManager.allGalaxyData[gp.galaxyDataIndex].mainColor;
             bestScoreTxt.text = gp.bestScore;
             if(gp.bestScore != "——"){
                 if(float.Parse(gp.bestScore) > 0){
@@ -506,7 +505,7 @@ public class GalaxyMenu : MonoBehaviour
             int numSpecial = UnityEngine.Random.Range(2, 5);
             LevelGenerator.SpecialType[] specialTypes = new LevelGenerator.SpecialType[numSpecial];
             List<LevelGenerator.SpecialType> allSpecial = allSpecialTypes.ToList();
-            GalaxyData gData = null;
+            int gDataIndex = 0;
             for (int t = 0; t < possibleTypes.Length; t++) 
             {
                 int chosenIndex = UnityEngine.Random.Range(0, galaxyTypes.Length);
@@ -519,9 +518,9 @@ public class GalaxyMenu : MonoBehaviour
                     specialTypes[x] = allSpecial[chosenSpecial];
                     allSpecial.Remove(specialTypes[x]);
                 }
-                for (int x = 0; x < possibleGalaxyData.Length; x++)
+                for (int x = 0; x < LevelManager.allGalaxyData.Length; x++)
                 {
-                    if (possibleGalaxyData[x].type == possibleTypes[t]) { gData = possibleGalaxyData[x]; }
+                    if (LevelManager.allGalaxyData[x].type == possibleTypes[t]) { gDataIndex = x; }
                 }
             }
 
@@ -529,7 +528,7 @@ public class GalaxyMenu : MonoBehaviour
             float difficultyLerpVal = (float)i/(float)galaxies.Length;
             int galaxyDifficulty = (int)Mathf.Lerp(galaxyDifficultyMin, galaxyDifficultyMax, difficultyLerpVal);
 
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(galaxyDifficulty,1,10), gData, possibleTypes, specialTypes, new bool[5], galaxyStarLockTracker, "——"); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(galaxyDifficulty,1,10), gDataIndex, possibleTypes, specialTypes, new bool[5], galaxyStarLockTracker, "——"); //setting galaxy at index
             galaxyStarLockTracker += UnityEngine.Random.Range(2, 4);
 
 
