@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Drawing;
 
 [ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
@@ -42,7 +43,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Button audioTabBtn;
     [SerializeField] Button gameTabBtn;
     [SerializeField] Button graphicsTabBtn;
-    [SerializeField] TextMeshProUGUI[] tabBtnSelected;
+    [SerializeField] Button[] tabBtns;
     [SerializeField] CanvasGroup[] settingsTabs;
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider masterVolElement;
@@ -80,15 +81,15 @@ public class SettingsManager : MonoBehaviour
         if(userSettings == null) { userSettings = new UserSettings(); }
         if(!Application.isPlaying) { return; }
         settingsCanvas = GetComponent<Canvas>();
-        settingsCanvas.enabled = false;
         settingsAnim = GetComponent<Animator>();
+        settingsAnim.Play("DisableMenu");
         currentTab = 0;
 
         SetButtonFunctions();
-        for (int i = 0; i < tabBtnSelected.Length; i++)
+        for (int i = 0; i < tabBtns.Length; i++)
         {
-            if (i == currentTab) { tabBtnSelected[i].enabled = true; }
-            else { tabBtnSelected[i].enabled = false; }
+            if (i==currentTab) { tabBtns[i].GetComponent<Animator>().Play("Select"); }
+            else { tabBtns[i].GetComponent<Animator>().Play("Unselect"); }
         }
     }
 
@@ -310,10 +311,10 @@ public class SettingsManager : MonoBehaviour
         settingsTabs[prevIndex].blocksRaycasts = false;
         settingsTabs[currentTab].interactable = true;
         settingsTabs[currentTab].blocksRaycasts = true;
-        for (int i = 0; i < tabBtnSelected.Length; i++)
+        for (int i = 0; i < tabBtns.Length; i++)
         {
-            if(i == currentTab) { tabBtnSelected[i].enabled = true; }
-            else { tabBtnSelected[i].enabled = false; }
+            if (i == currentTab) { tabBtns[i].GetComponent<Animator>().Play("Select"); }
+            else { tabBtns[i].GetComponent<Animator>().Play("Unselect"); }
         }
     }
     void SetButtonFunctions() //Sets all listener functions for buttons

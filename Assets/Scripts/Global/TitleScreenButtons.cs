@@ -225,8 +225,8 @@ public class TitleScreenButtons : MonoBehaviour
         for (int i = 0; i<ngSizeBtns.Length; i++)
         {
             bool enableText = i==size ? true : false;
-            if(enableText) {ngSizeBtns[i].transform.GetChild(0).GetComponent<Animator>().Play("FadeText");}
-            else {ngSizeBtns[i].transform.GetChild(0).GetComponent<Animator>().Play("FadeTextOut");}
+            if(enableText) {ngSizeBtns[i].GetComponent<Animator>().Play("Select");}
+            else {ngSizeBtns[i].GetComponent<Animator>().Play("Unselect");}
             
         }
     }
