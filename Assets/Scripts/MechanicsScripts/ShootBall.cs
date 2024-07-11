@@ -701,13 +701,13 @@ public class ShootBall : MonoBehaviour
         StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
         bool clockwise = DetermineOrbitType(velocity, hitPoint - hole.position);
-        StartCoroutine(StartAnimation(hole, hitPoint, velocity, clockwise));
+        StartCoroutine(StartAnimation(hole, hitPoint, velocity, clockwise, Vector3.Distance(hitPoint, hole.position)));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         inPortal = false;
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir, bool clockwise){
+    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir, bool clockwise, float distance){
         holeAnim?.Invoke();
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
@@ -717,7 +717,6 @@ public class ShootBall : MonoBehaviour
         Material mat = defaultBallMat;
         Vector3 velocity = rb.velocity;
 
-        float distance = Vector3.Distance(transform.position, hole.position);
         mat.SetVector("_Offset", new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
         if(GameManager.LevelManager.currentTheme != null)
         {
