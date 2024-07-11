@@ -19,6 +19,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI holeNoText;
     [SerializeField] TextMeshProUGUI powerText;
     [SerializeField] TextMeshProUGUI angleText;
+    [SerializeField] Button hackModeBtn;
     [SerializeField] Color positive, neutral, negative;
 
     [Serializable]
@@ -40,6 +41,7 @@ public class LevelScoring : MonoBehaviour
         parText.text = par.ToString();
         numShotsText.text = numShots.ToString();
         numShotsText.color = positive;
+        hackModeBtn.onClick.AddListener(() => Camera.main.GetComponent<HackMode>().EnterHackMode());
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
