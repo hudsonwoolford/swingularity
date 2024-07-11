@@ -38,14 +38,16 @@ public class LevelManager : MonoBehaviour
         public int difficulty; // Range 0-10 determining size of level and number of special objects
         public ColorSchemeStaticReference.PlanetType[] themes; // Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
+        public bool hasCollectible;
 
-        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
+        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects, bool hasCollectible)
         {
             this.seed = seed;
             this.levelPar = par;
             this.difficulty = difficulty;
             this.themes = themes;
             this.specialObjects = specialObjects;
+            this.hasCollectible = hasCollectible;
         }
 
         public override bool Equals(object obj)
@@ -65,6 +67,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ difficulty.GetHashCode();
             hash = (hash * 397) ^ (themes != null ? themes.GetHashCode() : 0);
             hash = (hash * 397) ^ (specialObjects != null ? specialObjects.GetHashCode() : 0);
+            hash = (hash * 397) ^ hasCollectible.GetHashCode();
             return hash;
         }
 
@@ -74,7 +77,8 @@ public class LevelManager : MonoBehaviour
                 && a.levelPar == b.levelPar
                 && a.difficulty == b.difficulty
                 && (a.themes == b.themes || (a.themes != null && b.themes != null && a.themes.SequenceEqual(b.themes)))
-                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)));
+                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)))
+                && a.hasCollectible == b.hasCollectible;
         }
 
         public static bool operator !=(LevelParams a, LevelParams b)

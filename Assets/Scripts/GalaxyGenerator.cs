@@ -54,7 +54,7 @@ public class GalaxyGenerator : MonoBehaviour
             int levelSeed = UnityEngine.Random.Range(-2147483647, 2147483647);
             int levelDifficulty = Mathf.Clamp(galaxyParams.relativeDifficulty + UnityEngine.Random.Range(-1, 1), 1, 10);
 
-            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, LevelManager.levelStatic.difficultyPars[levelDifficulty-1], galaxyParams.possibleTypes, specialTypes);
+            LevelManager.LevelParams systemParams = new LevelManager.LevelParams(levelSeed, levelDifficulty, LevelManager.levelStatic.difficultyPars[levelDifficulty-1], galaxyParams.possibleTypes, specialTypes, false);
 
             galaxyLevelParams[i] = systemParams;
             galaxyLevels[i] = "LevelGen";
