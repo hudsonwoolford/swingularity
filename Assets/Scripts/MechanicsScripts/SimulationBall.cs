@@ -6,6 +6,7 @@ public class SimulationBall : MonoBehaviour
 {
     ShootBall sB;
     Rigidbody rb;
+    const float tolerance = 5f;
     public void Init(ShootBall shootBall)
     {
         rb = GetComponent<Rigidbody>();
@@ -13,7 +14,7 @@ public class SimulationBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-         sB.BallCollides(collision.GetContact(0).point);
+        if(collision.impulse.magnitude >= tolerance){sB.BallCollides(collision.GetContact(0).point);}
     }
     private void OnTriggerEnter(Collider other)
     {

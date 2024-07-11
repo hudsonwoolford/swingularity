@@ -459,7 +459,7 @@ public class ShootBall : MonoBehaviour
         Physics.simulationMode = SimulationMode.Script;
 
         slr.positionCount = maxstep +1;
-        slr.SetPosition(0, startPos);
+        slr.SetPosition(0, new Vector3(startPos.x, startPos.y, -8));
 
         float rad = GetComponent<SphereCollider>().radius * transform.localScale.x;
         for (int i = 0; i < maxstep; i++)
@@ -467,7 +467,7 @@ public class ShootBall : MonoBehaviour
             if (velocity.magnitude < 0.1f)
             {
                 slr.positionCount = i + 2;
-                slr.SetPosition(i + 1, trackPos);
+                slr.SetPosition(i + 1, new Vector3(trackPos.x, trackPos.y, -8));
                 break;
             }
             
@@ -505,7 +505,7 @@ public class ShootBall : MonoBehaviour
             if(respawn)
             {
                 slr.positionCount = i + 2;
-                slr.SetPosition(i + 1, trackPos);
+                slr.SetPosition(i + 1, new Vector3(trackPos.x, trackPos.y, -8));
                 break;
             }
             if (dist + (trackPos - prevPos).magnitude > maxLengthSim)
@@ -513,13 +513,13 @@ public class ShootBall : MonoBehaviour
                 float distDifference = maxLengthSim - dist;
                 Vector3 finalPos = prevPos + (trackPos-prevPos).normalized * distDifference;
                 slr.positionCount = i + 2;
-                slr.SetPosition(i+1, finalPos);
+                slr.SetPosition(i+1,new Vector3(finalPos.x, finalPos.y, -8));
                 break;
             }
             dist += (trackPos - prevPos).magnitude;
 
             prevPos = trackPos;
-            slr.SetPosition(i + 1, trackPos);
+            slr.SetPosition(i + 1, new Vector3(trackPos.x, trackPos.y, -8));
         }
         Physics.simulationMode = SimulationMode.FixedUpdate;
         if(simulated) { DrawCollisionIcons(); }
@@ -742,6 +742,7 @@ public class ShootBall : MonoBehaviour
     } 
     private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
         Vector3 holeDir = hitPoint - hole.position;
+        velocity *= -1;
         float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
         if(angle < 0){
             angle += 360;

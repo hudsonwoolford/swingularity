@@ -43,7 +43,7 @@ public class LevelScoring : MonoBehaviour
         parText.text = par.ToString();
         numShotsText.text = numShots.ToString();
         numShotsText.color = positive;
-        hackModeBtn.onClick.AddListener(() => HackModeButton());
+        hackModeBtn.onClick.AddListener(() => Camera.main.GetComponent<HackMode>().EnterHackMode());
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
@@ -75,7 +75,7 @@ public class LevelScoring : MonoBehaviour
             powerText.text = "——%";
         }
     }
-    void HackModeButton(){
+    void HackModeButton(bool enable, Material mat){
         if(!hackMode){
             ColorBlock colors = hackModeBtn.colors;
             colors.normalColor = GameManager.LevelManager.currentTheme.hackModeColor;
@@ -88,8 +88,6 @@ public class LevelScoring : MonoBehaviour
             hackModeBtn.colors = colors;
             hackMode = false;
         }
-
-        Camera.main.GetComponent<HackMode>().EnterHackMode();
     }
 
     void SetGalaxyAndHole(){
@@ -181,6 +179,7 @@ public class LevelScoring : MonoBehaviour
         ShootBall.triggerReset += ResetHole;
         PauseManager.pauseGame += Pause;
         PauseManager.unpauseGame += UnPause;
+        HackMode.onHackMode += HackModeButton;
     }
     private void OnDisable()
     {
@@ -191,5 +190,7 @@ public class LevelScoring : MonoBehaviour
         ShootBall.triggerReset -= ResetHole;
         PauseManager.pauseGame -= Pause;
         PauseManager.unpauseGame -= UnPause;
+        HackMode.onHackMode -= HackModeButton;
+
     }
 }
