@@ -633,7 +633,7 @@ public class ShootBall : MonoBehaviour
                     index = j;
                 }
             }
-            cols[s].transform.GetChild(0).GetComponent<SpriteRenderer>().color = slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
+            cols[s].transform.GetChild(1).GetComponent<SpriteRenderer>().color = slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
 
         }
         colPos.Clear(); //clears all collision positions
