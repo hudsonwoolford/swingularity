@@ -123,6 +123,17 @@ public class LevelScoring : MonoBehaviour
         else{
             numShotsText.color = neutral;
         }
+        if(numShots == 12)
+        {
+            StartCoroutine(LevelFailed());
+        }
+    }
+    IEnumerator LevelFailed()
+    {
+        ShootBall.death?.Invoke(3);
+        yield return new WaitForSeconds(1.25f);
+        ShootBall.onHole?.Invoke();
+        HoleEnd();
     }
     void ResetHole()
     {

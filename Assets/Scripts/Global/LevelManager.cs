@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
     [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
-    Canvas levelCanvas; //The canvas for level UI
+    Animator levelMenuAnimator; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
     int currentGalaxyIndex;
 
@@ -235,11 +235,13 @@ public class LevelManager : MonoBehaviour
     public delegate void SetProceduralGalaxies(GalaxyParams[] galaxyParams);
     public static SetProceduralGalaxies setProceduralGalaxies;
 
+    public static bool ballInput { get; private set; }
+
     private void Awake()
     {
         completedLevels = new List<string>();
-        levelCanvas = GetComponent<Canvas>();
-        levelCanvas.enabled = false;
+        levelMenuAnimator = GetComponent<Animator>();
+        levelMenuAnimator.Play("DisableMenu");
         chosenOption = false;
         currentTheme = backupTheme;
         currentUniverse = new UniverseParams();
@@ -252,7 +254,6 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {
@@ -265,7 +266,7 @@ public class LevelManager : MonoBehaviour
     #region Next Level UI
     IEnumerator NextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
-        levelCanvas.enabled = true;
+        levelMenuAnimator.Play("ShowMenu");
         scoreText.enabled = true;
         streakText.enabled = false;
         hioStreakText.enabled = false;
@@ -280,7 +281,7 @@ public class LevelManager : MonoBehaviour
         {
             if(SceneManager.GetActiveScene().name != name) 
             {
-                levelCanvas.enabled = false;
+                levelMenuAnimator.Play("DisableMenu");
                 chosenOption = false;
                 yield break; 
             }
@@ -289,7 +290,7 @@ public class LevelManager : MonoBehaviour
         levelIndex++;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
-        levelCanvas.enabled = false;
+        levelMenuAnimator.Play("DisableMenu");
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
@@ -306,7 +307,7 @@ public class LevelManager : MonoBehaviour
             yield break;
         }
         //enable things
-        levelCanvas.enabled = true;
+        levelMenuAnimator.Play("ShowMenu");
         scoreText.enabled = true;
         streakText.enabled = false;
         hioStreakText.enabled = false;
@@ -330,7 +331,7 @@ public class LevelManager : MonoBehaviour
         {
             if (SceneManager.GetActiveScene().buildIndex != currentBuildIndex)
             {
-                levelCanvas.enabled = false;
+                levelMenuAnimator.Play("DisableMenu");
                 chosenOption = false;
                 yield break;
             }
@@ -339,7 +340,7 @@ public class LevelManager : MonoBehaviour
         levelIndex = levelIndex < 4 ? levelIndex + 1 : 0;
         chosenOption = false;
         loadNextOp.allowSceneActivation = true;
-        levelCanvas.enabled = false;
+        levelMenuAnimator.Play("DisableMenu");
     }
     void DetermineCurrentLevelIndex()
     {
@@ -359,6 +360,7 @@ public class LevelManager : MonoBehaviour
     }
     void CompleteCurrentLevel() //Adds the current level to completed level array
     {
+        ballInput = false;
         if (procedural) { StartCoroutine(ProceduralNextLevelUI()); return; }
 
         string name = SceneManager.GetActiveScene().name;
@@ -442,10 +444,24 @@ public class LevelManager : MonoBehaviour
         //     loadNextOp.allowSceneActivation = true;
         // }
     }
+    void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        ballInput = true;
+    }
+    IEnumerator DeathMessageInput(int index)
+    {
+        ballInput = false;
+        yield return new WaitForSeconds(1.25f);
+        ballInput = true;
+    }
 
     #endregion
     private void OnEnable()
     {
+        PauseManager.pauseGame += () => ballInput = false;
+        PauseManager.unpauseGame += () => ballInput = true;
+        ShootBall.death += (i) => StartCoroutine(DeathMessageInput(i));
+        SceneManager.sceneLoaded += OnSceneLoad;
         PointCardManager.onGalaxyScore += ScoreGalaxy;
         LevelManager.setProceduralUniverse += SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
         LevelManager.setProceduralGalaxies += SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
@@ -459,6 +475,10 @@ public class LevelManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        PauseManager.pauseGame -= () => ballInput = false;
+        PauseManager.unpauseGame -= () => ballInput = true;
+        ShootBall.death -= (i) => StartCoroutine(DeathMessageInput(i));
+        SceneManager.sceneLoaded -= OnSceneLoad;
         PointCardManager.onGalaxyScore -= ScoreGalaxy;
         LevelManager.setProceduralGalaxies -= SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
         LevelManager.setProceduralUniverse -= SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)

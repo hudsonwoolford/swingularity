@@ -157,7 +157,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && !astronautFading)
+            if(Input.GetMouseButtonDown(0) && !astronautFading && LevelManager.ballInput)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -186,8 +186,8 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay) { BallReset(); } //reset1ity
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl)) { origin = trueOrigin; BallReset(); } //reset1ity
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { BallReset(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; BallReset(); } //reset
     }
     void FixedUpdate(){
         rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass));

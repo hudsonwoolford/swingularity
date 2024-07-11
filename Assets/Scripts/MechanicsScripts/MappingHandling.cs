@@ -21,7 +21,7 @@ public class MappingHandling : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI deathMessageTxt;
 
-    readonly string[] deathMessages = new string[3] { "Lost in space!", "Burnt to a crisp!", "Fried by X-rays!"};
+    readonly string[] deathMessages = new string[4] { "Lost in space!", "Burnt to a crisp!", "Fried by X-rays!", "Level Failed!"};
     private void Awake()
     {
         if(ball == null) { ball = GameObject.FindGameObjectWithTag("Player").transform; }
@@ -115,14 +115,14 @@ public class MappingHandling : MonoBehaviour
         camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
         camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
     }
-    void ShowOOB()
+    void ShowDeathMessage()
     {
         deathMessageTxt.text = deathMessages[deathMessageIndex];
         canvasAnimator.Play("ShowOOB");
     }
     void SetDeathMessage(int index){
         deathMessageIndex = index;
-        ShowOOB();
+        ShowDeathMessage();
     }
     private void OnEnable()
     {
