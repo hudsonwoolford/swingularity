@@ -225,7 +225,7 @@ public class LevelManager : MonoBehaviour
 
     public static bool ballInput { get; private set; }
     public static bool levelComplete { get; private set; }
-    public static LevelGenStaticReferences levelStatic { get; private set; };
+    public static LevelGenStaticReferences levelStatic { get; private set; }
 
     private void Awake()
     {
