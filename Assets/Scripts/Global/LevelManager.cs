@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
     [Header("Parameters")]
+    [SerializeField] LevelGenStaticReferences levelStaticValue;
     [SerializeField] GalaxyData backupTheme;
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
     [Space()]
@@ -37,16 +38,14 @@ public class LevelManager : MonoBehaviour
         public int difficulty; // Range 0-10 determining size of level and number of special objects
         public ColorSchemeStaticReference.PlanetType[] themes; // Themes/color schemes for level - First scheme in list is primary
         public LevelGenerator.SpecialType[] specialObjects;
-        public LevelGenStaticReferences levelStatic; //static references for level generation
 
-        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects, LevelGenStaticReferences levelStatic)
+        public LevelParams(int seed, int difficulty, int par, ColorSchemeStaticReference.PlanetType[] themes, LevelGenerator.SpecialType[] specialObjects)
         {
             this.seed = seed;
             this.levelPar = par;
             this.difficulty = difficulty;
             this.themes = themes;
             this.specialObjects = specialObjects;
-            this.levelStatic = levelStatic;
         }
 
         public override bool Equals(object obj)
@@ -66,7 +65,6 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ difficulty.GetHashCode();
             hash = (hash * 397) ^ (themes != null ? themes.GetHashCode() : 0);
             hash = (hash * 397) ^ (specialObjects != null ? specialObjects.GetHashCode() : 0);
-            hash = (hash * 397) ^ (levelStatic != null ? levelStatic.GetHashCode() : 0);
             return hash;
         }
 
@@ -76,8 +74,7 @@ public class LevelManager : MonoBehaviour
                 && a.levelPar == b.levelPar
                 && a.difficulty == b.difficulty
                 && (a.themes == b.themes || (a.themes != null && b.themes != null && a.themes.SequenceEqual(b.themes)))
-                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)))
-                && a.levelStatic == b.levelStatic;
+                && (a.specialObjects == b.specialObjects || (a.specialObjects != null && b.specialObjects != null && a.specialObjects.SequenceEqual(b.specialObjects)));
         }
 
         public static bool operator !=(LevelParams a, LevelParams b)
@@ -95,12 +92,11 @@ public class LevelManager : MonoBehaviour
         public GalaxyData galaxyData;
         public ColorSchemeStaticReference.PlanetType[] possibleTypes;
         public LevelGenerator.SpecialType[] possibleSpecial;
-        public LevelGenStaticReferences levelStatic; //static references for level generation
         public bool[] collectedStars;
         public int numStars;
         public string bestScore;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, LevelGenStaticReferences levelStatic, bool[] collectedStars, int numStars, string bestScore)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, GalaxyData galaxyData, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore)
         {
             this.name = name;
             this.seed = seed;
@@ -108,7 +104,6 @@ public class LevelManager : MonoBehaviour
             this.relativeDifficulty = relativeDifficulty;
             this.possibleTypes = possibleTypes;
             this.possibleSpecial = possibleSpecial;
-            this.levelStatic = levelStatic;
             this.collectedStars = collectedStars;
             this.numStars = numStars;
             this.bestScore = bestScore;
@@ -119,8 +114,7 @@ public class LevelManager : MonoBehaviour
             && a.seed == b.seed
             && a.relativeDifficulty == b.relativeDifficulty
             && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
-            && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
-            && a.levelStatic == b.levelStatic;
+            && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)));
         }
         public override bool Equals(object obj)
         {
@@ -141,7 +135,6 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ galaxyData.GetHashCode();
             hash = (hash * 397) ^ possibleTypes.GetHashCode();
             hash = (hash * 397) ^ possibleSpecial.GetHashCode();
-            hash = (hash * 397) ^ levelStatic.GetHashCode();
             hash = (hash * 397) ^ collectedStars.GetHashCode();
             return hash;
         }
@@ -153,7 +146,6 @@ public class LevelManager : MonoBehaviour
                 && a.relativeDifficulty == b.relativeDifficulty
                 && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
                 && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
-                && a.levelStatic == b.levelStatic
                 && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)));
         }
 
@@ -173,8 +165,7 @@ public class LevelManager : MonoBehaviour
         public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
         public int numStars;
-        public LevelGenStaticReferences levelStatic; //static references for level generation
-        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies, LevelGenStaticReferences levelStatic, int numStars)
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars)
         {
             this.name = name;
             this.seed = seed;
@@ -182,7 +173,6 @@ public class LevelManager : MonoBehaviour
             this.size = size;
             this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
-            this.levelStatic = levelStatic;
             this.numStars = numStars;
         }
         public override bool Equals(object obj)
@@ -204,7 +194,6 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ size.GetHashCode();
             hash = (hash * 397) ^ completedGalaxies.GetHashCode();
             hash = (hash * 397) ^ numGalaxies.GetHashCode();
-            hash = (hash * 397) ^ levelStatic.GetHashCode();
             hash = (hash * 397) ^ numStars.GetHashCode();
             return hash;
         }
@@ -217,7 +206,6 @@ public class LevelManager : MonoBehaviour
                 && a.size == b.size
                 && a.completedGalaxies == b.completedGalaxies
                 && a.numGalaxies == b.numGalaxies
-                && a.levelStatic == b.levelStatic
                 && a.numStars == b.numStars;
         }
 
@@ -237,9 +225,11 @@ public class LevelManager : MonoBehaviour
 
     public static bool ballInput { get; private set; }
     public static bool levelComplete { get; private set; }
+    public static LevelGenStaticReferences levelStatic { get; private set; }
 
     private void Awake()
     {
+        levelStatic = levelStaticValue;
         completedLevels = new List<string>();
         levelMenuAnimator = GetComponent<Animator>();
         levelMenuAnimator.Play("DisableMenu");
