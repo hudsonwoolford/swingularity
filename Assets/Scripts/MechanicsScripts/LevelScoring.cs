@@ -22,9 +22,9 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Button hackModeBtn;
     [SerializeField] Button resetBtn;
     [SerializeField] Color positive, neutral, negative;
-
-    Coroutine corountineStore;
-    bool hackMode;
+    
+    Coroutine coroutineStore;
+    bool hackMode, ballStill;
 
     [Serializable]
     struct Score
@@ -79,7 +79,10 @@ public class LevelScoring : MonoBehaviour
         }
     }
     IEnumerator ResetNotification(){
-        yield return new WaitForSeconds(1.5f);
+        while(ballStill){
+            yield return null;
+        }
+        yield return new WaitForSeconds(1f);
         EnableOrDisableResetUI(true);
     }
     void ResetButton(){
@@ -152,8 +155,8 @@ public class LevelScoring : MonoBehaviour
     }
     void IncrementScore()
     {
-        
-        corountineStore = StartCoroutine(ResetNotification());
+        ballStill = false;
+        coroutineStore = StartCoroutine(ResetNotification());
         numShots++;
 
         numShotsText.text = numShots.ToString();
@@ -190,8 +193,8 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
-        if(corountineStore != null){
-            StopCoroutine(corountineStore);    
+        if(coroutineStore != null){
+            StopCoroutine(coroutineStore);    
         }
 
         if(hackModeBtn.enabled != true){
