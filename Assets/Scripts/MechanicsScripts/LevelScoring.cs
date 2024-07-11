@@ -119,6 +119,7 @@ public class LevelScoring : MonoBehaviour
     }
     void HoleEnd()
     {
+        canvasAnimator.Play("Slide Out");
         if (numShots == 1)
         {
             currentScore = "Hole in One!";
@@ -174,12 +175,11 @@ public class LevelScoring : MonoBehaviour
     }
 
     void Pause(){
-        angleText.transform.parent.gameObject.SetActive(false);
-        numShotsText.transform.parent.gameObject.SetActive(false);
+        canvasAnimator.Play("Slide Out");
     }
     void UnPause(){
-        angleText.transform.parent.gameObject.SetActive(true);
-        numShotsText.transform.parent.gameObject.SetActive(true);
+        canvasAnimator.Play("Slide In1");
+
     }
     void OnBallStill()
     {

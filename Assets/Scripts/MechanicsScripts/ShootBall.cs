@@ -384,6 +384,7 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
+        GetComponent<Collider>().enabled = true;
         childObj.GetComponent<MeshRenderer>().enabled = true;
 
         Vector3 originalPos = transform.position;
