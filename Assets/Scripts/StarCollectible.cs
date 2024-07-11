@@ -104,13 +104,17 @@ public class StarCollectible : MonoBehaviour
         rb.useGravity = false;
         transform.rotation = Quaternion.identity;
     }
+    void CollectStar()
+    {
+        collectionAnimRoutine = StartCoroutine(CollectionAnimation());
+    }
     private void OnEnable()
     {
-        onStarCollected += () => collectionAnimRoutine = StartCoroutine(CollectionAnimation());
+        onStarCollected += CollectStar;
     }
     private void OnDisable()
     {
-        onStarCollected -= () => collectionAnimRoutine = StartCoroutine(CollectionAnimation());
+        onStarCollected -= CollectStar;
     }
     private void OnDrawGizmosSelected()
     {
