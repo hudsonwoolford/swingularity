@@ -18,13 +18,12 @@ public class StarCollectible : MonoBehaviour
     Vector3 chosenPos;
     Coroutine collectionAnimRoutine;
     SpriteRenderer spr;
+    CelestialMass cMass;
     public delegate void StarCollected();
     public static StarCollected onStarCollected;
     public void Init(Vector2 midPoint, int seed)
     {
-        sCol = GetComponent<SphereCollider>();
-        rb = GetComponent<Rigidbody>();
-        spr = GetComponent<SpriteRenderer>();
+        GetAllComponents();
         spr.enabled = false;
         sCol.enabled = false;
         Physics.SyncTransforms();
@@ -72,9 +71,8 @@ public class StarCollectible : MonoBehaviour
     IEnumerator CollectionAnimation()
     {
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
-        sCol = GetComponent<SphereCollider>();
-        rb = GetComponent<Rigidbody>();
-        spr = GetComponent<SpriteRenderer>();
+        GetAllComponents();
+        spr.enabled = true;
         rb.constraints = RigidbodyConstraints.None;
         rb.useGravity = true;
         rb.AddForce(Vector3.Lerp(minVel, maxVel, UnityEngine.Random.value), ForceMode.VelocityChange);
@@ -88,6 +86,8 @@ public class StarCollectible : MonoBehaviour
         }
         spr.color = Color.clear;
         rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -105,6 +105,13 @@ public class StarCollectible : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.useGravity = false;
         transform.rotation = Quaternion.identity;
+    }
+    void GetAllComponents()
+    {
+        sCol = GetComponent<SphereCollider>();
+        rb = GetComponent<Rigidbody>();
+        spr = GetComponent<SpriteRenderer>();
+        cMass = GetComponent<CelestialMass>();
     }
     void CollectStar()
     {
