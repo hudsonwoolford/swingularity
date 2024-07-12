@@ -36,6 +36,7 @@ public class LevelScoring : MonoBehaviour
     string currentScore;
     float timeOfBallRelease;
 
+
     public delegate void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor);
     public static OnScore onScore;
 
@@ -183,6 +184,7 @@ public class LevelScoring : MonoBehaviour
     void IncrementScore()
     {
         ballStill = false;
+
         StartCoroutine(ResetNotification());
         numShots++;
 

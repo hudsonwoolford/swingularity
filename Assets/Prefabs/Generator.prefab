@@ -40,13 +40,13 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736570304964729663}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.8392157, g: 0.47063127, b: 0.3058824, a: 1}
   m_Intensity: 0.44
-  m_Range: 2.3
+  m_Range: 2.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -147,13 +147,13 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2229070656619117603}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9245283, g: 0.6733028, b: 0.5276789, a: 1}
   m_Intensity: 0.07
-  m_Range: 2.0240002
+  m_Range: 2.2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -321,9 +321,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0c20b847c995f304ba63060e09659098, type: 2}
   - {fileID: 11400000, guid: a4092fc740d084240ac416e19aae3975, type: 2}
   - {fileID: 11400000, guid: c20b6d1b2223eca42a35721572133802, type: 2}
-  - {fileID: 11400000, guid: 654d6016be2cbb74bbf1dca901716b1a, type: 2}
   - {fileID: 11400000, guid: 59b1c274e43ca3e459be11d869144b69, type: 2}
   - {fileID: 11400000, guid: 69e4e6fcf1e7734438962d961fda93cf, type: 2}
+  planetFilter: 
+  moonOnly: 0
   biomeA: {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
   biomeB: {fileID: 11400000, guid: 927e0e9f8f29ee44cb0fee83466d8abe, type: 2}
   biomeP: {fileID: 11400000, guid: ec8297d416cf01b458351ac28926cd7d, type: 2}
@@ -393,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b755939b8cc8f834eb14dfb802d1da58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forceField: {fileID: 0}
   biomeA: {fileID: 11400000, guid: de3a14d336d3bd548ba3dc24b12eaf95, type: 2}
   biomeB: {fileID: 11400000, guid: 927e0e9f8f29ee44cb0fee83466d8abe, type: 2}
   forceFieldColor: {r: 0.8392157, g: 0.47058824, b: 0.30588236, a: 1}
@@ -418,7 +420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7203538336405085050
 Transform:
   m_ObjectHideFlags: 0
@@ -428,7 +430,7 @@ Transform:
   m_GameObject: {fileID: 5765096888082882944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.96, y: 1.96, z: 1.96}
+  m_LocalScale: {x: 2.02, y: 2.02, z: 2.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4533032007578357839}
@@ -540,13 +542,13 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8391902579975593360}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.745283, g: 0, b: 0.021890968, a: 1}
   m_Intensity: 0.97
-  m_Range: 2.116
+  m_Range: 2.3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10

@@ -21,7 +21,7 @@ public class HackMode : MonoBehaviour
     [SerializeField] Material edgeEffect;
     [SerializeField] Material gravityGrid;
     [SerializeField] Material whiteMat;
-    bool hackMode = false;
+    bool hackMode = false, canHackMode = true;
     Rigidbody ball;
     public delegate void OnHackMode(bool enable, Material whiteMaterial);
     public static OnHackMode onHackMode;
@@ -54,14 +54,13 @@ public class HackMode : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            hackMode = !hackMode;
-            onHackMode?.Invoke(hackMode, whiteMat);
-            RegenFabric();
+            EnterHackMode();
         }
         EnableFabric(hackMode);
         if(hackMode && updateInPlaymode) { UpdateFabric(planets); }
     }
     public void EnterHackMode(){
+        if(!canHackMode) { return; }
         hackMode = !hackMode;
         onHackMode?.Invoke(hackMode, whiteMat);
         RegenFabric();
@@ -106,6 +105,7 @@ public class HackMode : MonoBehaviour
     }
     void DisableHackModeShoot()
     {
+        canHackMode = false;
         if(!hackMode) { return; }
         hackMode = false;
         onHackMode?.Invoke(hackMode, whiteMat);
@@ -170,13 +170,18 @@ public class HackMode : MonoBehaviour
         gridMeshFilter.mesh = gridMesh;
         gridMeshRend.material = gravityGrid == null ? new Material(Shader.Find("Sprites/Default")) { color = Color.magenta } : gravityGrid;
     }
+    void CanHackMode(){
+        canHackMode = true;
+    }
     void OnEnable(){
         LevelGenerator.levelGenerated += LevelGenerated;
         ShootBall.onShoot += DisableHackModeShoot;
+        ShootBall.onStill += CanHackMode;
     }   
     void OnDisable(){
         LevelGenerator.levelGenerated -= LevelGenerated;
         ShootBall.onShoot -= DisableHackModeShoot;
+        ShootBall.onStill -= CanHackMode;
     }
 
     #endregion
