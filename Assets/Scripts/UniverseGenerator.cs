@@ -78,6 +78,8 @@ public class UniverseGenerator : MonoBehaviour
     public void ChangeUniverse(int s)
     {
         UnityEngine.Random.InitState(s);
+        offset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f));
+        warpOffset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f));
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
         addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
         ChangeMaterialBlock();
