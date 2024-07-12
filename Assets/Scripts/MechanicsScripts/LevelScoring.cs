@@ -94,18 +94,17 @@ public class LevelScoring : MonoBehaviour
         }
     }
     #region Level UI
-    IEnumerator ResetNotification(){
-        timeOfBallRelease = Time.time;
-        while(Time.time - timeOfBallRelease < ballNotifTime)
-        {
-            if(ballStill && Time.time - timeOfBallRelease > 0.1f) {  yield break; }
-            else { ballStill = false; }
-            yield return null;
-        }
-        EnableOrDisableResetUI(true);
-    }
+    //IEnumerator ResetNotification(){
+    //    timeOfBallRelease = Time.time;
+    //    while(Time.time - timeOfBallRelease < ballNotifTime)
+    //    {
+            
+    //        yield return null;
+    //    }
+    //    EnableOrDisableResetUI(true);
+    //}
     void ResetButton(){
-        if(LevelManager.ballInput){
+        if(LevelManager.ballInput && !LevelManager.levelComplete){
             ShootBall.triggerReset?.Invoke();
         }
     }
@@ -184,8 +183,7 @@ public class LevelScoring : MonoBehaviour
     void IncrementScore()
     {
         ballStill = false;
-
-        StartCoroutine(ResetNotification());
+        EnableOrDisableResetUI(true);
         numShots++;
 
         numShotsText.text = numShots.ToString();
@@ -208,7 +206,6 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
-        print("still");
         ballStill = true;
         if(resetUI){
             EnableOrDisableResetUI(false);

@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 753106334091175523}
   - component: {fileID: 2280519663166924013}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Hackmode Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1415,12 +1415,12 @@ GameObject:
   - component: {fileID: 3895610595199804667}
   - component: {fileID: 2087707645473881834}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Reset Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4893489071488782801
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1434,7 +1434,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 552617213163652444}
-  m_Father: {fileID: 7424015173572518976}
+  m_Father: {fileID: 8372458282295150288}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -1463,7 +1463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1692,7 +1692,6 @@ RectTransform:
   m_Children:
   - {fileID: 340636909633445829}
   - {fileID: 6183203631235018598}
-  - {fileID: 4893489071488782801}
   m_Father: {fileID: 785648357190154563}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2130,6 +2129,7 @@ RectTransform:
   - {fileID: 8714367093711485167}
   - {fileID: 7498792738083215815}
   - {fileID: 270591102292139009}
+  - {fileID: 4893489071488782801}
   m_Father: {fileID: 785648357190154563}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

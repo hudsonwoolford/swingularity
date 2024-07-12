@@ -270,25 +270,19 @@ public class LevelManager : MonoBehaviour
         streakText.enabled = false;
         hioStreakText.enabled = false;
 
-        string name = SceneManager.GetActiveScene().name;
-        levelIndex = Array.IndexOf(currentGalaxy, name);
+        string sceneName = SceneManager.GetActiveScene().name;
+        levelIndex = Array.IndexOf(currentGalaxy, sceneName);
         string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Galaxies";
 
         AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
-            if(SceneManager.GetActiveScene().name != name) 
-            {
-                levelMenuAnimator.Play("DisableMenu");
-                chosenOption = false;
-                yield break; 
-            }
             yield return new WaitForFixedUpdate();
         }
         levelIndex++;
-        chosenOption = false;
         loadNextOp.allowSceneActivation = true;
+        chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
@@ -320,7 +314,6 @@ public class LevelManager : MonoBehaviour
             setProceduralUniverse?.Invoke(cU);
         }
         //determine next level string
-        int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
@@ -328,17 +321,11 @@ public class LevelManager : MonoBehaviour
         loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
-            if (SceneManager.GetActiveScene().buildIndex != currentBuildIndex)
-            {
-                levelMenuAnimator.Play("DisableMenu");
-                chosenOption = false;
-                yield break;
-            }
             yield return new WaitForFixedUpdate();
         }
         levelIndex = levelIndex < 4 ? levelIndex + 1 : 0;
-        chosenOption = false;
         loadNextOp.allowSceneActivation = true;
+        chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
     }
     void DetermineCurrentLevelIndex()
