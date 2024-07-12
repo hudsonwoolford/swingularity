@@ -11,24 +11,38 @@ public class StarCollectible : MonoBehaviour
     [SerializeField] float travelStep;
     [SerializeField] int maxDirections;
     [SerializeField] float fadeDuration;
+    [SerializeField] float waitDuration;
     [SerializeField] AnimationCurve fadeCurve;
     [SerializeField] Vector3 minVel, maxVel, minAngVel, maxAngVel;
+    [SerializeField] MeshRenderer[] glowRenderers;
+    [SerializeField] MeshRenderer[] metalRenderers;
+    [SerializeField] Material emissionMat;
+    [SerializeField] float glowMult;
+    MaterialPropertyBlock glowPBlock;
+    MaterialPropertyBlock metalPBlock;
     SphereCollider sCol;
     Rigidbody rb;
     Vector3 chosenPos;
     Coroutine collectionAnimRoutine;
-    SpriteRenderer spr;
+    GameObject starObj;
     CelestialMass cMass;
     public delegate void StarCollected();
     public static StarCollected onStarCollected;
     public void Init(Vector2 midPoint, int seed)
     {
-        GetAllComponents();
-        spr.enabled = false;
+        NullChecks();
+        CreatePropertyBlocks();
+        starObj.SetActive(false);
         sCol.enabled = false;
         Physics.SyncTransforms();
         StartCoroutine(RandomPointAlgorithm(midPoint, seed));
     }
+    /// <summary>
+    /// Chooses a random point in a circle, travels in a random direction in a max radius until it finds an open spot
+    /// </summary>
+    /// <param name="midPoint"></param>
+    /// <param name="seed"></param>
+    /// <returns></returns>
     IEnumerator RandomPointAlgorithm(Vector2 midPoint, int seed)
     {
         UnityEngine.Random.InitState(seed);
@@ -70,51 +84,89 @@ public class StarCollectible : MonoBehaviour
     IEnumerator CollectionAnimation()
     {
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
-        GetAllComponents();
-        spr.enabled = true;
+        NullChecks();
+        starObj.SetActive(true);
+        //rigid body movement
         rb.constraints = RigidbodyConstraints.None;
         rb.useGravity = true;
         rb.AddForce(Vector3.Lerp(minVel, maxVel, UnityEngine.Random.value), ForceMode.VelocityChange);
         rb.AddTorque(Vector3.Lerp(minAngVel, maxAngVel, UnityEngine.Random.value), ForceMode.VelocityChange);
+        //wait until fade
+        yield return new WaitForSeconds(waitDuration);
         float timer = 0;
+        //loop fades material
         while (timer < fadeDuration)
         {
-            spr.color = new Color(spr.color.r, spr.color.g, spr.color.b, Mathf.Lerp(1, 0, fadeCurve.Evaluate(timer/fadeDuration)));
+            SetMatCutoff(1-fadeCurve.Evaluate(timer / fadeDuration));
             timer += Time.deltaTime;
             yield return null;
         }
-        spr.color = Color.clear;
+        //disabling
+        starObj.SetActive(false);
+        cMass.enabled = false;
         rb.useGravity = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-    }
-    private void OnTriggerEnter(Collider collision)
-    {
-        if(collision.tag=="Player")
-        {
-            onStarCollected?.Invoke();
-        }
+        transform.position = Vector3.one * 1000;
     }
     void CollectibleReset()
     {
         if(LevelManager.levelComplete) { return; }
         if(collectionAnimRoutine != null) { StopCoroutine(collectionAnimRoutine); }
-        spr.color = Color.white;
+        starObj.SetActive(false);
         transform.position = chosenPos;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.useGravity = false;
         transform.rotation = Quaternion.identity;
     }
-    void GetAllComponents()
+    void NullChecks()
     {
         sCol = GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
-        spr = GetComponent<SpriteRenderer>();
+        starObj = transform.GetChild(0).gameObject;
         cMass = GetComponent<CelestialMass>();
     }
+    #region Materials
+    void CreatePropertyBlocks()
+    {
+        metalPBlock = new MaterialPropertyBlock(); metalPBlock.SetColor("_EdgeColor", emissionMat.GetColor("_EmissionColor"));
+        for (int i = 0; i < metalRenderers.Length; i++)
+        {
+            metalRenderers[i].SetPropertyBlock(metalPBlock);
+        }
+        glowPBlock = new MaterialPropertyBlock();
+        glowPBlock.SetColor("_EdgeColor", emissionMat.GetColor("_EmissionColor"));
+        glowPBlock.SetColor("_Color", emissionMat.GetColor("_EmissionColor") * glowMult);
+        for (int i = 0; i < glowRenderers.Length; i++)
+        {
+            glowRenderers[i].SetPropertyBlock(glowPBlock);
+        }
+    }
+    void SetMatCutoff(float cutoff)
+    {
+        if(glowPBlock == null || metalPBlock == null) { CreatePropertyBlocks(); }
+        glowPBlock.SetFloat("_Cutoff", cutoff);
+        metalPBlock.SetFloat("_Cutoff", cutoff);
+        for (int i = 0; i < metalRenderers.Length; i++)
+        {
+            metalRenderers[i].SetPropertyBlock(metalPBlock);
+        }
+        for (int i = 0; i < glowRenderers.Length; i++)
+        {
+            glowRenderers[i].SetPropertyBlock(glowPBlock);
+        }
+    }
+    #endregion
     void CollectStar()
     {
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
+    }
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.tag == "Player")
+        {
+            onStarCollected?.Invoke();
+        }
     }
     private void OnEnable()
     {
