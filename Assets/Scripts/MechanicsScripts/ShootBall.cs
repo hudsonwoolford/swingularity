@@ -170,7 +170,6 @@ public class ShootBall : MonoBehaviour
         }
         if (rb.velocity.magnitude < 0.1f && Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length > 1){
             if(!ballStill){
-                onStill?.Invoke();
                 ballStillTimer = 0f;
                 StartCoroutine(BallStillTiming(ballStillTimeVal));
             }
@@ -208,6 +207,8 @@ public class ShootBall : MonoBehaviour
         }
         //origin = transform.position;
         ballStill = true;
+        onStill?.Invoke();
+
         if (!astronautFading && !deathDelay){
             StartCoroutine(AstronautFade());
         }

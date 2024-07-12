@@ -206,6 +206,7 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
+        print("still");
         ballStill = true;
         if(resetUI){
             EnableOrDisableResetUI(false);

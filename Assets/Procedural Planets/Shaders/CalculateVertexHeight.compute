@@ -87,7 +87,7 @@ void CalculateVertexHeight (uint id : SV_DispatchThreadID)
 
         float maskNoise = MaskNoise(vertexPos, maskNoiseOctaves, maskNoiseScale, maskNoisePersistence, maskNoiseLacunarity, maskNoiseMultiplier, maskNoiseGain, maskNoiseOffset, maskVerticalShift);
         float continentMaskNoise = ContinentNoise(vertexPos, continentNoiseOctaves, continentNoiseScale, continentNoisePersistence, 1, continentNoiseMultiplier, continentNoiseGain, continentNoiseOffset);
-        continentMask = Blend(0, maskBlend, SmoothMax(maskNoise, continentMaskNoise, -maskBlend));
+        continentMask = clamp(Blend(0, maskBlend, SmoothMax(maskNoise, continentMaskNoise, -maskBlend)), 0, 2);
     }
     
     float detailNoiseValue = 0;
