@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8279675601118871642}
   - component: {fileID: 3926569085003740277}
   - component: {fileID: 2991872351619851067}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: UniverseBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7503894955475263}
-  m_LocalRotation: {x: -0.076601624, y: 0.1427151, z: 0.26279354, w: -0.9511594}
+  m_LocalRotation: {x: -0.5569176, y: -0.07027974, z: -0.6474246, w: -0.51550466}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.018376064, y: 0.018376064, z: 0.018376064}
   m_ConstrainProportionsScale: 1
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   universeIndex: 11
   indexSeed: 0
-  addOffset: {x: 0, y: 0, z: 0}
+  addOffset: {x: -54, y: 26, z: -156}
   possibleUniverses:
   - nebulaColorA: {r: 0.2627451, g: 0.0048007374, b: 0, a: 1}
     nebulaColorB: {r: 5.6126432, g: 2.101047, b: 0.6618682, a: 1}
@@ -195,7 +195,7 @@ MonoBehaviour:
     fresnelColor: {r: 0.29775944, g: 0, b: 0.9528302, a: 1}
     glitterColor: {r: 19.35194, g: 19.35194, b: 19.35194, a: 1}
     volumetricStarColor: {r: 6.2034006, g: 5.0429606, b: 7.080183, a: 0}
-  rotSpeed: {x: 36.1, y: 30.42, z: 24.89}
+  rotSpeed: {x: 0, y: 0, z: 0}
   rotate: 1
 --- !u!1 &2854824059518701385
 GameObject:
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 962416030185478085}
   - component: {fileID: 1182525520534772337}
   - component: {fileID: 4702542614571239557}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: '''Old time'' golf ball'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,13 +308,13 @@ Transform:
   m_GameObject: {fileID: 5242362583749448509}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5400, y: 5400, z: 5400}
+  m_LocalScale: {x: 429.45, y: 429.45004, z: 429.45}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 962416030185478085}
   - {fileID: 5578117417945093754}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &828031847981807630
 MeshFilter:
@@ -378,4 +378,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 278b37eb3b2741a4caa17916c673057f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateDir: {x: 0, y: 50, z: 0}
+  rotateDir: {x: 0, y: 0, z: 0}
