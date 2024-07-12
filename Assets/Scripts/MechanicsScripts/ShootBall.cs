@@ -187,8 +187,8 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !ballStill) { triggerReset?.Invoke(); } //reset
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput && !ballStill) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
@@ -423,6 +423,7 @@ public class ShootBall : MonoBehaviour
         if(!movedAstronaut) { StartCoroutine(AstronautFade()); }
         deathDelay = false;
         liningUpShot = false;
+        DrawCollisionIcons();
     }
     void DeleteSimulation()
     {
