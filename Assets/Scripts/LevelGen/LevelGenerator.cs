@@ -332,13 +332,14 @@ public class LevelGenerator : MonoBehaviour
             }
         }
         //Goop planets are not limited to planets - 2
+        availableIndices = ignoreIndices.ToList();
         for (int i = 0; i < replaceObjects.Count; i++)
         {
             if (replaceObjects[i].Item2.type == SpecialType.DarkMatter)
             {
                 for (int u = 0; u < replaceObjects[i].Item1 && u < 2; u++)
                 {
-                    int index = ignoreIndices[UnityEngine.Random.Range(0, 1)];
+                    int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
                     availableIndices.Remove(index);
                     replacers.Add((index, replaceObjects[i].Item2));
                 }
