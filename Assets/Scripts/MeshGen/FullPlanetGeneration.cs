@@ -575,6 +575,7 @@ public class FullPlanetGeneration : MonoBehaviour
             
             planet.terrainVar = pool[index].Item2;
             RandomizeOffset(offsetSeed, planetI);
+            // print(offsetSeed);
 
             UpdateOcean();
             return (biomeA, biomeB);

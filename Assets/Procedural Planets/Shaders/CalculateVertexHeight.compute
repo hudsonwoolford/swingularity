@@ -39,7 +39,7 @@ float3 maskNoiseOffset;
 int maskNoiseOctaves;
 float maskVerticalShift;
 
-[numthreads(512, 1, 1)]
+[numthreads(256, 1, 1)]
 void CalculateVertexHeight (uint id : SV_DispatchThreadID)
 {
     //If vertices is complete then do not compute any more indexes
