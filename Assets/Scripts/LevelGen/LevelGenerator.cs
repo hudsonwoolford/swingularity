@@ -677,35 +677,37 @@ public class LevelGenerator : MonoBehaviour
         //Flag position
         UnityEngine.Random.InitState(seed);
         float flagRad = flag.GetComponent<SphereCollider>().radius * flag.localScale.x;
-        int rot = UnityEngine.Random.Range(0, 360);
-        Vector3 predictedFlagPos = Vector3.zero;
+        float flagRot = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+        Vector3 initFlagPos = Vector3.zero;
         for (int u = 0; u < 6; u++)
         {
-            flag.eulerAngles = new Vector3(0, 0, rot);
-            predictedFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + flag.up * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + flagRad + 0.05f); //maybe scale with radius
-            if (!Physics.CheckSphere(predictedFlagPos, flagRad))
+            Vector3 angleVector = new Vector3(Mathf.Cos(flagRot), Mathf.Sin(flagRot), 0);
+            initFlagPos = candidates[farthestPlanets[0]].forceField.transform.position + angleVector * (candidates[farthestPlanets[0]].forceField.transform.localScale.x + flagRad + 0.05f); //maybe scale with radius
+            if (!Physics.CheckSphere(initFlagPos, flagRad))
             {
                 break;
             }
-            Debug.LogFormat("Flag position intercepted collider. Rotation #{0} | Current rotation: {1}", u, rot);
-            rot += 360 / 7;
+            Debug.LogFormat("Flag position intercepted collider. Rotation #{0} | Current rotation: {1} radians. Check scene view to see iterated ball positions.", u, flagRot);
+            ExtensionMethods.DrawSquare(initFlagPos, Vector2.one, Color.red, 100);
+            flagRot += 2 * Mathf.PI / 7;
         }
-        flag.position = predictedFlagPos;
-        UnityEngine.Random.InitState(seed + 9);
+        flag.position = initFlagPos;
         //Ball position
+        UnityEngine.Random.InitState(seed + 9);
         float ballRad = ball.GetComponent<SphereCollider>().radius * ball.localScale.x;
-        int ballRot = UnityEngine.Random.Range(0, 360);
+        float ballRot = UnityEngine.Random.Range(0f, 2f * Mathf.PI);
         Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(ballRot), Mathf.Sin(ballRot)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
         for (int u = 0; u < 6; u++)
         {
-            ball.eulerAngles = new Vector3(0, 0, rot);
-            initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + ball.up * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
+            Vector3 angleVector = new Vector3(Mathf.Cos(ballRot), Mathf.Sin(ballRot), 0);
+            initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + angleVector * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
             if (!Physics.CheckSphere(initBallPos, ballRad - 0.05f))
             {
                 break;
             }
-            Debug.LogFormat("Ball position intercepted collider. Rotation #{0} | Current rotation: {1}", u, ballRot);
-            ballRot += 360 / 7;
+            Debug.LogFormat("Ball position intercepted collider. Rotation #{0} | Current rotation: {1} radians. Check scene view to see iterated ball positions.", u, ballRot);
+            ExtensionMethods.DrawSquare(initBallPos, Vector2.one, Color.red, 100);
+            ballRot += 2 * Mathf.PI / 7;
         }
         ball.GetComponent<Rigidbody>().position = initBallPos;
     }

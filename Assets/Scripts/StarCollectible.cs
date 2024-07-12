@@ -66,7 +66,6 @@ public class StarCollectible : MonoBehaviour
         transform.position = randPos;
         chosenPos = randPos;
         sCol.enabled = true;
-        Debug.Log(iterations);
     }
     IEnumerator CollectionAnimation()
     {

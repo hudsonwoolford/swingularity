@@ -34,6 +34,7 @@ public class LevelScoring : MonoBehaviour
     }
     int numShots;
     string currentScore;
+    float timeOfBallRelease;
 
     public delegate void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor);
     public static OnScore onScore;
@@ -47,42 +48,56 @@ public class LevelScoring : MonoBehaviour
         numShotsText.color = positive;
         hackModeBtn.onClick.AddListener(() => Camera.main.GetComponent<HackMode>().EnterHackMode());
         resetBtn.onClick.AddListener(() => ResetButton());
+
+        angleText.color = Color.white;
+        powerText.color = Color.white;
+        angleText.text = "——°";
+        powerText.text = "——%";
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
-        if(ShootBall.liningUpShot){
+        if (ShootBall.liningUpShot)
+        {
             powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString() + "%";
-            if(ShootBall.shootPower < 25){
+            if (ShootBall.shootPower < 25)
+            {
                 powerText.color = negative;
             }
-            else{
+            else
+            {
                 powerText.color = Color.white;
             }
-            if(ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140){
+            if (ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140)
+            {
                 angleText.color = negative;
             }
-            else{
+            else
+            {
                 angleText.color = Color.white;
             }
-            if(ShootBall.shootAngle + 90 > 180){
+            if (ShootBall.shootAngle + 90 > 180)
+            {
                 angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString() + "°";
             }
-            else{
+            else
+            {
                 angleText.text = Mathf.RoundToInt(ShootBall.shootAngle + 90).ToString() + "°";
             }
         }
-        else{
+        else if (ballStill && Time.time - timeOfBallRelease > 0.1f)
+        {
             angleText.color = Color.white;
             powerText.color = Color.white;
             angleText.text = "——°";
             powerText.text = "——%";
         }
     }
+    #region Level UI
     IEnumerator ResetNotification(){
-        float timeOffset = Time.time;
-        while(Time.time - timeOffset < ballNotifTime)
+        timeOfBallRelease = Time.time;
+        while(Time.time - timeOfBallRelease < ballNotifTime)
         {
-            if(ballStill && Time.time - timeOffset > 0.1f) {  yield break; }
+            if(ballStill && Time.time - timeOfBallRelease > 0.1f) {  yield break; }
             else { ballStill = false; }
             yield return null;
         }
@@ -116,6 +131,14 @@ public class LevelScoring : MonoBehaviour
             hackMode = false;
         }
     }
+    IEnumerator LevelFailed()
+    {
+        ShootBall.death?.Invoke(3);
+        HoleEnd();
+        yield return new WaitForSeconds(1.25f);
+        ShootBall.onHole?.Invoke();
+    }
+    #endregion
 
     void SetGalaxyAndHole(){
         if(GameManager.LevelManager.procedural) //Procedural level pars
@@ -173,13 +196,6 @@ public class LevelScoring : MonoBehaviour
         else{
             numShotsText.color = neutral;
         }
-    }
-    IEnumerator LevelFailed()
-    {
-        ShootBall.death?.Invoke(3);
-        HoleEnd();
-        yield return new WaitForSeconds(1.25f);
-        ShootBall.onHole?.Invoke();
     }
     void Pause(){
         canvasAnimator.Play("Slide Out");
