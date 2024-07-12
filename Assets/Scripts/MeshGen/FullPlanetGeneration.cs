@@ -7,6 +7,8 @@ using System.Linq;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine.Pool;
+using System.Threading;
+
 
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -575,7 +577,8 @@ public class FullPlanetGeneration : MonoBehaviour
             
             planet.terrainVar = pool[index].Item2;
             RandomizeOffset(offsetSeed, planetI);
-
+            // print(offsetSeed);
+            Thread.Sleep(25);
             UpdateOcean();
             return (biomeA, biomeB);
         }

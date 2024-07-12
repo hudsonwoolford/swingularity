@@ -14,8 +14,9 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] Transform ballArrow, flagArrow;
     [SerializeField] Animator canvasAnimator;
     [SerializeField] Canvas mappingCanvas;
-    BoxCollider2D camAreaSmaller;
-    PolygonCollider2D boundaries;
+    [SerializeField] PolygonCollider2D boundaries;
+    [SerializeField] PolygonCollider2D exteriorCollider;
+    [SerializeField] RectTransform[] boundsPoints;
     Camera mainCam;
 
     int deathMessageIndex;
@@ -31,17 +32,12 @@ public class MappingHandling : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Transform cas = new GameObject("Cam Area Smaller").transform;
-        cas.SetParent(transform);
-        cas.localScale = Vector3.one;
-        camAreaSmaller = cas.AddComponent<BoxCollider2D>();
-        camAreaSmaller.isTrigger = true;
         mainCam = Camera.main;
-        boundaries = CameraFollow.innerShape;
         ballArrow.position = -Vector3.one * 100;
         flagArrow.position = -Vector3.one * 100;
-
         MatchCameraColliders();
+        boundaries = CameraFollow.innerShape;
+
         ballDistText.text = "";
         flagDistText.text = "";
     }
@@ -56,11 +52,31 @@ public class MappingHandling : MonoBehaviour
             ShootBall.death.Invoke(0);
 
         }
+        
         ArrowToObject(flag, flagArrow, flagDistText);
-        if (CameraFollow.panning) { return; }
         ArrowToObject(ball, ballArrow, ballDistText);
 
     }
+    // void ArrowPos(Transform obj, Transform arrow, TextMeshProUGUI distText){
+    //     if (!camArea.bounds.Contains(obj.position)){
+    //         Vector3 dirtoCamera = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, camArea.transform.position.z) - obj.position;
+    //         float zRot = Mathf.Atan2(dirtoCamera.normalized.y, dirtoCamera.normalized.x) * Mathf.Rad2Deg;
+    //         arrow.rotation = Quaternion.Euler(0, 0, zRot - 180);
+    //         Transform dt = distText.gameObject.transform;
+    //         if ((-arrow.transform.up).y > 0)
+    //         {
+    //             dt.localRotation = Quaternion.Euler(180, 180, 0);
+    //             distText.alignment = TextAlignmentOptions.Left;
+    //         }
+    //         else
+    //         {
+    //             dt.localRotation = Quaternion.Euler(0, 0, 0);
+    //             distText.alignment = TextAlignmentOptions.Right;
+    //         }
+    //         Vector3 arrowPos = exteriorCollider.ClosestPoint(ball.transform.position);
+    //         arrow.position = Camera.main.WorldToScreenPoint(arrowPos + new Vector3(0, 0, -5));
+    //     }
+    // }
     void ArrowToObject(Transform obj, Transform arrow, TextMeshProUGUI distText)
     {
         if (!camArea.bounds.Contains(obj.position))
@@ -80,7 +96,7 @@ public class MappingHandling : MonoBehaviour
                         Vector3 point = r.point;
                         dist = Mathf.RoundToInt(Vector3.Distance(point, obj.position) * 10);
                     }
-                    if (r.collider == camAreaSmaller)
+                    if (r.collider == exteriorCollider)
                     {
                         Vector3 arrowPos = r.point;
                         float zRot = Mathf.Atan2(dirtoCamera.normalized.y, dirtoCamera.normalized.x) * Mathf.Rad2Deg;
@@ -110,12 +126,16 @@ public class MappingHandling : MonoBehaviour
         float height = mainCam.orthographicSize * 2; //camera height in units
         float width = height * mainCam.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height, 0);
+
         camArea.transform.localScale = camSize;
-        camAreaSmaller.transform.localScale = camArea.transform.localScale * smallerBounds;
+        camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
         ballArrow.position = -Vector3.one * 100;
         flagArrow.position = -Vector3.one * 100;
-        camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
-        camAreaSmaller.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        Vector2[] points = new Vector2[boundsPoints.Length];
+        for(int i = 0; i < boundsPoints.Length; i++){
+            points[i] = mainCam.ScreenToWorldPoint(boundsPoints[i].position);
+        }
+        exteriorCollider.points = points; 
     }
     void ShowDeathMessage()
     {
