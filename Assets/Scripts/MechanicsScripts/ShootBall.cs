@@ -145,7 +145,7 @@ public class ShootBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.LogFormat("Portal: {0} | Level Complete: {1} | Input: {2} | deathDelay: {3} | ballStill {4}", inPortal, LevelManager.levelComplete, LevelManager.ballInput, deathDelay, ballStill);
+        //Debug.LogFormat("Portal: {0} | Level Complete: {1} | Input: {2} | deathDelay: {3} | ballStill {4} | Astronaut Fade: {5}", inPortal, LevelManager.levelComplete, LevelManager.ballInput, deathDelay, ballStill, astronautFading);
         if(LevelManager.levelComplete || inPortal) { return; }
         if(planets.Count != planetTransform.childCount){
             planets.Clear();
@@ -187,8 +187,8 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !ballStill) { triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput && !ballStill) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
@@ -217,7 +217,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator AstronautFade(){
         astronautFading = true;
-        if(movedAstronaut) { yield break; }
+        if(movedAstronaut) { astronautFading = false; yield break; }
         if(Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
             bool notFullyFinished = false; //whether the astronaut has completely faded or not
             //checks cutoff value on every material
