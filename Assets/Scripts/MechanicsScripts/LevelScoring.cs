@@ -51,14 +51,14 @@ public class LevelScoring : MonoBehaviour
 
         angleText.color = Color.white;
         powerText.color = Color.white;
-        angleText.text = "——°";
-        powerText.text = "——%";
+        angleText.text = "——";
+        powerText.text = "——";
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
         if (ShootBall.liningUpShot)
         {
-            powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString() + "%";
+            powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString();
             if (ShootBall.shootPower < 25)
             {
                 powerText.color = negative;
@@ -77,19 +77,19 @@ public class LevelScoring : MonoBehaviour
             }
             if (ShootBall.shootAngle + 90 > 180)
             {
-                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString() + "°";
+                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString();
             }
             else
             {
-                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle + 90).ToString() + "°";
+                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle + 90).ToString();
             }
         }
         else if (ballStill && Time.time - timeOfBallRelease > 0.1f)
         {
             angleText.color = Color.white;
             powerText.color = Color.white;
-            angleText.text = "——°";
-            powerText.text = "——%";
+            angleText.text = "——";
+            powerText.text = "——";
         }
     }
     #region Level UI

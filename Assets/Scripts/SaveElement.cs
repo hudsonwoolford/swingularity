@@ -45,7 +45,7 @@ public class SaveElement : MonoBehaviour
         difficultyText.text = uniParams.relativeDifficulty.ToString();
         int numGalaxies = uniParams.numGalaxies == 0 ? 1 : uniParams.numGalaxies; //avoid division by zero
         float progress = (float)uniParams.numStars / ((float)numGalaxies * 5);
-        progressText.text = uniParams.numStars.ToString() + " / " + (numGalaxies*5).ToString();
+        progressText.text = Mathf.RoundToInt((progress*100)).ToString();
         sizeText.text = uniParams.size;
 
         difficultyText.color = difficultyCol;

@@ -229,7 +229,7 @@ public class SettingsManager : MonoBehaviour
         ref string currentEdit = ref width;
         for (int i = 0; i < screenResString.Length; i++)
         {
-            if (screenResString[i] == '/' || screenResString[i] == ' ')
+            if (screenResString[i] == 'X' || screenResString[i] == ' ')
             {
                 currentEdit = ref height;
                 continue;

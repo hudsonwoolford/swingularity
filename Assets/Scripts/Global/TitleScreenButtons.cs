@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.IO;
 using System.Linq;
+using System;
 
 
 public class TitleScreenButtons : MonoBehaviour
@@ -190,6 +191,7 @@ public class TitleScreenButtons : MonoBehaviour
         FileInfo[] saveInfos = SaveLoadManager.saves;
 
         SaveElement[] allElements = saveElementParent.GetComponentsInChildren<SaveElement>(true);
+        Array.Sort(saveInfos, (s1, s2) => s2.LastAccessTime.CompareTo(s1.LastAccessTime));
         for (int i = 0; i < allElements.Length; i++)
         {
             Destroy(allElements[i].gameObject);
