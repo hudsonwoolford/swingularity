@@ -139,7 +139,7 @@ public class MappingHandling : MonoBehaviour
     }
     void ShowDeathMessage()
     {
-        deathMessageTxt.text = deathMessages[deathMessageIndex];
+        deathMessageTxt.text = deathMessages[deathMessageIndex].ToUpper();
         canvasAnimator.Play("ShowOOB");
     }
     void SetDeathMessage(int index){
