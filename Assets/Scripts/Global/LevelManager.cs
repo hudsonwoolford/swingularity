@@ -274,29 +274,28 @@ public class LevelManager : MonoBehaviour
         levelIndex = Array.IndexOf(currentGalaxy, sceneName);
         string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Galaxies";
 
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(nextName);
-        loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
             yield return new WaitForFixedUpdate();
         }
         levelIndex++;
-        loadNextOp.allowSceneActivation = true;
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
+
+        GameManager.SceneHandling.LoadScene(nextName, sceneName != "Galaxies");
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
         if (currentProceduralGalaxy == null || currentProceduralGalaxy.Length == 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.SceneHandling.LoadScene("LevelGen", true);
             yield break;
         }
 
         // Ensure levelIndex is within a valid range
         if (levelIndex < 0 || levelIndex >= currentProceduralGalaxy.Length)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.SceneHandling.LoadScene("LevelGen", true);
             yield break;
         }
         //enable things
@@ -314,19 +313,18 @@ public class LevelManager : MonoBehaviour
             setProceduralUniverse?.Invoke(cU);
         }
         //determine next level string
-        string name = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
+        string sceneName = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
         
-        AsyncOperation loadNextOp = SceneManager.LoadSceneAsync(name);
-        loadNextOp.allowSceneActivation = false;
         while (!chosenOption)
         {
             yield return new WaitForFixedUpdate();
         }
         levelIndex = levelIndex < 4 ? levelIndex + 1 : 0;
-        loadNextOp.allowSceneActivation = true;
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
+
+        GameManager.SceneHandling.LoadScene(sceneName, sceneName != "Galaxies");
     }
     void DetermineCurrentLevelIndex()
     {

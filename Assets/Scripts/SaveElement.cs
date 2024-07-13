@@ -20,6 +20,7 @@ public class SaveElement : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeText;
     [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TextMeshProUGUI progressText;
+    [SerializeField] TextMeshProUGUI progressPercentText;
     [SerializeField] TextMeshProUGUI sizeText;
     [SerializeField] UniverseGenerator universeGenerator;
     [SerializeField] GameObject ballImaging;
@@ -50,6 +51,7 @@ public class SaveElement : MonoBehaviour
 
         difficultyText.color = difficultyCol;
         progressText.color = progressGrad.Evaluate(progress);
+        progressPercentText.color = progressText.color;
         sizeText.color = sizeCol;
     }
     void CreateBallImage()

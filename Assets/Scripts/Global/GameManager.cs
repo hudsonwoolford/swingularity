@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static SettingsManager SettingsManager { get; private set; }
     public static LevelSettingsManager LevelSettingsManager { get; private set; }
     public static SaveLoadManager SaveLoadManager { get; private set; }
+    public static SceneHandling SceneHandling { get; private set; }
     public static MusicManager MusicManager {get; private set; }
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
         SettingsManager = GetComponentInChildren<SettingsManager>(true);
         LevelSettingsManager = GetComponentInChildren<LevelSettingsManager>(true);
         SaveLoadManager = GetComponentInChildren<SaveLoadManager>(true);
+        SceneHandling = GetComponentInChildren<SceneHandling>(true);
         MusicManager = GetComponentInChildren<MusicManager>(true); 
     }
     private void Start()

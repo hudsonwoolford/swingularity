@@ -2,15 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
-using Unity.Mathematics;
-using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -127,7 +123,7 @@ public class GalaxyMenu : MonoBehaviour
     void PlayGalaxy()
     {
         SetProceduralGalaxy(galaxyList[focusedGalaxy]);
-        SceneManager.LoadScene("LevelGen");
+        GameManager.SceneHandling.LoadScene("LevelGen", true);
     }
     void DotButton(int dotIndex)
     {
@@ -202,6 +198,7 @@ public class GalaxyMenu : MonoBehaviour
             cB.disabledColor = difficultyNum.color;
             difficultySlider.colors = cB;
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
+            astroBiomeTxt.text = astroBiomeTxt.text.ToUpper();
             astroBiomeTxt.color = LevelManager.allGalaxyData[gp.galaxyDataIndex].mainColor;
             bestScoreTxt.text = gp.bestScore;
             if(gp.bestScore != "——"){
