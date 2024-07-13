@@ -298,7 +298,7 @@ public class TitleScreenButtons : MonoBehaviour
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
-        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0);
+        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0, System.DateTime.Now.ToString("dd.MM.yy hh:mm"));
     }
 
     void OnEnable(){

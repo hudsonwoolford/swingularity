@@ -159,7 +159,7 @@ public class LevelScoring : MonoBehaviour
         if (numShots == 1)
         {
             currentScore = "Hole in One!";
-            onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate(0));
+            onScore?.Invoke(currentScore.ToUpper(), numShots - par, numShots, scoreGradient.Evaluate(0));
             return;
         }
         bool namedScore = false;
@@ -176,7 +176,7 @@ public class LevelScoring : MonoBehaviour
         { 
             currentScore = numShots.ToString() + " Shots";
         }
-        onScore?.Invoke(currentScore, numShots - par, numShots, scoreGradient.Evaluate(Mathf.Clamp01(((float)numShots / 5)) * 0.5f + 0.5f));
+        onScore?.Invoke(currentScore.ToUpper(), numShots - par, numShots, scoreGradient.Evaluate(Mathf.Clamp01(((float)numShots / 5)) * 0.5f + 0.5f));
 
     }
     void IncrementScore()

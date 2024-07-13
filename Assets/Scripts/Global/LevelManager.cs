@@ -171,7 +171,8 @@ public class LevelManager : MonoBehaviour
         public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
         public int numStars;
-        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars)
+        public string date;
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars, string date)
         {
             this.name = name;
             this.seed = seed;
@@ -180,6 +181,7 @@ public class LevelManager : MonoBehaviour
             this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
             this.numStars = numStars;
+            this.date = date;
         }
         public override bool Equals(object obj)
         {

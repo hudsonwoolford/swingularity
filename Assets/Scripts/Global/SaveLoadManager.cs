@@ -107,6 +107,7 @@ public class SaveLoadManager : MonoBehaviour
             allGalaxies = GameManager.LevelManager.currentProceduralUniverse
         };
         if(save.universeParams == new UniverseParams()) { return; }
+        save.universeParams.date = System.DateTime.Now.ToString("dd.MM.yy hh:mm");
         string jsonSave = JsonUtility.ToJson(save, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + save.universeParams.name + ".txt", jsonSave);

@@ -40,7 +40,7 @@ public class SaveElement : MonoBehaviour
     void SetElementValues()
     {
         nameText.text = uniParams.name;
-        timeText.text = "time";
+        timeText.text = uniParams.date;
         difficultyText.text = uniParams.relativeDifficulty.ToString();
         int numGalaxies = uniParams.numGalaxies == 0 ? 1 : uniParams.numGalaxies; //avoid division by zero
         float progress = (float)uniParams.numStars / ((float)numGalaxies * 5);
