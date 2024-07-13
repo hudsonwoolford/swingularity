@@ -8,57 +8,22 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NPCNameText;
     [SerializeField] private TextMeshProUGUI NPCDialogueText;
     [SerializeField] private float typeSpeed = 5;
+    [SerializeField] private float minParagraphInterval = 5;
 
     private Queue<string> paragraphs = new Queue<string>();
-    private bool conversationEnded;
+    public bool isConversation { get; private set; }
     private bool isTyping;
+    private bool isPaused;
     private string p;
+
     private Coroutine typeDialogueCoroutine;
+    private Coroutine paragraphIntervalCoroutine;
 
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
-    public void DisplayNextParagraph(DialogueText dialogueText)
+    public void StartConversation(DialogueText dialogueText)
     {
-        //nothing in the queue
-        if(paragraphs.Count == 0)
-        {
-            if(!conversationEnded)
-            {
-                StartConversation(dialogueText);
-            }
-            else if(conversationEnded && !isTyping)
-            {
-                EndConversation();
-                return;
-            }
-        }
-
-        //something in the queue
-        if(!isTyping)
-        {
-            p = paragraphs.Dequeue();
-            typeDialogueCoroutine = StartCoroutine(TypeDialogueText(p));
-        }
-        else
-        {
-            FinishParagraphEarly();
-        }
-
-        //check if nothing in queue
-        if (paragraphs.Count == 0)
-        {
-            conversationEnded = true;
-        }
-    }
-
-    private void StartConversation(DialogueText dialogueText)
-    {
-        //activate gameobject
-        if(!gameObject.activeSelf)
-        {
-            gameObject.SetActive(true);
-        }
-
+        isConversation = true;
         //update speaker name
         NPCNameText.text = dialogueText.speakerName;
 
@@ -67,6 +32,37 @@ public class DialogueController : MonoBehaviour
         {
             paragraphs.Enqueue(dialogueText.paragraphs[i]);
         }
+
+        //start talking
+        DisplayNextParagraph();
+    }
+    public void DisplayNextParagraph()
+    {
+        //nothing in queue
+        if(paragraphs.Count == 0 && !isTyping)
+        {
+            EndConversation();
+            return;
+        }
+
+        if (!isTyping)
+        {
+            if(paragraphIntervalCoroutine != null)
+            {
+                StopCoroutine(paragraphIntervalCoroutine);
+            }
+            p = paragraphs.Dequeue();
+            typeDialogueCoroutine = StartCoroutine(TypeDialogueText(p));
+        }
+        else
+        {
+            FinishParagraph();
+        }
+    }
+    public void TogglePauseDialogue()
+    {
+        //toggle pause boolean
+        isPaused = !isPaused;
     }
     private void EndConversation()
     {
@@ -74,13 +70,7 @@ public class DialogueController : MonoBehaviour
         paragraphs.Clear();
 
         //return bool to false
-        conversationEnded = false;
-
-        //deactivate gameobject
-        if(gameObject.activeSelf)
-        {
-            gameObject.SetActive(false);
-        }
+        isConversation = false;
     }
     private IEnumerator TypeDialogueText(string p)
     {
@@ -93,21 +83,28 @@ public class DialogueController : MonoBehaviour
 
         foreach (char c in p.ToCharArray())
         {
+            yield return new WaitForSeconds(MAX_TYPE_TIME / typeSpeed);
+            yield return new WaitUntil(() => !isPaused);
             alphaIndex++;
             NPCDialogueText.text = originalText;
 
             displayedText = NPCDialogueText.text.Insert(alphaIndex, HTML_ALPHA);
             NPCDialogueText.text = displayedText;
-
-            yield return new WaitForSeconds(MAX_TYPE_TIME / typeSpeed);
         }
-
         isTyping = false;
+        FinishParagraph();
     }
-    void FinishParagraphEarly()
+    private IEnumerator ParagraphTimeInterval()
     {
-        //stop coroutine
+        yield return new WaitForSeconds(minParagraphInterval);
+        if (paragraphs.Count == 0) { EndConversation(); }
+        else { DisplayNextParagraph(); }
+    }
+    private void FinishParagraph()
+    {
+        //stop coroutines
         StopCoroutine(typeDialogueCoroutine);
+        paragraphIntervalCoroutine = StartCoroutine(ParagraphTimeInterval());
 
         //finish typing text
         NPCDialogueText.text = p;

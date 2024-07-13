@@ -29,7 +29,8 @@ public class MusicManager : MonoBehaviour
     MusicData currentMusic;
     void Awake()
     {
-        if (musicSource1 == null || musicSource2 == null) { AudioSource[] sources = GetComponents<AudioSource>(); musicSource1 = sources[0]; musicSource2 = sources[1]; }   
+        if (musicSource1 == null || musicSource2 == null) { AudioSource[] sources = GetComponents<AudioSource>(); musicSource1 = sources[0]; musicSource2 = sources[1]; }
+        currentSource = musicSource1;
     }
     // Start is called before the first frame update
     void Start()

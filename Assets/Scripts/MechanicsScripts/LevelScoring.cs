@@ -22,7 +22,6 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Button hackModeBtn;
     [SerializeField] Button resetBtn;
     [SerializeField] Color positive, neutral, negative;
-    float ballNotifTime = 5f;
     bool hackMode, ballStill;
     bool resetUI;
 
