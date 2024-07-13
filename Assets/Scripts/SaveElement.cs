@@ -13,6 +13,7 @@ public class SaveElement : MonoBehaviour
     [SerializeField] Color difficultyCol;
     [SerializeField] Gradient progressGrad;
     [SerializeField] Color sizeCol;
+    [SerializeField] string lastAccessTime;
 
     [Header("References")]
     [SerializeField] TextMeshProUGUI nameText;
@@ -40,11 +41,11 @@ public class SaveElement : MonoBehaviour
     void SetElementValues()
     {
         nameText.text = uniParams.name;
-        timeText.text = uniParams.date;
+        timeText.text = lastAccessTime;
         difficultyText.text = uniParams.relativeDifficulty.ToString();
         int numGalaxies = uniParams.numGalaxies == 0 ? 1 : uniParams.numGalaxies; //avoid division by zero
         float progress = (float)uniParams.numStars / ((float)numGalaxies * 5);
-        progressText.text = Mathf.RoundToInt(progress* 100).ToString() + "%";
+        progressText.text = uniParams.numStars.ToString() + " / " + (numGalaxies*5).ToString();
         sizeText.text = uniParams.size;
 
         difficultyText.color = difficultyCol;
@@ -88,8 +89,9 @@ public class SaveElement : MonoBehaviour
 
         return sprite;
     }
-    public Button InitValues(LevelManager.UniverseParams universeParams, Color difficultyCol, Color sizeCol)
+    public Button InitValues(LevelManager.UniverseParams universeParams, Color difficultyCol, Color sizeCol, string lastAccessTime)
     {
+        this.lastAccessTime = lastAccessTime;
         this.uniParams = universeParams;
         this.difficultyCol = difficultyCol;
         this.sizeCol = sizeCol;

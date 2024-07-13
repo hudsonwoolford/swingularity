@@ -4,10 +4,23 @@ using UnityEngine;
 
 public class TIIGER : EventTalkableNPC
 {
+    public static TIIGER Instance;
+
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
     private bool isTransitioning;
     private bool dialogueShown;
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(Instance);
+        }
+    }
     private void Start()
     {
         tgrAnimator.Play("DisableDialogue");
