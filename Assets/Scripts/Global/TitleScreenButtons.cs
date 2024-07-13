@@ -58,7 +58,6 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
         //normal ui
-        continueBtn.onClick.AddListener(() => Continue());
         newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
@@ -74,6 +73,18 @@ public class TitleScreenButtons : MonoBehaviour
         ngSizeBtns[0].onClick.AddListener(() => SetGalaxySize(0));
         ngSizeBtns[1].onClick.AddListener(() => SetGalaxySize(1));
         ngSizeBtns[2].onClick.AddListener(() => SetGalaxySize(3));
+
+        if(SaveLoadManager.saves.Length > 0){
+            continueBtn.transform.GetChild(0).gameObject.SetActive(true);
+            continueBtn.transform.GetChild(1).gameObject.SetActive(false);
+            continueBtn.transform.GetChild(2).gameObject.SetActive(true);
+            continueBtn.onClick.AddListener(() => Continue());
+        }
+        else{
+            continueBtn.transform.GetChild(0).gameObject.SetActive(false);
+            continueBtn.transform.GetChild(1).gameObject.SetActive(true);
+            continueBtn.transform.GetChild(2).gameObject.SetActive(false);
+        }
     }
     private void Update()
     {
@@ -112,6 +123,7 @@ public class TitleScreenButtons : MonoBehaviour
     }
     #region Main Screen UI
     void Continue(){
+
         SceneManager.LoadScene("Galaxies");
 
     }
@@ -119,24 +131,37 @@ public class TitleScreenButtons : MonoBehaviour
         onlyCreateMenu = true;
         StartCoroutine(EnableNewGameMenu(true));
         ngMenuAnim.Play("ShowCreationMenu");
+        menuAnim.Play("HideMenu");
     }
     void LoadGame(){
         onlyCreateMenu = false;
         StartCoroutine(EnableNewGameMenu(true));
         ngMenuAnim.Play("HideCreationMenu");
+        menuAnim.Play("HideMenu");
     }
     void OpenSettings(){
-        settingsMenu = true;
-        cameraAnim.Play("MenuToSettings");
-        SettingsManager.enableSettingsMenu?.Invoke(true);
+        StartCoroutine(SettingsAnimDelay("MenuToSettings", 0.5f, cameraAnim, true));
+        menuAnim.Play("HideMenu");
     }
     void DisableSettings(bool enable){
         if (enable){return;}
         settingsMenu = false;
+        StartCoroutine(SettingsAnimDelay("ShowMenu", 0.5f, menuAnim, false));
+
         cameraAnim.Play("SettingsToMenu");
     }
     void QuitGame(){
         Application.Quit();
+    }
+
+    IEnumerator SettingsAnimDelay(string anim, float seconds, Animator animator, bool enable){
+        yield return new WaitForSeconds(seconds);
+        animator.Play(anim);
+        settingsMenu = enable;
+        if(enable){
+            SettingsManager.enableSettingsMenu?.Invoke(true);
+        }
+
     }
 
     #endregion
@@ -216,6 +241,7 @@ public class TitleScreenButtons : MonoBehaviour
     {
         if(onlyCreateMenu) {StartCoroutine(EnableNewGameMenu(false));}
         else {ngMenuAnim.Play("HideCreationMenu");}
+        menuAnim.Play("ShowMenu");
     }
     /// <param name="size">0, 1 or 2 | small, medium, or large</param>
     void SetGalaxySize(int size)
