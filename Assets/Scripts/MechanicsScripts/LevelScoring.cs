@@ -142,7 +142,7 @@ public class LevelScoring : MonoBehaviour
     void SetGalaxyAndHole(){
         if(GameManager.LevelManager.procedural) //Procedural level pars
         {
-            holeNoText.text = "#" + (GameManager.LevelManager.levelIndex + 1).ToString();
+            holeNoText.text = (GameManager.LevelManager.levelIndex + 1).ToString();
             //Need something here to determine name of galaxy
         }
     }
