@@ -545,7 +545,7 @@ public class GalaxyMenu : MonoBehaviour
             float difficultyLerpVal = (float)i/(float)galaxies.Length;
             int galaxyDifficulty = (int)Mathf.Lerp(galaxyDifficultyMin, galaxyDifficultyMax, difficultyLerpVal);
 
-            galaxies[i] = new LevelManager.GalaxyParams(name, UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(galaxyDifficulty,1,10), gDataIndex, possibleTypes, specialTypes, new bool[5], galaxyStarLockTracker, "——", false); //setting galaxy at index
+            galaxies[i] = new LevelManager.GalaxyParams(name.ToUpper(), UnityEngine.Random.Range(-2147483647, 2147483647), Mathf.Clamp(galaxyDifficulty,1,10), gDataIndex, possibleTypes, specialTypes, new bool[5], galaxyStarLockTracker, "——", false); //setting galaxy at index
             galaxyStarLockTracker += UnityEngine.Random.Range(2, 4);
 
 
