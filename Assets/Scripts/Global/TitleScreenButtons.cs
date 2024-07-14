@@ -141,13 +141,13 @@ public class TitleScreenButtons : MonoBehaviour
         menuAnim.Play("HideMenu");
     }
     void OpenSettings(){
-        StartCoroutine(SettingsAnimDelay("MenuToSettings", 0.5f, cameraAnim, true));
+        StartCoroutine(SettingsAnimDelay(true));
         menuAnim.Play("HideMenu");
     }
     void DisableSettings(bool enable){
         if (enable){return;}
         settingsMenu = false;
-        StartCoroutine(SettingsAnimDelay("ShowMenu", 0.5f, menuAnim, false));
+        StartCoroutine(SettingsAnimDelay(false));
 
         cameraAnim.Play("SettingsToMenu");
     }
@@ -155,12 +155,25 @@ public class TitleScreenButtons : MonoBehaviour
         Application.Quit();
     }
 
-    IEnumerator SettingsAnimDelay(string anim, float seconds, Animator animator, bool enable){
-        yield return new WaitForSeconds(seconds);
-        animator.Play(anim);
+    IEnumerator SettingsAnimDelay(bool enable){
+        if(enable)
+        {
+            menuAnim.Play("HideMenu");
+            cameraAnim.Play("MenuToSettings");
+        }
+        else
+        {
+            cameraAnim.Play("SettingsToMenu");
+        }
+
+        yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length);
         settingsMenu = enable;
         if(enable){
             SettingsManager.enableSettingsMenu?.Invoke(true);
+        }
+        else
+        {
+            menuAnim.Play("ShowMenu");
         }
 
     }
@@ -220,7 +233,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor, saveInfos[i].LastAccessTime.ToShortDateString() + " | " + saveInfos[i].LastAccessTime.ToShortTimeString()).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor, saveInfos[i].LastAccessTime.ToShortDateString() + " | " + saveInfos[i].LastAccessTime.ToShortTimeString(), true).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion

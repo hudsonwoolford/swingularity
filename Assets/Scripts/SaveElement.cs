@@ -14,14 +14,23 @@ public class SaveElement : MonoBehaviour
     [SerializeField] Gradient progressGrad;
     [SerializeField] Color sizeCol;
     [SerializeField] string lastAccessTime;
+    [SerializeField] bool procedural;
 
     [Header("References")]
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI timeText;
-    [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TextMeshProUGUI progressText;
     [SerializeField] TextMeshProUGUI progressPercentText;
+    [Header("Procedural")]
+    [SerializeField] TextMeshProUGUI seedText;
+    [SerializeField] GameObject proceduralInfo;
+    [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TextMeshProUGUI sizeText;
+    [Header("Campaign")]
+    [SerializeField] GameObject mainCampaignInfo;
+    //[SerializeField] TextMeshProUGUI progressText;
+    //[SerializeField] TextMeshProUGUI progressPercentText;
+    [Header("Miscellaneous")]
     [SerializeField] UniverseGenerator universeGenerator;
     [SerializeField] GameObject ballImaging;
     [SerializeField] Image ballImage;
@@ -43,16 +52,32 @@ public class SaveElement : MonoBehaviour
     {
         nameText.text = uniParams.name;
         timeText.text = lastAccessTime;
-        difficultyText.text = uniParams.relativeDifficulty.ToString();
+        if(procedural)
+        {
+            proceduralInfo.SetActive(true);
+            mainCampaignInfo.SetActive(false);
+            difficultyText.text = uniParams.relativeDifficulty.ToString();
+            seedText.text = "Seed: " + uniParams.seed.ToString();
+            sizeText.text = uniParams.size;
+            difficultyText.color = difficultyCol;
+            sizeText.color = sizeCol;
+
+            progressText.transform.localPosition = new Vector3(progressText.transform.localPosition.x, 0, progressText.transform.localPosition.z);
+        }
+        else
+        {
+            proceduralInfo.SetActive(false);
+            mainCampaignInfo.SetActive(true);
+            progressText.transform.localPosition = new Vector3(progressText.transform.localPosition.x, 15, progressText.transform.localPosition.z);
+        }
+
+        //progress
         int numGalaxies = uniParams.numGalaxies == 0 ? 1 : uniParams.numGalaxies; //avoid division by zero
         float progress = (float)uniParams.numStars / ((float)numGalaxies * 5);
         progressText.text = Mathf.RoundToInt((progress*100)).ToString();
-        sizeText.text = uniParams.size;
-
-        difficultyText.color = difficultyCol;
         progressText.color = progressGrad.Evaluate(progress);
         progressPercentText.color = progressText.color;
-        sizeText.color = sizeCol;
+
     }
     void CreateBallImage()
     {
@@ -91,12 +116,13 @@ public class SaveElement : MonoBehaviour
 
         return sprite;
     }
-    public Button InitValues(LevelManager.UniverseParams universeParams, Color difficultyCol, Color sizeCol, string lastAccessTime)
+    public Button InitValues(LevelManager.UniverseParams universeParams, Color difficultyCol, Color sizeCol, string lastAccessTime, bool procedural)
     {
         this.lastAccessTime = lastAccessTime;
         this.uniParams = universeParams;
         this.difficultyCol = difficultyCol;
         this.sizeCol = sizeCol;
+        this.procedural = procedural;
         return deleteButton;
     }
 }
