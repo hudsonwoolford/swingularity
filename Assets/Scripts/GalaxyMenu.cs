@@ -84,7 +84,7 @@ public class GalaxyMenu : MonoBehaviour
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
-        if(GameManager.LevelManager.procedural && GameManager.LevelManager.currentUniverse != new UniverseParams())
+        if(GameManager.LevelManager.procedural && GameManager.LevelManager.currentUniverse.proceduralUniverse)
         {
             CreateProceduralGalaxies();
         }
@@ -183,7 +183,7 @@ public class GalaxyMenu : MonoBehaviour
         {
             galaxyLevels[i] = sceneSuffix + "_" + i.ToString();
         }
-        initSystem?.Invoke(galaxyLevels, LevelManager.allGalaxyData[galaxyList[focusedGalaxy].galaxyDataIndex]);
+        initSystem?.Invoke(galaxyLevels, galaxyList[focusedGalaxy], LevelManager.allGalaxyData[galaxyList[focusedGalaxy].galaxyDataIndex]);
         GameManager.SceneHandling.LoadScene(galaxyLevels[0], true);
     }
     void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
@@ -564,7 +564,7 @@ public class GalaxyMenu : MonoBehaviour
                 else { alreadyLMSet = false; }
             }
         }
-        if (!alreadyLMSet) { LevelManager.setProceduralGalaxies?.Invoke(galaxies); }
+        if (!alreadyLMSet) { LevelManager.setGalaxies?.Invoke(galaxies); LevelManager.notifyProcedural?.Invoke(true); }
         galaxyList = GameManager.LevelManager.currentProceduralUniverse;
         GameManager.SaveLoadManager.Save();
     }

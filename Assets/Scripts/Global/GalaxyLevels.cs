@@ -34,7 +34,6 @@ public class GalaxyLevels : MonoBehaviour
         {
             ssLevels[i] = ssGens[i].SystemLevel();
         }
-        GalaxyGenerator.initSystem?.Invoke(ssLevels, galaxyTheme);
     }
     private void Update()
     {

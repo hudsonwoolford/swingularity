@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static LevelManager;
 
 public class LevelManager : MonoBehaviour
 {
@@ -173,7 +174,8 @@ public class LevelManager : MonoBehaviour
         public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
         public int numStars;
-        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars)
+        public bool proceduralUniverse;
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars, bool proceduralUniverse)
         {
             this.name = name;
             this.seed = seed;
@@ -182,6 +184,7 @@ public class LevelManager : MonoBehaviour
             this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
             this.numStars = numStars;
+            this.proceduralUniverse = proceduralUniverse;
         }
         public override bool Equals(object obj)
         {
@@ -203,6 +206,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ completedGalaxies.GetHashCode();
             hash = (hash * 397) ^ numGalaxies.GetHashCode();
             hash = (hash * 397) ^ numStars.GetHashCode();
+            hash = (hash * 397) ^ proceduralUniverse.GetHashCode();
             return hash;
         }
 
@@ -214,7 +218,8 @@ public class LevelManager : MonoBehaviour
                 && a.size == b.size
                 && a.completedGalaxies == b.completedGalaxies
                 && a.numGalaxies == b.numGalaxies
-                && a.numStars == b.numStars;
+                && a.numStars == b.numStars
+                && a.proceduralUniverse == b.proceduralUniverse;
         }
 
         public static bool operator !=(UniverseParams a, UniverseParams b)
@@ -226,10 +231,10 @@ public class LevelManager : MonoBehaviour
     //events
     public delegate void NotifyProcedural(bool procedural);
     public static NotifyProcedural notifyProcedural;
-    public delegate void SetProceduralUniverse(UniverseParams universeParams);
-    public static SetProceduralUniverse setProceduralUniverse;
-    public delegate void SetProceduralGalaxies(GalaxyParams[] galaxyParams);
-    public static SetProceduralGalaxies setProceduralGalaxies;
+    public delegate void SetUniverse(UniverseParams universeParams);
+    public static SetUniverse setUniverse;
+    public delegate void SetGalaxies(GalaxyParams[] galaxyParams);
+    public static SetGalaxies setGalaxies;
 
     public static bool ballInput { get; private set; }
     public static bool levelComplete { get; private set; }
@@ -331,7 +336,7 @@ public class LevelManager : MonoBehaviour
         {
             UniverseParams cU = currentUniverse;
             cU.completedGalaxies++;
-            setProceduralUniverse?.Invoke(cU);
+            setUniverse?.Invoke(cU);
         }
         //determine next level string
         string sceneName = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
@@ -389,11 +394,16 @@ public class LevelManager : MonoBehaviour
 
         StartCoroutine(NextLevelUI());
     }
-    void SetGalaxyLevels(string[] galaxy, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
+    void SetGalaxyLevels(string[] galaxy, GalaxyParams galaxyParams, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
         currentTheme = theme;
         procedural = false;
         currentGalaxy = galaxy;
+
+       for (int i = 0; i < currentProceduralUniverse.Length; i++)
+        {
+            if (currentProceduralUniverse[i] == galaxyParams) { galaxyIndex = i; break; }
+        }
     }
     void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyParams galaxyParams, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
@@ -403,21 +413,15 @@ public class LevelManager : MonoBehaviour
         currentProceduralGalaxy = galaxyLevels;
         levelIndex = 0;
 
-        for (int i = 0; i < currentProceduralGalaxy.Length; i++)
+        for (int i = 0; i < currentProceduralUniverse.Length; i++)
         {
             if (currentProceduralUniverse[i] == galaxyParams) { galaxyIndex = i; break; }
         }
     }
-    void SetProceduralGalaxiesEvent(GalaxyParams[] galaxyParams) //Sets the current universe
-    {
-        procedural = true;
-        currentProceduralUniverse = galaxyParams;
-    }
-    void SetProceduralUniverseEvent(UniverseParams universeParams) //Sets the current universe
-    {
-        procedural = true;
-        currentUniverse = universeParams;
-    }
+    void SetGalaxiesEvent(GalaxyParams[] galaxyParams) => currentProceduralUniverse = galaxyParams; //Sets the current universe
+    void SetUniverseEvent(UniverseParams universeParams) => currentUniverse = universeParams; //Sets the current universe
+    void LevelInitiation(GalaxyData theme) => currentTheme = theme;//Just sets theme, called by procedural level generation in start before generation
+    void IsProcedural(bool p) => procedural = p;  //sets whether procedural
     void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar)
     {
         bool[] starScore = new bool[]
@@ -442,15 +446,7 @@ public class LevelManager : MonoBehaviour
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
-        setProceduralUniverse?.Invoke(universeParams);
-    }
-    void LevelInitiation(GalaxyData theme) //Just sets theme, called by procedural level generation in start before generation
-    {
-        currentTheme = theme;
-    }
-    void IsProcedural(bool procedural) //Sets procedural to bool
-    {
-        this.procedural = procedural;
+        setUniverse?.Invoke(universeParams);
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor) //Updates score text to the score invoked in the event by LevelScoring
     {
@@ -465,6 +461,8 @@ public class LevelManager : MonoBehaviour
         //     loadNextOp.allowSceneActivation = true;
         // }
     }
+    void PauseGame() => ballInput = false;
+    void UnpauseGame() => ballInput = true;
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         ballInput = true;
@@ -474,12 +472,12 @@ public class LevelManager : MonoBehaviour
     #endregion
     private void OnEnable()
     {
-        PauseManager.pauseGame += () => ballInput = false;
-        PauseManager.unpauseGame += () => ballInput = true;
+        PauseManager.pauseGame += PauseGame;
+        PauseManager.unpauseGame += UnpauseGame;
         SceneManager.sceneLoaded += OnSceneLoad;
         PointCardManager.onGalaxyScore += ScoreGalaxy;
-        LevelManager.setProceduralUniverse += SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
-        LevelManager.setProceduralGalaxies += SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
+        LevelManager.setUniverse += SetUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
+        LevelManager.setGalaxies += SetGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
         LevelScoring.onScore += OnScore;                    //Invoked by level scoring after it calculated the score for the level | (string score, int scoreRelToPar)
         LevelGenerator.levelInit += LevelInitiation;        //Invoked by level generator in start when after generating the level
         LevelManager.notifyProcedural += IsProcedural;//Invoked by level generator in start when after generating the level
@@ -490,12 +488,12 @@ public class LevelManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        PauseManager.pauseGame -= () => ballInput = false;
-        PauseManager.unpauseGame -= () => ballInput = true;
+        PauseManager.pauseGame -= PauseGame;
+        PauseManager.unpauseGame -= UnpauseGame;
         SceneManager.sceneLoaded -= OnSceneLoad;
         PointCardManager.onGalaxyScore -= ScoreGalaxy;
-        LevelManager.setProceduralGalaxies -= SetProceduralGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
-        LevelManager.setProceduralUniverse -= SetProceduralUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
+        LevelManager.setGalaxies -= SetGalaxiesEvent; //Invoked by anything (galaxy menu manager) to set the galaxies | (GalaxyParams[] galaxyParams)
+        LevelManager.setUniverse -= SetUniverseEvent; //Invoked by anything (usually create new game) to set the universe | (UniverseParams universeParams)
         LevelScoring.onScore -= OnScore;
         LevelGenerator.levelInit -= LevelInitiation;
         LevelManager.notifyProcedural -= IsProcedural;

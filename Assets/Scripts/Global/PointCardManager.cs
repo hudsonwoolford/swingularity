@@ -42,37 +42,28 @@ public class PointCardManager : MonoBehaviour
     }
     void OnScore(string score, int relPar, int totalShots, Color scoreColor) //Called by onScore delegate from LevelScoring, sets the text required for the current level
     {
-        if (!GameManager.LevelManager.procedural) //Procedural processes differently because the scene name is always the same
-        {
-            int i = GameManager.LevelManager.levelIndex;
+        int i = GameManager.LevelManager.levelIndex;
+        SetPointCardVar (i, relPar, totalShots);
 
-            SetPointCardVar(i, relPar, totalShots);
-        }
-        else //Procedural processing
+        if (i == 4)
         {
-            int i = GameManager.LevelManager.levelIndex;
-            SetPointCardVar (i, relPar, totalShots);
-
-            if(i == 4)
+            int scoreSum = 0, shotSum = 0, parSum = 0;
+            for (int j = 0; j < 5; j++)
             {
-                int scoreSum = 0, shotSum = 0, parSum = 0;
-                for (int j = 0; j < 5; j++)
+                if (scoreTexts[j].text != "—")
                 {
-                    if (scoreTexts[j].text != "—")
-                    {
-                        scoreSum += int.Parse(scoreTexts[j].text);
-                    }
-                    if (shotsTexts[j].text != "—")
-                    {
-                        shotSum += int.Parse(shotsTexts[j].text);
-                    }
-                    if (parTexts[j].text != "—")
-                    {
-                        parSum += int.Parse(parTexts[j].text);
-                    }
+                    scoreSum += int.Parse(scoreTexts[j].text);
                 }
-                onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
+                if (shotsTexts[j].text != "—")
+                {
+                    shotSum += int.Parse(shotsTexts[j].text);
+                }
+                if (parTexts[j].text != "—")
+                {
+                    parSum += int.Parse(parTexts[j].text);
+                }
             }
+            onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
         }
     }
     void SetPointCardVar(int i, int relPar, int totalShots)
@@ -145,6 +136,11 @@ public class PointCardManager : MonoBehaviour
         shotsTexts[5].color = scoreCol;
         parTexts[5].text = parSum.ToString();
     }
+    void NewSystem(string[] galaxyLevels, GalaxyParams galaxyParams, GalaxyData theme)
+    {
+        galaxyStarCollected = false;
+        ClearPointCard();
+    }
     void NewProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyParams galaxyParams, GalaxyData theme)
     {
         galaxyStarCollected = false;
@@ -156,12 +152,14 @@ public class PointCardManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        StarCollectible.onStarCollected += CollectibleCollected;
+        GalaxyGenerator.initSystem += NewSystem;
         GalaxyGenerator.initProceduralSystem += NewProceduralSystem;
+        StarCollectible.onStarCollected += CollectibleCollected;
         LevelScoring.onScore += OnScore;
     }
     private void OnDisable()
     {
+        GalaxyGenerator.initSystem -= NewSystem;
         StarCollectible.onStarCollected -= CollectibleCollected;
         GalaxyGenerator.initProceduralSystem -= NewProceduralSystem;
         LevelScoring.onScore -= OnScore;

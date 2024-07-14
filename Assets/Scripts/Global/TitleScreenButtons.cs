@@ -31,6 +31,9 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Button campaignBtn;
     [SerializeField] Button infiniteBtn;
     [SerializeField] Button optionsBackBtn;
+    [Header("Campaign Creation UI")]
+    [SerializeField] TMP_InputField ccNameFld;
+    [SerializeField] Button ccCreateBtn;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -50,6 +53,7 @@ public class TitleScreenButtons : MonoBehaviour
     Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
     bool ngMenu;
+    bool newGameNGMenu;
     NGMenuState currentNGMenuState;
     bool settingsMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
@@ -57,10 +61,11 @@ public class TitleScreenButtons : MonoBehaviour
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
 
     private enum NGMenuState
-    { 
+    {
         SaveLoadMenu,
         OptionsMenu,
-        CreationMenu
+        CreationMenu,
+        CampaignCreationMenu
     }
 
     void Start()
@@ -77,27 +82,30 @@ public class TitleScreenButtons : MonoBehaviour
         settingsBtn.onClick.AddListener(() => OpenSettings());
         quitBtn.onClick.AddListener(() => QuitGame());
         //options ui
-        optionsBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
+        optionsBackBtn.onClick.AddListener(() => OptionBackBtn());
+        campaignBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.CampaignCreationMenu));
         infiniteBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.CreationMenu));
         //save load ui
         slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
         slCreateBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
-        slLoadBtn.onClick.AddListener(() => LoadProceduralUniverse());
+        slLoadBtn.onClick.AddListener(() => LoadUniverse());
         slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
+        //campaign creation ui
+        ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse());
         //new game ui
-        ngBackBtn.onClick.AddListener(() => NewGameBack());
+        ngBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
         ngSizeBtns[0].onClick.AddListener(() => SetGalaxySize(0));
         ngSizeBtns[1].onClick.AddListener(() => SetGalaxySize(1));
         ngSizeBtns[2].onClick.AddListener(() => SetGalaxySize(3));
 
-        if(SaveLoadManager.saves.Length > 0){
+        if (SaveLoadManager.saves.Length > 0) {
             continueBtn.transform.GetChild(0).gameObject.SetActive(true);
             continueBtn.transform.GetChild(1).gameObject.SetActive(false);
             continueBtn.transform.GetChild(2).gameObject.SetActive(true);
             continueBtn.onClick.AddListener(() => Continue());
         }
-        else{
+        else {
             continueBtn.transform.GetChild(0).gameObject.SetActive(false);
             continueBtn.transform.GetChild(1).gameObject.SetActive(true);
             continueBtn.transform.GetChild(2).gameObject.SetActive(false);
@@ -105,7 +113,7 @@ public class TitleScreenButtons : MonoBehaviour
     }
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && ngMenu) 
+        if (Input.GetKeyDown(KeyCode.Escape) && ngMenu)
         {
             StartCoroutine(EnableNewGameMenu(false));
         }
@@ -113,14 +121,14 @@ public class TitleScreenButtons : MonoBehaviour
         {
             DisableSettings(false);
         }
-        if(ngMenu && currentNGMenuState == NGMenuState.SaveLoadMenu)
+        if (ngMenu && currentNGMenuState == NGMenuState.SaveLoadMenu)
         {
-            slScrollBar.value += -Input.mouseScrollDelta.y/15;
+            slScrollBar.value += -Input.mouseScrollDelta.y / 15;
             slScrollBar.value = Mathf.Clamp(slScrollBar.value, 0f, 1f);
         }
-        if (ngMenu){
+        if (ngMenu) {
             rotation += Time.deltaTime * speed;
-            if(rotation > 360){
+            if (rotation > 360) {
                 rotation = 0;
             }
             skybox.SetFloat("_Rotation", rotation);
@@ -130,7 +138,7 @@ public class TitleScreenButtons : MonoBehaviour
 
 
     void GetLastGameObjectSelected() {
-        if(eventSystem == null) {eventSystem = EventSystem.current;}
+        if (eventSystem == null) { eventSystem = EventSystem.current; }
         if (eventSystem.currentSelectedGameObject != currentSelectedGameObject_Recent) {
 
             lastSelectedGameObject = currentSelectedGameObject_Recent;
@@ -139,44 +147,48 @@ public class TitleScreenButtons : MonoBehaviour
         }
     }
     #region Main Screen UI
-    void Continue(){
+    void Continue() {
 
         SceneManager.LoadScene("Galaxies");
 
     }
-    void NewGame(){
+    void NewGame() {
         StartCoroutine(EnableNewGameMenu(true));
         ngMenuAnim.Play("HideCreationMenu");
         ngMenuAnim.Play("ShowOptionMenu");
         ngMenuAnim.Play("HideSaveLoadMenu");
+        ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
         currentNGMenuState = NGMenuState.OptionsMenu;
+        newGameNGMenu = true;
     }
-    void LoadGame(){
+    void LoadGame() {
         StartCoroutine(EnableNewGameMenu(true));
         ngMenuAnim.Play("HideCreationMenu");
         ngMenuAnim.Play("HideOptionMenu");
         ngMenuAnim.Play("ShowSaveLoadMenu");
+        ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
-        currentNGMenuState = NGMenuState.SaveLoadMenu; 
+        currentNGMenuState = NGMenuState.SaveLoadMenu;
+        newGameNGMenu = false;
     }
-    void OpenSettings(){
+    void OpenSettings() {
         StartCoroutine(SettingsAnimDelay(true));
         menuAnim.Play("HideMenu");
     }
-    void DisableSettings(bool enable){
-        if (enable){return;}
+    void DisableSettings(bool enable) {
+        if (enable) { return; }
         settingsMenu = false;
         StartCoroutine(SettingsAnimDelay(false));
 
         cameraAnim.Play("SettingsToMenu");
     }
-    void QuitGame(){
+    void QuitGame() {
         Application.Quit();
     }
 
-    IEnumerator SettingsAnimDelay(bool enable){
-        if(enable)
+    IEnumerator SettingsAnimDelay(bool enable) {
+        if (enable)
         {
             menuAnim.Play("HideMenu");
             cameraAnim.Play("MenuToSettings");
@@ -188,7 +200,7 @@ public class TitleScreenButtons : MonoBehaviour
 
         yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length);
         settingsMenu = enable;
-        if(enable){
+        if (enable) {
             SettingsManager.enableSettingsMenu?.Invoke(true);
         }
         else
@@ -202,7 +214,7 @@ public class TitleScreenButtons : MonoBehaviour
     #region Save Load UI
     void OnSaveLoadScrollbar(float value)
     {
-        float maxValue = -(SaveLoadManager.saves.Length-1) * elementHeightJump;
+        float maxValue = -(SaveLoadManager.saves.Length - 1) * elementHeightJump;
         saveElementParent.localPosition = Vector3.Lerp(saveElementParentOrigin, saveElementParentOrigin + new Vector3(0, maxValue, 0), value);
     }
     void DeleteSave(SaveElement se)
@@ -211,10 +223,11 @@ public class TitleScreenButtons : MonoBehaviour
         Destroy(se.gameObject);
         PopulateSaves();
     }
-    void LoadProceduralUniverse()
+    void LoadUniverse()
     {
         SaveElement se;
-        if(lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<SaveElement>(out se)) {return;}
+        if (lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<SaveElement>(out se)) { return; }
+        LevelManager.notifyProcedural?.Invoke(se.uniParams.proceduralUniverse);
         GameManager.SaveLoadManager.Load(se.uniParams.name + ".txt");
         SceneManager.LoadScene(proceduralGalaxiesScene);
     }
@@ -229,14 +242,14 @@ public class TitleScreenButtons : MonoBehaviour
         {
             Destroy(allElements[i].gameObject);
         }
-        for(int i = 0; i < saveInfos.Length; i++)
+        for (int i = 0; i < saveInfos.Length; i++)
         {
             RectTransform tr = Instantiate(saveElementObj, saveElementParent).GetComponent<RectTransform>();
-            tr.localPosition += new Vector3(0,elementHeightJump * i,0);
+            tr.localPosition += new Vector3(0, elementHeightJump * i, 0);
 
             //Temporary bc no save load functionality
             LevelManager.UniverseParams uni = GameManager.SaveLoadManager.RetrieveSave(saveInfos[i].Name).universeParams;
-            if(uni == null) { continue; }
+            if (uni == null) { continue; }
             Color sizeColor = Color.white;
             if (uni.size == "Small")
             {
@@ -253,29 +266,28 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty/10), sizeColor, saveInfos[i].LastAccessTime.ToShortDateString() + " | " + saveInfos[i].LastAccessTime.ToShortTimeString(), true).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastAccessTime.ToShortDateString() + " | " + saveInfos[i].LastAccessTime.ToShortTimeString(), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion
     #region New Game UI
     public void UpdateDifficulty()
     {
-        if(ngDifficultySldr.value <= 0){
+        if (ngDifficultySldr.value <= 0) {
             ngDifficultySldr.value = 1;
-        } 
+        }
         difficultyNumber.text = ngDifficultySldr.value.ToString();
-        ngDifficultySldr.targetGraphic.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
-        difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value/10);
+        ngDifficultySldr.targetGraphic.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value / 10);
+        difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value / 10);
     }
     public void RandomizeSeed()
     {
         UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * System.DateTime.Now.Second * Time.time));
         ngSeedFld.text = UnityEngine.Random.Range(-2147483647, 2147483647).ToString();
     }
-    void NewGameBack()
+    void OptionBackBtn()
     {
-        SwitchCurrentNGMenu(NGMenuState.OptionsMenu);
-        menuAnim.Play("ShowMenu");
+        if (newGameNGMenu) { StartCoroutine(EnableNewGameMenu(false)); } else { SwitchCurrentNGMenu(NGMenuState.SaveLoadMenu); }
     }
     /// <param name="size">0, 1 or 2 | small, medium, or large</param>
     void SetGalaxySize(int size)
@@ -289,6 +301,17 @@ public class TitleScreenButtons : MonoBehaviour
             else {ngSizeBtns[i].GetComponent<Animator>().Play("Unselect");}
             
         }
+    }
+    void CreateNewManualUniverse()
+    {
+        LevelManager.UniverseParams up = campaignUniverseParams;
+        if(up.name == string.Empty) { up.name = "MyUniverse"; }
+        up.proceduralUniverse = false;
+        up.name = EnsureUniqueFileName(SaveLoadManager.saves, ccNameFld.text + ".txt");
+        up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
+        GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });
+        LevelManager.notifyProcedural?.Invoke(false);
+        SceneManager.LoadScene(proceduralGalaxiesScene);
     }
     void CreateNewProceduralUniverse() //create button in new game menu
     {
@@ -354,7 +377,6 @@ public class TitleScreenButtons : MonoBehaviour
             case NGMenuState.CreationMenu:
                 if (currentNGMenuState == NGMenuState.OptionsMenu)
                 {
-                    Debug.Log("polay");
                     ngMenuAnim.Play("HideOptionMenu");
                 }
                 if (currentNGMenuState == NGMenuState.SaveLoadMenu)
@@ -362,6 +384,13 @@ public class TitleScreenButtons : MonoBehaviour
                     ngMenuAnim.Play("HideSaveLoadMenu");
                 }
                 ngMenuAnim.Play("ShowCreationMenu");
+                break;
+            case NGMenuState.CampaignCreationMenu:
+                if(currentNGMenuState == NGMenuState.OptionsMenu)
+                {
+                    ngMenuAnim.Play("HideOptionMenu");
+                }
+                ngMenuAnim.Play("ShowCampaignCreationMenu");
                 break;
             default:
                 break;
@@ -397,7 +426,7 @@ public class TitleScreenButtons : MonoBehaviour
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
-        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0);
+        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0, true);
     }
 
     void OnEnable(){

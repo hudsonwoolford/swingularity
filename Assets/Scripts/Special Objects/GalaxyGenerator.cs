@@ -31,7 +31,7 @@ public class GalaxyGenerator : MonoBehaviour
 
     public delegate void InitProceduralSystem(string[] galaxyLevels, LevelManager.LevelParams[] galaxyLevelParams, GalaxyParams galaxyParams, GalaxyData theme);
     public static InitProceduralSystem initProceduralSystem;
-    public delegate void InitSystem(string[] galaxyLevels, GalaxyData theme);
+    public delegate void InitSystem(string[] galaxyLevels, GalaxyParams galaxyParams, GalaxyData theme);
     public static InitSystem initSystem;
 
     // Start is called before the first frame update
@@ -42,7 +42,7 @@ public class GalaxyGenerator : MonoBehaviour
     }
     void SetNormalGalaxy() //Sets the galaxy in level manager through event
     {
-        initSystem?.Invoke(schemes[schemeIndex].levelScenes, schemes[schemeIndex].galaxyData);
+        initSystem?.Invoke(schemes[schemeIndex].levelScenes, galaxyParams, schemes[schemeIndex].galaxyData);
     }
     void SetProceduralGalaxy()
     {

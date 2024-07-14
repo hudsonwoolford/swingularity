@@ -124,8 +124,8 @@ public class SaveLoadManager : MonoBehaviour
                 AssetDatabase.Refresh();
 #endif
 
-        setProceduralUniverse?.Invoke(save.universeParams);
-        setProceduralGalaxies?.Invoke(save.allGalaxies);
+        setUniverse?.Invoke(save.universeParams);
+        setGalaxies?.Invoke(save.allGalaxies);
         RetrieveUniverseSaves();
     }
     public void Load(string fileName)
@@ -136,8 +136,8 @@ public class SaveLoadManager : MonoBehaviour
             string jsonSave = File.ReadAllText(path);
             UniverseSave loadedSave = JsonUtility.FromJson<UniverseSave>(jsonSave);
 
-            setProceduralUniverse?.Invoke(loadedSave.universeParams);
-            setProceduralGalaxies?.Invoke(loadedSave.allGalaxies);
+            setUniverse?.Invoke(loadedSave.universeParams);
+            setGalaxies?.Invoke(loadedSave.allGalaxies);
         }
         else
         {
