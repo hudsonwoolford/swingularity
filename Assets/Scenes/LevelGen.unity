@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0017648805, g: 0.0016952389, b: 0.0016965698, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015692601, g: 0.0014718646, b: 0.0013907086, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1168,12 +1168,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &1911591889 stripped
-PolygonCollider2D:
-  m_CorrespondingSourceObject: {fileID: 216809186401438329, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-    type: 3}
-  m_PrefabInstance: {fileID: 4379427723298299601}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1961610431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1892,21 +1886,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 507376493887668936, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_Name
-      value: Hackmode Btn
-      objectReference: {fileID: 0}
     - target: {fileID: 3169579409820135831, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 92287119}
-    - target: {fileID: 4144947159168899429, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 335544319
-      objectReference: {fileID: 0}
     - target: {fileID: 4518943914118313802, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: m_RootOrder
@@ -1961,21 +1945,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4712886536454161439, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 335544319
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573478106949262314, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_Name
-      value: Reset Btn
-      objectReference: {fileID: 0}
-    - target: {fileID: 8473455349000770421, guid: bad1842c40dcd0648bf12c2c963c69df,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 16777215
       objectReference: {fileID: 0}
     - target: {fileID: 9048760814423628004, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
@@ -2716,68 +2685,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Area
       objectReference: {fileID: 0}
-    - target: {fileID: 2772416378485026814, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.88235295
-      objectReference: {fileID: 0}
     - target: {fileID: 4675466341704514064, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
         type: 3}
       propertyPath: ball
       value: 
       objectReference: {fileID: 734920138}
-    - target: {fileID: 4675466341704514064, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: boundaries
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4675466341704514064, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: deathMessageTxt
-      value: 
-      objectReference: {fileID: 4379427723298299602}
-    - target: {fileID: 4675466341704514064, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: exteriorCollider
-      value: 
-      objectReference: {fileID: 1911591889}
-    - target: {fileID: 4675466341704514064, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: boundsPoints.Array.size
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6927790168852405388, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8224106253557762027, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 92287119}
-    - target: {fileID: 8915632878307914634, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71308fb94a9ab7d4cb50843c78b54bfc, type: 3}
---- !u!114 &4379427723298299602 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1449495138958631018, guid: 71308fb94a9ab7d4cb50843c78b54bfc,
-    type: 3}
-  m_PrefabInstance: {fileID: 4379427723298299601}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &4463124757177308435
 Transform:
   m_ObjectHideFlags: 0

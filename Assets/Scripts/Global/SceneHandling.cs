@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Threading.Tasks;
+using TMPro;
 
 public class SceneHandling : MonoBehaviour
 {
-    [SerializeField] private Image progressBar;
+    [SerializeField] private Slider progressBar;
+    [SerializeField] private TextMeshProUGUI percentageProgress;
+    [SerializeField] private TextMeshProUGUI loadingDescription;
     private Animator animator;
     private Canvas loaderCanvas;
-    private float fillTarget;
     private bool levelGenerated;
+
+    private const float MAX_PROGRESS = 0.98f;
+    public static bool loadingScreen { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -23,42 +27,59 @@ public class SceneHandling : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        progressBar.fillAmount = Mathf.MoveTowards(progressBar.fillAmount, fillTarget, Time.deltaTime);
     }
-    public async void LoadScene(string sceneName, bool waitForLevelGeneration)
+    public void LoadScene(string sceneName, bool waitForLevelGeneration)
     {
-        fillTarget = 0;
-        progressBar.fillAmount = 0f;
+        StartCoroutine(LoadSceneCoroutine(sceneName, waitForLevelGeneration));
+    }
+    IEnumerator LoadSceneCoroutine(string sceneName, bool waitForLevelGeneration)
+    {
+        progressBar.value = 0f;
+        loadingDescription.text = "Loading Scene...";
+        percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();
 
         levelGenerated = false;
 
-        animator.Play("ShowMenu");  
-        await Task.Delay(1000);
+        animator.Play("ShowMenu");
+        yield return new WaitForSecondsRealtime(animator.GetCurrentAnimatorStateInfo(0).length);
 
-        var scene = SceneManager.LoadSceneAsync(sceneName);
-        scene.allowSceneActivation = false;
+        var sceneLoading = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
 
+        sceneLoading.allowSceneActivation = false;
 
+        float progressModifier = waitForLevelGeneration ? 0.5f : 1f;
         //increment load bar
         do
         {
-            fillTarget = scene.progress;
-        } while (scene.progress < 0.9f);
+            progressBar.value = sceneLoading.progress * progressModifier * MAX_PROGRESS;
+            percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();
+            yield return null;
+        } while (sceneLoading.progress < 0.9f);
 
-        scene.allowSceneActivation = true;
+        sceneLoading.allowSceneActivation = true;
+
         //level generation wait
-        while(waitForLevelGeneration && !levelGenerated)
+        if(waitForLevelGeneration)
         {
-            await Task.Yield();
+            loadingDescription.text = "Generating level...";
+            while (!levelGenerated)
+            {
+                progressBar.value = progressModifier * MAX_PROGRESS;
+                if (LevelGenerator.Instance != null)
+                {
+                    if (LevelGenerator.Instance.generationProgress != 1) //for some reason it is 1, i reset it but still happens
+                    {
+                        progressBar.value = progressModifier + LevelGenerator.Instance.generationProgress / 2 * MAX_PROGRESS;
+                    }
+                }
+                percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();
+                yield return null;
+            }
         }
-        await Task.Delay(1000);
 
         animator.Play("HideMenu");
     }
-    void OnLevelGenerated()
-    {
-        levelGenerated = true;
-    }
+    void OnLevelGenerated() => levelGenerated = true;
     private void OnEnable()
     {
         LevelGenerator.levelGenerated += () => OnLevelGenerated();

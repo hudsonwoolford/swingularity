@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0017648805, g: 0.0016952389, b: 0.0016965698, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015692601, g: 0.0014718646, b: 0.0013907086, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1512,67 +1512,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   galaxyList:
   - name: Earth
-    seed: 239
-    relativeDifficulty: 2
+    seed: 0
+    relativeDifficulty: 1
     galaxyDataIndex: 0
     possibleTypes: 00000000
-    possibleSpecial: 000000000100000002000000030000000400000005000000
+    possibleSpecial: 
     collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 0
     bestScore: "\u2014\u2014"
   - name: Desert
-    seed: -46
+    seed: 1
     relativeDifficulty: 2
     galaxyDataIndex: 1
     possibleTypes: 01000000
-    possibleSpecial: 0500000003000000
+    possibleSpecial: 00000000
     collectedStars: 0000000000
-    numStars: 0
-    bestScore: "\u2014\u2014"
-  - name: Ice
-    seed: -1154
-    relativeDifficulty: 2
-    galaxyDataIndex: 2
-    possibleTypes: 02000000
-    possibleSpecial: 0100000004000000
-    collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 1
     bestScore: "\u2014\u2014"
   - name: Fire
-    seed: -449
-    relativeDifficulty: 2
+    seed: 2
+    relativeDifficulty: 3
     galaxyDataIndex: 3
     possibleTypes: 03000000
-    possibleSpecial: 0100000005000000
+    possibleSpecial: 0000000001000000
     collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 3
+    bestScore: "\u2014\u2014"
+  - name: Ice
+    seed: 3
+    relativeDifficulty: 4
+    galaxyDataIndex: 2
+    possibleTypes: 02000000
+    possibleSpecial: 000000000100000002000000
+    collectedStars: 0000000000
+    requiredStars: 7
     bestScore: "\u2014\u2014"
   - name: Goop
-    seed: 778
-    relativeDifficulty: 2
+    seed: 4
+    relativeDifficulty: 5
     galaxyDataIndex: 4
     possibleTypes: 04000000
-    possibleSpecial: 0400000002000000
+    possibleSpecial: 00000000010000000200000003000000
     collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 12
     bestScore: "\u2014\u2014"
   - name: Waste
-    seed: 83
-    relativeDifficulty: 2
+    seed: 5
+    relativeDifficulty: 6
     galaxyDataIndex: 5
     possibleTypes: 05000000
-    possibleSpecial: 0200000001000000
+    possibleSpecial: 0000000001000000020000000300000004000000
     collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 15
     bestScore: "\u2014\u2014"
   - name: Mythical
-    seed: 442
-    relativeDifficulty: 2
+    seed: 6
+    relativeDifficulty: 7
     galaxyDataIndex: 6
     possibleTypes: 06000000
-    possibleSpecial: 0300000002000000
+    possibleSpecial: 000000000100000002000000030000000400000005000000
     collectedStars: 0000000000
-    numStars: 0
+    requiredStars: 18
     bestScore: "\u2014\u2014"
   focusPosition: {x: 0, y: 1, z: 0}
   zoomGalaxyPos: {x: -2, y: 0.25, z: 0}
@@ -6185,8 +6185,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 676095620}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 10
+  m_MinValue: 1
+  m_MaxValue: 11
   m_WholeNumbers: 1
   m_Value: 10
   m_OnValueChanged:

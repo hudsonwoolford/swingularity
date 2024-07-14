@@ -76,6 +76,8 @@ public class LevelGenerator : MonoBehaviour
     8: number of poisson disk samples before rejecting the point as a spawner
     9: offset scale for determining random values of planet
     */
+    public static LevelGenerator Instance;
+    public float generationProgress { get; private set; } = 0;
     [Header("Level Parameters")]
     public int seed; //The seed for the level
     //Level gen params
@@ -103,8 +105,21 @@ public class LevelGenerator : MonoBehaviour
     bool xOry;
 
     #endregion
+    private void Awake()
+    {
+        generationProgress = 0;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
+        generationProgress = 0;
         LevelManager.notifyProcedural?.Invoke(true);
         SetLevelParams();
         mainCam = Camera.main; //Cache camera
@@ -370,6 +385,7 @@ public class LevelGenerator : MonoBehaviour
     /// Generates the planets off of the level parameters
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level){
+        generationProgress = 0;
         Time.timeScale = 0; 
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
@@ -386,15 +402,23 @@ public class LevelGenerator : MonoBehaviour
         (int, SpecialObject)[] replacers = CalculateReplaceIndices(level, ignoreIndices);
         Array.Sort(replacers, (x, y) => CompareEnums(x, y));
         int[] replaceIndices = Array.ConvertAll(replacers, r => r.Item1);
+
+        //add objects, used later in the coroutine
+        SpecialObject[] addObjects = CalculateAddObjects();
+
+        int totalObjects = level.numPlanets + addObjects.Length + 1; //used for progress
         for (int i = 0; i < replacers.Length; i++)
         {
+            generationProgress += 1f/totalObjects;
             replacers[i].Item2.replaceGeneration(ref planetList[replaceIndices[i]], level.planetSizes[replaceIndices[i]], level.planetPoints[replaceIndices[i]], level.planetSeeds[replaceIndices[i]], level.planetTypes[replaceIndices[i]], generator, i);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
         for (int i = 0; i < level.numPlanets; i++){
             if(replaceIndices.Contains(i)){continue;}
+            generationProgress += 1f / totalObjects;
             planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
-            
-            yield return new WaitForSecondsRealtime(0.1f);
+
+            yield return new WaitForSecondsRealtime(0.2f);
         }
         Destroy(generator.gameObject);
 
@@ -407,16 +431,15 @@ public class LevelGenerator : MonoBehaviour
             }
         }
         //Additional special objects
-        SpecialObject[] addObjects = CalculateAddObjects();
         for (int i = 0; i < addObjects.Length; i++)
         {
+            generationProgress += 1f / totalObjects;
             for (int u = 0; u < addObjects[i].amount; u++)
             {
                 addObjects[i].addGeneration(normPlanets.ToArray(), level.planetSeeds[0], u + i * 1000);
                 yield return new WaitForSecondsRealtime(0.1f);
             }
         }
-
         //Ball and flag positions
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Transform flag = GameObject.FindGameObjectWithTag("Hole").transform;
@@ -441,7 +464,7 @@ public class LevelGenerator : MonoBehaviour
         {
             GenerateCollectible((startPos + endPos) / 2);
         }
-
+        generationProgress = 1;
         Time.timeScale = 1;
         levelGenerated?.Invoke();
     }

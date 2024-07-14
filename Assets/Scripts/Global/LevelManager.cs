@@ -91,16 +91,16 @@ public class LevelManager : MonoBehaviour
     {
         public string name; //namne of galaxy, appears in ui
         public int seed; //galxy seed, determines levels
-        [Range(0, 10)]
+        [Range(1, 10)]
         public int relativeDifficulty; //relative difficulty of galaxy (1-10)
         public int galaxyDataIndex;
         public ColorSchemeStaticReference.PlanetType[] possibleTypes;
         public LevelGenerator.SpecialType[] possibleSpecial;
         public bool[] collectedStars;
-        public int numStars;
+        public int requiredStars;
         public string bestScore;
 
-        public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int numStars, string bestScore, bool hasCollectedCollectible)
+        public GalaxyParams(string name, int seed, int relativeDifficulty, int galaxyDataIndex, ColorSchemeStaticReference.PlanetType[] possibleTypes, LevelGenerator.SpecialType[] possibleSpecial, bool[] collectedStars, int requiredStars, string bestScore, bool hasCollectedCollectible)
         {
             this.name = name;
             this.seed = seed;
@@ -109,7 +109,7 @@ public class LevelManager : MonoBehaviour
             this.possibleTypes = possibleTypes;
             this.possibleSpecial = possibleSpecial;
             this.collectedStars = collectedStars;
-            this.numStars = numStars;
+            this.requiredStars = requiredStars;
             this.bestScore = bestScore;
         }
         public bool EqualNoStar(GalaxyParams a, GalaxyParams b)
@@ -140,6 +140,8 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ possibleTypes.GetHashCode();
             hash = (hash * 397) ^ possibleSpecial.GetHashCode();
             hash = (hash * 397) ^ collectedStars.GetHashCode();
+            hash = (hash * 397) ^ requiredStars.GetHashCode();
+            hash = (hash * 397) ^ bestScore.GetHashCode();
             return hash;
         }
 
@@ -151,7 +153,7 @@ public class LevelManager : MonoBehaviour
                 && (a.possibleTypes == b.possibleTypes || (a.possibleTypes != null && b.possibleTypes != null && a.possibleTypes.SequenceEqual(b.possibleTypes)))
                 && (a.possibleSpecial == b.possibleSpecial || (a.possibleSpecial != null && b.possibleSpecial != null && a.possibleSpecial.SequenceEqual(b.possibleSpecial)))
                 && (a.collectedStars == b.collectedStars || (a.collectedStars != null && b.collectedStars != null && a.collectedStars.SequenceEqual(b.collectedStars)))
-                && a.numStars == b.numStars
+                && a.requiredStars == b.requiredStars
                 && a.bestScore == b.bestScore;
         }
 
@@ -253,6 +255,16 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //CheatCodeInput();
+    }
+    void CheatCodeInput() //CHEATS
+    {
+        if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.A) && SceneManager.GetActiveScene().name == "Galaxies")
+        {
+            UniverseParams cu = currentUniverse;
+            cu.numStars = cu.numGalaxies * 5;
+            currentUniverse = cu;
+        }
     }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {
@@ -270,9 +282,8 @@ public class LevelManager : MonoBehaviour
         streakText.enabled = false;
         hioStreakText.enabled = false;
 
-        string sceneName = SceneManager.GetActiveScene().name;
-        levelIndex = Array.IndexOf(currentGalaxy, sceneName);
-        string nextName = levelIndex + 1 <= currentGalaxy.Length - 1 ? currentGalaxy[levelIndex + 1] : "Galaxies";
+        DetermineCurrentLevelIndex(false);
+        string nextName = levelIndex < currentGalaxy.Length-1 ? currentGalaxy[levelIndex+1] : "Galaxies";
 
         while (!chosenOption)
         {
@@ -282,7 +293,7 @@ public class LevelManager : MonoBehaviour
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
 
-        GameManager.SceneHandling.LoadScene(nextName, sceneName != "Galaxies");
+        GameManager.SceneHandling.LoadScene(nextName, nextName != "Galaxies");
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
@@ -304,7 +315,7 @@ public class LevelManager : MonoBehaviour
         streakText.enabled = false;
         hioStreakText.enabled = false;
         //determine current level index
-        DetermineCurrentLevelIndex();
+        DetermineCurrentLevelIndex(true);
         //complete universe
         if(levelIndex>=4) 
         {
@@ -326,13 +337,26 @@ public class LevelManager : MonoBehaviour
 
         GameManager.SceneHandling.LoadScene(sceneName, sceneName != "Galaxies");
     }
-    void DetermineCurrentLevelIndex()
+    void DetermineCurrentLevelIndex(bool determineProcedural)
     {
-        for (int i = 0; i < currentProceduralGalaxy.Length; i++)
+        if (determineProcedural)
         {
-            if (levelParams == currentProceduralGalaxy[i]) //OPERATOR DOESNT WORK IDK WHY SHOULD BE FIXED BUT THIS FOR NOW
+            for (int i = 0; i < currentProceduralGalaxy.Length; i++)
             {
-                levelIndex = i; break;
+                if (levelParams == currentProceduralGalaxy[i])
+                {
+                    levelIndex = i; break;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < currentGalaxy.Length; i++)
+            {
+                if(SceneManager.GetActiveScene().name == currentGalaxy[i])
+                {
+                    levelIndex = i; break;
+                }
             }
         }
     }

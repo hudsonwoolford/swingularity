@@ -24,7 +24,6 @@ public class GalaxyMenu : MonoBehaviour
         public Color color;
     }
 
-
     [SerializeField] LevelManager.GalaxyParams[] galaxyList;
     [Header("Important Positions and Rotations")]
     [SerializeField] Vector3 focusPosition; //focused centre, not zoomed in
@@ -122,8 +121,15 @@ public class GalaxyMenu : MonoBehaviour
     }
     void PlayGalaxy()
     {
-        SetProceduralGalaxy(galaxyList[focusedGalaxy]);
-        GameManager.SceneHandling.LoadScene("LevelGen", true);
+        if(GameManager.LevelManager.procedural)
+        {
+            SetProceduralGalaxy(galaxyList[focusedGalaxy]);
+            GameManager.SceneHandling.LoadScene("LevelGen", true);
+        }
+        else
+        {
+            SetManualGalaxy();
+        }
     }
     void DotButton(int dotIndex)
     {
@@ -162,6 +168,18 @@ public class GalaxyMenu : MonoBehaviour
             ZoomButton(true);
         }
     }
+    void SetManualGalaxy()
+    {
+        string[] galaxyLevels = new string[5];
+        string sceneSuffix = galaxyList[focusedGalaxy].possibleTypes[0].ToString();
+        sceneSuffix = char.ToUpper(sceneSuffix[0]) + sceneSuffix.Substring(1);
+        for (int i = 0; i < 5; i++)
+        {
+            galaxyLevels[i] = sceneSuffix + "_" + i.ToString();
+        }
+        initSystem?.Invoke(galaxyLevels, LevelManager.allGalaxyData[galaxyList[focusedGalaxy].galaxyDataIndex]);
+        GameManager.SceneHandling.LoadScene(galaxyLevels[0], true);
+    }
     void SetProceduralGalaxy(LevelManager.GalaxyParams gp)
     {
         LevelManager.LevelParams[] galaxyLevelParams = new LevelManager.LevelParams[5];
@@ -193,7 +211,7 @@ public class GalaxyMenu : MonoBehaviour
             galaxyTitle.text = gp.name;
             difficultyNum.text = gp.relativeDifficulty.ToString();
             difficultyNum.color = difficultyGradient.Evaluate(gp.relativeDifficulty / difficultySlider.maxValue);
-            difficultySlider.value = gp.relativeDifficulty;
+            difficultySlider.value = gp.relativeDifficulty + 1;
             ColorBlock cB = difficultySlider.colors;
             cB.disabledColor = difficultyNum.color;
             difficultySlider.colors = cB;
@@ -255,7 +273,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     IEnumerator ZoomGalaxy(bool zoomIn)
     {
-        if(galaxyList[focusedGalaxy].numStars > GameManager.LevelManager.currentUniverse.numStars){galaxySummaries[focusedGalaxy].Shake(); yield break; }
+        if(galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars){galaxySummaries[focusedGalaxy].Shake(); yield break; }
         isMoving = true;
         zoomedIn = zoomIn;
         galaxyMenuCanvas.enabled = !zoomIn;
@@ -370,7 +388,7 @@ public class GalaxyMenu : MonoBehaviour
 
             //instantiating UI for galaxies
             galaxySummaries[i] = Instantiate(galaxyUISummary, galaxyCons[i].transform).GetComponent<GalaxySummary>();
-            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].numStars);
+            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].requiredStars);
 
             galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
