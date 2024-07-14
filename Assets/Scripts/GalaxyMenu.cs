@@ -138,27 +138,33 @@ public class GalaxyMenu : MonoBehaviour
     }
     void MenuInput()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if(!zoomedIn)
         {
-            MoveButton(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            MoveButton(-1);
-        }
-        if(Input.mouseScrollDelta.y != 0){
-            if(Input.mouseScrollDelta.y < 0){
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
                 MoveButton(1);
             }
-            else{
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
                 MoveButton(-1);
             }
-            transitionDuration = 0.3f;
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                if (Input.mouseScrollDelta.y < 0)
+                {
+                    MoveButton(1);
+                }
+                else
+                {
+                    MoveButton(-1);
+                }
+                transitionDuration = 0.3f;
 
 
-            // transitionDuration = 1/Mathf.Abs(Input.mouseScrollDelta.y) * scrollSpeed;
+                // transitionDuration = 1/Mathf.Abs(Input.mouseScrollDelta.y) * scrollSpeed;
+            }
+            else { transitionDuration = 0.5f; }
         }
-        else{ transitionDuration = 0.5f;}
         if (Input.GetKeyDown(KeyCode.Escape) && zoomedIn)
         {
             ZoomButton(false);

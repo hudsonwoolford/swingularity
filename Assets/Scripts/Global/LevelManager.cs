@@ -255,7 +255,7 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //CheatCodeInput();
+        CheatCodeInput();
     }
     void CheatCodeInput() //CHEATS
     {
@@ -264,6 +264,16 @@ public class LevelManager : MonoBehaviour
             UniverseParams cu = currentUniverse;
             cu.numStars = cu.numGalaxies * 5;
             currentUniverse = cu;
+            for (int i = 0; i < currentProceduralUniverse.Length; i++)
+            {
+                for (int x = 0; x < currentProceduralUniverse[i].collectedStars.Length; x++)
+                {
+                    currentProceduralUniverse[i].collectedStars[x] = true;
+                }
+            }
+            GameManager.SaveLoadManager.Save();
+            GameManager.SaveLoadManager.Load(currentUniverse.name + ".txt");
+            GameManager.SceneHandling.LoadScene("Galaxies", false);
         }
     }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
