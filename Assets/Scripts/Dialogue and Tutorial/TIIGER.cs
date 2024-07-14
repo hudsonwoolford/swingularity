@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TIIGER : EventTalkableNPC
 {
@@ -74,5 +75,15 @@ public class TIIGER : EventTalkableNPC
         dialogueController.TogglePauseDialogue();
 
         isTransitioning = false;
+    }
+    protected override void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        base.OnSceneLoad(scene, loadSceneMode);
+        if(dialogueShown)
+        {
+            dialogueController.EndConversation();
+            StopAllCoroutines();
+            tgrAnimator.Play("DisableDialogue");
+        }
     }
 }

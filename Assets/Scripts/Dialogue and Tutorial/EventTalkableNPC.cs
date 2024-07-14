@@ -103,9 +103,14 @@ public class EventTalkableNPC : NPC, ITalkable
                 break;
         }
     }
-    void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
+    protected virtual void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         if(eventTriggeredDialogues == null) { return; }
+        foreach (var kvp in eventDelegates)
+        {
+            UnsubscribeDelegate(kvp.Key);
+        }
+        eventDelegates.Clear();
         for (int i = 0; i < eventTriggeredDialogues.Length; i++)
         {
             for (int x = 0; x < eventTriggeredDialogues[i].allowedScenes.Length; x++)

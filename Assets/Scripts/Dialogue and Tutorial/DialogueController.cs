@@ -64,7 +64,7 @@ public class DialogueController : MonoBehaviour
         //toggle pause boolean
         isPaused = !isPaused;
     }
-    private void EndConversation()
+    public void EndConversation()
     {
         //clear queue
         paragraphs.Clear();

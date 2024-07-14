@@ -27,6 +27,10 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] float elementHeightJump;
     [SerializeField] Transform saveElementParent;
     [SerializeField] GameObject saveElementObj;
+    [Header("Options UI")]
+    [SerializeField] Button campaignBtn;
+    [SerializeField] Button infiniteBtn;
+    [SerializeField] Button optionsBackBtn;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -37,6 +41,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] TextMeshProUGUI difficultyNumber;
     [SerializeField] Gradient difficultyColorGrad;
     [Header("Miscellaneous Params")]
+    [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
     [SerializeField] string proceduralGalaxiesScene;
