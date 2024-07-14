@@ -50,11 +50,19 @@ public class TitleScreenButtons : MonoBehaviour
     Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
     bool ngMenu;
+    NGMenuState currentNGMenuState;
     bool settingsMenu;
-    bool onlyCreateMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
+
+    private enum NGMenuState
+    { 
+        SaveLoadMenu,
+        OptionsMenu,
+        CreationMenu
+    }
+
     void Start()
     {
         saveElementParentOrigin = saveElementParent.localPosition;
@@ -68,9 +76,12 @@ public class TitleScreenButtons : MonoBehaviour
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         quitBtn.onClick.AddListener(() => QuitGame());
+        //options ui
+        optionsBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
+        infiniteBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.CreationMenu));
         //save load ui
         slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
-        slCreateBtn.onClick.AddListener(() => ngMenuAnim.Play("ShowCreationMenu"));
+        slCreateBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         slLoadBtn.onClick.AddListener(() => LoadProceduralUniverse());
         slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
         //new game ui
@@ -102,7 +113,7 @@ public class TitleScreenButtons : MonoBehaviour
         {
             DisableSettings(false);
         }
-        if(ngMenu && !onlyCreateMenu)
+        if(ngMenu && currentNGMenuState == NGMenuState.SaveLoadMenu)
         {
             slScrollBar.value += -Input.mouseScrollDelta.y/15;
             slScrollBar.value = Mathf.Clamp(slScrollBar.value, 0f, 1f);
@@ -134,16 +145,20 @@ public class TitleScreenButtons : MonoBehaviour
 
     }
     void NewGame(){
-        onlyCreateMenu = true;
-        StartCoroutine(EnableNewGameMenu(true));
-        ngMenuAnim.Play("ShowCreationMenu");
-        menuAnim.Play("HideMenu");
-    }
-    void LoadGame(){
-        onlyCreateMenu = false;
         StartCoroutine(EnableNewGameMenu(true));
         ngMenuAnim.Play("HideCreationMenu");
+        ngMenuAnim.Play("ShowOptionMenu");
+        ngMenuAnim.Play("HideSaveLoadMenu");
         menuAnim.Play("HideMenu");
+        currentNGMenuState = NGMenuState.OptionsMenu;
+    }
+    void LoadGame(){
+        StartCoroutine(EnableNewGameMenu(true));
+        ngMenuAnim.Play("HideCreationMenu");
+        ngMenuAnim.Play("HideOptionMenu");
+        ngMenuAnim.Play("ShowSaveLoadMenu");
+        menuAnim.Play("HideMenu");
+        currentNGMenuState = NGMenuState.SaveLoadMenu; 
     }
     void OpenSettings(){
         StartCoroutine(SettingsAnimDelay(true));
@@ -259,8 +274,7 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void NewGameBack()
     {
-        if(onlyCreateMenu) {StartCoroutine(EnableNewGameMenu(false));}
-        else {ngMenuAnim.Play("HideCreationMenu");}
+        SwitchCurrentNGMenu(NGMenuState.OptionsMenu);
         menuAnim.Play("ShowMenu");
     }
     /// <param name="size">0, 1 or 2 | small, medium, or large</param>
@@ -311,6 +325,49 @@ public class TitleScreenButtons : MonoBehaviour
 
         return uniqueFileName;
     }
+    void SwitchCurrentNGMenu(NGMenuState targetState)
+    {
+        switch (targetState)
+        {
+            case NGMenuState.SaveLoadMenu:
+                if(currentNGMenuState == NGMenuState.OptionsMenu)
+                {
+                    ngMenuAnim.Play("HideOptionMenu");
+                }
+                else if(currentNGMenuState == NGMenuState.CreationMenu)
+                {
+                    ngMenuAnim.Play("HideCreationMenu");
+                }
+                ngMenuAnim.Play("ShowSaveLoadMenu");
+                break;
+            case NGMenuState.OptionsMenu:
+                if(currentNGMenuState == NGMenuState.CreationMenu)
+                {
+                    ngMenuAnim.Play("HideCreationMenu");
+                }
+                if (currentNGMenuState == NGMenuState.SaveLoadMenu)
+                {
+                    ngMenuAnim.Play("HideSaveLoadMenu");
+                }
+                ngMenuAnim.Play("ShowOptionMenu");
+                break;
+            case NGMenuState.CreationMenu:
+                if (currentNGMenuState == NGMenuState.OptionsMenu)
+                {
+                    Debug.Log("polay");
+                    ngMenuAnim.Play("HideOptionMenu");
+                }
+                if (currentNGMenuState == NGMenuState.SaveLoadMenu)
+                {
+                    ngMenuAnim.Play("HideSaveLoadMenu");
+                }
+                ngMenuAnim.Play("ShowCreationMenu");
+                break;
+            default:
+                break;
+        }
+        currentNGMenuState = targetState;
+    }
     IEnumerator EnableNewGameMenu(bool enable)
     {
         if(enable)
@@ -318,18 +375,14 @@ public class TitleScreenButtons : MonoBehaviour
             PopulateSaves();
             ngMenu = true;
             menuAnim.Play("HideMenu");
-            // yield return new WaitForSeconds(menuAnim.GetCurrentAnimatorStateInfo(0).length/3);
             cameraAnim.Play("MenuToNGMenu");
-            // yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length/3);
             ngMenuAnim.Play("ShowNGMenu");
         }
         else if (!enable)
         {
             ngMenu = false;
             ngMenuAnim.Play("HideNGMenu");
-            // yield return new WaitForSeconds(ngMenuAnim.GetCurrentAnimatorStateInfo(0).length/3);
             cameraAnim.Play("NGMenuToMenu");
-            // yield return new WaitForSeconds(cameraAnim.GetCurrentAnimatorStateInfo(0).length/3);
             menuAnim.Play("ShowMenu");
         }
         yield return null;
