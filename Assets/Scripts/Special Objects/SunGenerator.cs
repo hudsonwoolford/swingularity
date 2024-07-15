@@ -18,7 +18,7 @@ public class SunGenerator : MonoBehaviour
     [SerializeField] protected float bigNoiseOffset;
     [SerializeField] protected float lightRangeMult = 1, lightIntensityMult = 1;
     [SerializeField] protected GameObject collisionParticles;
-    [SerializeField] protected AudioClip collisionClip;
+    [SerializeField] protected AudioObj collisionAudio;
     [SerializeField] protected bool autoMass = true;
     protected Light lightSource;
     protected SphereCollider col;
@@ -72,7 +72,7 @@ public class SunGenerator : MonoBehaviour
     protected virtual void OnCollisionEnter(Collision c)
     {
         if(c.gameObject.layer == 7) { return; } //Simulation layer
-        source.PlayOneShot(collisionClip, 0.6f);
+        GameManager.SFXManager.PlaySFX(collisionAudio);
 
         //Instantiates collision particles
         GameObject insta = Instantiate(collisionParticles, c.contacts[0].point + new Vector3(0,0,-5), Quaternion.Euler(new Vector3(-Mathf.Atan2(c.contacts[0].point.y - transform.position.y, c.contacts[0].point.x - transform.position.x) * Mathf.Rad2Deg, 90, -90)));

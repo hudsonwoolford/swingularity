@@ -18,6 +18,7 @@ public class StarCollectible : MonoBehaviour
     [SerializeField] MeshRenderer[] metalRenderers;
     [SerializeField] Material emissionMat;
     [SerializeField] float glowMult;
+    [SerializeField] AudioObj collectionAudio;
     MaterialPropertyBlock glowPBlock;
     MaterialPropertyBlock metalPBlock;
     SphereCollider sCol;
@@ -35,7 +36,7 @@ public class StarCollectible : MonoBehaviour
         starObj.SetActive(false);
         sCol.enabled = false;
         Physics.SyncTransforms();
-        StartCoroutine(RandomPointAlgorithm(midPoint, seed));
+        RandomPointAlgorithm(midPoint, seed);
     }
     /// <summary>
     /// Chooses a random point in a circle, travels in a random direction in a max radius until it finds an open spot
@@ -43,7 +44,7 @@ public class StarCollectible : MonoBehaviour
     /// <param name="midPoint"></param>
     /// <param name="seed"></param>
     /// <returns></returns>
-    IEnumerator RandomPointAlgorithm(Vector2 midPoint, int seed)
+    void RandomPointAlgorithm(Vector2 midPoint, int seed)
     {
         UnityEngine.Random.InitState(seed);
 
@@ -74,7 +75,6 @@ public class StarCollectible : MonoBehaviour
             }
             iterations++;
             transform.position = randPos;
-            yield return new WaitForFixedUpdate();
         }
         
         transform.position = randPos;
@@ -159,6 +159,7 @@ public class StarCollectible : MonoBehaviour
     #endregion
     void CollectStar()
     {
+        GameManager.SFXManager.PlaySFX(collectionAudio);
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
     }
     private void OnTriggerEnter(Collider collision)

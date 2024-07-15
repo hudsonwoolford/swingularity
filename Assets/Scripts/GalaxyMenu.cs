@@ -68,6 +68,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Sprite[] starIcon;
     [SerializeField] SpecialObjectIcon[] iconSprites;
     [SerializeField] TextMeshProUGUI bestScoreTxt;
+    [Header("Sounds")]
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
