@@ -88,6 +88,10 @@ public class GalaxyMenu : MonoBehaviour
         {
             CreateProceduralGalaxies();
         }
+        else
+        {
+            LevelManager.setGalaxies?.Invoke(galaxyList);
+        }
         CreateControllers();
         rightBtn.onClick.AddListener(() => MoveButton(1));
         leftBtn.onClick.AddListener(() => MoveButton(-1));
