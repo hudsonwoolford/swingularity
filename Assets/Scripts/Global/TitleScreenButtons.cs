@@ -15,7 +15,6 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim;
     [Header("Main Screen UI")]
     [SerializeField] Button continueBtn;
-    [SerializeField] Button newGameBtn;
     [SerializeField] Button loadGameBtn;
     [SerializeField] Button settingsBtn;
     [SerializeField] Button quitBtn;
@@ -77,7 +76,6 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
         //normal ui
-        newGameBtn.onClick.AddListener(() => NewGame());
         loadGameBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         quitBtn.onClick.AddListener(() => QuitGame());
