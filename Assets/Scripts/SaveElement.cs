@@ -22,7 +22,7 @@ public class SaveElement : MonoBehaviour
     [SerializeField] TextMeshProUGUI progressText;
     [SerializeField] TextMeshProUGUI progressPercentText;
     [Header("Procedural")]
-    [SerializeField] TextMeshProUGUI seedText;
+    [SerializeField] TMP_InputField seedText;
     [SerializeField] GameObject proceduralInfo;
     [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TextMeshProUGUI sizeText;
