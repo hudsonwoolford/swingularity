@@ -45,8 +45,11 @@ public class ShootBall : MonoBehaviour
 
     [Header("Sound")]
     [SerializeField] AudioObj enterPortal;
+    [SerializeField] AudioObj hitBall;
+    [SerializeField] AudioSource ballAudioSrc;
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
+    public static bool liningUpShot;
 
     MeshRenderer ballRenderer;
     Material defaultBallMat;
@@ -61,7 +64,6 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
-    public static bool liningUpShot;
     bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
@@ -388,6 +390,8 @@ public class ShootBall : MonoBehaviour
         ballStill = false;
         movedAstronaut = false;
 
+        ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, force.magnitude / maxPower) + UnityEngine.Random.Range(-0.15f, 0.15f);
+        GameManager.SFXManager.PlaySFX(hitBall, ballAudioSrc, Mathf.Clamp01(force.magnitude / maxPower * 2));
         onShoot?.Invoke(); //invoke shoot event
         rb.AddForce(force, ForceMode.Impulse); //adding force
 

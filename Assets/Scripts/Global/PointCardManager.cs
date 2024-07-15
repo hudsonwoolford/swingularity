@@ -14,6 +14,9 @@ public class PointCardManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] shotsTexts; //Text that displays play shots for a level, 5 in array
     [SerializeField] Color positive, neutral, negative;
     [SerializeField] Color holeInOne;
+    [Header("Sound")]
+    [SerializeField] AudioObj holeInOneAudio;
+    [SerializeField] AudioObj showPointCardAudio;
     public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum, bool starCollected);
     public static GalaxyScoring onGalaxyScore;
     bool galaxyStarCollected;
@@ -44,6 +47,9 @@ public class PointCardManager : MonoBehaviour
     {
         int i = GameManager.LevelManager.levelIndex;
         SetPointCardVar (i, relPar, totalShots);
+
+        if(totalShots == 1) { GameManager.SFXManager.PlaySFX(holeInOneAudio); } 
+        else { GameManager.SFXManager.PlaySFX(showPointCardAudio); }
 
         if (i == 4)
         {
