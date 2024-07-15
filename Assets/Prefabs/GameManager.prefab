@@ -8854,6 +8854,7 @@ Transform:
   - {fileID: 2704877546289196357}
   - {fileID: 8631393248701897734}
   - {fileID: 8541561832160390122}
+  - {fileID: 3110857846925428420}
   - {fileID: 4545621549953044717}
   - {fileID: 783733375315893245}
   m_Father: {fileID: 0}
@@ -14726,7 +14727,7 @@ GameObject:
   - component: {fileID: 2992165138235948976}
   - component: {fileID: 1036822138251081877}
   m_Layer: 5
-  m_Name: SceneHandling
+  m_Name: Scene Handling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17661,6 +17662,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &5380101150357877678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3110857846925428420}
+  m_Layer: 0
+  m_Name: SFX Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3110857846925428420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380101150357877678}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1221.7434, y: 592.276, z: -339.2016}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2798159181106569840}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5426761260428614252
 GameObject:
   m_ObjectHideFlags: 0
@@ -27750,7 +27782,7 @@ MonoBehaviour:
   menuMusic:
     name: Main Music
     type: 7
-    musicClip: {fileID: 8300000, guid: a76df859ead21904fac5f94b27edfcef, type: 3}
+    musicClip: {fileID: 8300000, guid: 29de39f8a1a6d334d90f18e661f006fb, type: 3}
     loopEndOffset: 0
     loopBeginOffset: 0
     volume: 0.6
@@ -27793,7 +27825,7 @@ MonoBehaviour:
     volume: 0.6
   - name: Mythical
     type: 6
-    musicClip: {fileID: 8300000, guid: 48ab3a07b5aeac64bb0e0b67b77af4a5, type: 3}
+    musicClip: {fileID: 8300000, guid: 490a3a8a57e0be2418945d2f4a568b8a, type: 3}
     loopEndOffset: 0
     loopBeginOffset: 0
     volume: 0.4
