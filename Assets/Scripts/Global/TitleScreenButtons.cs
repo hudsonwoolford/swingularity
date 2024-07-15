@@ -213,7 +213,7 @@ public class TitleScreenButtons : MonoBehaviour
     #region Save Load UI
     void OnSaveLoadScrollbar(float value)
     {
-        float maxValue = -(SaveLoadManager.saves.Length - 1) * elementHeightJump;
+        float maxValue = -Mathf.Clamp(SaveLoadManager.saves.Length - 3, 0, SaveLoadManager.saves.Length) * elementHeightJump;
         saveElementParent.localPosition = Vector3.Lerp(saveElementParentOrigin, saveElementParentOrigin + new Vector3(0, maxValue, 0), value);
     }
     void DeleteSave(SaveElement se)
