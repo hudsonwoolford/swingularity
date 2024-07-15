@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Drawing;
 
 [ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
@@ -45,6 +44,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Button graphicsTabBtn;
     [SerializeField] Button[] tabBtns;
     [SerializeField] CanvasGroup[] settingsTabs;
+    [SerializeField] Image[] settingsTabHovers;
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider masterVolElement;
     [SerializeField] SettingsSlider sfxVolElement;
@@ -132,6 +132,8 @@ public class SettingsManager : MonoBehaviour
     }
     public void LoadUIElements(UserSettings userSettings)
     {
+        settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
+
         SetSlider(userSettings.masterVolume, ref masterVolElement);
         float div = userSettings.masterVolume == 0 ? 1 : userSettings.masterVolume;
         SetSlider(userSettings.sfxVolume / div, ref sfxVolElement);
@@ -307,6 +309,8 @@ public class SettingsManager : MonoBehaviour
         }
         settingsTabs[prevIndex].alpha = 0;
         settingsTabs[currentTab].alpha = 1;
+        settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
+        settingsTabHovers[prevIndex].color = new Color (1, 1, 1, 10f/255f);
         settingsTabs[prevIndex].interactable = false;
         settingsTabs[prevIndex].blocksRaycasts = false;
         settingsTabs[currentTab].interactable = true;
