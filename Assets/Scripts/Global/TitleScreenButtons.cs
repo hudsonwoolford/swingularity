@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using System.IO;
 using System.Linq;
 using System;
+using static SaveLoadManager;
 
 
 public class TitleScreenButtons : MonoBehaviour
@@ -309,9 +310,9 @@ public class TitleScreenButtons : MonoBehaviour
     void CreateNewManualUniverse()
     {
         LevelManager.UniverseParams up = campaignUniverseParams;
-        if(up.name == string.Empty) { up.name = "MyUniverse"; }
+        up.name = up.name == string.Empty ? "MyUniverse" : up.name; //failsafe
         up.proceduralUniverse = false;
-        up.name = EnsureUniqueFileName(SaveLoadManager.saves, ccNameFld.text + ".txt");
+        up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
         GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });
         LevelManager.notifyProcedural?.Invoke(false);
@@ -433,7 +434,7 @@ public class TitleScreenButtons : MonoBehaviour
         int numGalaxies = UnityEngine.Random.Range(minMaxGalaxies[currentUniverseSize].x, minMaxGalaxies[currentUniverseSize].y); //random number of galaxies
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
-        universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe - needs to not be the same name as other saves - not implemented
+        universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe
         return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0, true);
     }
 
