@@ -15,7 +15,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim;
     [Header("Main Screen UI")]
     [SerializeField] Button continueBtn;
-    [SerializeField] Button loadGameBtn;
+    [SerializeField] Button myUniverseBtn;
     [SerializeField] Button settingsBtn;
     [SerializeField] Button quitBtn;
     [Header("Save Load UI")]
@@ -29,10 +29,12 @@ public class TitleScreenButtons : MonoBehaviour
     [Header("Options UI")]
     [SerializeField] Button campaignBtn;
     [SerializeField] Button infiniteBtn;
+    [SerializeField] Button optionsSelectBtn;
     [SerializeField] Button optionsBackBtn;
     [Header("Campaign Creation UI")]
     [SerializeField] TMP_InputField ccNameFld;
     [SerializeField] Button ccCreateBtn;
+    [SerializeField] Button ccBackBtn;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -52,7 +54,6 @@ public class TitleScreenButtons : MonoBehaviour
     Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
     bool ngMenu;
-    bool newGameNGMenu;
     NGMenuState currentNGMenuState;
     bool settingsMenu;
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
@@ -76,13 +77,12 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
         //normal ui
-        loadGameBtn.onClick.AddListener(() => LoadGame());
+        myUniverseBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         quitBtn.onClick.AddListener(() => QuitGame());
         //options ui
         optionsBackBtn.onClick.AddListener(() => OptionBackBtn());
-        campaignBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.CampaignCreationMenu));
-        infiniteBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.CreationMenu));
+        optionsSelectBtn.onClick.AddListener(() => OptionSelectButton());
         //save load ui
         slBackBtn.onClick.AddListener(() => StartCoroutine(EnableNewGameMenu(false)));
         slCreateBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
@@ -90,6 +90,7 @@ public class TitleScreenButtons : MonoBehaviour
         slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
         //campaign creation ui
         ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse());
+        ccBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         //new game ui
         ngBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
@@ -158,7 +159,6 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
         currentNGMenuState = NGMenuState.OptionsMenu;
-        newGameNGMenu = true;
     }
     void LoadGame() {
         StartCoroutine(EnableNewGameMenu(true));
@@ -168,7 +168,6 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
         currentNGMenuState = NGMenuState.SaveLoadMenu;
-        newGameNGMenu = false;
     }
     void OpenSettings() {
         StartCoroutine(SettingsAnimDelay(true));
@@ -283,9 +282,16 @@ public class TitleScreenButtons : MonoBehaviour
         UnityEngine.Random.InitState(Mathf.RoundToInt(System.DateTime.Now.Millisecond * System.DateTime.Now.Second * Time.time));
         ngSeedFld.text = UnityEngine.Random.Range(-2147483647, 2147483647).ToString();
     }
+    void OptionSelectButton()
+    {
+        Button b;
+        if (lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<Button>(out b)) { return; }
+        if (b == infiniteBtn) { SwitchCurrentNGMenu(NGMenuState.CreationMenu); }
+        if (b == campaignBtn) { SwitchCurrentNGMenu(NGMenuState.CampaignCreationMenu); }
+    }
     void OptionBackBtn()
     {
-        if (newGameNGMenu) { StartCoroutine(EnableNewGameMenu(false)); } else { SwitchCurrentNGMenu(NGMenuState.SaveLoadMenu); }
+        SwitchCurrentNGMenu(NGMenuState.SaveLoadMenu);
     }
     /// <param name="size">0, 1 or 2 | small, medium, or large</param>
     void SetGalaxySize(int size)
@@ -369,6 +375,10 @@ public class TitleScreenButtons : MonoBehaviour
                 if (currentNGMenuState == NGMenuState.SaveLoadMenu)
                 {
                     ngMenuAnim.Play("HideSaveLoadMenu");
+                }
+                if(currentNGMenuState == NGMenuState.CampaignCreationMenu)
+                {
+                    ngMenuAnim.Play("HideCampaignCreationMenu");
                 }
                 ngMenuAnim.Play("ShowOptionMenu");
                 break;
