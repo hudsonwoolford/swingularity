@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 public class SettingsManager : MonoBehaviour
@@ -61,9 +62,10 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] OptionScroll planetResElement;
     [SerializeField] OptionScroll antiAliasingElement;
     [SerializeField] SettingsToggle vsyncTgl;
-
+    GameObject previousSelectedTab;
     Canvas settingsCanvas;
     Animator settingsAnim;
+    [SerializeField] EventSystem settingsEventsystem;
     bool menuOpen = false;
     int currentTab;
     float transitionDuration = 0.05f;
@@ -84,13 +86,9 @@ public class SettingsManager : MonoBehaviour
         settingsAnim = GetComponent<Animator>();
         settingsAnim.Play("DisableMenu");
         currentTab = 0;
+        previousSelectedTab = audioTabBtn.gameObject;
 
         SetButtonFunctions();
-        for (int i = 0; i < tabBtns.Length; i++)
-        {
-            if (i==currentTab) { tabBtns[i].GetComponent<Animator>().Play("Select"); }
-            else { tabBtns[i].GetComponent<Animator>().Play("Unselect"); }
-        }
     }
 
     // Update is called once per frame
@@ -106,6 +104,19 @@ public class SettingsManager : MonoBehaviour
             {
                 enableSettingsMenu?.Invoke(false);
             }
+        }
+        if(menuOpen){
+            int selectedOther = 0;
+            for(int i = 0; i < tabBtns.Length; i++){
+                if(settingsEventsystem.currentSelectedGameObject != tabBtns[i].gameObject){
+                    selectedOther++;
+                }
+            }
+
+            if(selectedOther == 3){
+                previousSelectedTab.GetComponent<Button>().Select();
+            }
+
         }
     }
     #region Setting Variables
@@ -132,7 +143,6 @@ public class SettingsManager : MonoBehaviour
     }
     public void LoadUIElements(UserSettings userSettings)
     {
-        settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
 
         SetSlider(userSettings.masterVolume, ref masterVolElement);
         float div = userSettings.masterVolume == 0 ? 1 : userSettings.masterVolume;
@@ -296,8 +306,19 @@ public class SettingsManager : MonoBehaviour
     {
         int prevIndex = currentTab;
         currentTab = tabIndex;
-        if(prevIndex == currentTab) { yield break; }
+
         float timeOfTransition = 0;
+        // settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
+        // settingsTabHovers[prevIndex].color = new Color (1, 1, 1, 10f/255f);
+            tabBtns[currentTab].Select();
+            previousSelectedTab = tabBtns[currentTab].gameObject;
+
+            // for(int i = 0; i < tabBtns.Length; i++){
+                
+            //     if(i == currentTab){tabBtns[currentTab].interactable = false;}
+            //     else{tabBtns[currentTab].interactable = true;}
+            // }
+        if(prevIndex == currentTab) { yield break; }
         while(timeOfTransition<transitionDuration)
         {
             float alpha = Mathf.Lerp(0, 1, timeOfTransition / transitionDuration);
@@ -309,17 +330,12 @@ public class SettingsManager : MonoBehaviour
         }
         settingsTabs[prevIndex].alpha = 0;
         settingsTabs[currentTab].alpha = 1;
-        settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
-        settingsTabHovers[prevIndex].color = new Color (1, 1, 1, 10f/255f);
+
         settingsTabs[prevIndex].interactable = false;
         settingsTabs[prevIndex].blocksRaycasts = false;
         settingsTabs[currentTab].interactable = true;
         settingsTabs[currentTab].blocksRaycasts = true;
-        for (int i = 0; i < tabBtns.Length; i++)
-        {
-            if (i == currentTab) { tabBtns[i].GetComponent<Animator>().Play("Select"); }
-            else { tabBtns[i].GetComponent<Animator>().Play("Unselect"); }
-        }
+
     }
     void SetButtonFunctions() //Sets all listener functions for buttons
     {

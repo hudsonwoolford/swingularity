@@ -747,6 +747,10 @@ public class ShootBall : MonoBehaviour
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
+            //Failsafe here
+            if((hole.position - transform.position).magnitude < 1.5f){
+                transform.position = hole.GetComponent<Collider>().ClosestPoint(transform.position);
+            }
             Vector3 holeDir = hitPoint - hole.position;
             if(clockwise){
                 transform.position = Vector3.SmoothDamp(transform.position, hole.position + Quaternion.Euler(new Vector3 (0, 0, (1-progress) * 360)) * holeDir * (1-progress) * animScale, ref velocity, animSmoothing);
