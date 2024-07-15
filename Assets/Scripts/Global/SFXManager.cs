@@ -16,15 +16,19 @@ public class SFXManager : MonoBehaviour
     {
         
     }
-    public void PlayInterface(AudioClip clip)
+    public void PlayInterface(AudioObj audio)
     {
 
-        interfaceSrc.PlayOneShot(clip);
+        interfaceSrc.PlayOneShot(audio.clip, audio.inherentVol);
     }
-    public void PlaySFX(AudioClip clip, float volModifier)
+    public void PlaySFX(AudioObj audio)
+    {
+        sfxSrc.PlayOneShot(audio.clip, audio.inherentVol);
+    }
+    public void PlaySFX(AudioObj audio, float dynamicAudioScalar)
     {
 
-        sfxSrc.PlayOneShot(clip, volModifier);
+        sfxSrc.PlayOneShot(audio.clip, audio.inherentVol * dynamicAudioScalar);
     }
     private void ManageSRCSettings()
     {

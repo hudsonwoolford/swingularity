@@ -18,7 +18,7 @@ public class StarCollectible : MonoBehaviour
     [SerializeField] MeshRenderer[] metalRenderers;
     [SerializeField] Material emissionMat;
     [SerializeField] float glowMult;
-    [SerializeField] AudioClip collectionClip;
+    [SerializeField] AudioObj collectionAudio;
     MaterialPropertyBlock glowPBlock;
     MaterialPropertyBlock metalPBlock;
     SphereCollider sCol;
@@ -159,7 +159,7 @@ public class StarCollectible : MonoBehaviour
     #endregion
     void CollectStar()
     {
-        GameManager.SFXManager.PlaySFX(collectionClip, 0.3f);
+        GameManager.SFXManager.PlaySFX(collectionAudio);
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
     }
     private void OnTriggerEnter(Collider collision)

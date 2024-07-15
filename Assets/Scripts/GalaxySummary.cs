@@ -10,6 +10,8 @@ public class GalaxySummary : MonoBehaviour
     [SerializeField] bool[] collectedStars;
     [SerializeField] Image[] starImgs;
     [SerializeField] GameObject lockImage, stars;
+    [SerializeField] AudioObj lockErrorAudio;
+
     Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,7 @@ public class GalaxySummary : MonoBehaviour
         UpdateStars();
     }
     public void Shake(){
+        GameManager.SFXManager.PlaySFX(lockErrorAudio);
         animator.Play("ShakeLock");
     }
     public void InitSummary(bool[] collectedStars, int lockStars)

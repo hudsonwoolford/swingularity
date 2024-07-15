@@ -43,6 +43,8 @@ public class ShootBall : MonoBehaviour
     [SerializeField] Material[] astronautFadeMats;
     [SerializeField] Shader emmisionShader;
 
+    [Header("Sound")]
+    [SerializeField] AudioObj enterPortal;
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
 
@@ -697,6 +699,7 @@ public class ShootBall : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
          if(other.gameObject.tag == "Hole")
         {
+            GameManager.SFXManager.PlaySFX(enterPortal);
             other.enabled = false;
             RaycastHit hit;
             if (Physics.Raycast(posLastFrame, (transform.position - posLastFrame), out hit))

@@ -16,7 +16,7 @@ public class ForceField : MonoBehaviour
     [SerializeField] float meshChangeThreshold = 2;
     [SerializeField] Material forceMat;
     [SerializeField] Mesh smallMesh, bigMesh;
-    [SerializeField] AudioClip bump;
+    [SerializeField] AudioObj bump;
     [SerializeField] public bool autoMass = false;
 
     [Header("Property Variables (Set by script)")]
