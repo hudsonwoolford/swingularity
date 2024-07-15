@@ -266,7 +266,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastAccessTime.ToShortDateString() + " | " + saveInfos[i].LastAccessTime.ToShortTimeString(), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastAccessTime.ToString("dd.MM.yy hh:mm"), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion
