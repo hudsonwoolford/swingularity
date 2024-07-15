@@ -72,7 +72,7 @@ public class SunGenerator : MonoBehaviour
     protected virtual void OnCollisionEnter(Collision c)
     {
         if(c.gameObject.layer == 7) { return; } //Simulation layer
-        source.PlayOneShot(collisionClip, 0.6f);
+        GameManager.SFXManager.PlaySFX(collisionClip, 1f);
 
         //Instantiates collision particles
         GameObject insta = Instantiate(collisionParticles, c.contacts[0].point + new Vector3(0,0,-5), Quaternion.Euler(new Vector3(-Mathf.Atan2(c.contacts[0].point.y - transform.position.y, c.contacts[0].point.x - transform.position.x) * Mathf.Rad2Deg, 90, -90)));
