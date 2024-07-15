@@ -40,6 +40,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
     [SerializeField] Button[] ngSizeBtns;
+    [SerializeField] Image[] ngSizeHoverImgs;
     [SerializeField] TMP_InputField ngNameFld;
     [SerializeField] TMP_InputField ngSeedFld;
     [SerializeField] Slider ngDifficultySldr;
@@ -298,14 +299,18 @@ public class TitleScreenButtons : MonoBehaviour
     void SetGalaxySize(int size)
     {
         size = Mathf.Clamp(size, 0, 2);
-        currentUniverseSize = size;
+
         for (int i = 0; i<ngSizeBtns.Length; i++)
         {
             bool enableText = i==size ? true : false;
-            if(enableText) {ngSizeBtns[i].GetComponent<Animator>().Play("Select");}
-            else {ngSizeBtns[i].GetComponent<Animator>().Play("Unselect");}
+            if(i==currentUniverseSize && enableText){
+                ngSizeBtns[i].GetComponent<Animator>().Play("Reselect"); ngSizeHoverImgs[i].gameObject.SetActive(false);
+            }
+            else if(enableText) {ngSizeBtns[i].GetComponent<Animator>().Play("Select"); ngSizeHoverImgs[i].gameObject.SetActive(false);}
+            else {ngSizeBtns[i].GetComponent<Animator>().Play("Unselect"); ngSizeHoverImgs[i].gameObject.SetActive(true);}
             
         }
+        currentUniverseSize = size;
     }
     void CreateNewManualUniverse()
     {
