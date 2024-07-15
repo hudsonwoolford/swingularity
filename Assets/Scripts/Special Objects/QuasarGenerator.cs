@@ -46,6 +46,7 @@ public class QuasarGenerator : MonoBehaviour
     [SerializeField] MeshRenderer lowerRenderer;
     [SerializeField] MeshRenderer lowerElectroRenderer;
     [SerializeField] MeshRenderer lowerDarkRenderer;
+
     //Property Blocks
     MaterialPropertyBlock sphereBlock;
     MaterialPropertyBlock distortBlock;

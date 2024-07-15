@@ -46,6 +46,7 @@ public class ShootBall : MonoBehaviour
     [Header("Sound")]
     [SerializeField] AudioObj enterPortal;
     [SerializeField] AudioObj hitBall;
+    [SerializeField] AudioObj quasarDeath;
     [SerializeField] AudioSource ballAudioSrc;
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
@@ -856,7 +857,8 @@ public class ShootBall : MonoBehaviour
         deathDelay = true;
         if(objCol.GetComponent<QuasarGenerator>()!=null)
         {
-            death.Invoke(2);
+            GameManager.SFXManager.PlaySFX(quasarDeath);
+            death?.Invoke(2);
             if (GameManager.LevelManager.currentTheme != null)
             {
                 defaultBallMat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
@@ -882,10 +884,10 @@ public class ShootBall : MonoBehaviour
             yield break;
         }
         else if(objCol.GetComponent<SunGenerator>() != null){
-            death.Invoke(1);
+            death?.Invoke(1);
         }
         else{
-            death.Invoke(0);
+            death?.Invoke(0);
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
         childObj.GetComponent<MeshRenderer>().enabled = false;
