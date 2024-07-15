@@ -63,6 +63,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Slider difficultySlider;
     [SerializeField] Gradient difficultyGradient;
     [SerializeField] TextMeshProUGUI astroBiomeTxt;
+    [SerializeField] TextMeshProUGUI noEncontersTxt;
     [SerializeField] Image[] iconImgs;
     [SerializeField] Image[] starImgs;
     [SerializeField] Sprite[] starIcon;
@@ -245,6 +246,7 @@ public class GalaxyMenu : MonoBehaviour
                 bestScoreTxt.color = new Color(1,1,1,1);
             }
 
+            noEncontersTxt.enabled = gp.possibleSpecial == null || gp.possibleSpecial.Length == 0 ? true : false;
             SpecialObjectIcon[] icons = new SpecialObjectIcon[gp.possibleSpecial.Length];
             for (int i = 0; i < icons.Length; i++)
             {
