@@ -698,10 +698,11 @@ public class LevelGenerator : MonoBehaviour
     void SetBallFlagPositionFarthest(Transform flag, Transform ball, Planet[] candidates, int[] farthestPlanets)
     {
         Physics.SyncTransforms();
+        Vector2 ballToFlagPlanet = candidates[farthestPlanets[0]].forceField.transform.position - candidates[farthestPlanets[1]].forceField.transform.position;
         //Flag position
         UnityEngine.Random.InitState(seed);
         float flagRad = flag.GetComponent<SphereCollider>().radius * flag.localScale.x;
-        float flagRot = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+        float flagRot = Mathf.Atan2(-ballToFlagPlanet.y, -ballToFlagPlanet.x) + UnityEngine.Random.Range(-Mathf.PI/2, Mathf.PI/2);
         Vector3 initFlagPos = Vector3.zero;
         for (int u = 0; u < 6; u++)
         {
@@ -719,7 +720,7 @@ public class LevelGenerator : MonoBehaviour
         //Ball position
         UnityEngine.Random.InitState(seed + 9);
         float ballRad = ball.GetComponent<SphereCollider>().radius * ball.localScale.x;
-        float ballRot = UnityEngine.Random.Range(0f, 2f * Mathf.PI);
+        float ballRot = Mathf.Atan2(ballToFlagPlanet.y, ballToFlagPlanet.x) + UnityEngine.Random.Range(-Mathf.PI / 2, Mathf.PI / 2);
         Vector3 initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + new Vector3(Mathf.Cos(ballRot), Mathf.Sin(ballRot)) * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
         for (int u = 0; u < 6; u++)
         {

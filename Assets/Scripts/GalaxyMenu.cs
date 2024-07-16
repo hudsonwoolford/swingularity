@@ -7,6 +7,7 @@ using System.Linq;
 using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
+using static UnityEditor.Progress;
 
 public class GalaxyMenu : MonoBehaviour
 {
@@ -92,7 +93,29 @@ public class GalaxyMenu : MonoBehaviour
         }
         else
         {
-            LevelManager.setGalaxies?.Invoke(galaxyList);
+            bool notLMSet = false;
+            if(GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
+            {
+                for (int i = 0; i < galaxyList.Length; i++)
+                {
+                    if (i < GameManager.LevelManager.currentProceduralUniverse.Length)
+                    {
+                        notLMSet |= !galaxyList[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxyList[i]);
+                    }
+                    else { notLMSet = true; }
+
+                }
+            }
+            else { notLMSet = true; }
+            Debug.Log(notLMSet);
+            if (notLMSet)
+            {
+                LevelManager.setGalaxies?.Invoke(galaxyList);
+            }
+            else
+            {
+                galaxyList = GameManager.LevelManager.currentProceduralUniverse;
+            }
         }
         CreateControllers();
         rightBtn.onClick.AddListener(() => MoveButton(1));
@@ -468,7 +491,7 @@ public class GalaxyMenu : MonoBehaviour
         float galaxyDifficultyMax = galaxyDifficulties.Item2;
 
         int galaxyStarLockTracker = 0;
-        bool alreadyLMSet = false;
+        bool notLMSet = false;
         for (int i = 0; i < galaxies.Length; i++) //for each galaxy index, create one
         {
             UnityEngine.Random.InitState(universe.seed + i); //different random values
@@ -566,12 +589,13 @@ public class GalaxyMenu : MonoBehaviour
             {
                 if(i < GameManager.LevelManager.currentProceduralUniverse.Length)
                 {
-                    alreadyLMSet |= galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
+                    notLMSet |= !galaxies[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxies[i]);
                 }
-                else { alreadyLMSet = false; }
+                else { notLMSet = true; }
             }
+            else { notLMSet = true; }
         }
-        if (!alreadyLMSet) { LevelManager.setGalaxies?.Invoke(galaxies); LevelManager.notifyProcedural?.Invoke(true); }
+        if (notLMSet) { LevelManager.setGalaxies?.Invoke(galaxies); LevelManager.notifyProcedural?.Invoke(true); }
         galaxyList = GameManager.LevelManager.currentProceduralUniverse;
         GameManager.SaveLoadManager.Save();
     }

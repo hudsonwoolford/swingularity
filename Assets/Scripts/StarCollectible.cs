@@ -29,6 +29,13 @@ public class StarCollectible : MonoBehaviour
     CelestialMass cMass;
     public delegate void StarCollected();
     public static StarCollected onStarCollected;
+    private void Awake()
+    {
+        NullChecks();
+        starObj.SetActive(false);
+        sCol.enabled = true;
+        chosenPos = transform.position;
+    }
     public void Init(Vector2 midPoint, int seed)
     {
         NullChecks();
