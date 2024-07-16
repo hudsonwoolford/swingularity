@@ -7,7 +7,6 @@ using System.Linq;
 using static GalaxyGenerator;
 using static LevelGenerator;
 using static LevelManager;
-using static UnityEditor.Progress;
 
 public class GalaxyMenu : MonoBehaviour
 {
