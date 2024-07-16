@@ -176,6 +176,13 @@ public class BlackHoleGenerator : MonoBehaviour
         yield return new WaitForSeconds(blackHoleTimer);
         canTravel = true;
     }
+    private void OnDrawGizmos()
+    {
+        if(correspondent != null && !whiteHole)
+        {
+            Gizmos.DrawLine(transform.position, correspondent.position);
+        }
+    }
     private void OnEnable(){
         blackHoleTravel += BlackHoleTravelTimer;
         HackMode.onHackMode += EnableLine;
