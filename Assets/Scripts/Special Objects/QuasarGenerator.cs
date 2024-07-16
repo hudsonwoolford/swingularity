@@ -24,10 +24,11 @@ public class QuasarGenerator : MonoBehaviour
     [SerializeField] float systemRotSpeed = 8;
     [SerializeField] float angle;
     [SerializeField] float radius = 1;
-    [Tooltip("First interval is on, after that it switches")]
+    [SerializeField] bool startOff;
     [SerializeField] List<float> intervals = new List<float>();
     [SerializeField] AnimationCurve enableCurve;
     [SerializeField] float enableSpeed;
+    [SerializeField] bool raycastForcefields;
     [Header("Local Variables")]
     [SerializeField] Transform upperBeamParent;
     [SerializeField] Transform lowerBeamParent;
@@ -67,6 +68,32 @@ public class QuasarGenerator : MonoBehaviour
     {
         maxRadius = radius;
         NullChecks();
+
+    }
+    void RaycastForceFields()
+    {
+        if (!raycastForcefields)
+        {
+            return;
+        }
+        RaycastHit[] downRay = Physics.RaycastAll(transform.position, -transform.up, radius * 2 + 1);
+        RaycastHit[] upRay = Physics.RaycastAll(transform.position, transform.up, radius * 2 + 1);
+
+        ForceField ff;
+        for (int i = 0; i < downRay.Length; i++)
+        {
+            if (downRay[i].transform.TryGetComponent(out ff))
+            {
+                ff.AddInteractable(lowerEnd.transform);
+            }
+        }
+        for (int i = 0; i < upRay.Length; i++)
+        {
+            if (upRay[i].transform.TryGetComponent(out ff))
+            {
+                ff.AddInteractable(upperEnd.transform);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -150,8 +177,16 @@ public class QuasarGenerator : MonoBehaviour
         bCollider.size = new Vector3(1, Mathf.Max(radius * 8.25f, 0.1f), 1);
         bCollider.enabled = radius == 0 ? false : true;
         bool shrinking = maxRadius <= radius ? false : true;
-        upperEnd.gameObject.SetActive(!shrinking);
-        lowerEnd.gameObject.SetActive(!shrinking);
+        if(Application.isPlaying)
+        {
+            upperEnd.gameObject.SetActive(!shrinking);
+            lowerEnd.gameObject.SetActive(!shrinking);
+        }
+        else
+        {
+            upperEnd.gameObject.SetActive(true);
+            lowerEnd.gameObject.SetActive(true);
+        }
         
 
         //Property blocks
@@ -212,7 +247,6 @@ public class QuasarGenerator : MonoBehaviour
         intervalTime += Time.deltaTime;
         if(intervalTime > intervals[currentInterval]) 
         {
-
             intervalTime = 0;
             currentInterval++;
 
@@ -222,11 +256,11 @@ public class QuasarGenerator : MonoBehaviour
             }
             if(currentInterval%2 == 0)
             {
-                StartCoroutine(EnableBeam(true));
+                StartCoroutine(EnableBeam(!startOff));
             }
             else
             {
-                StartCoroutine(EnableBeam(false));
+                StartCoroutine(EnableBeam(startOff));
             }
         }
     }
@@ -257,5 +291,13 @@ public class QuasarGenerator : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
+    }
+    private void OnEnable()
+    {
+        LevelGenerator.levelGenerated += RaycastForceFields;
+    }
+    private void OnDisable()
+    {
+        LevelGenerator.levelGenerated -= RaycastForceFields;
     }
 }
