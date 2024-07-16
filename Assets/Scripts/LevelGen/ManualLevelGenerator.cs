@@ -10,7 +10,7 @@ public class ManualLevelGenerator : MonoBehaviour
 {
     public int aestheticSeed;
     [SerializeField] Transform mockPlanetsParent;
-    [SerializeField] GameObject planetGeneratorPrefab, forcefieldPrefab;
+    [SerializeField] GameObject planetGeneratorPrefab, forcefieldPrefab, darkMatterPrefab;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] int resolution = 1024;
     [SerializeField] bool spawnForcefields = true;
@@ -41,16 +41,20 @@ public class ManualLevelGenerator : MonoBehaviour
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
         mockPlanets = mockPlanetsParent.GetComponentsInChildren<MockPlanet>();
         List<int> moons = new List<int>();
+        List<int> darkMatter = new List<int>();
         for (int i = 0; i < mockPlanets.Length; i++)
         {
             if (mockPlanets[i] is MockMoon)
             {
                 moons.Add(i);
             }
+            if(mockPlanets[i].darkMatter){
+                darkMatter.Add(i);
+            }
         }
 
         ProceduralLevelGeneration.Level level = ManualLevelGeneration.CreateLevel(aestheticSeed, mockPlanets, levelStatic);
-        StartCoroutine(Generatelevel(level, moons.ToArray()));
+        StartCoroutine(Generatelevel(level, moons.ToArray(), darkMatter.ToArray()));
     }
 
     // Update is called once per frame
@@ -61,7 +65,7 @@ public class ManualLevelGenerator : MonoBehaviour
     /// <summary>
     /// Generates the planets off of the level parameters
     /// </summary>
-    IEnumerator Generatelevel(ProceduralLevelGeneration.Level level, int[] moonIndices)
+    IEnumerator Generatelevel(ProceduralLevelGeneration.Level level, int[] moonIndices, int[] darkMatterIndices)
     {
         Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
@@ -69,7 +73,7 @@ public class ManualLevelGenerator : MonoBehaviour
 
         for (int i = 0; i < level.numPlanets; i++)
         {
-            if(moonIndices.Contains(i))
+            if(moonIndices.Contains(i) || darkMatterIndices.Contains(i))
             {
                 planetList[i] = new Planet();
                 continue;
@@ -99,7 +103,12 @@ public class ManualLevelGenerator : MonoBehaviour
                     correspondant = planetList[x].forceField.GetComponent<CelestialMass>();
                 }
             }
-            planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, i, mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis);
+            planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, moonIndices[i], mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis);
+        }
+
+        for (int i = 0; i < darkMatterIndices.Length; i++)
+        {
+            planetList[darkMatterIndices[i]] = GenerateDarkMatter(ref planetList[darkMatterIndices[i]],  level.planetSizes[darkMatterIndices[i]], level.planetPoints[darkMatterIndices[i]],  level.planetSeeds[darkMatterIndices[i]],level.planetTypes[darkMatterIndices[i]], generator, darkMatterIndices[i]);
         }
         Destroy(generator.gameObject);
 
@@ -176,6 +185,15 @@ public class ManualLevelGenerator : MonoBehaviour
 
 
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);
+    }
+    Planet GenerateDarkMatter(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
+    {
+        UnityEngine.Random.InitState((int)seed.z + index);
+        planet = GeneratePlanet(generator, size, index, position, seed, planetType);
+
+        DarkMatterGenerator darkMatter = Instantiate(darkMatterPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity).GetComponent<DarkMatterGenerator>();
+        darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>());
+        return planet;
     }
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)
     {

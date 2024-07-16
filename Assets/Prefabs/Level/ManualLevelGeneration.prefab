@@ -98,7 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
-  seed: -1404471273
+  darkMatter: 0
+  seed: {x: 0, y: 0, z: 0}
 --- !u!1 &4095208237594366364
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,5 +183,9 @@ MonoBehaviour:
     type: 3}
   forcefieldPrefab: {fileID: 3159997371337105200, guid: d2135fc615dcc254a9eec81c2ea84936,
     type: 3}
+  darkMatterPrefab: {fileID: 6212409807194619062, guid: eb5876fa31dfe3947a7e0bcb416467fa,
+    type: 3}
   levelStatic: {fileID: 11400000, guid: 80aabc0431992a244946fda6ff73e477, type: 2}
   resolution: 1024
+  spawnForcefields: 1
+  allPlanetParent: {fileID: 0}

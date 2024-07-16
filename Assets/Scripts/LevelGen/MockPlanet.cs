@@ -7,6 +7,7 @@ public class MockPlanet : MonoBehaviour
 {
     [SerializeField] public ColorSchemeStaticReference.PlanetType planetType;
     [SerializeField] public bool specificSeed;
+    [SerializeField] public bool darkMatter;
     [SerializeField] public Vector3 seed;
 }
 #if UNITY_EDITOR
