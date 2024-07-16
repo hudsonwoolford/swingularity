@@ -315,7 +315,7 @@ public class TitleScreenButtons : MonoBehaviour
     void CreateNewManualUniverse()
     {
         LevelManager.UniverseParams up = campaignUniverseParams;
-        up.name = up.name == string.Empty ? "MyUniverse" : up.name; //failsafe
+        up.name = ccNameFld.text == string.Empty ? "MyUniverse" : ccNameFld.text; //failsafe
         up.proceduralUniverse = false;
         up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
