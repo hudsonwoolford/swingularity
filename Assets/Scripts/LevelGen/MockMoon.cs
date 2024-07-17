@@ -17,6 +17,7 @@ public class MockMoon : MockPlanet
     [SerializeField] public float apoapsis = 1;
     [Range(0,360f)]
     [SerializeField] public float rotation;
+    [SerializeField] public bool showLr = true;
 
     private void OnDrawGizmos()
     {

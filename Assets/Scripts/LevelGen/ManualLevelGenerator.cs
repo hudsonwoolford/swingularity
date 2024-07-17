@@ -103,7 +103,7 @@ public class ManualLevelGenerator : MonoBehaviour
                     correspondant = planetList[x].forceField.GetComponent<CelestialMass>();
                 }
             }
-            planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, moonIndices[i], mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis);
+            planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, moonIndices[i], mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis, mockMoon.showLr);
         }
 
         for (int i = 0; i < darkMatterIndices.Length; i++)
@@ -243,7 +243,7 @@ public class ManualLevelGenerator : MonoBehaviour
         ff.Init(planet);
         return forcefield;
     }
-    Planet GenerateMoon(CelestialMass correspondant, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index, float eccentricity, float speed, float rotation, float apoapsis)
+    Planet GenerateMoon(CelestialMass correspondant, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index, float eccentricity, float speed, float rotation, float apoapsis, bool showLr)
     {
         if(correspondant == null) { Debug.LogWarning("Correspondant of moon is null, this could be due to it not being set in inspector."); return new Planet(); }
         UnityEngine.Random.InitState((int)(seed.y + index));
@@ -259,6 +259,9 @@ public class ManualLevelGenerator : MonoBehaviour
         smallMoon.forceField.GetComponent<ForceField>().AutoMass();
         smallMoon.forceField.GetComponent<Collider>().material = levelStatic.superBouncyMoon;
         moonScript.Init(semiMajorAxis, ArtificialGravity.G, eccentricity, speed, smallMoon.forceField.GetComponent<CelestialMass>(), correspondant, levelStatic.moonLine, rotation, (int)seed.x);
+        if(!showLr){
+            moonScript.DisableLr();
+        }
         moonScript.GetComponent<MeshRenderer>().enabled = true;
         return smallMoon;
     }

@@ -166,6 +166,9 @@ public class MoonManager : MonoBehaviour
             lr.SetPosition(i, dir);
         }
     }
+    public void DisableLr(){
+        lr.enabled = false;
+    }
     void OnEnable(){
         LevelGenerator.levelGenerated += StartingForce;
     }
