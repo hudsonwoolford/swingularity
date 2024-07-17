@@ -22,8 +22,8 @@ public class QuasarGenerator : MonoBehaviour
     [SerializeField] QuasarColorScheme[] schemePool;
     [SerializeField] int schemeIndex;
     [SerializeField] float systemRotSpeed = 8;
-    [SerializeField] float angle;
-    [SerializeField] float radius = 1;
+    [SerializeField] protected float angle;
+    [SerializeField] protected float radius = 1;
     [SerializeField] bool startOff;
     [SerializeField] List<float> intervals = new List<float>();
     [SerializeField] AnimationCurve enableCurve;
@@ -64,41 +64,14 @@ public class QuasarGenerator : MonoBehaviour
     int currentInterval = 0;
     float maxRadius;
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         maxRadius = radius;
         NullChecks();
-
-    }
-    void RaycastForceFields()
-    {
-        if (!raycastForcefields)
-        {
-            return;
-        }
-        Physics.SyncTransforms();
-        RaycastHit[] downRay = Physics.RaycastAll(transform.position, -transform.up, radius * 2 + 1);
-        RaycastHit[] upRay = Physics.RaycastAll(transform.position, transform.up, radius * 2 + 1);
-
-        ForceField ff;
-        for (int i = 0; i < downRay.Length; i++)
-        {
-            if (downRay[i].transform.TryGetComponent(out ff))
-            {
-                ff.AddInteractable(lowerEnd.transform);
-            }
-        }
-        for (int i = 0; i < upRay.Length; i++)
-        {
-            if (upRay[i].transform.TryGetComponent(out ff))
-            {
-                ff.AddInteractable(upperEnd.transform);
-            }
-        }
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (schemePool.Length == 0) { return; }
         NullChecks();
@@ -275,6 +248,32 @@ public class QuasarGenerator : MonoBehaviour
             progress = Mathf.MoveTowards(progress, 1, enableSpeed * Time.deltaTime);
             radius = Mathf.Lerp(start, target, enableCurve.Evaluate(progress));
             yield return null;
+        }
+    }
+    void RaycastForceFields()
+    {
+        if (!raycastForcefields)
+        {
+            return;
+        }
+        Physics.SyncTransforms();
+        RaycastHit[] downRay = Physics.RaycastAll(transform.position, -transform.up, radius * 2 + 1);
+        RaycastHit[] upRay = Physics.RaycastAll(transform.position, transform.up, radius * 2 + 1);
+
+        ForceField ff;
+        for (int i = 0; i < downRay.Length; i++)
+        {
+            if (downRay[i].transform.TryGetComponent(out ff))
+            {
+                ff.AddInteractable(lowerEnd.transform);
+            }
+        }
+        for (int i = 0; i < upRay.Length; i++)
+        {
+            if (upRay[i].transform.TryGetComponent(out ff))
+            {
+                ff.AddInteractable(upperEnd.transform);
+            }
         }
     }
     void NullChecks()

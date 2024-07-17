@@ -19,6 +19,7 @@ public class StarCollectible : MonoBehaviour
     [SerializeField] Material emissionMat;
     [SerializeField] float glowMult;
     [SerializeField] AudioObj collectionAudio;
+    [SerializeField] AudioObj lostAudio;
     MaterialPropertyBlock glowPBlock;
     MaterialPropertyBlock metalPBlock;
     SphereCollider sCol;
@@ -27,6 +28,7 @@ public class StarCollectible : MonoBehaviour
     Coroutine collectionAnimRoutine;
     GameObject starObj;
     CelestialMass cMass;
+    bool collectedOnShot;
     public delegate void StarCollected();
     public static StarCollected onStarCollected;
     private void Awake()
@@ -120,6 +122,7 @@ public class StarCollectible : MonoBehaviour
     {
         if(LevelManager.levelComplete) { return; }
         if(collectionAnimRoutine != null) { StopCoroutine(collectionAnimRoutine); }
+        GameManager.SFXManager.PlaySFX(lostAudio);
         starObj.SetActive(false);
         transform.position = chosenPos;
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -166,24 +169,42 @@ public class StarCollectible : MonoBehaviour
     #endregion
     void CollectStar()
     {
-        Debug.Log("Collected");
         GameManager.SFXManager.PlaySFX(collectionAudio);
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
+    }
+    void OnBallStill()
+    {
+        if(collectedOnShot)
+        {
+            onStarCollected?.Invoke();
+        }
+        collectedOnShot = false;
+    }
+    void OnBallDeath(int dIndex)
+    {
+        if (collectedOnShot)
+        {
+            CollectibleReset();
+        }
+
     }
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.tag == "Player")
         {
-            onStarCollected?.Invoke();
+            collectedOnShot = true;
+            CollectStar();
         }
     }
     private void OnEnable()
     {
-        onStarCollected += CollectStar;
+        ShootBall.onStill += OnBallStill;
+        ShootBall.death += OnBallDeath;
     }
     private void OnDisable()
     {
-        onStarCollected -= CollectStar;
+        ShootBall.onStill -= OnBallStill;
+        ShootBall.death -= OnBallDeath;
     }
     private void OnDrawGizmosSelected()
     {
