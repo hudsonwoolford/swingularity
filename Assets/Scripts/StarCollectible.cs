@@ -166,6 +166,7 @@ public class StarCollectible : MonoBehaviour
     #endregion
     void CollectStar()
     {
+        Debug.Log("Collected");
         GameManager.SFXManager.PlaySFX(collectionAudio);
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
     }
