@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0011726149, g: 0.0010930519, b: 0.0010295701, a: 1}
+  m_IndirectSpecularColor: {r: 0.0012563955, g: 0.0011953952, b: 0.001170729, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -218,12 +218,12 @@ PrefabInstance:
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.200001
+      value: 9.26
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.49
+      value: -3.62
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
@@ -368,6 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 3
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 38.56511, y: 133.53265, z: 99.53577}
 --- !u!23 &583879262
 MeshRenderer:
@@ -630,7 +631,7 @@ Transform:
   m_GameObject: {fileID: 1078341590}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.19, y: 0, z: 0}
-  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
+  m_LocalScale: {x: 5.01, y: 5.01, z: 5.01}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2050905750}
@@ -650,6 +651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 3
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -96.78848, y: -182.738, z: 263.83093}
 --- !u!23 &1078341593
 MeshRenderer:
@@ -1025,7 +1027,7 @@ PrefabInstance:
     - target: {fileID: 4518943914118313802, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4518943914118313802, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}

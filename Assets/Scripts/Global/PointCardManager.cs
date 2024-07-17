@@ -20,6 +20,7 @@ public class PointCardManager : MonoBehaviour
     public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum, bool starCollected);
     public static GalaxyScoring onGalaxyScore;
     bool galaxyStarCollected;
+    bool lastLevel;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,23 +54,8 @@ public class PointCardManager : MonoBehaviour
 
         if (i == 4)
         {
-            int scoreSum = 0, shotSum = 0, parSum = 0;
-            for (int j = 0; j < 5; j++)
-            {
-                if (scoreTexts[j].text != "—")
-                {
-                    scoreSum += int.Parse(scoreTexts[j].text);
-                }
-                if (shotsTexts[j].text != "—")
-                {
-                    shotSum += int.Parse(shotsTexts[j].text);
-                }
-                if (parTexts[j].text != "—")
-                {
-                    parSum += int.Parse(parTexts[j].text);
-                }
-            }
-            onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
+            lastLevel = true;
+
         }
     }
     void SetPointCardVar(int i, int relPar, int totalShots)
@@ -156,8 +142,38 @@ public class PointCardManager : MonoBehaviour
     {
         galaxyStarCollected = true;
     }
+    void ScoreGalaxy()
+    {
+        int scoreSum = 0, shotSum = 0, parSum = 0;
+        for (int j = 0; j < 5; j++)
+        {
+            if (scoreTexts[j].text != "—")
+            {
+                scoreSum += int.Parse(scoreTexts[j].text);
+            }
+            if (shotsTexts[j].text != "—")
+            {
+                shotSum += int.Parse(shotsTexts[j].text);
+            }
+            if (parTexts[j].text != "—")
+            {
+                parSum += int.Parse(parTexts[j].text);
+            }
+        }
+        onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
+        lastLevel = false;
+    }
+    void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (lastLevel)
+        {
+            ScoreGalaxy();
+        }
+
+    }
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoad;
         GalaxyGenerator.initSystem += NewSystem;
         GalaxyGenerator.initProceduralSystem += NewProceduralSystem;
         StarCollectible.onStarCollected += CollectibleCollected;
@@ -165,6 +181,7 @@ public class PointCardManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoad;
         GalaxyGenerator.initSystem -= NewSystem;
         StarCollectible.onStarCollected -= CollectibleCollected;
         GalaxyGenerator.initProceduralSystem -= NewProceduralSystem;

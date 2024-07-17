@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public GalaxyData currentTheme { get; private set; }
     [SerializeField] public LevelParams levelParams { get; private set; }
     [SerializeField] public GalaxyParams[] currentProceduralUniverse { get; private set; } //An array of galaxy params in order that correspond to which universe you are in
+    [SerializeField] public int galaxyIndex { get; private set; }
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
@@ -29,7 +30,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
     Animator levelMenuAnimator; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI
-    int galaxyIndex;
 
     [Serializable]
     public struct LevelParams
@@ -424,6 +424,7 @@ public class LevelManager : MonoBehaviour
     void IsProcedural(bool p) => procedural = p;  //sets whether procedural
     void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar)
     {
+        levelIndex = 0;
         bool[] starScore = new bool[]
         {
             true,
@@ -435,8 +436,8 @@ public class LevelManager : MonoBehaviour
         int starTotal = 0;
         for (int i = 0; i < currentProceduralUniverse[galaxyIndex].collectedStars.Length; i++)
         {
+            if (starScore[i] && !currentProceduralUniverse[galaxyIndex].collectedStars[i]){starTotal++;}
             currentProceduralUniverse[galaxyIndex].collectedStars[i] |= starScore[i]; 
-            if (starScore[i]){starTotal++;}
         }
         if(scoreSum > 0){
             currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();

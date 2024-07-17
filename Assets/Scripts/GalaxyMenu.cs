@@ -37,6 +37,11 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] float scrollSpeed; //scales scrolling speed
     [SerializeField] float buttonThresholdTime; //time holding down key before starts scrolling smoothly
     [SerializeField] AnimationCurve transitionCurve;
+    [SerializeField] float starScaleDuration;
+    [SerializeField] float starIntervalDuration;
+    [SerializeField] AnimationCurve starScaleCurve;
+    [SerializeField] float starPitchInterval;
+    [SerializeField] float starStartPitch;
     [Header("Main UI")]
     [SerializeField] Button rightBtn; //move buttons
     [SerializeField] Button leftBtn; //move buttons
@@ -70,6 +75,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] SpecialObjectIcon[] iconSprites;
     [SerializeField] TextMeshProUGUI bestScoreTxt;
     [Header("Sounds")]
+    [SerializeField] AudioSource starAudioSrc;
+    [SerializeField] AudioObj showStarAudio;
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
@@ -79,9 +86,11 @@ public class GalaxyMenu : MonoBehaviour
     int focusedGalaxy; //index of focused galaxy
     bool isMoving; //whether it is in transition
     bool zoomedIn;
+    bool started;
     // Start is called before the first frame update
     void Start()
     {
+        if(started) { return; }
         focusedGalaxy = 0;
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
@@ -106,7 +115,6 @@ public class GalaxyMenu : MonoBehaviour
                 }
             }
             else { notLMSet = true; }
-            Debug.Log(notLMSet);
             if (notLMSet)
             {
                 LevelManager.setGalaxies?.Invoke(galaxyList);
@@ -123,6 +131,7 @@ public class GalaxyMenu : MonoBehaviour
         playGalaxyBtn.onClick.AddListener(() => PlayGalaxy());
         infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
         EnableDisableGalaxies(false);
+        started = true;
     }
     void Update()
     {
@@ -140,7 +149,7 @@ public class GalaxyMenu : MonoBehaviour
     {
         if (!isMoving)
         {
-            StartCoroutine(ZoomGalaxy(zoomIn));
+            StartCoroutine(ZoomGalaxy(zoomIn, false));
         }
     }
     void InfoCardBackButton()
@@ -306,7 +315,7 @@ public class GalaxyMenu : MonoBehaviour
             infoCardAnim.Play("HideInfoCard");
         }
     }
-    IEnumerator ZoomGalaxy(bool zoomIn)
+    IEnumerator ZoomGalaxy(bool zoomIn, bool instant)
     {
         if(galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars){galaxySummaries[focusedGalaxy].Shake(); yield break; }
         isMoving = true;
@@ -327,7 +336,7 @@ public class GalaxyMenu : MonoBehaviour
         }
 
         float timeOfTransition = 0f; //timer
-        while(timeOfTransition < transitionDuration)
+        while(timeOfTransition < transitionDuration && !instant)
         {
             float progress = timeOfTransition / transitionDuration;
             if(!zoomIn && progress > 0.5f)
@@ -341,6 +350,8 @@ public class GalaxyMenu : MonoBehaviour
             timeOfTransition += Time.deltaTime;
             yield return null;
         }
+        mainCam.position = cameraTarget;
+        galaxyCons[focusedGalaxy].transform.position = galaxyTarget;
 
         isMoving = false;
         if(!zoomIn)
@@ -620,6 +631,67 @@ public class GalaxyMenu : MonoBehaviour
             loopedValue += range;
 
         return min + loopedValue;
+    }
+    void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected)
+    {
+        Start();
+        Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
+        for (int i = 0; i < galaxyCons.Length; i++)
+        {
+            galaxyCons[i].transform.position = galaxyPos[i];
+        }
+        StartCoroutine(ZoomGalaxy(true, true));
+        galaxySummaries[focusedGalaxy].DisableSummary();
+        menuAnim.Play("DisableMenu");
+        EnableAndSetInfoCard(true, galaxyList[focusedGalaxy]);
+        bool[] starScore = new bool[]
+        {
+            true,
+            scoreSum <= 0,
+            scoreSum < 0,
+            shotsSum == 5,
+            starCollected
+        };
+        StartCoroutine(AnimateStars(starScore));
+        galaxyList = GameManager.LevelManager.currentProceduralUniverse;
+    }
+    IEnumerator AnimateStars(bool[] stars)
+    {
+        playGalaxyBtn.interactable = false;
+        infoBackBtn.interactable = false;
+        for (int i = 0; i < stars.Length; i++)
+        {
+            if (stars[i]) 
+            {
+                starImgs[i].transform.localScale = Vector3.zero;
+            }
+        }
+        yield return new WaitForSecondsRealtime(0.5f);
+        int realIteration = 0;
+        for (int i = 0; i < stars.Length; i++)
+        {
+            if (!stars[i]) { continue; }
+            starAudioSrc.pitch = starStartPitch + starPitchInterval * realIteration;
+            GameManager.SFXManager.PlaySFX(showStarAudio, starAudioSrc, 1);
+            float timeTracker = 0;
+            while (timeTracker < starScaleDuration)
+            {
+                starImgs[i].transform.localScale = Vector3.one * starScaleCurve.Evaluate((timeTracker / starScaleDuration));
+                timeTracker += Time.deltaTime;
+                yield return null;
+            }
+            realIteration++;
+        }
+        playGalaxyBtn.interactable = true;
+        infoBackBtn.interactable = true;
+    }
+    private void OnEnable()
+    {
+        PointCardManager.onGalaxyScore += ShowScoredGalaxy;
+    }
+    private void OnDisable()
+    {
+        PointCardManager.onGalaxyScore -= ShowScoredGalaxy;
     }
     #endregion
 }
