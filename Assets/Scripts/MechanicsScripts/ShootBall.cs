@@ -117,6 +117,7 @@ public class ShootBall : MonoBehaviour
         if (simulationScene != null)
         {
             AsyncOperation removingScene = SceneManager.UnloadSceneAsync(simulationScene);
+            removingScene.allowSceneActivation = true;
             yield return removingScene;
             PhysicsScene();
         }
