@@ -76,6 +76,7 @@ public class QuasarGenerator : MonoBehaviour
         {
             return;
         }
+        Physics.SyncTransforms();
         RaycastHit[] downRay = Physics.RaycastAll(transform.position, -transform.up, radius * 2 + 1);
         RaycastHit[] upRay = Physics.RaycastAll(transform.position, transform.up, radius * 2 + 1);
 
