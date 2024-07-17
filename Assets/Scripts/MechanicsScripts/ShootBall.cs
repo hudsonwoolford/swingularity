@@ -152,11 +152,11 @@ public class ShootBall : MonoBehaviour
         }
         StartCoroutine(BallStillTiming(0.5f));
     }
-    void OnLevel(){
-        if(gravitySpawnCast){
-            Init(planetTransform, GravitySpawnRaycast());
-        }
-    }
+    //void OnLevel(){
+    //    if(gravitySpawnCast){
+    //        Init(planetTransform, GravitySpawnRaycast());
+    //    }
+    //}
 
 
     Vector3 GravitySpawnRaycast(){
@@ -935,13 +935,13 @@ public class ShootBall : MonoBehaviour
         onHole += DeleteSimulation;
         triggerReset += BallReset;
         HackMode.onHackMode += OnHackMode;
-        LevelGenerator.levelGenerated += OnLevel;
+        //LevelGenerator.levelGenerated += OnLevel;
     }
     private void OnDisable()
     {
         onHole -= DeleteSimulation;
         triggerReset -= BallReset;
         HackMode.onHackMode -= OnHackMode;
-        LevelGenerator.levelGenerated -= OnLevel;
+        //LevelGenerator.levelGenerated -= OnLevel;
     }
 }
