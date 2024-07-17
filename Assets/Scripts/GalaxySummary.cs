@@ -33,9 +33,15 @@ public class GalaxySummary : MonoBehaviour
         GameManager.SFXManager.PlaySFX(lockErrorAudio);
         animator.Play("ShakeLock");
     }
+    public void DisableSummary()
+    {
+        animator.Play("DisableMenu");
+    }
     public void InitSummary(bool[] collectedStars, int lockStars)
     {
-        if(GameManager.LevelManager.currentUniverse.numStars < lockStars){
+        animator = GetComponent<Animator>();
+        GetComponent<Canvas>().worldCamera = Camera.main;
+        if (GameManager.LevelManager.currentUniverse.numStars < lockStars){
             lockImage.SetActive(true);
             lockImage.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (lockStars).ToString();
             stars.SetActive(false);
