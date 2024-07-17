@@ -34,6 +34,7 @@ public class SceneHandling : MonoBehaviour
     }
     IEnumerator LoadSceneCoroutine(string sceneName, bool waitForLevelGeneration)
     {
+        float randMult = UnityEngine.Random.Range(0.75f,1f);
         progressBar.value = 0f;
         loadingDescription.text = "Loading Scene...";
         percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();
@@ -51,7 +52,7 @@ public class SceneHandling : MonoBehaviour
         //increment load bar
         do
         {
-            progressBar.value = sceneLoading.progress * progressModifier * MAX_PROGRESS;
+            progressBar.value = sceneLoading.progress * progressModifier * MAX_PROGRESS * randMult;
             percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();
             yield return null;
         } while (sceneLoading.progress < 0.9f);
@@ -64,12 +65,19 @@ public class SceneHandling : MonoBehaviour
             loadingDescription.text = "Generating level...";
             while (!levelGenerated)
             {
-                progressBar.value = progressModifier * MAX_PROGRESS;
+                progressBar.value = progressModifier * MAX_PROGRESS * randMult;
                 if (LevelGenerator.Instance != null)
                 {
                     if (LevelGenerator.Instance.generationProgress != 1) //for some reason it is 1, i reset it but still happens
                     {
-                        progressBar.value = progressModifier + LevelGenerator.Instance.generationProgress / 2 * MAX_PROGRESS;
+                        progressBar.value = progressModifier * randMult + LevelGenerator.Instance.generationProgress / 2 * MAX_PROGRESS ;
+                    }
+                }
+                if (ManualLevelGenerator.Instance != null)
+                {
+                    if (ManualLevelGenerator.Instance.generationProgress != 1) //for some reason it is 1, i reset it but still happens
+                    {
+                        progressBar.value = progressModifier * randMult + ManualLevelGenerator.Instance.generationProgress / 2 * MAX_PROGRESS;
                     }
                 }
                 percentageProgress.text = Mathf.RoundToInt(progressBar.value * 100).ToString();

@@ -8,6 +8,8 @@ using static LevelGenerator;
 
 public class ManualLevelGenerator : MonoBehaviour
 {
+    public float generationProgress { get; private set; } = 0;  
+    public static ManualLevelGenerator Instance;
     public int aestheticSeed;
     [SerializeField] Transform mockPlanetsParent;
     [SerializeField] GameObject planetGeneratorPrefab, forcefieldPrefab, darkMatterPrefab;
@@ -23,6 +25,14 @@ public class ManualLevelGenerator : MonoBehaviour
     bool procedural = false;
     private void Awake()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         player = GameObject.FindGameObjectWithTag("Player");
         environment = GameObject.FindGameObjectWithTag("Environment").transform;
     }
@@ -67,10 +77,10 @@ public class ManualLevelGenerator : MonoBehaviour
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level, int[] moonIndices, int[] darkMatterIndices)
     {
+        generationProgress = 0;
         Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();
         Planet[] planetList = new Planet[level.numPlanets];
-
         for (int i = 0; i < level.numPlanets; i++)
         {
             if(moonIndices.Contains(i) || darkMatterIndices.Contains(i))
@@ -78,6 +88,7 @@ public class ManualLevelGenerator : MonoBehaviour
                 planetList[i] = new Planet();
                 continue;
             }
+            generationProgress += 1 / (float)level.numPlanets;
 
             if(procedural){
                 planetList[i] = GeneratePlanet(generator, level.planetSizes[i], i, level.planetPoints[i], level.planetSeeds[i], level.planetTypes[i]);
@@ -92,6 +103,8 @@ public class ManualLevelGenerator : MonoBehaviour
         //Moons
         for (int i = 0; i < moonIndices.Length; i++)
         {
+            generationProgress += 1 / (float)level.numPlanets;
+
             MockMoon mockMoon = (MockMoon)mockPlanets[moonIndices[i]];
             CelestialMass correspondant = null;
             //Get celestial mass correspondant
@@ -105,7 +118,7 @@ public class ManualLevelGenerator : MonoBehaviour
             }
             planetList[moonIndices[i]] = GenerateMoon(correspondant, level.planetSizes[moonIndices[i]], level.planetPoints[moonIndices[i]], level.planetSeeds[moonIndices[i]], level.planetTypes[moonIndices[i]], generator, moonIndices[i], mockMoon.eccentricity, mockMoon.speed, mockMoon.rotation, mockMoon.apoapsis, mockMoon.showLr);
         }
-
+        
         for (int i = 0; i < darkMatterIndices.Length; i++)
         {
             planetList[darkMatterIndices[i]] = GenerateDarkMatter(ref planetList[darkMatterIndices[i]],  level.planetSizes[darkMatterIndices[i]], level.planetPoints[darkMatterIndices[i]],  level.planetSeeds[darkMatterIndices[i]],level.planetTypes[darkMatterIndices[i]], generator);
@@ -122,7 +135,7 @@ public class ManualLevelGenerator : MonoBehaviour
         //Camera.main.GetComponent<CameraFollow>().InitPositions(startPos, endPos, maxZoom);
 
 
-
+        generationProgress = 1;
         Time.timeScale = 1;
         levelGenerated?.Invoke();
         player?.GetComponent<ShootBall>().Init(environment, player.GetComponent<Rigidbody>().position);
