@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0013510984, g: 0.0012344172, b: 0.0011534374, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014224113, g: 0.0013315865, b: 0.0013027878, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -129,6 +129,106 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1108948784652166674}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &130521660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 130521661}
+  - component: {fileID: 130521664}
+  - component: {fileID: 130521663}
+  - component: {fileID: 130521662}
+  m_Layer: 14
+  m_Name: Normal (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &130521661
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130521660}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.18, y: -3.94, z: 0}
+  m_LocalScale: {x: 5.42, y: 5.42, z: 5.42}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 6597518753631032715}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &130521662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130521660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetType: 4
+  specificSeed: 1
+  darkMatter: 0
+  seed: {x: -67.128174, y: 114.93196, z: 70.0903}
+--- !u!23 &130521663
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130521660}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &130521664
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130521660}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &335838005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,12 +318,12 @@ PrefabInstance:
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.09
+      value: -15.47
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.51
+      value: 2.37
       objectReference: {fileID: 0}
     - target: {fileID: 1472040763093170986, guid: 93aed6f7bf9366e429975372dd1e7233,
         type: 3}
@@ -450,10 +550,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetType: 3
+  planetType: 4
   specificSeed: 1
-  darkMatter: 0
-  seed: {x: -54.073956, y: -52.413635, z: -26.526306}
+  darkMatter: 1
+  seed: {x: 19.326889, y: 2.023346, z: -91.206375}
 --- !u!23 &1346267579
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -978,12 +1078,12 @@ PrefabInstance:
     - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
       propertyPath: endPos.x
-      value: -10.13
+      value: -14.18
       objectReference: {fileID: 0}
     - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
       propertyPath: startPos.x
-      value: 9.57
+      value: 10.58
       objectReference: {fileID: 0}
     - target: {fileID: 4752169504599136428, guid: 1e30e1e1df6617740b4dc94b8466e88d,
         type: 3}
@@ -1071,7 +1171,7 @@ PrefabInstance:
     - target: {fileID: 2041861299221359432, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: par
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3169579409820135831, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
@@ -1355,7 +1455,7 @@ PrefabInstance:
     - target: {fileID: 3466070122645160618, guid: 6b22623ac2a29f848a8c3902dfd352e5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.98
+      value: -6.75
       objectReference: {fileID: 0}
     - target: {fileID: 3466070122645160618, guid: 6b22623ac2a29f848a8c3902dfd352e5,
         type: 3}
@@ -1508,6 +1608,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1346267577}
+    - targetCorrespondingSourceObject: {fileID: 3688481069132238004, guid: b06a82183d0023b43a917d2884a2be87,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 130521661}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b06a82183d0023b43a917d2884a2be87, type: 3}
 --- !u!4 &6597518753631032715 stripped
