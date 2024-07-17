@@ -51,6 +51,7 @@ public class ShootBall : MonoBehaviour
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
     [SerializeField] bool gravitySpawnCast;
+    [SerializeField] Transform referenceForGravitySpawnCast;
     public static bool liningUpShot;
 
     MeshRenderer ballRenderer;
@@ -109,6 +110,7 @@ public class ShootBall : MonoBehaviour
             StartCoroutine(RecreatePhysicsScene());
         }
         tr.Clear();
+
     }
     IEnumerator RecreatePhysicsScene()
     {
@@ -136,6 +138,7 @@ public class ShootBall : MonoBehaviour
         defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
         lr.positionCount = 0; //no line
+
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
         ballStill = true;
@@ -147,6 +150,23 @@ public class ShootBall : MonoBehaviour
             astronaut.AddComponent<MeshRenderer>().material = defaultBallMat;
         }
         StartCoroutine(BallStillTiming(0.5f));
+    }
+    void OnLevel(){
+        if(gravitySpawnCast){
+            Init(planetTransform, GravitySpawnRaycast());
+        }
+    }
+
+
+    Vector3 GravitySpawnRaycast(){
+        print(transform.position);
+
+        RaycastHit hit;
+        Vector3 dir = (referenceForGravitySpawnCast.position - transform.position).normalized;
+        Physics.Raycast(transform.position, dir, out hit, Mathf.Infinity); 
+        transform.position = hit.point + GetComponent<SphereCollider>().radius * transform.localScale.x * -dir;
+        print(transform.position);
+        return transform.position;
     }
     // Update is called once per frame
     void Update()
@@ -914,11 +934,13 @@ public class ShootBall : MonoBehaviour
         onHole += DeleteSimulation;
         triggerReset += BallReset;
         HackMode.onHackMode += OnHackMode;
+        LevelGenerator.levelGenerated += OnLevel;
     }
     private void OnDisable()
     {
         onHole -= DeleteSimulation;
         triggerReset -= BallReset;
         HackMode.onHackMode -= OnHackMode;
+        LevelGenerator.levelGenerated -= OnLevel;
     }
 }
