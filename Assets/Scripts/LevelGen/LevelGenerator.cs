@@ -520,7 +520,6 @@ public class LevelGenerator : MonoBehaviour
         ForceField ff = forcefield.GetComponent<ForceField>();
         ff.enabled = true;
         ff.Init(planet);
-        ff.AddInteractable(astronaut.transform);
         return forcefield;
     }
     #region Special Generation

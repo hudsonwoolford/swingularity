@@ -63,6 +63,11 @@ public class ForceField : MonoBehaviour
         {
             interactableObject.Add(GameObject.FindGameObjectWithTag("Player").transform);
         }
+        Transform astronaut = GameObject.FindGameObjectWithTag("Astronaut").transform;
+        if (astronaut != null)
+        {
+            interactableObject.Add(astronaut);
+        }
 
         src = GameObject.FindGameObjectWithTag("SRC").GetComponent<AudioSource>();
         meshRenderer = GetComponent<MeshRenderer>();
