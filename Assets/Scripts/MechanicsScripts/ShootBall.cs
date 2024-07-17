@@ -50,6 +50,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] AudioSource ballAudioSrc;
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
+    [SerializeField] bool gravitySpawnCast;
     public static bool liningUpShot;
 
     MeshRenderer ballRenderer;
