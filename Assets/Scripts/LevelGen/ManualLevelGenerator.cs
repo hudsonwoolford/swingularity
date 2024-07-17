@@ -108,7 +108,7 @@ public class ManualLevelGenerator : MonoBehaviour
 
         for (int i = 0; i < darkMatterIndices.Length; i++)
         {
-            planetList[darkMatterIndices[i]] = GenerateDarkMatter(ref planetList[darkMatterIndices[i]],  level.planetSizes[darkMatterIndices[i]], level.planetPoints[darkMatterIndices[i]],  level.planetSeeds[darkMatterIndices[i]],level.planetTypes[darkMatterIndices[i]], generator, darkMatterIndices[i]);
+            planetList[darkMatterIndices[i]] = GenerateDarkMatter(ref planetList[darkMatterIndices[i]],  level.planetSizes[darkMatterIndices[i]], level.planetPoints[darkMatterIndices[i]],  level.planetSeeds[darkMatterIndices[i]],level.planetTypes[darkMatterIndices[i]], generator);
         }
         Destroy(generator.gameObject);
 
@@ -186,13 +186,13 @@ public class ManualLevelGenerator : MonoBehaviour
 
         return new Planet(newPlanet, planetType, biomes.Item1, biomes.Item2, forceField);
     }
-    Planet GenerateDarkMatter(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
+    Planet GenerateDarkMatter(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator)
     {
-        UnityEngine.Random.InitState((int)seed.z + index);
-        planet = GeneratePlanet(generator, size, index, position, seed, planetType);
+        UnityEngine.Random.InitState((int)seed.z);
+        planet = GenerateManualPlanet(generator, size, position, seed, planetType);
 
         DarkMatterGenerator darkMatter = Instantiate(darkMatterPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity).GetComponent<DarkMatterGenerator>();
-        darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>());
+        darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>(), planet.forceField);
         return planet;
     }
     Planet GeneratePlanet(FullPlanetGeneration generator, float size, int index, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)

@@ -19,6 +19,8 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] TextMeshProUGUI holeNoText;
     [SerializeField] TextMeshProUGUI powerText;
     [SerializeField] TextMeshProUGUI angleText;
+    [SerializeField] TextMeshProUGUI powerTextPercent;
+    [SerializeField] TextMeshProUGUI angleTextDegree;
     [SerializeField] Button hackModeBtn;
     [SerializeField] Button resetBtn;
     [SerializeField] Color positive, neutral, negative;
@@ -62,18 +64,22 @@ public class LevelScoring : MonoBehaviour
             if (ShootBall.shootPower < 25)
             {
                 powerText.color = negative;
+                powerTextPercent.color = negative;
             }
             else
             {
                 powerText.color = Color.white;
+                powerTextPercent.color = Color.white;
             }
             if (ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140)
             {
                 angleText.color = negative;
+                angleTextDegree.color = negative;
             }
             else
             {
                 angleText.color = Color.white;
+                angleTextDegree.color = Color.white;
             }
             if (ShootBall.shootAngle + 90 > 180)
             {
@@ -88,6 +94,8 @@ public class LevelScoring : MonoBehaviour
         {
             angleText.color = Color.white;
             powerText.color = Color.white;
+            angleTextDegree.color = Color.white;
+            powerTextPercent.color = Color.white;
             angleText.text = "——";
             powerText.text = "——";
         }

@@ -41,9 +41,10 @@ public class DarkMatterGenerator : MonoBehaviour
 
         ApplyingVariables();
     }
-    public void Init(PlanetDataHolder pData)
+    public void Init(PlanetDataHolder pData, GameObject forceField)
     {
         planetData = pData;
+        ffCollider = forceField.GetComponent<SphereCollider>();
         NullChecks();
 
         ApplyingVariables();

@@ -114,13 +114,8 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator RecreatePhysicsScene()
     {
-        if (simulationScene != null)
-        {
-            AsyncOperation removingScene = SceneManager.UnloadSceneAsync(simulationScene);
-            removingScene.allowSceneActivation = true;
-            yield return removingScene;
             PhysicsScene();
-        }
+            yield return null;
     }
 
     private void Awake()
@@ -131,7 +126,7 @@ public class ShootBall : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         ballRenderer = GetComponentInChildren<MeshRenderer>(true);
         planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
-        if (simulated) { PhysicsScene(); }
+        // if (simulated) { PhysicsScene(); }
     }
     private void Start()
     {
@@ -152,11 +147,6 @@ public class ShootBall : MonoBehaviour
         }
         StartCoroutine(BallStillTiming(0.5f));
     }
-    //void OnLevel(){
-    //    if(gravitySpawnCast){
-    //        Init(planetTransform, GravitySpawnRaycast());
-    //    }
-    //}
 
 
     Vector3 GravitySpawnRaycast(){
@@ -935,13 +925,11 @@ public class ShootBall : MonoBehaviour
         onHole += DeleteSimulation;
         triggerReset += BallReset;
         HackMode.onHackMode += OnHackMode;
-        //LevelGenerator.levelGenerated += OnLevel;
     }
     private void OnDisable()
     {
         onHole -= DeleteSimulation;
         triggerReset -= BallReset;
         HackMode.onHackMode -= OnHackMode;
-        //LevelGenerator.levelGenerated -= OnLevel;
     }
 }

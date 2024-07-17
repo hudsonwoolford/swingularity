@@ -615,7 +615,7 @@ public class LevelGenerator : MonoBehaviour
         planet = GeneratePlanet(generator, size, index, position, seed, planetType);
 
         DarkMatterGenerator darkMatter = Instantiate(darkMatterPrefab, new Vector3(position.x + levelStatic.maxSize / 2, position.y + levelStatic.maxSize / 2, position.z), Quaternion.identity, specialObjectsParent).GetComponent<DarkMatterGenerator>();
-        darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>());
+        darkMatter.Init(planet.planet.GetComponent<PlanetDataHolder>(), planet.forceField);
     }
     void GenerateStar(ref Planet planet, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType, FullPlanetGeneration generator, int index)
     {
