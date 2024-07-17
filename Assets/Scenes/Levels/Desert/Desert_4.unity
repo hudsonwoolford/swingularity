@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0016386232, g: 0.0015408271, b: 0.001545044, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -322,6 +322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 91.47919, y: 192.16708, z: -266.41364}
 --- !u!23 &468579280
 MeshRenderer:
@@ -494,6 +495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -73.89572, y: 166.31393, z: -104.347275}
 --- !u!23 &601585267
 MeshRenderer:
@@ -677,6 +679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -60.600903, y: 170.66321, z: -108.25864}
 --- !u!23 &900880448
 MeshRenderer:
@@ -776,12 +779,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -13.238205, y: 166.61829, z: 72.76579}
   orbitPlanet: {fileID: 1784550070}
   eccentricity: 0
   speed: -0.64
   apoapsis: 3.29
   rotation: 199
+  showLr: 1
 --- !u!23 &989292495
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1047,6 +1052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 63.785004, y: 175.80017, z: 149.00986}
 --- !u!23 &1396379752
 MeshRenderer:
@@ -1146,6 +1152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 30.196041, y: -75.4697, z: 140.82663}
 --- !u!23 &1521399077
 MeshRenderer:
@@ -1245,12 +1252,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 82.30109, y: 176.59683, z: 68.67739}
   orbitPlanet: {fileID: 900880446}
   eccentricity: 0
   speed: 0.86
   apoapsis: 3.26
   rotation: 268
+  showLr: 1
 --- !u!23 &1639742820
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1349,6 +1358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -37.878952, y: 81.84294, z: -207.68422}
 --- !u!23 &1784550072
 MeshRenderer:
@@ -1533,12 +1543,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 32.03773, y: -156.46521, z: -55.187164}
   orbitPlanet: {fileID: 1521399075}
   eccentricity: 0
   speed: 0.86
   apoapsis: 3.14
   rotation: 110
+  showLr: 1
 --- !u!23 &1948505127
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1780,7 +1792,7 @@ PrefabInstance:
     - target: {fileID: 2041861299221359432, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: par
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4518943914118313802, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}

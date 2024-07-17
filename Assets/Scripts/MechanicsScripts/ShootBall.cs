@@ -114,8 +114,8 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator RecreatePhysicsScene()
     {
-            PhysicsScene();
-            yield return null;
+        PhysicsScene();
+        yield return null;
     }
 
     private void Awake()
@@ -176,7 +176,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && !astronautFading && LevelManager.ballInput)
+            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -336,7 +336,7 @@ public class ShootBall : MonoBehaviour
             //    }
             //}
             RaycastHit hit;
-            bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass), out hit, 1f, obstacles);
+            bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
             Vector2 normal = (transform.position - hit.transform.position).normalized;
             Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
 

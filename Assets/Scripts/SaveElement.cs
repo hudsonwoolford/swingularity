@@ -61,20 +61,19 @@ public class SaveElement : MonoBehaviour
             sizeText.text = uniParams.size;
             difficultyText.color = difficultyCol;
             sizeText.color = sizeCol;
-
-            progressText.transform.localPosition = new Vector3(progressText.transform.localPosition.x, 0, progressText.transform.localPosition.z);
         }
         else
         {
             proceduralInfo.SetActive(false);
             mainCampaignInfo.SetActive(true);
-            progressText.transform.localPosition = new Vector3(progressText.transform.localPosition.x, 15, progressText.transform.localPosition.z);
+            progressText.transform.parent.localPosition -= new Vector3(0, 15, 0);
         }
 
         //progress
         int numGalaxies = uniParams.numGalaxies == 0 ? 1 : uniParams.numGalaxies; //avoid division by zero
-        float progress = (float)uniParams.numStars / ((float)numGalaxies * 5);
-        progressText.text = Mathf.RoundToInt((progress*100)).ToString();
+        float progress = (float)uniParams.numStars / ((float)numGalaxies * 5f);
+        //Debug.LogFormat("Progress {0} | Galaxies: {1} | Stars: {2}", progress, numGalaxies, uniParams.numStars);
+        progressText.text = Mathf.RoundToInt((progress*100f)).ToString();
         progressText.color = progressGrad.Evaluate(progress);
         progressPercentText.color = progressText.color;
 
@@ -123,6 +122,7 @@ public class SaveElement : MonoBehaviour
         this.difficultyCol = difficultyCol;
         this.sizeCol = sizeCol;
         this.procedural = procedural;
+        SetElementValues();
         return deleteButton;
     }
 }

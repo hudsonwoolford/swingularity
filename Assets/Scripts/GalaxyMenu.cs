@@ -87,6 +87,7 @@ public class GalaxyMenu : MonoBehaviour
     bool isMoving; //whether it is in transition
     bool zoomedIn;
     bool started;
+    Vector2 mouseStartPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -209,6 +210,18 @@ public class GalaxyMenu : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
         {
             ZoomButton(true);
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseStartPos = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            if(Mathf.Abs(Input.mousePosition.x - mouseStartPos.x) > 100)
+            {
+                MoveButton(-(int)Mathf.Sign(Input.mousePosition.x - mouseStartPos.x));
+                mouseStartPos = Input.mousePosition;
+            }
         }
     }
     void SetManualGalaxy()
@@ -635,6 +648,7 @@ public class GalaxyMenu : MonoBehaviour
     void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected)
     {
         Start();
+        focusedGalaxy = GameManager.LevelManager.galaxyIndex;
         Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
         for (int i = 0; i < galaxyCons.Length; i++)
         {
@@ -644,6 +658,7 @@ public class GalaxyMenu : MonoBehaviour
         galaxySummaries[focusedGalaxy].DisableSummary();
         menuAnim.Play("DisableMenu");
         EnableAndSetInfoCard(true, galaxyList[focusedGalaxy]);
+        EnableDisableGalaxies(false);
         bool[] starScore = new bool[]
         {
             true,

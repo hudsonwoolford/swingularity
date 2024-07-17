@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static GalaxyGenerator;
 
 public class PauseManager : MonoBehaviour
 {
@@ -95,6 +96,12 @@ public class PauseManager : MonoBehaviour
         SettingsManager.enableSettingsMenu?.Invoke(false);
         pauseAnim.Play("ShowMenu");
         settingsMenu = false;
+    }
+    public void RestartGalaxy()
+    {
+        initSystem?.Invoke(GameManager.LevelManager.currentGalaxy, GameManager.LevelManager.currentProceduralUniverse[GameManager.LevelManager.galaxyIndex], LevelManager.allGalaxyData[GameManager.LevelManager.currentProceduralUniverse[GameManager.LevelManager.galaxyIndex].galaxyDataIndex]);
+        GameManager.SceneHandling.LoadScene(GameManager.LevelManager.currentGalaxy[0], true);
+        unpauseGame?.Invoke();
     }
     public void ResumeButton()
     {

@@ -52,7 +52,7 @@ public class HackMode : MonoBehaviour
         if(env==null) { return; }
         Rigidbody[] planets = env.GetComponentsInChildren<Rigidbody>();
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.H) && !PauseManager.paused && !SceneHandling.loadingScreen)
         {
             EnterHackMode();
         }

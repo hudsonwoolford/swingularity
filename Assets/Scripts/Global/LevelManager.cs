@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public GalaxyData currentTheme { get; private set; }
     [SerializeField] public LevelParams levelParams { get; private set; }
     [SerializeField] public GalaxyParams[] currentProceduralUniverse { get; private set; } //An array of galaxy params in order that correspond to which universe you are in
+    [SerializeField] public string[] currentGalaxy { get; private set; } //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] public int galaxyIndex { get; private set; }
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
@@ -26,7 +27,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI hioStreakText; //Text that hole in one streak
     [Header("Serialized Variables")]
     [SerializeField] List<string> completedLevels; //A list of the scene names of completed levels
-    [SerializeField] string[] currentGalaxy; //An array of scene names in order that correspond to which galaxy you are in
     [SerializeField] LevelParams[] currentProceduralGalaxy; //An array of level params in order that correspond to which galaxy you are in
     Animator levelMenuAnimator; //The canvas for level UI
     bool chosenOption; //True when the player has clicked a button on the canvas UI

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0011478009, g: 0.0010323651, b: 0.0009506331, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -314,6 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 97.56596, y: -15.0212555, z: 281.04474}
 --- !u!23 &467955298
 MeshRenderer:
@@ -413,6 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 47.47998, y: -73.42941, z: -83.87306}
 --- !u!23 &468579280
 MeshRenderer:
@@ -585,12 +587,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 0
+  darkMatter: 0
   seed: {x: -54.88591, y: -114.10123, z: 168.32692}
   orbitPlanet: {fileID: 467955296}
   eccentricity: 0
   speed: 0.81
   apoapsis: 2.95
   rotation: 0
+  showLr: 1
 --- !u!23 &650896090
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -689,6 +693,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 49.4488, y: 0.7127991, z: 102.61093}
 --- !u!23 &676398519
 MeshRenderer:
@@ -1039,6 +1044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -94.328384, y: 2.7938538, z: -250.72453}
 --- !u!23 &1396379752
 MeshRenderer:
@@ -1138,6 +1144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 24.601517, y: -63.351135, z: -164.00386}
 --- !u!23 &1555448179
 MeshRenderer:
@@ -1237,12 +1244,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 1
   specificSeed: 0
+  darkMatter: 0
   seed: {x: 98.74919, y: -193.33936, z: 118.051025}
   orbitPlanet: {fileID: 1555448177}
   eccentricity: 0
   speed: -0.65
   apoapsis: 2.95
   rotation: 199
+  showLr: 1
 --- !u!23 &1596980878
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1489,7 +1498,7 @@ PrefabInstance:
     - target: {fileID: 2041861299221359432, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
       propertyPath: par
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4518943914118313802, guid: bad1842c40dcd0648bf12c2c963c69df,
         type: 3}
