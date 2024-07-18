@@ -85,7 +85,8 @@ public class GalaxySummary : MonoBehaviour
         if(SaveLoadManager.currentUniverseSave != null)
         {
             universeShotsTxt.text = "Shots: " + SaveLoadManager.currentUniverseSave.totalShots;
-            System.TimeSpan universeTS = System.TimeSpan.FromHours(SaveLoadManager.currentUniverseSave.totalTime);
+            System.TimeSpan universeTS = System.TimeSpan.FromSeconds(SaveLoadManager.currentUniverseSave.totalTime);
+            Debug.Log(SaveLoadManager.currentUniverseSave.totalTime);
             string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)universeTS.TotalHours, universeTS.Minutes, universeTS.Seconds);
             universeTimeTxt.text = "Time: " + formattedTime;
         }

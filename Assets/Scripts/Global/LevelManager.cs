@@ -281,6 +281,7 @@ public class LevelManager : MonoBehaviour
             GameManager.SceneHandling.LoadScene("Galaxies", false);
         }
     }
+    public void EnableBallInput(bool enable) => ballInput = enable;
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {
         return completedLevels.Contains(level);

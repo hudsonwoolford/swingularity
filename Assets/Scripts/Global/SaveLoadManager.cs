@@ -23,8 +23,10 @@ public class SaveLoadManager : MonoBehaviour
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
+    [SerializeField] string[] nonLevelScenes; //Folder containing settings
     public static UniverseSave currentUniverseSave { get; private set; }
     public static FileInfo[] saves { get; private set; }
+    bool inLevel;
 
     private void Awake()
     {
@@ -47,7 +49,10 @@ public class SaveLoadManager : MonoBehaviour
     }
     void Update()
     {
-
+        if(inLevel && currentUniverseSave != null)
+        {
+            currentUniverseSave.totalTime += Time.deltaTime;
+        }
     }
     void RetrieveUniverseSaves()
     {
@@ -169,23 +174,31 @@ public class SaveLoadManager : MonoBehaviour
     }
     void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {
+        bool matchNonLevel = false;
+        foreach (string s in nonLevelScenes)
+        {
+            if(s == SceneManager.GetActiveScene().name)
+            {
+                matchNonLevel = true;
+            }
+        }
+        inLevel = !matchNonLevel;
         Save();
     }
-    void IncrementNumShots(int scoreSum, int shotsSum, int parSum, bool starCollected)
+    void IncrementNumShots()
     {
-        if (currentUniverseSave != null) { currentUniverseSave.totalShots+=shotsSum; }
-        
+        if (currentUniverseSave != null) { currentUniverseSave.totalShots++; }
     }
     private void OnEnable()
     {
-        PointCardManager.onGalaxyScore += IncrementNumShots;
+        ShootBall.onShoot += IncrementNumShots;
         SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsEnabled;
         SettingsManager.applySettingsVar += SaveSettings;
     }
     private void OnDisable()
     {
-        PointCardManager.onGalaxyScore -= IncrementNumShots;
+        ShootBall.onShoot -= IncrementNumShots;
         SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsEnabled;
         SettingsManager.applySettingsVar -= SaveSettings;

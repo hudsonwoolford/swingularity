@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
+  m_IndirectSpecularColor: {r: 0.0010006599, g: 0.00090480404, b: 0.00086606137, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -430,6 +430,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c01f59bf67e25b34ebfb8b1fe0711981, type: 3}
+--- !u!95 &638307890 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6559357327877506474, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+    type: 3}
+  m_PrefabInstance: {fileID: 1069681033660518462}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &734920138 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3466070122645160618, guid: 6b22623ac2a29f848a8c3902dfd352e5,
@@ -500,7 +506,7 @@ MonoBehaviour:
     type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
-  astronaut: {fileID: 919132149153254394}
+  astronaut: {fileID: 0}
   starCollectiblePrefab: {fileID: 1558331757705019381, guid: 08e5b33348adeba42b32fb8323822936,
     type: 3}
 --- !u!4 &866247461
@@ -1114,12 +1120,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &919132149153254394 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3179938617014444164, guid: 5b8dbfc6c6ed353409850701e3a8a228,
-    type: 3}
-  m_PrefabInstance: {fileID: 1069681033660518462}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &919132149155761622
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,10 +1222,45 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 278536506506996555, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Left Forearm
+      objectReference: {fileID: 0}
+    - target: {fileID: 2278647977436502900, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Right Shin
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506992538540856962, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Right Thigh
+      objectReference: {fileID: 0}
+    - target: {fileID: 3199849382256466123, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 3432883320014890833, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_Name
       value: AstronautParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 3461161615767571267, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: astronautAnim
+      value: 
+      objectReference: {fileID: 638307890}
+    - target: {fileID: 3881032331593207332, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Left Shoulder
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124284535755996638, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Left Foot
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
@@ -1250,22 +1285,22 @@ PrefabInstance:
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7071068
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
@@ -1275,12 +1310,37 @@ PrefabInstance:
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 4744359492694351794, guid: 5b8dbfc6c6ed353409850701e3a8a228,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5521281442178347777, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Right Forearm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6282415929102582850, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Left Shin
+      objectReference: {fileID: 0}
+    - target: {fileID: 7485135287284757777, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Right Foot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7702873836039083298, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Left Thigh
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965675925753526210, guid: 5b8dbfc6c6ed353409850701e3a8a228,
+        type: 3}
+      propertyPath: m_Name
+      value: Right Shoulder
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

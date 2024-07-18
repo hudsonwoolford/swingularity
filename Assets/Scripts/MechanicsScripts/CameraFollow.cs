@@ -25,7 +25,6 @@ public class CameraFollow : MonoBehaviour
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
-    bool hackMode = false;
 
     public void InitPositions(Vector2 startPosSent, Vector2 endPosSent, float maxSizeSent){
         startPos = startPosSent;
@@ -36,7 +35,11 @@ public class CameraFollow : MonoBehaviour
         innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
 
         MasterStart();
-    }   
+    }  
+    public void SetTargetZoom(float targetZoom) //this should be only called from tutorial
+    {
+        targetCameraSize = targetZoom;
+    }
     private void Awake()
     {
         ball = GameObject.FindGameObjectWithTag("Player").transform;
@@ -333,9 +336,7 @@ public class CameraFollow : MonoBehaviour
     {
         panning = false;
     }
-    void HackModeSet(bool enable, Material whiteMat){
-        hackMode = enable;
-    }
+
     Vector2 CalculateCamsize(float orthoSize)
     {
         float height = orthoSize * 2; //camera height in units
@@ -348,7 +349,6 @@ public class CameraFollow : MonoBehaviour
         ShootBall.triggerReset += OnReset;
         ShootBall.onHole += OnReset;
         ShootBall.holeAnim += ZoomIn;
-        HackMode.onHackMode += HackModeSet;
     }
     private void OnDisable()
     {
@@ -356,7 +356,6 @@ public class CameraFollow : MonoBehaviour
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;
         ShootBall.holeAnim -= ZoomIn;
-        HackMode.onHackMode -= HackModeSet;
     }
     private void OnDrawGizmos()
     {
