@@ -34,6 +34,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
     [SerializeField] float animScale; //Scale of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
+    [SerializeField] float ballSpinSpeed;
     [SerializeField] Material ballHackModeMat;
 
     [SerializeField] LayerMask ignoreStill;
@@ -199,9 +200,9 @@ public class ShootBall : MonoBehaviour
             }
             ballStill = false;
             childObj.transform.up =
-            Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f);
+            Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f * ballSpinSpeed);
             childObj.transform.forward =
-            Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f);
+            Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f * ballSpinSpeed);
         }
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
@@ -233,6 +234,7 @@ public class ShootBall : MonoBehaviour
         yield break;
     }
     IEnumerator AstronautFade(){
+        astronaut.GetComponent<AstronautMatController>().StartFade();
         astronautFading = true;
         if(movedAstronaut) { astronautFading = false; yield break; }
         if(Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
@@ -299,6 +301,7 @@ public class ShootBall : MonoBehaviour
         }
         origin = transform.position; //Ball reset position
         astronautFading = false;
+        astronaut.GetComponent<AstronautMatController>().EndFade();
         yield break;
 
     }
