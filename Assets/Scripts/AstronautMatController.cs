@@ -10,11 +10,16 @@ public class AstronautMatController : MonoBehaviour
     [SerializeField] Material alu, blackGloss, white, emmission;
 
     [Header("Fade Materials")]
-    [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;    
+    [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
+    [SerializeField] Animator astronautAnim;    
 
     void Start(){
-        emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.5f/6f);    
+        emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
+        emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.5f/6f);    
         EndFade();
+    }
+    void Update(){
+        StartCoroutine(GolfSwingPullBack());
     }
 
     public void StartFade(){
@@ -36,5 +41,12 @@ public class AstronautMatController : MonoBehaviour
             alu,
         };
         astronaut.materials = mats;
+    }
+    
+    IEnumerator GolfSwingPullBack(){
+        float lerpVal = ShootBall.shootPower/100f;
+        float time = Mathf.Lerp(250f/500f, 275f/500f, lerpVal);
+        // astronautAnim.Play("Swing Left", 0, time);
+        yield return null;
     }
 }
