@@ -5,8 +5,7 @@ using UnityEngine.Rendering;
 
 public class AstronautMatController : MonoBehaviour
 {
-    [SerializeField] SortingGroup[] sortingGroups;
-    [SerializeField] SkinnedMeshRenderer[] aluMeshes, blackMeshes, whiteMeshes, emmissionMeshes;
+    [SerializeField] SkinnedMeshRenderer astronaut;
     [Header("Normal Materials")]
     [SerializeField] Material alu, blackGloss, white, emmission;
 
@@ -19,37 +18,23 @@ public class AstronautMatController : MonoBehaviour
     }
 
     public void StartFade(){
-        for (int i = 0; i < sortingGroups.Length; i++){
-            sortingGroups[i].enabled = true;
-        }
-        for (int i = 0; i < aluMeshes.Length; i++){
-            aluMeshes[i].material = aluFade;
-        }
-        for (int i = 0; i < blackMeshes.Length; i++){
-            blackMeshes[i].material = blackFade;
-        }
-        for (int i = 0; i < whiteMeshes.Length; i++){
-            whiteMeshes[i].material = whiteFade;
-        }
-        for (int i = 0; i < emmissionMeshes.Length; i++){
-            emmissionMeshes[i].material = emmissionFade;
-        }
+        Material[] fadeMats = new Material[5]{
+            whiteFade,
+            whiteFade,
+            emmissionFade,
+            whiteFade,
+            aluFade
+        };
+        astronaut.materials = fadeMats;
     }
     public void EndFade(){
-        for (int i = 0; i < sortingGroups.Length; i++){
-            sortingGroups[i].enabled = false;
-        }
-        for (int i = 0; i < aluMeshes.Length; i++){
-            aluMeshes[i].material = alu;
-        }
-        for (int i = 0; i < blackMeshes.Length; i++){
-            blackMeshes[i].material = blackGloss;
-        }
-        for (int i = 0; i < whiteMeshes.Length; i++){
-            whiteMeshes[i].material = white;
-        }
-        for (int i = 0; i < emmissionMeshes.Length; i++){
-            emmissionMeshes[i].material = emmission;
-        }
+        Material[] mats = new Material[5]{
+            white,
+            white,
+            emmission,
+            white,
+            alu,
+        };
+        astronaut.materials = mats;
     }
 }
