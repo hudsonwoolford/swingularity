@@ -429,7 +429,7 @@ public class LevelManager : MonoBehaviour
         {
             true,
             scoreSum <= 0,
-            scoreSum < -3 || shotsSum == 5,
+            scoreSum <= -3 || shotsSum == 5,
             shotsSum == 5,
             collectedStar
         };

@@ -65,7 +65,6 @@ public class SceneHandling : MonoBehaviour
             loadingDescription.text = "Generating level...";
             while (!levelGenerated)
             {
-                progressBar.value = progressModifier * MAX_PROGRESS * randMult;
                 if (LevelGenerator.Instance != null)
                 {
                     if (LevelGenerator.Instance.generationProgress != 1) //for some reason it is 1, i reset it but still happens

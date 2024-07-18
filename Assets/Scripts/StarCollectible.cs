@@ -199,11 +199,13 @@ public class StarCollectible : MonoBehaviour
     private void OnEnable()
     {
         ShootBall.onStill += OnBallStill;
+        ShootBall.onHole += OnBallStill;
         ShootBall.death += OnBallDeath;
     }
     private void OnDisable()
     {
         ShootBall.onStill -= OnBallStill;
+        ShootBall.onHole -= OnBallStill;
         ShootBall.death -= OnBallDeath;
     }
     private void OnDrawGizmosSelected()
