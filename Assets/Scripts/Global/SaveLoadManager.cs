@@ -23,12 +23,12 @@ public class SaveLoadManager : MonoBehaviour
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
-
-    public static FileInfo[] saves {get;private set;}
+    public static UniverseSave currentUniverseSave { get; private set; }
+    public static FileInfo[] saves { get; private set; }
 
     private void Awake()
     {
-        if(!Directory.Exists(Application.dataPath + saveFolder))
+        if (!Directory.Exists(Application.dataPath + saveFolder))
         {
             Directory.CreateDirectory(Application.dataPath + saveFolder);
         }
@@ -43,7 +43,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void Start()
     {
-        
+
     }
     void Update()
     {
@@ -57,7 +57,7 @@ public class SaveLoadManager : MonoBehaviour
         for (int i = 0; i < saveFiles.Length; i++)
         {
             if (saveFiles[i].Name == "UserSettings.txt") { continue; }
-            if (saveFiles[i].Extension == ".meta" ){ continue; }
+            if (saveFiles[i].Extension == ".meta") { continue; }
             if (!saveFiles[i].Exists) { continue; }
             trackRealSave.Add(saveFiles[i]);
         }
@@ -66,7 +66,7 @@ public class SaveLoadManager : MonoBehaviour
     #region Setting Saving
     void SettingsEnabled(bool enable)
     {
-        if(enable) { LoadSettings(); }
+        if (enable) { LoadSettings(); }
         else { SaveSettings(); }
     }
     void SaveSettings()
@@ -80,9 +80,9 @@ public class SaveLoadManager : MonoBehaviour
 
         File.WriteAllText(Application.dataPath + settingsSaveFolder + "UserSettings.txt", jsonSave);
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         AssetDatabase.Refresh();
-        #endif
+#endif
     }
     void LoadSettings()
     {
@@ -103,16 +103,11 @@ public class SaveLoadManager : MonoBehaviour
     #region Universe Saving
     public void Save()
     {
-        UniverseSave save = new UniverseSave
-        {
-            universeParams = GameManager.LevelManager.currentUniverse,
-            allGalaxies = GameManager.LevelManager.currentProceduralUniverse
-        };
-        if(save.universeParams == new UniverseParams()) { return; }
-        string jsonSave = JsonUtility.ToJson(save, true);
+        if (currentUniverseSave == null || currentUniverseSave.universeParams == new UniverseParams()) { return; }
+        string jsonSave = JsonUtility.ToJson(currentUniverseSave, true);
 
-        File.WriteAllText(Application.dataPath + saveFolder + save.universeParams.name + ".txt", jsonSave);
-        File.SetLastAccessTime(Application.dataPath + saveFolder + save.universeParams.name + ".txt", System.DateTime.Now);
+        File.WriteAllText(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", jsonSave);
+        File.SetLastAccessTime(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", System.DateTime.Now);
         #if UNITY_EDITOR
                 AssetDatabase.Refresh();
         #endif
@@ -123,8 +118,9 @@ public class SaveLoadManager : MonoBehaviour
 
         File.WriteAllText(Application.dataPath + saveFolder + fileName, jsonSave);
         #if UNITY_EDITOR
-                AssetDatabase.Refresh();
-#endif
+            AssetDatabase.Refresh();
+        #endif
+        currentUniverseSave = save;
 
         setUniverse?.Invoke(save.universeParams);
         setGalaxies?.Invoke(save.allGalaxies);
@@ -137,6 +133,8 @@ public class SaveLoadManager : MonoBehaviour
         {
             string jsonSave = File.ReadAllText(path);
             UniverseSave loadedSave = JsonUtility.FromJson<UniverseSave>(jsonSave);
+
+            currentUniverseSave = loadedSave;
 
             setUniverse?.Invoke(loadedSave.universeParams);
             setGalaxies?.Invoke(loadedSave.allGalaxies);
@@ -173,14 +171,21 @@ public class SaveLoadManager : MonoBehaviour
     {
         Save();
     }
+    void IncrementNumShots(int scoreSum, int shotsSum, int parSum, bool starCollected)
+    {
+        if (currentUniverseSave != null) { currentUniverseSave.totalShots+=shotsSum; }
+        
+    }
     private void OnEnable()
     {
+        PointCardManager.onGalaxyScore += IncrementNumShots;
         SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsEnabled;
         SettingsManager.applySettingsVar += SaveSettings;
     }
     private void OnDisable()
     {
+        PointCardManager.onGalaxyScore -= IncrementNumShots;
         SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsEnabled;
         SettingsManager.applySettingsVar -= SaveSettings;

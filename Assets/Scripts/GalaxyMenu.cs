@@ -202,6 +202,18 @@ public class GalaxyMenu : MonoBehaviour
                 // transitionDuration = 1/Mathf.Abs(Input.mouseScrollDelta.y) * scrollSpeed;
             }
             else { transitionDuration = 0.5f; }
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseStartPos = Input.mousePosition;
+            }
+            if (Input.GetMouseButton(0))
+            {
+                if (Mathf.Abs(Input.mousePosition.x - mouseStartPos.x) > 100)
+                {
+                    MoveButton(-(int)Mathf.Sign(Input.mousePosition.x - mouseStartPos.x));
+                    mouseStartPos = Input.mousePosition;
+                }
+            }
         }
         if (Input.GetKeyDown(KeyCode.Escape) && zoomedIn)
         {
@@ -210,18 +222,6 @@ public class GalaxyMenu : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space) && !zoomedIn)
         {
             ZoomButton(true);
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            mouseStartPos = Input.mousePosition;
-        }
-        if (Input.GetMouseButton(0))
-        {
-            if(Mathf.Abs(Input.mousePosition.x - mouseStartPos.x) > 100)
-            {
-                MoveButton(-(int)Mathf.Sign(Input.mousePosition.x - mouseStartPos.x));
-                mouseStartPos = Input.mousePosition;
-            }
         }
     }
     void SetManualGalaxy()

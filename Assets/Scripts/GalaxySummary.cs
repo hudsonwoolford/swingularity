@@ -16,6 +16,7 @@ public class GalaxySummary : MonoBehaviour
     [SerializeField] GameObject universeSummary;
     [SerializeField] TextMeshProUGUI universeNameTxt;
     [SerializeField] TextMeshProUGUI universeSeedTxt;
+    [SerializeField] TextMeshProUGUI universeShotsTxt;
     [SerializeField] TextMeshProUGUI universeTimeTxt;
     [SerializeField] TextMeshProUGUI universeProgressTxt;
     [SerializeField] Slider progressSlider;
@@ -74,12 +75,21 @@ public class GalaxySummary : MonoBehaviour
         universeSummary.SetActive(true);
         LevelManager.UniverseParams uni = GameManager.LevelManager.currentUniverse;
         universeNameTxt.text = uni.name;
+        //progress
         float numPossibleStars = uni.numGalaxies * 5f == 0 ? 1 : uni.numGalaxies * 5f;
         float progress = (float)uni.numStars / (numPossibleStars);
         universeProgressTxt.text = "Progress: " + SetColor(Mathf.RoundToInt(progress*100).ToString(), colorGrad.Evaluate(1 - progress));
         progressSlider.value = progress;
         progressSliderFill.color = colorGrad.Evaluate(1 - progress);
-        universeTimeTxt.text = "Time: " + Mathf.RoundToInt(Time.timeSinceLevelLoad).ToString();
+        //shots and time
+        if(SaveLoadManager.currentUniverseSave != null)
+        {
+            universeShotsTxt.text = "Shots: " + SaveLoadManager.currentUniverseSave.totalShots;
+            System.TimeSpan universeTS = System.TimeSpan.FromHours(SaveLoadManager.currentUniverseSave.totalTime);
+            string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)universeTS.TotalHours, universeTS.Minutes, universeTS.Seconds);
+            universeTimeTxt.text = "Time: " + formattedTime;
+        }
+        //seed, stars, supernovae, and difficulty
         universeSeedTxt.text = !uni.proceduralUniverse ? "Seed: " + SetColor("Campaign", colorGrad.Evaluate(0)) :  "Seed: " + uni.seed.ToString();
         universeStarsTxt.text = uni.numStars.ToString();
         universeSupernovaeTxt.text = (uni.numStars * uni.relativeDifficulty).ToString();
