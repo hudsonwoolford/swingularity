@@ -14,6 +14,8 @@ public class SaveLoadManager : MonoBehaviour
     {
         public UniverseParams universeParams;
         public GalaxyParams[] allGalaxies;
+        public float totalTime;
+        public int totalShots;
     }
     class SettingsSave
     {

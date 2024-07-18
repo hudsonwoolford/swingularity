@@ -430,7 +430,7 @@ public class GalaxyMenu : MonoBehaviour
     {
         for (int i = 0; i < galaxyCons.Length; i++)
         {
-            if(Mathf.Abs(i-focusedGalaxy)<=1 || enableAll)
+            if((Mathf.Abs(i-focusedGalaxy)<=1 || enableAll))
             {
                 galaxyCons[i].gameObject.SetActive(true);
             }
@@ -445,31 +445,47 @@ public class GalaxyMenu : MonoBehaviour
     void CreateControllers() //Instantiates all galaxies
     {
         starCount.text = GameManager.LevelManager.currentUniverse.numStars.ToString();
-        galaxyCons = new GalaxyController[galaxyList.Length];
-        galaxySummaries = new GalaxySummary[galaxyList.Length];
-        Vector3[] positions = GalaxyPositions(galaxyList.Length, focusedGalaxy);
-        for (int i = 0; i < galaxyList.Length; i++) //galaxy obj
+        galaxyCons = new GalaxyController[galaxyList.Length + 1];
+        galaxySummaries = new GalaxySummary[galaxyList.Length + 1];
+        Vector3[] positions = GalaxyPositions(galaxyList.Length + 1, focusedGalaxy);
+        for (int i = 0; i < galaxyList.Length+1; i++) //galaxy obj
         {
-
             //instantiating galaxies
             galaxyCons[i] = Instantiate(galaxyObj, galaxyObjParent).GetComponent<GalaxyController>();
             galaxyCons[i].transform.localScale = galaxyCons[i].transform.localScale * sizeScalar;
-            UnityEngine.Random.InitState(galaxyList[i].seed);
-            float randomValue = UnityEngine.Random.Range(0f, 1f);
-            galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, randomValue));
-            galaxyCons[i].transform.position = positions[i];
-            galaxyCons[i].SetProceduralScheme(galaxyList[i]);
+            if (i != galaxyList.Length)
+            {
+                UnityEngine.Random.InitState(galaxyList[i].seed);
+                float randomValue = UnityEngine.Random.Range(0f, 1f);
+                galaxyCons[i].transform.rotation = Quaternion.Euler(Vector3.Lerp(minRotation, maxRotation, randomValue));
+                galaxyCons[i].transform.position = positions[i];
+                galaxyCons[i].SetProceduralScheme(galaxyList[i]);
+            }
+            else
+            {
+                galaxyCons[i].enabled = false;
+                foreach (var pr in galaxyCons[i].GetComponentsInChildren<ParticleSystem>())
+                {
+                    Destroy(pr.gameObject);
+                }
+                galaxyCons[i].transform.position = positions[i];
+            }
 
             //instantiating UI for galaxies
             galaxySummaries[i] = Instantiate(galaxyUISummary, galaxyCons[i].transform).GetComponent<GalaxySummary>();
-            galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].requiredStars);
+
+            if (i != galaxyList.Length)
+            {
+                galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].requiredStars);
+            }
+            else { galaxySummaries[i].InitUniverseSummary(); Debug.Log("u"); }
 
             galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
 
-        float halfLength = ((galaxyList.Length - 1) / 2) * dotDistanceInterval;
-        dotSelectedImgs = new Image[galaxyList.Length];
-        for (int i = 0; i < galaxyList.Length; i++) //dot button creation
+        float halfLength = ((galaxyCons.Length-1) / 2) * dotDistanceInterval;
+        dotSelectedImgs = new Image[galaxyCons.Length];
+        for (int i = 0; i < galaxyCons.Length; i++) //dot button creation
         {
             RectTransform t = Instantiate(dotButton, transform).GetComponent<RectTransform>();
             t.localPosition = new Vector3(dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
