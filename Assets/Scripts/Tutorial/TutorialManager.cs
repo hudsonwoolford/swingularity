@@ -30,7 +30,7 @@ public class TutorialManager : MonoBehaviour
     TutorialState currentState;
     private void Start()
     {
-        if(!SettingsManager.userSettings.hints) { Destroy(gameObject); }
+        if(!SettingsManager.userSettings.hints) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); return; }
         DisableAll();
         tutorialAnimator.Play("TeachScroll");
         ChangeTutorialState(TutorialState.TeachScrollPan);

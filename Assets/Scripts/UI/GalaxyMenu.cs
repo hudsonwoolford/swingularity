@@ -478,7 +478,7 @@ public class GalaxyMenu : MonoBehaviour
             {
                 galaxySummaries[i].InitSummary(galaxyList[i].collectedStars, galaxyList[i].requiredStars);
             }
-            else { galaxySummaries[i].InitUniverseSummary(); Debug.Log("u"); }
+            else { galaxySummaries[i].InitUniverseSummary();}
 
             galaxySummaries[i].transform.rotation = Quaternion.identity;
         }
