@@ -14,21 +14,20 @@ public class AstronautMatController : MonoBehaviour
     [SerializeField] Animator astronautAnim;    
     bool left;
     [SerializeField] float transitionDuration;
+    [SerializeField] float animSmoothing;
+    float lerpVal;
 
     void Start(){
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
-        emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.5f/6f);    
+        emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
         EndFade();
     }
     void Update(){
-        if(ShootBall.liningUpShot){
-            GolfSwingPullBack();
-        }
-        else{
-            astronautAnim.CrossFade("Idle", transitionDuration, 0);
-        }
-    }
+            astronautAnim.SetBool("liningUp", ShootBall.liningUpShot);
+            lerpVal = ShootBall.shootPower/100f;
 
+            GolfSwingPullBack();
+    }
     public void StartFade(){
         Material[] fadeMats = new Material[5]{
             whiteFade,
@@ -51,29 +50,28 @@ public class AstronautMatController : MonoBehaviour
     }
     
     void GolfSwingPullBack(){
-        float lerpVal = ShootBall.shootPower/100f;
-        if(ShootBall.shootAngle > 1)
-        if(left){
-            astronautAnim.CrossFade("Pull Left", transitionDuration, 0, lerpVal);
-        }
-        else{
-            astronautAnim.CrossFade("Pull Right", transitionDuration, 0, lerpVal);
-        }
+        // if(ShootBall.shootAngle > 1)
+        astronautAnim.SetBool("left", left);
+        astronautAnim.SetFloat("pullbackPos", lerpVal);
     }
 
     void BallSwing(){
+        float offset = Mathf.Lerp(0, 5f/23f, lerpVal);
         if(left){
-            astronautAnim.CrossFade("Swing Left", transitionDuration);
+            astronautAnim.CrossFade("Swing Left", transitionDuration, 0, offset);
         }
         else{
-            astronautAnim.CrossFade("Swing Right", transitionDuration);
+            astronautAnim.CrossFade("Swing Right", transitionDuration, 0, offset);
         }
     }
 
     void OnEnable(){
         ShootBall.onSwing += BallSwing;
+        ShootBall.triggerReset += EndFade;
     }
     void OnDisable(){
         ShootBall.onSwing -= BallSwing;
+        ShootBall.triggerReset -= EndFade;
+
     }
 }

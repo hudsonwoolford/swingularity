@@ -99,11 +99,6 @@ public class ShootBall : MonoBehaviour
         transform.position = originPos;
         origin = originPos;
         trueOrigin = origin;
-        foreach (Material mat in astronautFadeMats){
-            if (mat.shader == emmisionShader){
-                mat.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
-            }
-        }
         foreach (Transform t in planetTransform)
         {
             planets.Add(t.gameObject.GetComponent<CelestialMass>());
@@ -236,10 +231,11 @@ public class ShootBall : MonoBehaviour
         yield break;
     }
     IEnumerator AstronautFade(){
-        astronaut.GetComponent<AstronautMatController>().StartFade();
         astronautFading = true;
-        if(movedAstronaut) { astronautFading = false; yield break; }
+        if(movedAstronaut) { astronautFading = false; astronaut.GetComponent<AstronautMatController>().EndFade(); yield break; }
+
         if(Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
+
             bool notFullyFinished = false; //whether the astronaut has completely faded or not
             //checks cutoff value on every material
             foreach (Material mat in astronautFadeMats)
@@ -261,6 +257,8 @@ public class ShootBall : MonoBehaviour
         foreach(Material mat in astronautFadeMats){
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
         }
+            astronaut.GetComponent<AstronautMatController>().StartFade();
+
         while(timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
             foreach(Material mat in astronautFadeMats){
@@ -397,12 +395,15 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
 
-        if(force.magnitude < 1f)
+        if(shootPower < 10f)
         {
             liningUpShot = false;
             yield break;
         }
         StopCoroutine(BallStillTiming(ballStillTimeVal));
+        onSwing?.Invoke(); //invoke shoot event
+
+        yield return new WaitForSeconds(0.25f);
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;
@@ -411,6 +412,7 @@ public class ShootBall : MonoBehaviour
         ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, 1-force.magnitude / maxPower) + UnityEngine.Random.Range(-0.15f, 0.15f);
         GameManager.SFXManager.PlaySFX(hitBall, ballAudioSrc, Mathf.Clamp01(force.magnitude / maxPower * 2));
         onShoot?.Invoke(); //invoke shoot event
+
         rb.AddForce(force, ForceMode.Impulse); //adding force
 
         foreach (GameObject c in cols)
@@ -445,6 +447,8 @@ public class ShootBall : MonoBehaviour
         StopAllCoroutines();
         astronautFading = false;
         if(!movedAstronaut) { StartCoroutine(AstronautFade()); }
+        astronaut.GetComponent<AstronautMatController>().EndFade();
+
         deathDelay = false;
         liningUpShot = false;
         DrawCollisionIcons();
