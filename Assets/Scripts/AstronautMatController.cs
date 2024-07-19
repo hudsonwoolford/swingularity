@@ -84,7 +84,7 @@ public class AstronautMatController : MonoBehaviour
 
     void BallSwing(){
         float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
-        astronautAnim.SetTrigger("swing");
+        astronautAnim.SetBool("swing", true);
         
         leftSwingTransition.offset = -offset;
         rightSwingTransition.offset = -offset;
@@ -96,13 +96,18 @@ public class AstronautMatController : MonoBehaviour
             // }
     }
 
+    void BallHit(){
+        astronautAnim.SetBool("swing", false);
+    }
+
     void OnEnable(){
         ShootBall.onSwing += BallSwing;
         ShootBall.triggerReset += EndFade;
+        ShootBall.onShoot += BallHit;
     }
     void OnDisable(){
         ShootBall.onSwing -= BallSwing;
         ShootBall.triggerReset -= EndFade;
-
+        ShootBall.onShoot -= BallHit;
     }
 }
