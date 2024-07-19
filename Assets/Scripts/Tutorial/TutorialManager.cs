@@ -13,16 +13,28 @@ public class TutorialManager : MonoBehaviour
     public TeachHackMode teachHackMode = new TeachHackMode();
     public TeachNothing teachNothing = new TeachNothing();
     public bool isPullingBack { get; private set; }
+    bool dialogueComplete;
     TutorialState currentState;
-    private void Start()
+    private IEnumerator Start()
     {
-        if(!SettingsManager.userSettings.hints) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); return; }
-        DisableAll();
-        ChangeTutorialState(scrollPanTutorial);
+        if(!SettingsManager.userSettings.hints) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); yield break; }
         DontDestroyOnLoad(gameObject);
+        DisableAll();
+        currentState = teachNothing;
+        StartCoroutine(WaitUntilDialogueChangeState(scrollPanTutorial));
+    }
+    IEnumerator WaitUntilDialogueChangeState(TutorialState state)
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+        while (!dialogueComplete)
+        {
+            yield return null;
+        }
+        ChangeTutorialState(state);
     }
     private void Update()
     {
+        if(!dialogueComplete) { return; }
         currentState.OnUpdate();
     }
     #region State Functions
@@ -65,6 +77,13 @@ public class TutorialManager : MonoBehaviour
     }
     #endregion
     #region Event Functions
+    void OnEnableDialogue(bool enable)
+    {
+        if(!enable)
+        {
+            dialogueComplete = true;
+        }
+    }
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         if (scene.name == "Earth_0" || scene.name == "Earth_1")
@@ -72,7 +91,7 @@ public class TutorialManager : MonoBehaviour
             if(scene.name == "Earth_1")
             {
                 DisableAll();
-                ChangeTutorialState(teachHackMode);
+                StartCoroutine(WaitUntilDialogueChangeState(teachHackMode));
             }
         }
         else
@@ -89,9 +108,11 @@ public class TutorialManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoad;
+        TIIGER.onEnableDialogue += OnEnableDialogue;
     }
     private void OnDisable()
     {
+        TIIGER.onEnableDialogue -= OnEnableDialogue;
         SceneManager.sceneLoaded -= OnSceneLoad;
         GameManager.LevelManager.EnableBallInput(true);
     }

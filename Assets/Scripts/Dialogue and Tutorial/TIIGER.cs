@@ -10,7 +10,10 @@ public class TIIGER : EventTalkableNPC
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
     private bool isTransitioning;
-    private bool dialogueShown;
+    public bool dialogueShown { get; private set; }
+    public delegate void OnEnableDialogue(bool enable);
+    public static OnEnableDialogue onEnableDialogue;
+
     private void Awake()
     {
         if(Instance == null)
@@ -19,7 +22,8 @@ public class TIIGER : EventTalkableNPC
         }
         else
         {
-            Destroy(Instance);
+            Destroy(gameObject);
+            return;
         }
     }
     private void Start()
@@ -32,6 +36,10 @@ public class TIIGER : EventTalkableNPC
         if(dialogueShown && !dialogueController.isConversation)
         {
             StartCoroutine(HideDialogue());
+        }
+        if(dialogueController.isConversation && LevelManager.ballInput)
+        {
+            GameManager.LevelManager.EnableBallInput(false);
         }
     }
     public override void Interact()
@@ -48,8 +56,10 @@ public class TIIGER : EventTalkableNPC
     IEnumerator DisplayDialogue(DialogueText dialogueText)
     {
         isTransitioning = true;
+        GameManager.LevelManager.EnableBallInput(false);
 
         //animation
+        onEnableDialogue?.Invoke(true);
         dialogueShown = true;
         tgrAnimator.Play("ShowTgrDialogue");
         dialogueController.StartConversation(dialogueText); //sets text
@@ -64,8 +74,10 @@ public class TIIGER : EventTalkableNPC
     IEnumerator HideDialogue()
     {
         isTransitioning = true;
+        GameManager.LevelManager.EnableBallInput(false);
 
         //animation
+        onEnableDialogue?.Invoke(false);
         dialogueShown = false;
         tgrAnimator.Play("HideTgrDialogue");
 

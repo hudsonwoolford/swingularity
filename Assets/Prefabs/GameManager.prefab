@@ -748,7 +748,6 @@ GameObject:
   - component: {fileID: 6243078004977349516}
   - component: {fileID: 2019611557074414909}
   - component: {fileID: 804114890814668289}
-  - component: {fileID: 4463049889583557375}
   - component: {fileID: 3052511449868730651}
   m_Layer: 5
   m_Name: TIIGERBox
@@ -817,22 +816,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 6
---- !u!114 &4463049889583557375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 205819498920861170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15fde5f237f644b46a5d2d40e4ea3db8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPCNameText: {fileID: 0}
-  NPCDialogueText: {fileID: 0}
-  typeSpeed: 5
-  minParagraphInterval: 3
 --- !u!114 &3052511449868730651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3223,7 +3206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &783733375315893245
 Transform:
   m_ObjectHideFlags: 0
@@ -4069,8 +4052,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6243078004977349516}
+  - {fileID: 2915306797488189962}
   - {fileID: 679329288786328441}
+  - {fileID: 6243078004977349516}
   m_Father: {fileID: 783733375315893245}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18449,16 +18433,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventTriggeredDialogues:
-  - name: 
+  - name: Earth_0 - Human Discovery
     dialogueEvent: 0
-    numCallsRequired: 0
+    numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0
-    allowedScenes: []
-    dialogueText: {fileID: 0}
+    allowedScenes:
+    - Earth_0
+    dialogueText: {fileID: 11400000, guid: 96e01ed1cc397e743887c5624be06e80, type: 2}
     numCalls: 0
-  dialogueController: {fileID: 0}
-  tgrAnimator: {fileID: 0}
+  - name: Earth_0 - Reaction to hole 1
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 0
+    allowedScenes:
+    - Earth_1
+    dialogueText: {fileID: 11400000, guid: 7da1a7131af23904daa7e8fa193ce9ef, type: 2}
+    numCalls: 0
+  dialogueController: {fileID: 1936830023792863048}
+  tgrAnimator: {fileID: 3803249320274144040}
 --- !u!1 &4665182456571014053
 GameObject:
   m_ObjectHideFlags: 0
@@ -28133,6 +28127,82 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &7274406795262387436
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2915306797488189962}
+  - component: {fileID: 6956710583468900755}
+  - component: {fileID: 6821510799978407635}
+  m_Layer: 5
+  m_Name: BackgroundTint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2915306797488189962
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274406795262387436}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2751383362844775734}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6956710583468900755
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274406795262387436}
+  m_CullTransparentMesh: 1
+--- !u!114 &6821510799978407635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274406795262387436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &7277164728822178523
 GameObject:
   m_ObjectHideFlags: 0
@@ -29739,8 +29809,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 4ac86867e57b2934dbbb983865d3c2b1, type: 2}
-  isGlobal: 1
+  sharedProfile: {fileID: 11400000, guid: 6dea76e5187ba424db0ac1e30897153a, type: 2}
+  isGlobal: 0
   blendDistance: 0
   weight: 1
   priority: 3.6

@@ -96,7 +96,7 @@ public class DialogueController : MonoBehaviour
     }
     private IEnumerator ParagraphTimeInterval()
     {
-        yield return new WaitForSeconds(minParagraphInterval);
+        yield return new WaitForSecondsRealtime(minParagraphInterval);
         if (paragraphs.Count == 0) { EndConversation(); }
         else { DisplayNextParagraph(); }
     }
