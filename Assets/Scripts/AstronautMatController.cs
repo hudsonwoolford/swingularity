@@ -86,8 +86,8 @@ public class AstronautMatController : MonoBehaviour
         float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
         astronautAnim.SetBool("swing", true);
         
-        leftSwingTransition.offset = -offset;
-        rightSwingTransition.offset = -offset;
+        leftSwingTransition.offset = offset;
+        rightSwingTransition.offset = offset;
             // if(left){
             //     astronautAnim.CrossFadeInFixedTime("Swing Left", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
             // }
