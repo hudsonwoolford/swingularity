@@ -12,7 +12,7 @@ public class ShootBall : MonoBehaviour
 {
     [SerializeField] Transform planetTransform;
     [Header("Power")]
-    [SerializeField] float maxPower; //max power the player can input
+    [SerializeField] public static float maxPower = 30f; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
     [Header("Straight Arrow")]
     [SerializeField] bool straight;
@@ -79,6 +79,8 @@ public class ShootBall : MonoBehaviour
 
     public delegate void OnShoot();
     public static OnShoot onShoot;
+    public delegate void OnSwing();
+    public static OnSwing onSwing;
     public delegate void OnStill();
     public static OnStill onStill;
     public delegate void OnHole();
@@ -394,7 +396,7 @@ public class ShootBall : MonoBehaviour
         }
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
-       
+
         if(force.magnitude < 1f)
         {
             liningUpShot = false;
@@ -529,7 +531,7 @@ public class ShootBall : MonoBehaviour
                     {
                         //blackHole = true;
                     }
-                    if (r.gameObject.tag == "Respawn")
+                    if (r.gameObject.CompareTag("Respawn"))
                     {
                         respawn = true;
                         break;
@@ -717,7 +719,7 @@ public class ShootBall : MonoBehaviour
     #endregion
     #region OnTrueFunc
     private void OnTriggerEnter(Collider other) {
-         if(other.gameObject.tag == "Hole")
+         if(other.gameObject.CompareTag("Hole"))
         {
             GameManager.SFXManager.PlaySFX(enterPortal);
             other.enabled = false;
@@ -731,7 +733,7 @@ public class ShootBall : MonoBehaviour
                 StartCoroutine(FinishedLevel(other.transform, transform.position, transform.position - posLastFrame));
             }
         }
-        if (other.gameObject.tag == "Respawn")
+        if (other.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetDelay(0.3f, other.gameObject));
 
@@ -857,7 +859,7 @@ public class ShootBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Respawn")
+        if (collision.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetDelay(0.3f, collision.gameObject));
 

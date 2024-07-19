@@ -12,6 +12,8 @@ public class AstronautMatController : MonoBehaviour
     [Header("Fade Materials")]
     [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
+    bool left;
+    [SerializeField] float transitionDuration;
 
     void Start(){
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
@@ -19,7 +21,12 @@ public class AstronautMatController : MonoBehaviour
         EndFade();
     }
     void Update(){
-        StartCoroutine(GolfSwingPullBack());
+        if(ShootBall.liningUpShot){
+            GolfSwingPullBack();
+        }
+        else{
+            astronautAnim.CrossFade("Idle", transitionDuration, 0);
+        }
     }
 
     public void StartFade(){
@@ -43,10 +50,30 @@ public class AstronautMatController : MonoBehaviour
         astronaut.materials = mats;
     }
     
-    IEnumerator GolfSwingPullBack(){
+    void GolfSwingPullBack(){
         float lerpVal = ShootBall.shootPower/100f;
-        float time = Mathf.Lerp(250f/500f, 275f/500f, lerpVal);
-        // astronautAnim.Play("Swing Left", 0, time);
-        yield return null;
+        if(ShootBall.shootAngle > 1)
+        if(left){
+            astronautAnim.CrossFade("Pull Left", transitionDuration, 0, lerpVal);
+        }
+        else{
+            astronautAnim.CrossFade("Pull Right", transitionDuration, 0, lerpVal);
+        }
+    }
+
+    void BallSwing(){
+        if(left){
+            astronautAnim.CrossFade("Swing Left", transitionDuration);
+        }
+        else{
+            astronautAnim.CrossFade("Swing Right", transitionDuration);
+        }
+    }
+
+    void OnEnable(){
+        ShootBall.onSwing += BallSwing;
+    }
+    void OnDisable(){
+        ShootBall.onSwing -= BallSwing;
     }
 }
