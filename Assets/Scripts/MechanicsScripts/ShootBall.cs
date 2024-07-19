@@ -13,6 +13,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] Transform planetTransform;
     [Header("Power")]
     [SerializeField] public static float maxPower = 30f; //max power the player can input
+    [HideInInspector] public static float swingDelay = 0.5f; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
     [Header("Straight Arrow")]
     [SerializeField] bool straight;
@@ -35,11 +36,13 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animScale; //Scale of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
     [SerializeField] float ballSpinSpeed;
+    [SerializeField] float maxClubDist;
     [SerializeField] Material ballHackModeMat;
 
     [SerializeField] LayerMask ignoreStill;
 
     [SerializeField] GameObject astronaut;
+    [SerializeField] Transform astronautClub;
 
     [SerializeField] Material[] astronautFadeMats;
     [SerializeField] Shader emmisionShader;
@@ -74,7 +77,10 @@ public class ShootBall : MonoBehaviour
     float ballStillTimeVal = 0.2f;
     bool inPortal;
 
-    bool astronautFading = false, movedAstronaut = false;
+    bool swingHit;
+
+    public static bool astronautFading = false; 
+    bool movedAstronaut = false;
     GameObject childObj;
 
     public delegate void OnShoot();
@@ -197,10 +203,13 @@ public class ShootBall : MonoBehaviour
             }
             ballStill = false;
             childObj.transform.up =
-            Vector3.Slerp(childObj.transform.up, rb.velocity, Time.deltaTime * 15f * ballSpinSpeed);
+            Vector3.Slerp(childObj.transform.up, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
             childObj.transform.forward =
-            Vector3.Slerp(childObj.transform.forward, rb.velocity, Time.deltaTime * 3.5f * ballSpinSpeed);
+            Vector3.Slerp(childObj.transform.forward, rb.velocity.normalized, Time.deltaTime * 3.5f * ballSpinSpeed);
         }
+
+        float clubDist = (new Vector2(astronautClub.position.x, astronautClub.position.y) - new Vector2(transform.position.x, transform.position.y)).magnitude;
+        swingHit = clubDist < maxClubDist;
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
@@ -403,7 +412,7 @@ public class ShootBall : MonoBehaviour
         StopCoroutine(BallStillTiming(ballStillTimeVal));
         onSwing?.Invoke(); //invoke shoot event
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitUntil(() => swingHit);
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;

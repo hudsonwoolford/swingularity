@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4452002815616263580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Shin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7877333563910671532}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ForceFieldInteractor
   m_TagString: ForceFieldInteraction
   m_Icon: {fileID: 0}
@@ -63,6 +63,37 @@ Transform:
   m_Father: {fileID: 4744359492694351794}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1218663963459126960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1058420268861977329}
+  m_Layer: 10
+  m_Name: GolfClubCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1058420268861977329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218663963459126960}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.00081, y: 0.00882, z: -0.00239}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7517034354004651860}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &2099644831788712672
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,7 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7828442063680406838}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Forearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1701076733338988734}
   - component: {fileID: 8004651801698971917}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 'Exported Astronaut '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7517034354004651860}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Golf Club_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +208,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0.008155305, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1058420268861977329}
   m_Father: {fileID: 1599270374268112376}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -190,7 +222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7126253005795476566}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Shoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +254,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2901011288645858872}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Pelvis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1405778487521272808}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Thigh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4744359492694351794}
   - component: {fileID: 3461161615767571267}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AstronautParent
   m_TagString: Astronaut
   m_Icon: {fileID: 0}
@@ -335,7 +367,7 @@ MonoBehaviour:
   emmissionFade: {fileID: 2100000, guid: cfdac6a55d7856d48bfb9739e903ff52, type: 2}
   astronautAnim: {fileID: 8004651801698971917}
   transitionDuration: 0.1
-  animSmoothing: 0.1
+  animConversionFloat: 1.5
 --- !u!1 &4371196611609863638
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +377,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5329951620047512788}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +411,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3607145225957847565}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Foot_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +442,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6681900868193730138}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,7 +474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7396425257742869963}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Shoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -474,7 +506,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 489258356087545044}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Foot_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -505,7 +537,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2786325808586494339}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,7 +569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7939578905462712568}
   - component: {fileID: 7640467689412755220}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Main_Torso.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1317184887874727879}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Forearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -672,7 +704,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1599270374268112376}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Golf Club
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -704,7 +736,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4247736415828469881}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -737,7 +769,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6551567983588555800}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8782088749431034325}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -801,7 +833,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3095324731961894136}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Thigh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -833,7 +865,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1592012960359353499}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Forearm_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -864,7 +896,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5746467500227141661}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Armature.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -897,7 +929,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1195087430839133302}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Shin
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,21 +13,46 @@ public class AstronautMatController : MonoBehaviour
     [Header("Fade Materials")]
     [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
+    [SerializeField] AnimatorController astronautAnimController;    
     bool left;
     [SerializeField] float transitionDuration;
-    [SerializeField] float animSmoothing;
+    [SerializeField] float animConversionFloat;
+    [SerializeField] AnimatorStateTransition leftSwingTransition, rightSwingTransition;
     float lerpVal;
 
     void Start(){
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
         EndFade();
+        SetTransitions();
     }
     void Update(){
-            astronautAnim.SetBool("liningUp", ShootBall.liningUpShot);
-            lerpVal = ShootBall.shootPower/100f;
+                    lerpVal = ShootBall.shootPower/100f;
 
             GolfSwingPullBack();
+            astronautAnim.SetBool("liningUp", ShootBall.liningUpShot);
+        if(ShootBall.astronautFading){
+            astronautAnim.Play("Idle", 0);
+        }
+    }
+    void SetTransitions(){
+        AnimatorStateMachine machine = astronautAnimController.layers[0].stateMachine;
+        foreach(var state in machine.states){
+            if(state.state.name == "Pull Left"){
+                foreach(var transition in state.state.transitions){
+                    if(transition.destinationState.name == "Swing Left"){
+                        leftSwingTransition = transition;
+                    }
+                }
+            }
+            else if(state.state.name == "Pull Right"){
+                foreach(var transition in state.state.transitions){
+                    if(transition.destinationState.name == "Swing Right"){
+                        rightSwingTransition = transition;
+                    }
+                }
+            }
+        }
     }
     public void StartFade(){
         Material[] fadeMats = new Material[5]{
@@ -51,18 +77,23 @@ public class AstronautMatController : MonoBehaviour
     
     void GolfSwingPullBack(){
         // if(ShootBall.shootAngle > 1)
+        left = ShootBall.shootAngle >= 0;
         astronautAnim.SetBool("left", left);
         astronautAnim.SetFloat("pullbackPos", lerpVal);
     }
 
     void BallSwing(){
-        float offset = Mathf.Lerp(0, 5f/23f, lerpVal);
-        if(left){
-            astronautAnim.CrossFade("Swing Left", transitionDuration, 0, offset);
-        }
-        else{
-            astronautAnim.CrossFade("Swing Right", transitionDuration, 0, offset);
-        }
+        float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
+        astronautAnim.SetTrigger("swing");
+        
+        leftSwingTransition.offset = -offset;
+        rightSwingTransition.offset = -offset;
+            // if(left){
+            //     astronautAnim.CrossFadeInFixedTime("Swing Left", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
+            // }
+            // else{
+            //     astronautAnim.CrossFadeInFixedTime("Swing Right", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
+            // }
     }
 
     void OnEnable(){
