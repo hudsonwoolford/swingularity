@@ -77,6 +77,7 @@ public class GalaxyMenu : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] AudioSource starAudioSrc;
     [SerializeField] AudioObj showStarAudio;
+    [SerializeField] AudioObj fiveStarAudio;
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
@@ -685,11 +686,11 @@ public class GalaxyMenu : MonoBehaviour
         {
             galaxyCons[i].transform.position = galaxyPos[i];
         }
+        EnableDisableGalaxies(false);
         StartCoroutine(ZoomGalaxy(true, true));
         galaxySummaries[focusedGalaxy].DisableSummary();
         menuAnim.Play("DisableMenu");
         EnableAndSetInfoCard(true, galaxyList[focusedGalaxy]);
-        EnableDisableGalaxies(false);
         bool[] starScore = new bool[]
         {
             true,
@@ -727,6 +728,10 @@ public class GalaxyMenu : MonoBehaviour
                 yield return null;
             }
             realIteration++;
+        }
+        if(realIteration == 5)
+        {
+            GameManager.SFXManager.PlaySFX(fiveStarAudio);
         }
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
