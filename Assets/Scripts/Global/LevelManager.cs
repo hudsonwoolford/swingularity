@@ -451,7 +451,9 @@ public class LevelManager : MonoBehaviour
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
+        GameManager.SaveLoadManager.IncrementSupernovae(starTotal);
         setUniverse?.Invoke(universeParams);
+        GameManager.SaveLoadManager.Save();
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor) //Updates score text to the score invoked in the event by LevelScoring
     {

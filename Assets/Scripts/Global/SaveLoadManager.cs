@@ -12,19 +12,22 @@ public class SaveLoadManager : MonoBehaviour
 {
     public class UniverseSave
     {
-        public UniverseParams universeParams;
-        public GalaxyParams[] allGalaxies;
-        public float totalTime;
-        public int totalShots;
+        public UniverseParams universeParams = new UniverseParams();
+        public GalaxyParams[] allGalaxies = new GalaxyParams[1];
+        public float totalTime = 0f;
+        public int totalShots = 0;
+        public int supernovae = 0;
     }
-    class SettingsSave
+    class GlobalSave
     {
         public UserSettings userSettings = new UserSettings();
+        public int totalSupernovae = 0;
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
     [SerializeField] string[] nonLevelScenes; //Folder containing settings
     public static UniverseSave currentUniverseSave { get; private set; }
+    GlobalSave currentGlobalSave;
     public static FileInfo[] saves { get; private set; }
     bool inLevel;
 
@@ -34,11 +37,11 @@ public class SaveLoadManager : MonoBehaviour
         {
             Directory.CreateDirectory(Application.dataPath + saveFolder);
         }
-        if (!Directory.Exists(Application.dataPath + settingsSaveFolder))
+        if (!Directory.Exists(Application.dataPath + settingsSaveFolder) || !File.Exists(Application.dataPath + settingsSaveFolder + "UserSettings.txt"))
         {
             Directory.CreateDirectory(Application.dataPath + settingsSaveFolder);
             GameManager.SettingsManager.SetDefaultVariables();
-            SaveSettings();
+            CreateGlobalSave();
         }
         RetrieveUniverseSaves();
         LoadSettings();
@@ -49,9 +52,9 @@ public class SaveLoadManager : MonoBehaviour
     }
     void Update()
     {
-        if(inLevel && currentUniverseSave != null)
+        if(inLevel && currentUniverseSave != null && !PauseManager.paused)
         {
-            currentUniverseSave.totalTime += Time.deltaTime;
+            currentUniverseSave.totalTime += Time.unscaledDeltaTime;
         }
     }
     void RetrieveUniverseSaves()
@@ -72,13 +75,15 @@ public class SaveLoadManager : MonoBehaviour
     void SettingsEnabled(bool enable)
     {
         if (enable) { LoadSettings(); }
-        else { SaveSettings(); }
+        else { SaveGlobalSave(); }
     }
-    void SaveSettings()
+    void CreateGlobalSave()
     {
-        SettingsSave settingsSave = new SettingsSave
+        Debug.Log("create global");
+        GlobalSave settingsSave = new GlobalSave
         {
-            userSettings = SettingsManager.userSettings.DeepCopy()
+            userSettings = new UserSettings(),
+            totalSupernovae = 0
         };
 
         string jsonSave = JsonUtility.ToJson(settingsSave, true);
@@ -88,15 +93,32 @@ public class SaveLoadManager : MonoBehaviour
 #if UNITY_EDITOR
         AssetDatabase.Refresh();
 #endif
+        currentGlobalSave = settingsSave;
+    }
+    void SaveGlobalSave()
+    {
+        Debug.Log("save global");
+        if (currentGlobalSave == null) { Debug.LogError("No current global save, creating new one."); CreateGlobalSave(); }
+        currentGlobalSave.userSettings = SettingsManager.userSettings.DeepCopy();
+
+        string jsonSave = JsonUtility.ToJson(currentGlobalSave, true);
+
+        File.WriteAllText(Application.dataPath + settingsSaveFolder + "UserSettings.txt", jsonSave);
+
+        #if UNITY_EDITOR
+                AssetDatabase.Refresh();
+        #endif
     }
     void LoadSettings()
     {
+        Debug.Log("load global");
         string path = Application.dataPath + settingsSaveFolder + "UserSettings.txt";
         if (File.Exists(path))
         {
             string jsonSave = File.ReadAllText(path);
-            SettingsSave loadedSave = JsonUtility.FromJson<SettingsSave>(jsonSave);
+            GlobalSave loadedSave = JsonUtility.FromJson<GlobalSave>(jsonSave);
 
+            currentGlobalSave = loadedSave;
             GameManager.SettingsManager.LoadUIElements(loadedSave.userSettings);
         }
         else
@@ -109,6 +131,10 @@ public class SaveLoadManager : MonoBehaviour
     public void Save()
     {
         if (currentUniverseSave == null || currentUniverseSave.universeParams == new UniverseParams()) { return; }
+        currentUniverseSave.universeParams = GameManager.LevelManager.currentUniverse;
+        currentUniverseSave.allGalaxies = GameManager.LevelManager.currentProceduralUniverse;
+        currentUniverseSave.supernovae = currentUniverseSave.universeParams.numStars * currentUniverseSave.universeParams.relativeDifficulty;
+
         string jsonSave = JsonUtility.ToJson(currentUniverseSave, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", jsonSave);
@@ -172,6 +198,10 @@ public class SaveLoadManager : MonoBehaviour
         #endif
         RetrieveUniverseSaves();
     }
+    public void IncrementSupernovae(int increment)
+    {
+        currentGlobalSave.totalSupernovae += increment;
+    }
     void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {
         bool matchNonLevel = false;
@@ -194,14 +224,14 @@ public class SaveLoadManager : MonoBehaviour
         ShootBall.onShoot += IncrementNumShots;
         SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsEnabled;
-        SettingsManager.applySettingsVar += SaveSettings;
+        SettingsManager.applySettingsVar += SaveGlobalSave;
     }
     private void OnDisable()
     {
         ShootBall.onShoot -= IncrementNumShots;
         SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsEnabled;
-        SettingsManager.applySettingsVar -= SaveSettings;
+        SettingsManager.applySettingsVar -= SaveGlobalSave;
 
     }
 }

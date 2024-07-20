@@ -88,11 +88,11 @@ public class GalaxySummary : MonoBehaviour
             System.TimeSpan universeTS = System.TimeSpan.FromSeconds(SaveLoadManager.currentUniverseSave.totalTime);
             string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)universeTS.TotalHours, universeTS.Minutes, universeTS.Seconds);
             universeTimeTxt.text = "Time: " + formattedTime;
+            universeSupernovaeTxt.text = (SaveLoadManager.currentUniverseSave.supernovae).ToString();
         }
         //seed, stars, supernovae, and difficulty
         universeSeedTxt.text = !uni.proceduralUniverse ? "Seed: " + SetColor("Campaign", colorGrad.Evaluate(0)) :  "Seed: " + uni.seed.ToString();
         universeStarsTxt.text = uni.numStars.ToString();
-        universeSupernovaeTxt.text = (uni.numStars * uni.relativeDifficulty).ToString();
         universeDifficultyMult.text = !uni.proceduralUniverse ? "x" + SetColor("5", colorGrad.Evaluate(0.5f)) : "x" + SetColor(uni.relativeDifficulty.ToString(), colorGrad.Evaluate(uni.relativeDifficulty/10));
     }
     public void EnableSummary(bool enable)

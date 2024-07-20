@@ -320,6 +320,7 @@ public class TeachResetTutorial : TutorialState
     {
         base.OnEnter(ta, tm);
         ShootBall.triggerReset += OnBallReset;
+        ShootBall.onHole += OnBallReset;
         ShootBall.onShoot += OnBallShoot;
     }
     IEnumerator ResetTutorial()
@@ -346,11 +347,13 @@ public class TeachResetTutorial : TutorialState
     void OnBallReset()
     {
         ballReset = true;
+        ShootBall.onHole -= OnBallReset;
         ShootBall.triggerReset -= OnBallReset;
     }
     public override void DisableState()
     {
         resetTutorialParent.SetActive(false);
+        ShootBall.onHole -= OnBallReset;
         ShootBall.onShoot -= OnBallShoot; //safety
         ShootBall.triggerReset -= OnBallReset; //safety
         base.DisableState();

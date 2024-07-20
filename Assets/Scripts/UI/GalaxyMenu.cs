@@ -119,6 +119,7 @@ public class GalaxyMenu : MonoBehaviour
             else { notLMSet = true; }
             if (notLMSet)
             {
+                Debug.Log("not set");
                 LevelManager.setGalaxies?.Invoke(galaxyList);
             }
             else
