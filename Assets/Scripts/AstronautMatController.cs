@@ -27,7 +27,6 @@ public class AstronautMatController : MonoBehaviour
         SetTransitions();
     }
     void Update(){
-        Debug.Log(ShootBall.shootAngle);
         lerpVal = ShootBall.shootPower/100f;
         GolfSwingPullBack();
         astronautAnim.SetBool("liningUp", ShootBall.liningUpShot && ShootBall.shootPower >= 1);

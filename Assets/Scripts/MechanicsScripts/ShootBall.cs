@@ -180,7 +180,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput)
+            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput && !astronautFading)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -366,6 +366,7 @@ public class ShootBall : MonoBehaviour
 
             }
             force = dist * dir.normalized;
+            Debug.Log(force);
 
             if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f && simulationScene != null)
             {
