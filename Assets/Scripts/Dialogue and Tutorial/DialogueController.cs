@@ -17,6 +17,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private float typeSpeed = 5;
     [SerializeField] private float minParagraphInterval = 5;
     [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
+    [SerializeField] AudioObj talkObj;
+    [SerializeField] AudioSource tgrAudioSrc;
 
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
