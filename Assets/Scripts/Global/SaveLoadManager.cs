@@ -18,7 +18,7 @@ public class SaveLoadManager : MonoBehaviour
         public int totalShots = 0;
         public int supernovae = 0;
     }
-    class GlobalSave
+    public class GlobalSave
     {
         public UserSettings userSettings = new UserSettings();
         public int totalSupernovae = 0;
@@ -27,7 +27,7 @@ public class SaveLoadManager : MonoBehaviour
     [SerializeField] string settingsSaveFolder; //Folder containing settings
     [SerializeField] string[] nonLevelScenes; //Folder containing settings
     public static UniverseSave currentUniverseSave { get; private set; }
-    GlobalSave currentGlobalSave;
+    public static GlobalSave currentGlobalSave { get; private set; }
     public static FileInfo[] saves { get; private set; }
     bool inLevel;
 

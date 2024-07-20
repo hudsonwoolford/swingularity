@@ -47,6 +47,11 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Slider ngDifficultySldr;
     [SerializeField] TextMeshProUGUI difficultyNumber;
     [SerializeField] Gradient difficultyColorGrad;
+    [Header("Customization Element")]
+    [SerializeField] Transform customizationParent;
+    [SerializeField] GameObject customizationElement;
+    [SerializeField] CustomizeElement.MaterialCustomizationElement[] materialCustomizationElements;
+    [SerializeField] float cutomizationHeightJump;
     [Header("Miscellaneous Params")]
     [SerializeField] Button shopBackBtn;
     [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
@@ -63,6 +68,7 @@ public class TitleScreenButtons : MonoBehaviour
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
+    CustomizeElement[] customizeElements;
 
     private enum NGMenuState
     {
@@ -76,6 +82,7 @@ public class TitleScreenButtons : MonoBehaviour
     {
         saveElementParentOrigin = saveElementParent.localPosition;
         eventSystem = EventSystem.current;
+        PopulateCustomizationElements();
         SetGalaxySize(1);
         UpdateDifficulty();
         ngMenu = false;
@@ -173,11 +180,13 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideSaveLoadMenu");
         shopAnim.Play("ShowShopDelay");
         ngMenuAnim.Play("HideCampaignCreationMenu");
+        StartCoroutine(AnimateCustomizeMaterials(0.75f, true));
     }
     void QuitCustomise(){
         menuAnim.Play("ShowMenuWithDelay");
         shopAnim.Play("FadeShopDelay");
         cameraAnim.Play("ShopToCamera");
+        StartCoroutine(AnimateCustomizeMaterials(0f, false));
     }
     void LoadGame() {
         StartCoroutine(EnableNewGameMenu(true));
@@ -466,6 +475,30 @@ public class TitleScreenButtons : MonoBehaviour
 
     void OnDisable(){
         SettingsManager.enableSettingsMenu -= DisableSettings;
+    }
+    #endregion
+    #region Customization UI
+    IEnumerator AnimateCustomizeMaterials(float delay, bool enable)
+    {
+        yield return new WaitForSeconds(delay);
+        foreach (CustomizeElement cE in customizeElements)
+        {
+            cE.AnimateMaterialBalls(enable);
+        }
+    }
+    void PopulateCustomizationElements()
+    {
+        customizeElements = new CustomizeElement[materialCustomizationElements.Length];
+        for (int i = 0; i < materialCustomizationElements.Length; i++)
+        {
+            CustomizeElement cE = Instantiate(customizationElement, customizationParent).GetComponent<CustomizeElement>();
+            customizeElements[i] = cE;
+
+            cE.transform.localPosition = new Vector3(0, cutomizationHeightJump, 0) * i;
+
+            cE.matElement = materialCustomizationElements[i];
+            cE.InitElement();
+        }
     }
     #endregion
 }
