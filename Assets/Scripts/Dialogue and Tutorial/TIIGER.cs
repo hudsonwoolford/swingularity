@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TIIGER : EventTalkableNPC
@@ -9,6 +10,7 @@ public class TIIGER : EventTalkableNPC
 
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
+    [SerializeField] private Button skipButton;
     private bool isTransitioning;
     public bool dialogueShown { get; private set; }
     public delegate void OnEnableDialogue(bool enable);
@@ -31,6 +33,7 @@ public class TIIGER : EventTalkableNPC
     private void Start()
     {
         tgrAnimator.Play("DisableDialogue");
+        skipButton.onClick.AddListener(() => dialogueController.EndConversation());
         hologramMaterial = GetComponent<MeshRenderer>().material;
     }
     protected override void Update()
@@ -46,7 +49,7 @@ public class TIIGER : EventTalkableNPC
         }
         hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
         if(dialogueQueued) { dialogueShown |= dialogueQueued; }
-        if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown)
+        if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown && !dialogueQueued)
         {
             dialogueController.EndConversation();
             StartCoroutine(HideDialogue());

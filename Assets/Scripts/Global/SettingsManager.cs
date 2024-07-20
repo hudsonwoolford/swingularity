@@ -90,6 +90,7 @@ public class SettingsManager : MonoBehaviour
         previousSelectedTab = audioTabBtn.gameObject;
 
         SetButtonFunctions();
+        SetAllVariables();
     }
 
     // Update is called once per frame
@@ -427,21 +428,21 @@ public class SettingsManager : MonoBehaviour
 [System.Serializable]
 public class UserSettings
 {
-    public float masterVolume;
-    public float sfxVolume;
-    public float interfaceVolume;
-    public float musicVolume;
+    public float masterVolume = 0.5f;
+    public float sfxVolume = 0.5f;
+    public float interfaceVolume = 0.5f;
+    public float musicVolume = 0.5f;
 
-    public int windowMode;
-    public bool customCursor;
-    public bool hints;
-    public bool uiGlow;
+    public int windowMode = 0;
+    public bool customCursor = true;
+    public bool hints = true;
+    public bool uiGlow = false;
 
-    public int frameLimit;
-    public Vector2Int screenRes;
-    public int planetRes;
-    public int antiAliasing;
-    public bool vsync;
+    public int frameLimit = 240;
+    public Vector2Int screenRes = new Vector2Int(1920, 1080);
+    public int planetRes = 1024;
+    public int antiAliasing = 1;
+    public bool vsync = false;
     public UserSettings DeepCopy()
     {
         return new UserSettings

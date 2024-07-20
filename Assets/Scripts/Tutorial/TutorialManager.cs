@@ -29,6 +29,7 @@ public class TutorialManager : MonoBehaviour
     }
     IEnumerator WaitUntilDialogueChangeState(TutorialState state)
     {
+        GameManager.LevelManager.EnableBallInput(false);
         do
         {
             yield return null;
@@ -320,7 +321,7 @@ public class TeachResetTutorial : TutorialState
     {
         base.OnEnter(ta, tm);
         ShootBall.triggerReset += OnBallReset;
-        ShootBall.onHole += OnBallReset;
+        ShootBall.holeAnim += OnBallReset;
         ShootBall.onShoot += OnBallShoot;
     }
     IEnumerator ResetTutorial()
@@ -330,7 +331,7 @@ public class TeachResetTutorial : TutorialState
         tutorialAnimator.Play("ResetKeybindBlink");
         Time.timeScale = 0.2f;
         float timeOffset = Time.unscaledTime;
-        while (!ballReset && Time.unscaledTime - timeOffset < 15)
+        while (!ballReset && Time.unscaledTime - timeOffset < 7.5f)
         {
             yield return null;
         }
@@ -347,13 +348,13 @@ public class TeachResetTutorial : TutorialState
     void OnBallReset()
     {
         ballReset = true;
-        ShootBall.onHole -= OnBallReset;
+        ShootBall.holeAnim -= OnBallReset;
         ShootBall.triggerReset -= OnBallReset;
     }
     public override void DisableState()
     {
         resetTutorialParent.SetActive(false);
-        ShootBall.onHole -= OnBallReset;
+        ShootBall.holeAnim -= OnBallReset;
         ShootBall.onShoot -= OnBallShoot; //safety
         ShootBall.triggerReset -= OnBallReset; //safety
         base.DisableState();

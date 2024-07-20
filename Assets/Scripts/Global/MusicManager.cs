@@ -82,7 +82,7 @@ public class MusicManager : MonoBehaviour
         currentMusic = musicData;
         s.time = 0;
         s.clip = musicData.musicClip;
-        s.volume = musicData.volume;
+        s.volume = musicData.volume * SettingsManager.userSettings.musicVolume;
         s.Play();
     }
     void StopMusic(AudioSource s)
@@ -133,8 +133,8 @@ public class MusicManager : MonoBehaviour
     }
     void UpdateSourceVolume()
     {
-        musicSource1.volume = SettingsManager.userSettings.musicVolume;
-        musicSource2.volume = SettingsManager.userSettings.musicVolume;
+        musicSource1.volume = SettingsManager.userSettings.musicVolume * currentMusic.volume;
+        musicSource2.volume = SettingsManager.userSettings.musicVolume * currentMusic.volume;
     }
     void OnEnable()
     {

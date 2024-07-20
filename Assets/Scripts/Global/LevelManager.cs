@@ -281,8 +281,9 @@ public class LevelManager : MonoBehaviour
             GameManager.SceneHandling.LoadScene("Galaxies", false);
         }
     }
-    public void EnableBallInput(bool enable) //usually used by tutorial
+    public void EnableBallInput(bool enable) //usually used by tutorial and dialogue
     {
+        //Debug.Log("Ball input " + enable);
         ballInput = enable;
     }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
