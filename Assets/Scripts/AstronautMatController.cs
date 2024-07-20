@@ -85,8 +85,12 @@ public class AstronautMatController : MonoBehaviour
     }
 
     IEnumerator Swing(){
+
         yield return new WaitUntil(() => !astronautAnim.IsInTransition(0) && GetState());
-                float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
+        float offset = Mathf.Lerp(0, 5f/20f, 1-lerpVal);
+        ShootBall.swingDelay = 5f/20f - offset;
+        ShootBall.pullBack = true;
+
 
         if(left){
             astronautAnim.CrossFadeInFixedTime("Swing Left", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);

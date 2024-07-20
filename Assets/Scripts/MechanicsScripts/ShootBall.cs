@@ -14,6 +14,7 @@ public class ShootBall : MonoBehaviour
     [Header("Power")]
     [SerializeField] public static float maxPower = 30f; //max power the player can input
     [HideInInspector] public static float swingDelay = 0.5f; //max power the player can input
+    [HideInInspector] public static bool pullBack = false; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
     [Header("Straight Arrow")]
     [SerializeField] bool straight;
@@ -397,13 +398,15 @@ public class ShootBall : MonoBehaviour
 
         if(shootPower < 10f)
         {
+            if (colIcons) { DrawCollisionIcons(); }
             liningUpShot = false;
             yield break;
         }
         StopCoroutine(BallStillTiming(ballStillTimeVal));
         onSwing?.Invoke(); //invoke shoot event
 
-        yield return new WaitUntil(() => swingHit);
+        yield return new WaitUntil(() => pullBack);
+        yield return new WaitForSeconds(swingDelay);
         //unfreeze position
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         ballStill = false;
