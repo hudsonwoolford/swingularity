@@ -335,25 +335,13 @@ public class ShootBall : MonoBehaviour
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
             shootPower = dist/maxPower * 100;
             force = dist * dir.normalized;
-            //RaycastHit hit;
-            //if(Physics.Raycast(transform.position, dir, out hit, 1f,  obstacles)) //this happens if the player is about to shoot directly onto a planet
-            //{
-            //    if(!hit.collider.isTrigger)
-            //    {
-            //        Vector2 normal = (transform.position - hit.transform.position).normalized;
-            //        Vector2 mouseNormal = (mousePos - hit.transform.position).normalized;
-            //        dir = new Vector2(-normal.y, normal.x + 0.1f);
-            //        dir *= -Vector3.Dot(mouseNormal, dir) / Mathf.Abs(Vector3.Dot(mouseNormal, dir));
-            //        dist = Mathf.Clamp(dist, 0, 20 * Mathf.Pow(hit.transform.localScale.x, 0.5f) * (1-Vector3.Dot(mouseNormal, normal)));
-            //    }
-            //}
+
             RaycastHit hit;
             bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
             Vector2 normal = (transform.position - hit.transform.position).normalized;
-            Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
+            Vector2 mouseNormal = (mousePos - (transform.position - new Vector3(normal.x, normal.y) * 0.22f)).normalized;
 
-            shootAngle = -Vector2.SignedAngle(normal, -mouseNormal);
-            AstronautMatController.left = shootAngle >= 0;
+            shootAngle = -Vector2.SignedAngle(normal, dir);
             if (rayHit) //this happens if the player is about to shoot directly onto a planet
             {
                 if(Vector3.Dot(mouseNormal, normal) > 0)
