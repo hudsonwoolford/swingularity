@@ -27,9 +27,9 @@ public class AstronautMatController : MonoBehaviour
     }
     void Update(){
         isIdle = GetIdleState();
-        lerpVal = ShootBall.shootPower/100f;
+        lerpVal = Mathf.Lerp(10/50, 1, ShootBall.shootPower/100f);
         GolfSwingPullBack();
-        astronautAnim.SetBool("liningUp", ShootBall.liningUpShot && ShootBall.shootPower >= 1);
+        astronautAnim.SetBool("liningUp", ShootBall.liningUpShot && ShootBall.shootPower > 10f);
                         // astronautAnim.SetBool("swing", (!ShootBall.liningUpShot));
         if(ShootBall.astronautFading){
             astronautAnim.Play("Idle", 0);

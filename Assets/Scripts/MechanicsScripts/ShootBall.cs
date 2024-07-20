@@ -335,7 +335,7 @@ public class ShootBall : MonoBehaviour
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
-            shootPower = dist/maxPower * 100;
+            shootPower = Mathf.Pow(dist/maxPower, 2.5f) * 100;
             force = dist * dir.normalized;
 
             RaycastHit hit;

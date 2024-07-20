@@ -60,7 +60,7 @@ Shader "Custom/EmmissionDissolve"
                 o.Emission = stepProgress * _EdgeColor;
             }
         
-            o.Emission = c.rgb;
+            o.Emission = c.rgba;
 
         }
         ENDCG
