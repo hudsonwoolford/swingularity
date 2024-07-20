@@ -37,13 +37,11 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animScale; //Scale of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
     [SerializeField] float ballSpinSpeed;
-    [SerializeField] float maxClubDist;
     [SerializeField] Material ballHackModeMat;
 
     [SerializeField] LayerMask ignoreStill;
 
     [SerializeField] GameObject astronaut;
-    [SerializeField] Transform astronautClub;
 
     [SerializeField] Material[] astronautFadeMats;
     [SerializeField] Shader emmisionShader;
@@ -55,8 +53,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] AudioSource ballAudioSrc;
     [HideInInspector] public static float shootPower;
     [HideInInspector] public static float shootAngle;
-    [SerializeField] bool gravitySpawnCast;
-    [SerializeField] Transform referenceForGravitySpawnCast;
+
     public static bool liningUpShot;
 
     AstronautMatController astronautMatController;
@@ -156,16 +153,6 @@ public class ShootBall : MonoBehaviour
     }
 
 
-    Vector3 GravitySpawnRaycast(){
-        print(transform.position);
-
-        RaycastHit hit;
-        Vector3 dir = (referenceForGravitySpawnCast.position - transform.position).normalized;
-        Physics.Raycast(transform.position, dir, out hit, Mathf.Infinity); 
-        transform.position = hit.point + GetComponent<SphereCollider>().radius * transform.localScale.x * -dir;
-        print(transform.position);
-        return transform.position;
-    }
     // Update is called once per frame
     void Update()
     {
@@ -210,9 +197,6 @@ public class ShootBall : MonoBehaviour
             childObj.transform.forward =
             Vector3.Slerp(childObj.transform.forward, rb.velocity.normalized, Time.deltaTime * 3.5f * ballSpinSpeed);
         }
-
-        float clubDist = (new Vector2(astronautClub.position.x, astronautClub.position.y) - new Vector2(transform.position.x, transform.position.y)).magnitude;
-        swingHit = clubDist < maxClubDist;
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
