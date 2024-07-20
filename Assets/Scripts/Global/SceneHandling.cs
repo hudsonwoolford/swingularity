@@ -34,6 +34,7 @@ public class SceneHandling : MonoBehaviour
     }
     IEnumerator LoadSceneCoroutine(string sceneName, bool waitForLevelGeneration)
     {
+        loadingScreen = true;
         float randMult = UnityEngine.Random.Range(0.75f,1f);
         progressBar.value = 0f;
         loadingDescription.text = "Loading Scene...";
@@ -85,6 +86,7 @@ public class SceneHandling : MonoBehaviour
         }
 
         animator.Play("HideMenu");
+        loadingScreen = false;
     }
     void OnLevelGenerated() => levelGenerated = true;
     private void OnEnable()

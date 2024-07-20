@@ -36,7 +36,7 @@ public class TIIGER : EventTalkableNPC
     protected override void Update()
     {
         base.Update();
-        if(dialogueShown && !dialogueController.isConversation)
+        if(dialogueShown && !dialogueController.isConversation && !dialogueQueued)
         {
             StartCoroutine(HideDialogue());
         }
@@ -45,6 +45,12 @@ public class TIIGER : EventTalkableNPC
             GameManager.LevelManager.EnableBallInput(false);
         }
         hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
+        if(dialogueQueued) { dialogueShown |= dialogueQueued; }
+        if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown)
+        {
+            dialogueController.EndConversation();
+            StartCoroutine(HideDialogue());
+        }
     }
     public override void Interact()
     {
@@ -79,7 +85,7 @@ public class TIIGER : EventTalkableNPC
     IEnumerator HideDialogue()
     {
         isTransitioning = true;
-        GameManager.LevelManager.EnableBallInput(false);
+        GameManager.LevelManager.EnableBallInput(true);
         Time.timeScale = 1;
 
         //animation

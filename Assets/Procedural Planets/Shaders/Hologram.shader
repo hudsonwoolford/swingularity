@@ -15,7 +15,7 @@ Shader "Unlit/Hologram"
     SubShader
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent" "IgnoreProjector" = "True"}
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend One OneMinusSrcAlpha
         LOD 100
 
         Pass

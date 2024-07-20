@@ -733,6 +733,7 @@ public class ShootBall : MonoBehaviour
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
     {
         inPortal = true;
+        GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
         bool clockwise = DetermineOrbitType(velocity, hitPoint - hole.position);

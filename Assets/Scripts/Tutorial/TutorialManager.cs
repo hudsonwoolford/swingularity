@@ -11,9 +11,9 @@ public class TutorialManager : MonoBehaviour
     public BallInputTutorial ballInputTutorial = new BallInputTutorial();
     public TeachHoleTutorial teachHoleTutorial = new TeachHoleTutorial();
     public TeachHackMode teachHackMode = new TeachHackMode();
+    public TeachResetTutorial resetTutorial = new TeachResetTutorial();
     public TeachNothing teachNothing = new TeachNothing();
     public bool isPullingBack { get; private set; }
-    bool dialogueComplete;
     TutorialState currentState;
     private IEnumerator Start()
     {
@@ -21,20 +21,27 @@ public class TutorialManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DisableAll();
         currentState = teachNothing;
+        while(SceneHandling.loadingScreen)
+        {
+            yield return null;
+        }
         StartCoroutine(WaitUntilDialogueChangeState(scrollPanTutorial));
     }
     IEnumerator WaitUntilDialogueChangeState(TutorialState state)
     {
-        yield return new WaitForSecondsRealtime(0.5f);
-        while (!dialogueComplete)
+        do
         {
             yield return null;
-        }
+        } while (SceneHandling.loadingScreen);
+        do
+        {
+            yield return null;
+        } while (TIIGER.Instance.dialogueShown);
         ChangeTutorialState(state);
     }
     private void Update()
     {
-        if(!dialogueComplete) { return; }
+        if (TIIGER.Instance.dialogueShown || SceneHandling.loadingScreen) { return; }
         currentState.OnUpdate();
     }
     #region State Functions
@@ -74,16 +81,10 @@ public class TutorialManager : MonoBehaviour
         ballInputTutorial.DisableState();
         teachHoleTutorial.DisableState();
         teachHackMode.DisableState();
+        resetTutorial.DisableState();
     }
     #endregion
     #region Event Functions
-    void OnEnableDialogue(bool enable)
-    {
-        if(!enable)
-        {
-            dialogueComplete = true;
-        }
-    }
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         if (scene.name == "Earth_0" || scene.name == "Earth_1")
@@ -108,11 +109,9 @@ public class TutorialManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoad;
-        TIIGER.onEnableDialogue += OnEnableDialogue;
     }
     private void OnDisable()
     {
-        TIIGER.onEnableDialogue -= OnEnableDialogue;
         SceneManager.sceneLoaded -= OnSceneLoad;
         GameManager.LevelManager.EnableBallInput(true);
     }
@@ -155,6 +154,7 @@ public class ScrollPanTutorial : TutorialState
         scrollPanParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachScroll");
+        tutorialAnimator.Play("ScrollAnim");
         float timeoffset = Time.time;
         while (Input.mouseScrollDelta.y == 0 && Time.time - timeoffset < 30)
         {
@@ -162,12 +162,14 @@ public class ScrollPanTutorial : TutorialState
         }
         timeoffset = Time.time;
         tutorialAnimator.Play("TeachPan");
+        tutorialAnimator.Play("PanAnim");
         while (!Input.GetMouseButton(1) && Time.time - timeoffset < 30)
         {
             yield return null;
         }
         timeoffset = Time.time;
         tutorialAnimator.Play("TeachPanReset");
+        tutorialAnimator.Play("ResetPanAnim");
         while (!Input.GetMouseButton(2) && Time.time - timeoffset < 30)
         {
             yield return null;
@@ -285,6 +287,7 @@ public class TeachHackMode : TutorialState
         hackModeParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachHackMode");
+        tutorialAnimator.Play("HackModeKeybindBlink");
     }
     public override void OnUpdate()
     {
@@ -298,14 +301,58 @@ public class TeachHackMode : TutorialState
     {
         GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("HideHackMode");
-        tutorialManager.ChangeTutorialState(tutorialManager.teachNothing);
+        tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
         HackMode.onHackMode -= OnHackMode;
-        tutorialManager.CompleteTutorial();
     }
     public override void DisableState()
     {
         hackModeParent.SetActive(false);
         HackMode.onHackMode -= OnHackMode;//safety
+        base.DisableState();
+    }
+}
+[System.Serializable]
+public class TeachResetTutorial : TutorialState
+{
+    [SerializeField] protected GameObject resetTutorialParent;
+    protected bool ballReset = false;
+    public override void OnEnter(Animator ta, TutorialManager tm)
+    {
+        base.OnEnter(ta, tm);
+        ShootBall.triggerReset += OnBallReset;
+        ShootBall.onShoot += OnBallShoot;
+    }
+    IEnumerator ResetTutorial()
+    {
+        resetTutorialParent.SetActive(true);
+        tutorialAnimator.Play("TeachResetTutorial");
+        tutorialAnimator.Play("ResetKeybindBlink");
+        Time.timeScale = 0.2f;
+        float timeOffset = Time.unscaledTime;
+        while (!ballReset && Time.unscaledTime - timeOffset < 15)
+        {
+            yield return null;
+        }
+        Time.timeScale = 1f;
+        tutorialAnimator.Play("HideResetTutorial");
+        tutorialManager.ChangeTutorialState(tutorialManager.teachNothing);
+        tutorialManager.CompleteTutorial();
+    }
+    void OnBallShoot()
+    {
+        ShootBall.onShoot -= OnBallShoot;
+        tutorialManager.CallCoroutine(ResetTutorial());
+    }
+    void OnBallReset()
+    {
+        ballReset = true;
+        ShootBall.triggerReset -= OnBallReset;
+    }
+    public override void DisableState()
+    {
+        resetTutorialParent.SetActive(false);
+        ShootBall.onShoot -= OnBallShoot; //safety
+        ShootBall.triggerReset -= OnBallReset; //safety
         base.DisableState();
     }
 }

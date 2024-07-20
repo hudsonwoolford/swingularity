@@ -3040,6 +3040,98 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &619165650957094338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4624301992200484910}
+  - component: {fileID: 9088305928971874764}
+  - component: {fileID: 7725202315347924619}
+  - component: {fileID: 4913665342754564602}
+  m_Layer: 5
+  m_Name: TIIGER Mask
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4624301992200484910
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619165650957094338}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.075, y: 0.075, z: 0.075}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 1366058354069846344}
+  - {fileID: 679329288786328441}
+  m_Father: {fileID: 2751383362844775734}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -350, y: 0}
+  m_SizeDelta: {x: 4167, y: 4167}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!222 &9088305928971874764
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619165650957094338}
+  m_CullTransparentMesh: 1
+--- !u!114 &7725202315347924619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619165650957094338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 9f32c551d7251ee44a62a0239ddeb257, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4913665342754564602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619165650957094338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 0
 --- !u!1 &625261435389935543
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,7 +3297,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3122712668030223888}
-  - {fileID: 116904926626775933}
   - {fileID: 2751383362844775734}
   m_Father: {fileID: 2798159181106569840}
   m_RootOrder: -1
@@ -4018,6 +4109,7 @@ GameObject:
   - component: {fileID: 2264793876772564278}
   - component: {fileID: 4498804770350793771}
   - component: {fileID: 3803249320274144040}
+  - component: {fileID: 6936011818002291907}
   m_Layer: 5
   m_Name: Dialogue Canvas
   m_TagString: Untagged
@@ -4037,8 +4129,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 116904926626775933}
   - {fileID: 2915306797488189962}
-  - {fileID: 1366058354069846344}
+  - {fileID: 4624301992200484910}
   m_Father: {fileID: 783733375315893245}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4131,6 +4224,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6936011818002291907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801119488442043075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fde5f237f644b46a5d2d40e4ea3db8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPCNameText: {fileID: 35697138466215593}
+  NPCDialogueText: {fileID: 110497137044779698}
+  typeSpeed: 5
+  minParagraphInterval: 3
+  characterTypeInfo:
+  - character: 8230
+    waitMult: 1
+  - character: 63
+    waitMult: 1
+  - character: 33
+    waitMult: 1
+  - character: 44
+    waitMult: 1
+  - character: 46
+    waitMult: 1
 --- !u!1 &804397629679596646
 GameObject:
   m_ObjectHideFlags: 0
@@ -4440,7 +4560,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -20}
+  m_AnchoredPosition: {x: -35, y: -20}
   m_SizeDelta: {x: 750, y: 83.5}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &9197580914453370127
@@ -18332,7 +18452,7 @@ GameObject:
   - component: {fileID: 618359536801241044}
   - component: {fileID: 7898135887903008347}
   - component: {fileID: 6689661557192237575}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: T.I.I.G.E.R Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18426,7 +18546,7 @@ MonoBehaviour:
     - Earth_0
     dialogueText: {fileID: 11400000, guid: 96e01ed1cc397e743887c5624be06e80, type: 2}
     numCalls: 0
-  - name: Earth_0 - Reaction to hole 1
+  - name: Earth_1 - Reaction to hole 1
     dialogueEvent: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
@@ -18435,7 +18555,88 @@ MonoBehaviour:
     - Earth_1
     dialogueText: {fileID: 11400000, guid: 7da1a7131af23904daa7e8fa193ce9ef, type: 2}
     numCalls: 0
-  dialogueController: {fileID: 1936830023792863048}
+  - name: Earth_2 - Reaction to hole 2
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Earth_2
+    dialogueText: {fileID: 11400000, guid: 0d7889bc99028924ebfde676e8b095d4, type: 2}
+    numCalls: 0
+  - name: Desert_0-Meeting at desert galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Desert_0
+    dialogueText: {fileID: 11400000, guid: 54753d31f3921254ea2d08c57e6c7a5d, type: 2}
+    numCalls: 0
+  - name: Desert_4-Slight Acknowledgement
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Desert_4
+    dialogueText: {fileID: 11400000, guid: 7d281c044710ec9469ddc26610c8f420, type: 2}
+    numCalls: 0
+  - name: Fire_0-Introduction to Fire Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Fire_0
+    dialogueText: {fileID: 11400000, guid: 2e313d3c2de70e54481d4d771d89d5b2, type: 2}
+    numCalls: 0
+  - name: Ice_0-Introduction to Ice Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Ice_0
+    dialogueText: {fileID: 11400000, guid: 8664e1cbf10dbb94fbe8ae74f3383d22, type: 2}
+    numCalls: 0
+  - name: Goop_0-Discovers human in Goop Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Goop_0
+    dialogueText: {fileID: 11400000, guid: 3841dbfab3ff1124ea50b265fad790ff, type: 2}
+    numCalls: 0
+  - name: Waste_0-Explanation of Caddi lore
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Waste_0
+    dialogueText: {fileID: 11400000, guid: 335fe220879edcc498ea351aa0bbb223, type: 2}
+    numCalls: 0
+  - name: Mythical_0-Reconsideration of humanity
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Mythical_0
+    dialogueText: {fileID: 11400000, guid: e1dacb026d50d304192eec9c6da0cabe, type: 2}
+    numCalls: 0
+  - name: Mythical_4-Congratulations
+    dialogueEvent: 2
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Mythical_4
+    dialogueText: {fileID: 11400000, guid: e1dacb026d50d304192eec9c6da0cabe, type: 2}
+    numCalls: 0
+  dialogueController: {fileID: 6936011818002291907}
   tgrAnimator: {fileID: 3803249320274144040}
 --- !u!1 &4665182456571014053
 GameObject:
@@ -21876,6 +22077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7fe035a2a467344b1aa3077cb5299d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customCursorTxtr: {fileID: 2800000, guid: e619d67324e35cd4f9284c26177f38ff, type: 3}
   applySettings: {fileID: 3982911258321534562}
   backBtn: {fileID: 8917928509839347996}
   audioTabBtn: {fileID: 8109548985559778926}
@@ -25563,7 +25765,6 @@ GameObject:
   - component: {fileID: 679329288786328441}
   - component: {fileID: 8979548514602026388}
   - component: {fileID: 1889050789455037768}
-  - component: {fileID: 1936830023792863048}
   - component: {fileID: 2106173690823396770}
   m_Layer: 5
   m_Name: DialogueBoxIMG
@@ -25581,19 +25782,19 @@ RectTransform:
   m_GameObject: {fileID: 6626228153944708526}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 13.333333, y: 13.333333, z: 13.333333}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4176712203843945311}
   - {fileID: 3485173974846850552}
   - {fileID: 8282729690235324845}
   - {fileID: 6243078004977349516}
-  m_Father: {fileID: 1366058354069846344}
+  m_Father: {fileID: 4624301992200484910}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 400, y: -225}
+  m_AnchoredPosition: {x: 4666.6665, y: -3000}
   m_SizeDelta: {x: 1000, y: 350}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8979548514602026388
@@ -25634,22 +25835,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 6
---- !u!114 &1936830023792863048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6626228153944708526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15fde5f237f644b46a5d2d40e4ea3db8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPCNameText: {fileID: 35697138466215593}
-  NPCDialogueText: {fileID: 110497137044779698}
-  typeSpeed: 5
-  minParagraphInterval: 3
 --- !u!114 &2106173690823396770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29709,13 +29894,13 @@ GameObject:
   - component: {fileID: 7974238462341426898}
   - component: {fileID: 7694151932449445214}
   - component: {fileID: 2888921445016057416}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: HoloBallCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &116904926626775933
 Transform:
   m_ObjectHideFlags: 0
@@ -29728,7 +29913,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 783733375315893245}
+  m_Father: {fileID: 2751383362844775734}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &7974238462341426898
@@ -29740,8 +29925,8 @@ Camera:
   m_GameObject: {fileID: 7924769063845834918}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 4
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -29795,7 +29980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharedProfile: {fileID: 11400000, guid: 6dea76e5187ba424db0ac1e30897153a, type: 2}
-  isGlobal: 0
+  isGlobal: 1
   blendDistance: 0
   weight: 1
   priority: 3.6
@@ -29814,10 +29999,10 @@ MonoBehaviour:
   volumeTrigger: {fileID: 116904926626775933}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 131072
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 0
+  antialiasingMode: 1
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -29827,7 +30012,7 @@ MonoBehaviour:
     quality: 2
   fastApproximateAntialiasing:
     fastMode: 0
-    keepAlpha: 0
+    keepAlpha: 1
   fog:
     enabled: 1
     excludeSkybox: 1
@@ -34150,9 +34335,8 @@ GameObject:
   - component: {fileID: 1366058354069846344}
   - component: {fileID: 481173089233375748}
   - component: {fileID: 715823131727513765}
-  - component: {fileID: 3741442589086419961}
   m_Layer: 0
-  m_Name: T.I.I.G.E.R
+  m_Name: T.I.I.G.E.R Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34167,17 +34351,16 @@ RectTransform:
   m_GameObject: {fileID: 9128898633106733521}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 14.33333, y: 14.33333, z: 14.33333}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 679329288786328441}
-  m_Father: {fileID: 2751383362844775734}
+  m_Children: []
+  m_Father: {fileID: 4624301992200484910}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -400, y: 250}
-  m_SizeDelta: {x: 400, y: 400}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 312.525, y: 312.525}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &481173089233375748
 CanvasRenderer:
@@ -34203,7 +34386,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -34214,19 +34397,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &3741442589086419961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9128898633106733521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!1 &9185328731711384807
 GameObject:
   m_ObjectHideFlags: 0

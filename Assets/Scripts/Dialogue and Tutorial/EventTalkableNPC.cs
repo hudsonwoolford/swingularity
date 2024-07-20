@@ -35,6 +35,7 @@ public class EventTalkableNPC : NPC, ITalkable
     [SerializeField]protected EventTriggeredDialogue[] eventTriggeredDialogues;
     private Dictionary<EventTriggeredDialogue, Delegate> eventDelegates = new Dictionary<EventTriggeredDialogue, Delegate>();
     protected int currentDialogue;
+    protected bool dialogueQueued;
 
     public virtual void Talk(DialogueText dialogueText)
     {
@@ -48,14 +49,15 @@ public class EventTalkableNPC : NPC, ITalkable
     IEnumerator DelegateCalled(EventTriggeredDialogue etd)
     {
         etd.numCalls++;
-        Debug.Log(etd.numCalls);
         if (etd.numCalls<etd.numCallsRequired) { yield break; }
+        dialogueQueued = true;
         yield return new WaitForSeconds(etd.timeDelay);
         if(etd.dialogueText == null) { Debug.LogWarning("Dialogue text is invalid. Check inspector?"); yield break; }
         currentDialogue = Array.IndexOf(eventTriggeredDialogues, etd);
         if(!etd.resubscribeAfterCall) { UnsubscribeDelegate(etd); }
         else { etd.numCalls = 0; }
         Talk(etd.dialogueText);
+        dialogueQueued = false;
     }
 
     void SubscribeDelegate(EventTriggeredDialogue etd)

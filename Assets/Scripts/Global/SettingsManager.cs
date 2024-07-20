@@ -37,6 +37,7 @@ public class SettingsManager : MonoBehaviour
         public bool defaultValue;
         public Button[] resetBtns;
     }
+    [SerializeField] Texture2D customCursorTxtr;
     [SerializeField] Button applySettings;
     [SerializeField] Button backBtn;
     [Header("Main Settings")]
@@ -139,7 +140,6 @@ public class SettingsManager : MonoBehaviour
         SetSlider(frameLimitElement.defaultValue, ref frameLimitElement);
         SetToggleButton(vsyncTgl.defaultValue, ref vsyncTgl);
 
-        SetAllVariables();
     }
     public void LoadUIElements(UserSettings userSettings)
     {
@@ -213,6 +213,16 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
         userSettings.customCursor = customCursorTgl.currentValue;
+        if (userSettings.customCursor)
+        {
+            Cursor.SetCursor(customCursorTxtr, Vector2.zero, CursorMode.Auto);
+        }
+        else
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        }
+
+
         userSettings.hints = hintsTgl.currentValue;
         userSettings.uiGlow = uiGlowTgl.currentValue;
     }

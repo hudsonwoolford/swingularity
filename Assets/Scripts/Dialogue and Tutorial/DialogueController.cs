@@ -5,10 +5,18 @@ using TMPro;
 
 public class DialogueController : MonoBehaviour
 {
+    [System.Serializable]
+    struct CharacterTypeInfo
+    {
+        public char character;
+        public float waitMult;
+    }
+
     [SerializeField] private TextMeshProUGUI NPCNameText;
     [SerializeField] private TextMeshProUGUI NPCDialogueText;
     [SerializeField] private float typeSpeed = 5;
     [SerializeField] private float minParagraphInterval = 5;
+    [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
 
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
@@ -80,10 +88,15 @@ public class DialogueController : MonoBehaviour
         string originalText = p;
         string displayedText = "";
         int alphaIndex = 0;
-
+        float waitMultiplier = 1;
         foreach (char c in p.ToCharArray())
         {
-            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed);
+            waitMultiplier = 1;
+            foreach (CharacterTypeInfo ct in characterTypeInfo)
+            {
+                if(c == ct.character) { waitMultiplier = ct.waitMult; }
+            }
+            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed * waitMultiplier);
             yield return new WaitUntil(() => !isPaused);
             alphaIndex++;
             NPCDialogueText.text = originalText;
