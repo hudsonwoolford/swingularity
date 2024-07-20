@@ -14,6 +14,8 @@ public class TIIGER : EventTalkableNPC
     public delegate void OnEnableDialogue(bool enable);
     public static OnEnableDialogue onEnableDialogue;
 
+    Material hologramMaterial;
+
     private void Awake()
     {
         if(Instance == null)
@@ -29,6 +31,7 @@ public class TIIGER : EventTalkableNPC
     private void Start()
     {
         tgrAnimator.Play("DisableDialogue");
+        hologramMaterial = GetComponent<MeshRenderer>().material;
     }
     protected override void Update()
     {
@@ -41,6 +44,7 @@ public class TIIGER : EventTalkableNPC
         {
             GameManager.LevelManager.EnableBallInput(false);
         }
+        hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
     }
     public override void Interact()
     {
@@ -57,6 +61,7 @@ public class TIIGER : EventTalkableNPC
     {
         isTransitioning = true;
         GameManager.LevelManager.EnableBallInput(false);
+        Time.timeScale = 0;
 
         //animation
         onEnableDialogue?.Invoke(true);
@@ -66,7 +71,7 @@ public class TIIGER : EventTalkableNPC
 
         //stop dialogue
         dialogueController.TogglePauseDialogue();
-        yield return new WaitForSeconds(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
+        yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
         dialogueController.TogglePauseDialogue();
 
         isTransitioning = false;
@@ -75,6 +80,7 @@ public class TIIGER : EventTalkableNPC
     {
         isTransitioning = true;
         GameManager.LevelManager.EnableBallInput(false);
+        Time.timeScale = 1;
 
         //animation
         onEnableDialogue?.Invoke(false);
@@ -83,7 +89,7 @@ public class TIIGER : EventTalkableNPC
 
         //stop dialogue
         dialogueController.TogglePauseDialogue();
-        yield return new WaitForSeconds(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
+        yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
         dialogueController.TogglePauseDialogue();
 
         isTransitioning = false;

@@ -39,7 +39,7 @@ public class PauseManager : MonoBehaviour
     }
     void PauseInput()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !TIIGER.Instance.dialogueShown)
         {
             if(!paused)
             {

@@ -180,7 +180,7 @@ public class StarCollectible : MonoBehaviour
         }
         collectedOnShot = false;
     }
-    void OnBallDeath(int dIndex)
+    void OnBallReset()
     {
         if (collectedOnShot)
         {
@@ -198,15 +198,15 @@ public class StarCollectible : MonoBehaviour
     }
     private void OnEnable()
     {
+        ShootBall.triggerReset += OnBallReset;
         ShootBall.onStill += OnBallStill;
         ShootBall.onHole += OnBallStill;
-        ShootBall.death += OnBallDeath;
     }
     private void OnDisable()
     {
+        ShootBall.triggerReset -= OnBallReset;
         ShootBall.onStill -= OnBallStill;
         ShootBall.onHole -= OnBallStill;
-        ShootBall.death -= OnBallDeath;
     }
     private void OnDrawGizmosSelected()
     {

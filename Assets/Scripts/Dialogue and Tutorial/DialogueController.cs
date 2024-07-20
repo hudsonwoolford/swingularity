@@ -83,7 +83,7 @@ public class DialogueController : MonoBehaviour
 
         foreach (char c in p.ToCharArray())
         {
-            yield return new WaitForSeconds(MAX_TYPE_TIME / typeSpeed);
+            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed);
             yield return new WaitUntil(() => !isPaused);
             alphaIndex++;
             NPCDialogueText.text = originalText;
