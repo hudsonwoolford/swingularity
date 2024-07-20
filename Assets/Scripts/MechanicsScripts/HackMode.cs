@@ -21,6 +21,8 @@ public class HackMode : MonoBehaviour
     [SerializeField] Material edgeEffect;
     [SerializeField] Material gravityGrid;
     [SerializeField] Material whiteMat;
+    [Header("Sounds")]
+    [SerializeField] AudioObj toggleHackmodeAudio;
     bool hackMode = false, canHackMode = true;
     Rigidbody ball;
     public delegate void OnHackMode(bool enable, Material whiteMaterial);
@@ -62,6 +64,7 @@ public class HackMode : MonoBehaviour
     public void EnterHackMode(){
         if(!canHackMode) { return; }
         hackMode = !hackMode;
+        GameManager.SFXManager.PlaySFX(toggleHackmodeAudio);
         onHackMode?.Invoke(hackMode, whiteMat);
         RegenFabric();
     }

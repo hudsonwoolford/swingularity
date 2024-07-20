@@ -76,6 +76,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI bestScoreTxt;
     [Header("Sounds")]
     [SerializeField] AudioSource starAudioSrc;
+    [SerializeField] AudioObj scrollGalaxyAudio;
     [SerializeField] AudioObj showStarAudio;
     [SerializeField] AudioObj fiveStarAudio;
     Image[] dotSelectedImgs;
@@ -397,6 +398,7 @@ public class GalaxyMenu : MonoBehaviour
     IEnumerator MoveGalaxies(int dir)
     {
         isMoving = true;
+        GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
         bool loopMove = focusedGalaxy + dir < 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
         focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
         Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);

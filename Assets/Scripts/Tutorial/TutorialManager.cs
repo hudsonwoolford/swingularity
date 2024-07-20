@@ -331,7 +331,7 @@ public class TeachResetTutorial : TutorialState
         tutorialAnimator.Play("ResetKeybindBlink");
         Time.timeScale = 0.2f;
         float timeOffset = Time.unscaledTime;
-        while (!ballReset && Time.unscaledTime - timeOffset < 7.5f)
+        while (!ballReset && Time.unscaledTime - timeOffset < 3f)
         {
             yield return null;
         }

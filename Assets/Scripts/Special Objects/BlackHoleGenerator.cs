@@ -24,6 +24,7 @@ public class BlackHoleGenerator : MonoBehaviour
     [SerializeField] int schemeIndex;
     [SerializeField] float systemRotSpeed = 8;
     [SerializeField] float blackHoleTimer;
+    [SerializeField] AudioObj teleportationAudio;
 
     MeshRenderer sphereRenderer, distortRenderer;
     ParticleSystem swirlSystem;
@@ -162,6 +163,7 @@ public class BlackHoleGenerator : MonoBehaviour
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
             trailRenderer.Clear();
+            GameManager.SFXManager.PlaySFX(teleportationAudio);
             blackHoleTravel?.Invoke();
         }
         if(collision.gameObject.layer == 7){

@@ -17,6 +17,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] PolygonCollider2D boundaries;
     [SerializeField] PolygonCollider2D exteriorCollider;
     [SerializeField] RectTransform[] boundsPoints;
+    [SerializeField] AudioObj outOfBoundsAudio;
     Camera mainCam;
 
     int deathMessageIndex;
@@ -50,7 +51,7 @@ public class MappingHandling : MonoBehaviour
         {
             ShootBall.triggerReset?.Invoke();
             ShootBall.death.Invoke(0);
-
+            GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
         }
         
         ArrowToObject(flag, flagArrow, flagDistText);
