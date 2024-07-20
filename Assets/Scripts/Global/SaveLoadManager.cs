@@ -79,6 +79,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void CreateGlobalSave()
     {
+        Debug.Log("create global");
         GlobalSave settingsSave = new GlobalSave
         {
             userSettings = new UserSettings(),
@@ -96,6 +97,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void SaveGlobalSave()
     {
+        Debug.Log("save global");
         if (currentGlobalSave == null) { Debug.LogError("No current global save, creating new one."); CreateGlobalSave(); }
         currentGlobalSave.userSettings = SettingsManager.userSettings.DeepCopy();
 
@@ -109,6 +111,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void LoadSettings()
     {
+        Debug.Log("load global");
         string path = Application.dataPath + settingsSaveFolder + "UserSettings.txt";
         if (File.Exists(path))
         {
