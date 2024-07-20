@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -13,7 +12,6 @@ public class AstronautMatController : MonoBehaviour
     [Header("Fade Materials")]
     [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
-    [SerializeField] AnimatorController astronautAnimController;    
     [SerializeField] float transitionDuration;
     [SerializeField] float animConversionFloat;
     public bool isIdle { get; private set; }

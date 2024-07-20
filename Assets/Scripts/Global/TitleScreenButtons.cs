@@ -13,10 +13,11 @@ using static SaveLoadManager;
 
 public class TitleScreenButtons : MonoBehaviour
 {
-    [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim;
+    [SerializeField] Animator cameraAnim, menuAnim, ngMenuAnim, shopAnim;
     [Header("Main Screen UI")]
     [SerializeField] Button continueBtn;
     [SerializeField] Button myUniverseBtn;
+    [SerializeField] Button customiseBtn;
     [SerializeField] Button settingsBtn;
     [SerializeField] Button quitBtn;
     [Header("Save Load UI")]
@@ -47,6 +48,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] TextMeshProUGUI difficultyNumber;
     [SerializeField] Gradient difficultyColorGrad;
     [Header("Miscellaneous Params")]
+    [SerializeField] Button shopBackBtn;
     [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
@@ -81,6 +83,8 @@ public class TitleScreenButtons : MonoBehaviour
         //normal ui
         myUniverseBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
+        customiseBtn.onClick.AddListener(() => Customise());
+        shopBackBtn.onClick.AddListener(() => QuitCustomise());
         quitBtn.onClick.AddListener(() => QuitGame());
         //options ui
         optionsBackBtn.onClick.AddListener(() => OptionBackBtn());
@@ -161,6 +165,19 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
         currentNGMenuState = NGMenuState.OptionsMenu;
+    }
+    void Customise(){
+        menuAnim.Play("HideMenuSpeed");
+        cameraAnim.Play("CameraToShop");
+        ngMenuAnim.Play("HideCreationMenu");
+        ngMenuAnim.Play("HideSaveLoadMenu");
+        shopAnim.Play("ShowShopDelay");
+        ngMenuAnim.Play("HideCampaignCreationMenu");
+    }
+    void QuitCustomise(){
+        menuAnim.Play("ShowMenuWithDelay");
+        shopAnim.Play("FadeShopDelay");
+        cameraAnim.Play("ShopToCamera");
     }
     void LoadGame() {
         StartCoroutine(EnableNewGameMenu(true));
