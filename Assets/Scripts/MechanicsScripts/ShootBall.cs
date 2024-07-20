@@ -58,6 +58,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] Transform referenceForGravitySpawnCast;
     public static bool liningUpShot;
 
+    AstronautMatController astronautMatController;
     MeshRenderer ballRenderer;
     Material defaultBallMat;
     Scene simulationScene;
@@ -128,6 +129,7 @@ public class ShootBall : MonoBehaviour
         trueOrigin = origin;
         tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
+        astronautMatController = GameObject.FindGameObjectWithTag("Astronaut").GetComponent<AstronautMatController>();
         ballRenderer = GetComponentInChildren<MeshRenderer>(true);
         planetTransform = GameObject.FindGameObjectWithTag("Environment").transform;
         // if (simulated) { PhysicsScene(); }
@@ -180,7 +182,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput && !astronautFading)
+            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput && !astronautFading && astronautMatController.isIdle)
             {
                 if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -241,7 +243,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator AstronautFade(){
         astronautFading = true;
-        if(movedAstronaut) { astronautFading = false; astronaut.GetComponent<AstronautMatController>().EndFade(); yield break; }
+        if(movedAstronaut) { astronautFading = false; astronautMatController.EndFade(); yield break; }
 
         if(Vector2.Distance(astronaut.transform.position, rb.position) < 0.05f) {
 
@@ -266,7 +268,7 @@ public class ShootBall : MonoBehaviour
         foreach(Material mat in astronautFadeMats){
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
         }
-            astronaut.GetComponent<AstronautMatController>().StartFade();
+            astronautMatController.StartFade();
 
         while(timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
@@ -310,7 +312,7 @@ public class ShootBall : MonoBehaviour
         }
         origin = transform.position; //Ball reset position
         astronautFading = false;
-        astronaut.GetComponent<AstronautMatController>().EndFade();
+        astronautMatController.EndFade();
         yield break;
 
     }
@@ -366,7 +368,6 @@ public class ShootBall : MonoBehaviour
 
             }
             force = dist * dir.normalized;
-            Debug.Log(force);
 
             if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f && simulationScene != null)
             {
@@ -446,7 +447,7 @@ public class ShootBall : MonoBehaviour
         StopAllCoroutines();
         astronautFading = false;
         if(!movedAstronaut) { StartCoroutine(AstronautFade()); }
-        astronaut.GetComponent<AstronautMatController>().EndFade();
+        astronautMatController.EndFade();
 
         deathDelay = false;
         liningUpShot = false;

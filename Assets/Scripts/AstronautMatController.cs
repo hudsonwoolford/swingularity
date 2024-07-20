@@ -14,19 +14,19 @@ public class AstronautMatController : MonoBehaviour
     [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
     [SerializeField] AnimatorController astronautAnimController;    
-    public static bool left;
     [SerializeField] float transitionDuration;
     [SerializeField] float animConversionFloat;
-    [SerializeField] AnimatorStateTransition leftSwingTransition, rightSwingTransition;
+    public bool isIdle { get; private set; }
+    bool left;
     float lerpVal;
 
     void Start(){
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
         EndFade();
-        SetTransitions();
     }
     void Update(){
+        isIdle = GetIdleState();
         lerpVal = ShootBall.shootPower/100f;
         GolfSwingPullBack();
         astronautAnim.SetBool("liningUp", ShootBall.liningUpShot && ShootBall.shootPower >= 1);
@@ -35,25 +35,7 @@ public class AstronautMatController : MonoBehaviour
             astronautAnim.Play("Idle", 0);
         }
     }
-    void SetTransitions(){
-        AnimatorStateMachine machine = astronautAnimController.layers[0].stateMachine;
-        foreach(var state in machine.states){
-            if(state.state.name == "Pull Left"){
-                foreach(var transition in state.state.transitions){
-                    if(transition.destinationState.name == "Swing Left"){
-                        leftSwingTransition = transition;
-                    }
-                }
-            }
-            else if(state.state.name == "Pull Right"){
-                foreach(var transition in state.state.transitions){
-                    if(transition.destinationState.name == "Swing Right"){
-                        rightSwingTransition = transition;
-                    }
-                }
-            }
-        }
-    }
+
     public void StartFade(){
         Material[] fadeMats = new Material[5]{
             whiteFade,
@@ -96,6 +78,10 @@ public class AstronautMatController : MonoBehaviour
         else{
             return false;
         }
+    }
+    bool GetIdleState()
+    {
+        return astronautAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle");
     }
 
     IEnumerator Swing(){
