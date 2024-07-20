@@ -60,7 +60,7 @@ public class LevelScoring : MonoBehaviour
         levelCanvas.enabled = !LevelManager.levelComplete;
         if (ShootBall.liningUpShot)
         {
-            powerText.text = Mathf.RoundToInt(ShootBall.shootPower).ToString();
+            powerText.text = Mathf.CeilToInt(ShootBall.shootPower).ToString();
             if (ShootBall.shootPower < 10f)
             {
                 powerText.color = negative;
@@ -83,11 +83,11 @@ public class LevelScoring : MonoBehaviour
             }
             if (ShootBall.shootAngle + 90 > 180)
             {
-                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle - 270).ToString();
+                angleText.text = Mathf.CeilToInt(ShootBall.shootAngle - 270).ToString();
             }
             else
             {
-                angleText.text = Mathf.RoundToInt(ShootBall.shootAngle + 90).ToString();
+                angleText.text = Mathf.CeilToInt(ShootBall.shootAngle + 90).ToString();
             }
         }
         else if (ballStill && Time.time - timeOfBallRelease > 0.1f)

@@ -14,7 +14,7 @@ public class AstronautMatController : MonoBehaviour
     [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
     [SerializeField] AnimatorController astronautAnimController;    
-    bool left;
+    public static bool left;
     [SerializeField] float transitionDuration;
     [SerializeField] float animConversionFloat;
     [SerializeField] AnimatorStateTransition leftSwingTransition, rightSwingTransition;
@@ -28,9 +28,9 @@ public class AstronautMatController : MonoBehaviour
     }
     void Update(){
                     lerpVal = ShootBall.shootPower/100f;
-
             GolfSwingPullBack();
             astronautAnim.SetBool("liningUp", ShootBall.liningUpShot);
+                        // astronautAnim.SetBool("swing", (!ShootBall.liningUpShot));
         if(ShootBall.astronautFading){
             astronautAnim.Play("Idle", 0);
         }
@@ -83,21 +83,35 @@ public class AstronautMatController : MonoBehaviour
     }
 
     void BallSwing(){
-        float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
-        astronautAnim.SetBool("swing", true);
-        
-        leftSwingTransition.offset = offset;
-        rightSwingTransition.offset = offset;
-            // if(left){
-            //     astronautAnim.CrossFadeInFixedTime("Swing Left", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
-            // }
-            // else{
-            //     astronautAnim.CrossFadeInFixedTime("Swing Right", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
-            // }
+        StartCoroutine(Swing());
+        // leftSwingTransition.offset = offset;
+        // rightSwingTransition.offset = offset;
+
+    }
+    bool GetState(){
+        if(astronautAnim.GetCurrentAnimatorStateInfo(0).IsName("Pull Right") || astronautAnim.GetCurrentAnimatorStateInfo(0).IsName("Pull Left"))
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    IEnumerator Swing(){
+        yield return new WaitUntil(() => !astronautAnim.IsInTransition(0) && GetState());
+                float offset = Mathf.Lerp(0, 5f/23f, 1-lerpVal);
+
+        if(left){
+            astronautAnim.CrossFadeInFixedTime("Swing Left", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
+        }
+        else{
+            astronautAnim.CrossFadeInFixedTime("Swing Right", transitionDuration * animConversionFloat, 0, offset * animConversionFloat);
+        }
     }
 
     void BallHit(){
-        astronautAnim.SetBool("swing", false);
+        // astronautAnim.SetBool("swing", false);
     }
 
     void OnEnable(){

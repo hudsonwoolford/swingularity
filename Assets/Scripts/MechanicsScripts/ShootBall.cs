@@ -353,6 +353,7 @@ public class ShootBall : MonoBehaviour
             Vector2 mouseNormal = (mousePos - (transform.position- new Vector3(normal.x, normal.y) * 0.22f)).normalized;
 
             shootAngle = -Vector2.SignedAngle(normal, -mouseNormal);
+            AstronautMatController.left = shootAngle >= 0;
             if (rayHit) //this happens if the player is about to shoot directly onto a planet
             {
                 if(Vector3.Dot(mouseNormal, normal) > 0)
