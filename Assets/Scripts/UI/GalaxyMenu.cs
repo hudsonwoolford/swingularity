@@ -149,6 +149,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     void ZoomButton(bool zoomIn)
     {
+        if(focusedGalaxy == galaxySummaries.Length-1) { return; }
         if (!isMoving)
         {
             StartCoroutine(ZoomGalaxy(zoomIn, false));

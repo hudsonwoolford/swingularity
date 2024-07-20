@@ -47,6 +47,7 @@ Shader "Unlit/Hologram"
             float4 _OffsetSpeed;
             float _FresnelPower;
             float _FlickerSpeed;
+            float _UnscaledTime;
             float4 _FlickerDampening;
 
 
@@ -59,7 +60,7 @@ Shader "Unlit/Hologram"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = ComputeScreenPos(UnityObjectToClipPos(v.vertex));
-                o.uv = TRANSFORM_TEX(o.uv, _HoloTexture) + _OffsetSpeed * _Time.y;
+                o.uv = TRANSFORM_TEX(o.uv, _HoloTexture) + _OffsetSpeed * _UnscaledTime;
                 o.normal = v.normal;
                 return o;
             }
@@ -74,7 +75,7 @@ Shader "Unlit/Hologram"
                 mainCol.a = tex2D(_HoloTexture, i.uv).r;
                 float4 finalCol = lerp(mainCol, _FresnelColor, fresnel);
 
-                finalCol.a *= clamp(random(float2(_Time.y, _Time.y) * _FlickerSpeed), _FlickerDampening.x, _FlickerDampening.y);
+                finalCol.a *= clamp(random(float2(_UnscaledTime, _UnscaledTime) * _FlickerSpeed), _FlickerDampening.x, _FlickerDampening.y);
                 
                 return finalCol;
             }
