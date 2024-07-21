@@ -291,6 +291,9 @@ public class GalaxyMenu : MonoBehaviour
             cB.disabledColor = difficultyNum.color;
             difficultySlider.colors = cB;
             astroBiomeTxt.text = gp.possibleTypes[0].ToString();
+            if(gp.possibleTypes[0] == ColorSchemeStaticReference.PlanetType.goop){
+                astroBiomeTxt.text = "Alien";
+            }
             astroBiomeTxt.text = astroBiomeTxt.text.ToUpper();
             astroBiomeTxt.color = LevelManager.allGalaxyData[gp.galaxyDataIndex].mainColor;
             bestScoreTxt.text = gp.bestScore;
