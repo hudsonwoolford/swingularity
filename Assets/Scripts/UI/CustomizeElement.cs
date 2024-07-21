@@ -9,7 +9,6 @@ public class CustomizeElement : MonoBehaviour
     [System.Serializable]
     public struct MaterialCustomizationElement
     { 
-        public string name;
         public int requiredSupernovae;
         public Color matColor;
         [Range(0f, 1f)]
@@ -41,7 +40,6 @@ public class CustomizeElement : MonoBehaviour
     }
     void UpdateUIElements()
     {
-        labelTxt.text = matElement.name;
         requiredSupernovaeTxt.text = matElement.requiredSupernovae.ToString();
         if(SaveLoadManager.currentGlobalSave!=null)
         {

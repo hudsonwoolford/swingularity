@@ -51,7 +51,8 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Transform customizationParent;
     [SerializeField] GameObject customizationElement;
     [SerializeField] CustomizeElement.MaterialCustomizationElement[] materialCustomizationElements;
-    [SerializeField] float cutomizationHeightJump;
+    [SerializeField] float customizationHeightJump, customizationWidthJump;
+    [SerializeField] int customizationColumns, customizationRows;
     [Header("Miscellaneous Params")]
     [SerializeField] Button shopBackBtn;
     [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
@@ -494,7 +495,7 @@ public class TitleScreenButtons : MonoBehaviour
             CustomizeElement cE = Instantiate(customizationElement, customizationParent).GetComponent<CustomizeElement>();
             customizeElements[i] = cE;
 
-            cE.transform.localPosition = new Vector3(0, cutomizationHeightJump, 0) * i;
+            cE.transform.localPosition = new Vector3(customizationWidthJump, 0, 0) * (i % customizationRows) + new Vector3(0, customizationHeightJump, 0) * (i % customizationColumns);
 
             cE.matElement = materialCustomizationElements[i];
             cE.InitElement();
