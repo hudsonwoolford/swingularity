@@ -38,7 +38,6 @@ public class SFXManager : MonoBehaviour
     private void ManageSRCSettings()
     {
         sfxSrc.volume = SettingsManager.userSettings.sfxVolume;
-        interfaceSrc.volume = SettingsManager.userSettings.interfaceVolume;
     }
     private void OnEnable()
     {

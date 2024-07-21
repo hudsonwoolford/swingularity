@@ -95,6 +95,8 @@ public class SaveLoadManager : MonoBehaviour
 #if UNITY_EDITOR
         AssetDatabase.Refresh();
 #endif
+        Debug.Log("Create new save");
+
         currentGlobalSave = settingsSave;
     }
     void SaveGlobalSave()
@@ -119,7 +121,7 @@ public class SaveLoadManager : MonoBehaviour
             GlobalSave loadedSave = JsonUtility.FromJson<GlobalSave>(jsonSave);
 
             currentGlobalSave = loadedSave;
-            GameManager.SettingsManager.LoadUIElements(loadedSave.userSettings);
+            GameManager.SettingsManager.LoadUIElements(loadedSave.userSettings.DeepCopy());
         }
         else
         {

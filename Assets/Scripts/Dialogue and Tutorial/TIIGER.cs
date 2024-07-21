@@ -40,7 +40,11 @@ public class TIIGER : EventTalkableNPC
     protected override void Update()
     {
         base.Update();
-        if(dialogueShown && !dialogueController.isConversation && !dialogueQueued)
+        if (!SettingsManager.userSettings.dialogue)
+        {
+            return;
+        }
+        if (dialogueShown && !dialogueController.isConversation && !dialogueQueued)
         {
             StartCoroutine(HideDialogue());
         }
@@ -58,13 +62,21 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Interact()
     {
-        if(!isTransitioning && dialogueShown && !dialogueQueued)
+        if (!SettingsManager.userSettings.dialogue)
+        {
+            return;
+        }
+        if (!isTransitioning && dialogueShown && !dialogueQueued)
         {
             dialogueController.DisplayNextParagraph();
         }
     }
     public override void Talk(DialogueText dialogueText)
     {
+        if (!SettingsManager.userSettings.dialogue)
+        {
+            return;
+        }
         StartCoroutine(DisplayDialogue(dialogueText));
     }
     IEnumerator DisplayDialogue(DialogueText dialogueText)

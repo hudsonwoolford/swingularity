@@ -50,13 +50,12 @@ public class SettingsManager : MonoBehaviour
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider masterVolElement;
     [SerializeField] SettingsSlider sfxVolElement;
-    [SerializeField] SettingsSlider interfaceVolElement;
     [SerializeField] SettingsSlider musicVolElement;
     [Header("Game Elements")]
     [SerializeField] OptionScroll windowModeElement;
     [SerializeField] SettingsToggle customCursorTgl;
     [SerializeField] SettingsToggle hintsTgl;
-    [SerializeField] SettingsToggle uiGlowTgl;
+    [SerializeField] SettingsToggle dialogueTgl;
     [Header("Graphics Elements")]
     [SerializeField] SettingsSlider frameLimitElement;
     [SerializeField] OptionScroll screenResElement;
@@ -70,6 +69,7 @@ public class SettingsManager : MonoBehaviour
     bool menuOpen = false;
     int currentTab;
     float transitionDuration = 0.05f;
+    bool appliedSettings;
 
     public static UserSettings userSettings = new UserSettings();
 
@@ -90,7 +90,6 @@ public class SettingsManager : MonoBehaviour
         previousSelectedTab = audioTabBtn.gameObject;
 
         SetButtonFunctions();
-        SetAllVariables();
     }
 
     // Update is called once per frame
@@ -108,6 +107,7 @@ public class SettingsManager : MonoBehaviour
             }
         }
         if(menuOpen){
+            applySettings.interactable = !appliedSettings;
             int selectedOther = 0;
             for(int i = 0; i < tabBtns.Length; i++){
                 if(settingsEventsystem.currentSelectedGameObject != tabBtns[i].gameObject){
@@ -126,13 +126,12 @@ public class SettingsManager : MonoBehaviour
     {
         SetSlider(masterVolElement.defaultValue, ref masterVolElement);
         SetSlider(sfxVolElement.defaultValue, ref sfxVolElement);
-        SetSlider(interfaceVolElement.defaultValue, ref interfaceVolElement);
         SetSlider(musicVolElement.defaultValue, ref musicVolElement);
 
         SetScrollOption(windowModeElement.defaultValueIndex, ref windowModeElement);
         SetToggleButton(customCursorTgl.defaultValue, ref customCursorTgl);
         SetToggleButton(hintsTgl.defaultValue, ref hintsTgl);
-        SetToggleButton(uiGlowTgl.defaultValue, ref uiGlowTgl);
+        SetToggleButton(dialogueTgl.defaultValue, ref dialogueTgl);
 
         SetScrollOption(planetResElement.defaultValueIndex, ref planetResElement);
         SetScrollOption(screenResElement.defaultValueIndex, ref screenResElement);
@@ -144,17 +143,15 @@ public class SettingsManager : MonoBehaviour
     }
     public void LoadUIElements(UserSettings userSettings)
     {
-
         SetSlider(userSettings.masterVolume, ref masterVolElement);
         float div = userSettings.masterVolume == 0 ? 1 : userSettings.masterVolume;
         SetSlider(userSettings.sfxVolume / div, ref sfxVolElement);
-        SetSlider(userSettings.interfaceVolume / div, ref interfaceVolElement);
         SetSlider(userSettings.musicVolume / div, ref musicVolElement);
 
         SetScrollOption(userSettings.windowMode, ref windowModeElement);
         SetToggleButton(userSettings.customCursor, ref customCursorTgl);
         SetToggleButton(userSettings.hints, ref hintsTgl);
-        SetToggleButton(userSettings.uiGlow, ref uiGlowTgl);
+        SetToggleButton(userSettings.dialogue, ref dialogueTgl);
 
         int planetResIndex = planetResElement.defaultValueIndex;
         for (int i = 0; i < planetResElement.options.Length; i++)
@@ -189,12 +186,12 @@ public class SettingsManager : MonoBehaviour
         SetGameVariables();
         SetGraphicVariables();
         applySettingsVar?.Invoke();
+        appliedSettings = true;
     }
     void SetAudioVariables() //Applies only audio variables
     {
         userSettings.masterVolume = masterVolElement.slider.value;
         userSettings.sfxVolume = sfxVolElement.slider.value * masterVolElement.slider.value;
-        userSettings.interfaceVolume = interfaceVolElement.slider.value * masterVolElement.slider.value;
         userSettings.musicVolume = musicVolElement.slider.value * masterVolElement.slider.value;
     }
     void SetGameVariables() //Applies only game variables
@@ -225,7 +222,7 @@ public class SettingsManager : MonoBehaviour
 
 
         userSettings.hints = hintsTgl.currentValue;
-        userSettings.uiGlow = uiGlowTgl.currentValue;
+        userSettings.dialogue = dialogueTgl.currentValue;
     }
 
     void SetGraphicVariables() //Applies only graphic variables
@@ -313,6 +310,10 @@ public class SettingsManager : MonoBehaviour
         tg.currentValue = value;
         tg.toggleImg.enabled = tg.currentValue;
     }
+    void UnappliedSettings()
+    {
+        appliedSettings = false;
+    }
     IEnumerator ChangeTab(int tabIndex) //Changes the tab with a transition animation
     {
         int prevIndex = currentTab;
@@ -354,13 +355,15 @@ public class SettingsManager : MonoBehaviour
         backBtn.onClick.AddListener(() => enableSettingsMenu?.Invoke(false));
 
         //Slider buttons
-        SettingsSlider[] sSliders = new SettingsSlider[] { masterVolElement, sfxVolElement, interfaceVolElement, musicVolElement, frameLimitElement };
+        SettingsSlider[] sSliders = new SettingsSlider[] { masterVolElement, sfxVolElement, musicVolElement, frameLimitElement };
         for (int i = 0; i < sSliders.Length; i++)
         {
             for (int x = 0; x < sSliders[i].resetBtns.Length; x++)
             {
                 int currentIndex = i; //needs to be initialized in function
                 sSliders[i].resetBtns[x].onClick.AddListener(() => ResetSlider(ref sSliders[currentIndex]));
+                sSliders[i].resetBtns[x].onClick.AddListener(() => UnappliedSettings());
+                sSliders[i].slider.onValueChanged.AddListener(v => UnappliedSettings());
                 if (sSliders[i].valueText != null)
                 {
                     sSliders[i].slider.onValueChanged.AddListener(v => SetSliderValue(v, ref sSliders[currentIndex]));
@@ -374,10 +377,14 @@ public class SettingsManager : MonoBehaviour
         {
             int currentIndex = i; //needs to be initialized in function
             oScrolls[i].rightBtn.onClick.AddListener(() => ScrollOption(true, ref oScrolls[currentIndex]));
+            oScrolls[i].rightBtn.onClick.AddListener(() => UnappliedSettings());
             oScrolls[i].leftBtn.onClick.AddListener(() => ScrollOption(false, ref oScrolls[currentIndex]));
+            oScrolls[i].leftBtn.onClick.AddListener(() => UnappliedSettings());
+
             for (int x = 0; x < oScrolls[i].resetBtns.Length; x++)
             {
                 oScrolls[i].resetBtns[x].onClick.AddListener(() => ResetOptionScroll(ref oScrolls[currentIndex]));
+                oScrolls[i].resetBtns[x].onClick.AddListener(() => UnappliedSettings());
             }
 
             oScrolls[i].currentValue = oScrolls[i].defaultValueIndex;
@@ -385,14 +392,16 @@ public class SettingsManager : MonoBehaviour
         }
 
         //Toggle buttons
-        SettingsToggle[] sToggles = new SettingsToggle[] { customCursorTgl, hintsTgl, uiGlowTgl, vsyncTgl };
+        SettingsToggle[] sToggles = new SettingsToggle[] { customCursorTgl, hintsTgl, dialogueTgl, vsyncTgl };
         for (int i = 0; i < sToggles.Length; i++)
         {
             int currentIndex = i; //needs to be initialized in function
             sToggles[i].toggleBtn.onClick.AddListener(() => ToggleButton(ref sToggles[currentIndex]));
+            sToggles[i].toggleBtn.onClick.AddListener(() => UnappliedSettings());
             for (int x = 0; x < sToggles[i].resetBtns.Length; x++)
             {
                 sToggles[i].resetBtns[x].onClick.AddListener(() => ResetToggle(ref sToggles[currentIndex]));
+                sToggles[i].resetBtns[x].onClick.AddListener(() => UnappliedSettings());
             }
 
             sToggles[i].currentValue = sToggles[i].defaultValue;
@@ -429,14 +438,13 @@ public class SettingsManager : MonoBehaviour
 public class UserSettings
 {
     public float masterVolume = 0.5f;
-    public float sfxVolume = 0.5f;
-    public float interfaceVolume = 0.5f;
-    public float musicVolume = 0.5f;
+    public float sfxVolume = 0.25f;
+    public float musicVolume = 0.25f;
 
     public int windowMode = 0;
     public bool customCursor = true;
     public bool hints = true;
-    public bool uiGlow = false;
+    public bool dialogue = true;
 
     public int frameLimit = 240;
     public Vector2Int screenRes = new Vector2Int(1920, 1080);
@@ -449,13 +457,12 @@ public class UserSettings
         {
             masterVolume = this.masterVolume,
             sfxVolume = this.sfxVolume,
-            interfaceVolume = this.interfaceVolume,
             musicVolume = this.musicVolume,
 
             windowMode = this.windowMode,
             customCursor = this.customCursor,
             hints = this.hints,
-            uiGlow = this.uiGlow,
+            dialogue = this.dialogue,
 
             frameLimit = this.frameLimit,
             screenRes = this.screenRes,
