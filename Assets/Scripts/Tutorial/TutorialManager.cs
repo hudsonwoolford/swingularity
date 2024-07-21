@@ -298,6 +298,8 @@ public class TeachHackMode : TutorialState
     }
     public override void OnExit()
     {
+        hackModeParent.SetActive(false);
+        HackMode.onHackMode -= OnHackMode;//safety
         base.OnExit();
     }
     void OnHackMode(bool enable, Material whiteMat)
@@ -334,6 +336,8 @@ public class TeachPause : TutorialState
     }
     public override void OnExit()
     {
+        pauseParent.SetActive(false);
+        PauseManager.pauseGame -= OnPause;//safety
         base.OnExit();
     }
     void OnPause()

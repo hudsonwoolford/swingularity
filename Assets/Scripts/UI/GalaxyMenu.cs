@@ -94,7 +94,8 @@ public class GalaxyMenu : MonoBehaviour
     void Start()
     {
         if(started) { return; }
-        focusedGalaxy = 0;
+        
+
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
@@ -133,6 +134,13 @@ public class GalaxyMenu : MonoBehaviour
         zoomBtn.onClick.AddListener(() => ZoomButton(true));
         playGalaxyBtn.onClick.AddListener(() => PlayGalaxy());
         infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
+
+        focusedGalaxy = Mathf.Clamp(GameManager.LevelManager.galaxyIndex, 0, galaxyList.Length);
+        Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
+        for (int i = 0; i < galaxyCons.Length; i++)
+        {
+            galaxyCons[i].transform.position = galaxyPos[i];
+        }
         EnableDisableGalaxies(false);
         started = true;
     }
@@ -686,13 +694,7 @@ public class GalaxyMenu : MonoBehaviour
     void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected)
     {
         Start();
-        focusedGalaxy = GameManager.LevelManager.galaxyIndex;
-        Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
-        for (int i = 0; i < galaxyCons.Length; i++)
-        {
-            galaxyCons[i].transform.position = galaxyPos[i];
-        }
-        EnableDisableGalaxies(false);
+        
         StartCoroutine(ZoomGalaxy(true, true));
         galaxySummaries[focusedGalaxy].DisableSummary();
         menuAnim.Play("DisableMenu");

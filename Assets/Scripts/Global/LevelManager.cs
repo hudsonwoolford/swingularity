@@ -301,6 +301,7 @@ public class LevelManager : MonoBehaviour
     public void MenuUIButton() //Called by the "Next" button
     {
         StopAllCoroutines();
+        isPointCard = false;
         levelMenuAnimator.Play("DisableMenu");
         GameManager.SceneHandling.LoadScene("Galaxies", false);
         chosenOption = true;
@@ -469,7 +470,11 @@ public class LevelManager : MonoBehaviour
         isReset = false;
     }
     void SetGalaxiesEvent(GalaxyParams[] galaxyParams) => currentProceduralUniverse = galaxyParams; //Sets the current universe
-    void SetUniverseEvent(UniverseParams universeParams) => currentUniverse = universeParams; //Sets the current universe
+    void SetUniverseEvent(UniverseParams universeParams)
+    {
+        galaxyIndex = 0;
+        currentUniverse = universeParams; //Sets the current universe
+    }
     void LevelInitiation(GalaxyData theme) => currentTheme = theme;//Just sets theme, called by procedural level generation in start before generation
     void IsProcedural(bool p) => procedural = p;  //sets whether procedural
     void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar)
