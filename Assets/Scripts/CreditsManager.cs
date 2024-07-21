@@ -16,7 +16,7 @@ public class CreditsManager : MonoBehaviour
 
     void Update(){
         if (Input.GetKeyDown(KeyCode.Escape)){
-            GameManager.SceneHandling.LoadScene("MainMenu", false);
+            GameManager.SceneHandling.LoadScene("Main Menu", false);
         }
         rotation += Time.deltaTime * speed;
         if (rotation > 360) {
