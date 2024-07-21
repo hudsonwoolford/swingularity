@@ -22,6 +22,7 @@ public class SaveLoadManager : MonoBehaviour
     {
         public UserSettings userSettings = new UserSettings();
         public int totalSupernovae = 0;
+        public bool unlockedInfinite;
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
@@ -56,6 +57,7 @@ public class SaveLoadManager : MonoBehaviour
         {
             currentUniverseSave.totalTime += Time.unscaledDeltaTime;
         }
+        if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) { currentGlobalSave.unlockedInfinite = !currentGlobalSave.unlockedInfinite; }
     }
     void RetrieveUniverseSaves()
     {
@@ -82,7 +84,8 @@ public class SaveLoadManager : MonoBehaviour
         GlobalSave settingsSave = new GlobalSave
         {
             userSettings = new UserSettings(),
-            totalSupernovae = 0
+            totalSupernovae = 0,
+            unlockedInfinite = false
         };
 
         string jsonSave = JsonUtility.ToJson(settingsSave, true);
@@ -216,8 +219,17 @@ public class SaveLoadManager : MonoBehaviour
     {
         if (currentUniverseSave != null) { currentUniverseSave.totalShots++; }
     }
+    void OnHole()
+    {
+        if (SceneManager.GetActiveScene().name == "Mythical_4")
+        {
+            currentGlobalSave.unlockedInfinite = true;
+            SaveGlobalSave();
+        }
+    }
     private void OnEnable()
     {
+        ShootBall.onHole += OnHole;
         ShootBall.onShoot += IncrementNumShots;
         SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsEnabled;
@@ -225,6 +237,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        ShootBall.onHole -= OnHole;
         ShootBall.onShoot -= IncrementNumShots;
         SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsEnabled;

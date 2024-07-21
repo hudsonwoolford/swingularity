@@ -31,6 +31,7 @@ public class TitleScreenButtons : MonoBehaviour
     [Header("Options UI")]
     [SerializeField] Button campaignBtn;
     [SerializeField] Button infiniteBtn;
+    [SerializeField] CanvasGroup infiniteGroup;
     [SerializeField] Button optionsSelectBtn;
     [SerializeField] Button optionsBackBtn;
     [Header("Campaign Creation UI")]
@@ -414,6 +415,16 @@ public class TitleScreenButtons : MonoBehaviour
                     ngMenuAnim.Play("HideCampaignCreationMenu");
                 }
                 ngMenuAnim.Play("ShowOptionMenu");
+                if (SaveLoadManager.currentGlobalSave != null)
+                {
+                    infiniteGroup.interactable = SaveLoadManager.currentGlobalSave.unlockedInfinite;
+                    infiniteGroup.alpha = !infiniteGroup.interactable ? 0.25f : 1f;
+                }
+                else
+                {
+                    infiniteGroup.interactable = false;
+                    infiniteGroup.alpha = 0.25f;
+                }
                 break;
             case NGMenuState.CreationMenu:
                 if (currentNGMenuState == NGMenuState.OptionsMenu)
