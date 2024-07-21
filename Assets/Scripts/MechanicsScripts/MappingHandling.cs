@@ -34,8 +34,8 @@ public class MappingHandling : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        ballArrow.position = -Vector3.one * 100;
-        flagArrow.position = -Vector3.one * 100;
+        ballArrow.position = -Vector3.one * 9000;
+        flagArrow.position = -Vector3.one * 9000;
         MatchCameraColliders();
         boundaries = CameraFollow.innerShape;
 
@@ -130,8 +130,8 @@ public class MappingHandling : MonoBehaviour
 
         camArea.transform.localScale = camSize;
         camArea.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
-        ballArrow.position = -Vector3.one * 100;
-        flagArrow.position = -Vector3.one * 100;
+        ballArrow.position = -Vector3.one * 9000;
+        flagArrow.position = -Vector3.one * 9000;
         Vector2[] points = new Vector2[boundsPoints.Length];
         for(int i = 0; i < boundsPoints.Length; i++){
             points[i] = mainCam.ScreenToWorldPoint(boundsPoints[i].position);
