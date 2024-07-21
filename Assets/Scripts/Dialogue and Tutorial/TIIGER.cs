@@ -40,7 +40,7 @@ public class TIIGER : EventTalkableNPC
     protected override void Update()
     {
         base.Update();
-        if (!SettingsManager.userSettings.dialogue)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Mythical_4"))
         {
             return;
         }
@@ -62,7 +62,7 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Interact()
     {
-        if (!SettingsManager.userSettings.dialogue)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Mythical_4"))
         {
             return;
         }
@@ -73,7 +73,7 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Talk(DialogueText dialogueText)
     {
-        if (!SettingsManager.userSettings.dialogue)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Mythical_4"))
         {
             return;
         }

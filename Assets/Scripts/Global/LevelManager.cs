@@ -401,6 +401,10 @@ public class LevelManager : MonoBehaviour
     public void RestartGalaxy()
     {
         initSystem?.Invoke(currentGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
+        if(procedural)
+        {
+            levelParams = currentProceduralGalaxy[0];
+        }
         GameManager.SceneHandling.LoadScene(currentGalaxy[0], true);
         isReset = true;
     }

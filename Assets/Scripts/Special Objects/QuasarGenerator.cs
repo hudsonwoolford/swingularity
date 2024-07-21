@@ -25,6 +25,7 @@ public class QuasarGenerator : MonoBehaviour
     [SerializeField] protected float angle;
     [SerializeField] protected float radius = 1;
     [SerializeField] bool startOff;
+    [SerializeField] float startingDelay;
     [SerializeField] List<float> intervals = new List<float>();
     [SerializeField] AnimationCurve enableCurve;
     [SerializeField] float enableSpeed;
@@ -63,11 +64,17 @@ public class QuasarGenerator : MonoBehaviour
     float intervalTime = 0;
     int currentInterval = 0;
     float maxRadius;
+    bool firstRay;
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        firstRay = true;
         maxRadius = radius;
         NullChecks();
+        if(startOff)
+        {
+            StartCoroutine(EnableBeam(false));
+        }
     }
 
     // Update is called once per frame
@@ -219,8 +226,10 @@ public class QuasarGenerator : MonoBehaviour
         if(!Application.isPlaying) { return; }
         if(intervals.Count <= 0) { return; }
         intervalTime += Time.deltaTime;
-        if(intervalTime > intervals[currentInterval]) 
+        float waitTime = firstRay ? intervals[currentInterval] + startingDelay : intervals[currentInterval];
+        if(intervalTime > waitTime) 
         {
+            firstRay = false;
             intervalTime = 0;
             currentInterval++;
 
