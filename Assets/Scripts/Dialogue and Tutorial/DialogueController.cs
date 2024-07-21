@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
+using System;
 
 public class DialogueController : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class DialogueController : MonoBehaviour
     {
         public char character;
         public float waitMult;
+        public bool hideCharacter;
     }
 
     [SerializeField] private TextMeshProUGUI NPCNameText;
@@ -19,6 +22,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
     [SerializeField] AudioObj talkObj;
     [SerializeField] AudioSource tgrAudioSrc;
+    [SerializeField] char[] soundCharacters;
 
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
@@ -76,6 +80,8 @@ public class DialogueController : MonoBehaviour
     }
     public void EndConversation()
     {
+        StopAllCoroutines();
+        NPCDialogueText.text = "";
         //clear queue
         paragraphs.Clear();
 
@@ -91,20 +97,42 @@ public class DialogueController : MonoBehaviour
         string displayedText = "";
         int alphaIndex = 0;
         float waitMultiplier = 1;
+        int characterIteration = 0;
         foreach (char c in p.ToCharArray())
         {
+            //wait multiplier
             waitMultiplier = 1;
             foreach (CharacterTypeInfo ct in characterTypeInfo)
             {
                 if(c == ct.character) { waitMultiplier = ct.waitMult; }
+                //non show wait characters
+                //if(ct.hideCharacter) {
+                //    Debug.Log("hid");
+                //    originalText.Remove(characterIteration, 1);
+                //}
             }
-            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed * waitMultiplier);
+
+            //dialogue
+            if (characterIteration % 4 == 0)
+            {
+                if (soundCharacters.Contains(char.ToUpper(c)))
+                {
+                    Debug.Log(Array.IndexOf(soundCharacters, char.ToUpper(c)));
+                    tgrAudioSrc.pitch = Mathf.Lerp(0.05f, 0.25f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
+                    GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
+                }
+            }
+            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed);
             yield return new WaitUntil(() => !isPaused);
+
             alphaIndex++;
             NPCDialogueText.text = originalText;
 
             displayedText = NPCDialogueText.text.Insert(alphaIndex, HTML_ALPHA);
             NPCDialogueText.text = displayedText;
+
+            yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed * waitMultiplier - MAX_TYPE_TIME / typeSpeed);
+            characterIteration++;
         }
         isTyping = false;
         FinishParagraph();

@@ -4110,6 +4110,7 @@ GameObject:
   - component: {fileID: 4498804770350793771}
   - component: {fileID: 3803249320274144040}
   - component: {fileID: 6936011818002291907}
+  - component: {fileID: 6544069859521891101}
   m_Layer: 5
   m_Name: Dialogue Canvas
   m_TagString: Untagged
@@ -4243,15 +4244,122 @@ MonoBehaviour:
   minParagraphInterval: 3
   characterTypeInfo:
   - character: 8230
-    waitMult: 1
+    waitMult: 15
+    hideCharacter: 0
   - character: 63
-    waitMult: 1
+    waitMult: 10
+    hideCharacter: 0
   - character: 33
-    waitMult: 1
+    waitMult: 10
+    hideCharacter: 0
   - character: 44
-    waitMult: 1
+    waitMult: 5
+    hideCharacter: 0
   - character: 46
-    waitMult: 1
+    waitMult: 10
+    hideCharacter: 0
+  - character: 124
+    waitMult: 50
+    hideCharacter: 1
+  talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
+  tgrAudioSrc: {fileID: 6544069859521891101}
+  soundCharacters: 4100420043004400450046004700480049004a004b004c004d004e004f0050005100520053005400550056005700580059005a00
+--- !u!82 &6544069859521891101
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801119488442043075}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &804397629679596646
 GameObject:
   m_ObjectHideFlags: 0
@@ -28577,7 +28685,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: "Incoming transmission:ACCEPTED\r\nRebooting\u2026\r\n(IFNULL)\u2026---\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: abd90895e08a7d942b14c9bc5b474bc5, type: 2}
   m_sharedMaterial: {fileID: -2760754138431906543, guid: abd90895e08a7d942b14c9bc5b474bc5,
