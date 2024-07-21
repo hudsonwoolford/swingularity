@@ -755,7 +755,6 @@ public class ShootBall : MonoBehaviour
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             //Failsafe here
-            print((hole.position - transform.position).magnitude);
             if((hole.position - transform.position).magnitude < 1.5f){
                 transform.position = hole.GetComponent<Collider>().ClosestPoint(transform.position);
             }
