@@ -714,15 +714,8 @@ public class ShootBall : MonoBehaviour
         {
             GameManager.SFXManager.PlaySFX(enterPortal);
             other.enabled = false;
-            RaycastHit hit;
-            if (Physics.Raycast(posLastFrame, (transform.position - posLastFrame), out hit))
-            {
-                StartCoroutine(FinishedLevel(other.transform, hit.point, hit.point - posLastFrame));
-            }
-            else
-            {
-                StartCoroutine(FinishedLevel(other.transform, transform.position, transform.position - posLastFrame));
-            }
+
+            StartCoroutine(FinishedLevel(other.transform, transform.position));
         }
         if (other.gameObject.CompareTag("Respawn"))
         {
@@ -730,7 +723,7 @@ public class ShootBall : MonoBehaviour
 
         }
     }
-    IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint, Vector3 velocityDir)
+    IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint)
     {
         inPortal = true;
         GetComponent<Collider>().enabled = false;
@@ -762,6 +755,7 @@ public class ShootBall : MonoBehaviour
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             //Failsafe here
+            print((hole.position - transform.position).magnitude);
             if((hole.position - transform.position).magnitude < 1.5f){
                 transform.position = hole.GetComponent<Collider>().ClosestPoint(transform.position);
             }
