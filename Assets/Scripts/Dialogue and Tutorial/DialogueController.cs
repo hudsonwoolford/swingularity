@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using System;
+using System.Text;
 
 public class DialogueController : MonoBehaviour
 {
@@ -33,13 +34,23 @@ public class DialogueController : MonoBehaviour
     private Coroutine typeDialogueCoroutine;
     private Coroutine paragraphIntervalCoroutine;
 
+    private DialogueText currentDialogueTxt;
+
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
     public void StartConversation(DialogueText dialogueText)
     {
+        currentDialogueTxt = dialogueText;
         isConversation = true;
         //update speaker name
-        NPCNameText.text = dialogueText.speakerName;
+        if(!dialogueText.revealNameLater)
+        {
+            NPCNameText.text = dialogueText.speakerName;
+        }
+        else
+        {
+            NPCNameText.text = dialogueText.hiddenSpeakerName;
+        }
 
         //add dialogue text to queue
         for (int i = 0; i < dialogueText.paragraphs.Length; i++)
@@ -80,6 +91,7 @@ public class DialogueController : MonoBehaviour
     }
     public void EndConversation()
     {
+        currentDialogueTxt = null;
         StopAllCoroutines();
         NPCDialogueText.text = "";
         //clear queue
@@ -102,14 +114,20 @@ public class DialogueController : MonoBehaviour
         {
             //wait multiplier
             waitMultiplier = 1;
+
+            if(currentDialogueTxt.revealNameLater && c =='@')
+            {
+                NPCNameText.text = currentDialogueTxt.speakerName;
+                originalText = originalText.Replace(c, ' ');
+            }
             foreach (CharacterTypeInfo ct in characterTypeInfo)
             {
-                if(c == ct.character) { waitMultiplier = ct.waitMult; }
-                //non show wait characters
-                //if(ct.hideCharacter) {
-                //    Debug.Log("hid");
-                //    originalText.Remove(characterIteration, 1);
-                //}
+                if(c == ct.character) { waitMultiplier = ct.waitMult;
+                    if (ct.hideCharacter)
+                    {
+                        originalText = originalText.Replace(c, ' ');
+                    }
+                }
             }
 
             //dialogue
@@ -117,7 +135,6 @@ public class DialogueController : MonoBehaviour
             {
                 if (soundCharacters.Contains(char.ToUpper(c)))
                 {
-                    Debug.Log(Array.IndexOf(soundCharacters, char.ToUpper(c)));
                     tgrAudioSrc.pitch = Mathf.Lerp(0.05f, 0.25f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
                     GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
                 }
@@ -150,7 +167,31 @@ public class DialogueController : MonoBehaviour
         paragraphIntervalCoroutine = StartCoroutine(ParagraphTimeInterval());
 
         //finish typing text
-        NPCDialogueText.text = p;
+        StringBuilder finishedPara = new StringBuilder();
+        for (int i = 0; i < p.Length; i++)
+        {
+            bool hideChar = false;
+            if (p[i] == '@' && currentDialogueTxt.revealNameLater)
+            {
+                hideChar = true;
+                NPCNameText.text = currentDialogueTxt.speakerName;
+            }
+            foreach (CharacterTypeInfo ct in characterTypeInfo)
+            {
+                if (p[i] == ct.character)
+                {
+                    if (ct.hideCharacter)
+                    {
+                        hideChar = true;
+                    }
+                }
+            }
+            if(!hideChar)
+            {
+                finishedPara.Append(p[i]);
+            }
+        }
+        NPCDialogueText.text = finishedPara.ToString();
 
         //update typing bool
         isTyping = false;

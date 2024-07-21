@@ -64,7 +64,6 @@ public class HackMode : MonoBehaviour
     public void EnterHackMode(){
         if(!canHackMode) { return; }
         hackMode = !hackMode;
-        GameManager.SFXManager.PlaySFX(toggleHackmodeAudio);
         onHackMode?.Invoke(hackMode, whiteMat);
         RegenFabric();
     }
@@ -176,12 +175,18 @@ public class HackMode : MonoBehaviour
     void CanHackMode(){
         canHackMode = true;
     }
+    void HackModeSound(bool enable, Material whiteMAt)
+    {
+        GameManager.SFXManager.PlaySFX(toggleHackmodeAudio);
+    }
     void OnEnable(){
+        onHackMode += HackModeSound;
         LevelGenerator.levelGenerated += LevelGenerated;
         ShootBall.onShoot += DisableHackModeShoot;
         ShootBall.onStill += CanHackMode;
     }   
     void OnDisable(){
+        onHackMode -= HackModeSound;
         LevelGenerator.levelGenerated -= LevelGenerated;
         ShootBall.onShoot -= DisableHackModeShoot;
         ShootBall.onStill -= CanHackMode;
