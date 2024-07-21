@@ -30,12 +30,13 @@ public class SceneHandling : MonoBehaviour
     }
     public void LoadScene(string sceneName, bool waitForLevelGeneration)
     {
+        Debug.Log(loadingScreen);
         StartCoroutine(LoadSceneCoroutine(sceneName, waitForLevelGeneration));
     }
     IEnumerator LoadSceneCoroutine(string sceneName, bool waitForLevelGeneration)
     {
-        GameManager.LevelManager.EnableBallInput(false);
         loadingScreen = true;
+        GameManager.LevelManager.EnableBallInput(false);
         float randMult = UnityEngine.Random.Range(0.75f,1f);
         progressBar.value = 0f;
         loadingDescription.text = "Loading Scene...";
@@ -87,8 +88,8 @@ public class SceneHandling : MonoBehaviour
         }
 
         animator.Play("HideMenu");
-        loadingScreen = false;
         GameManager.LevelManager.EnableBallInput(true);
+        loadingScreen = false;
     }
     void OnLevelGenerated() => levelGenerated = true;
     private void OnEnable()

@@ -26,6 +26,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Color positive, neutral, negative;
     bool hackMode, ballStill;
     bool resetUI;
+    ShootBall shootBall;
 
     [Serializable]
     struct Score
@@ -43,6 +44,7 @@ public class LevelScoring : MonoBehaviour
 
     private void Start()
     {
+        shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         CheckPar();
         SetGalaxyAndHole();
         parText.text = par.ToString();
@@ -58,10 +60,10 @@ public class LevelScoring : MonoBehaviour
     }
     private void Update(){
         levelCanvas.enabled = !LevelManager.levelComplete;
-        if (ShootBall.liningUpShot)
+        if (shootBall.liningUpShot)
         {
-            powerText.text = Mathf.CeilToInt(ShootBall.shootPower).ToString();
-            if (Mathf.CeilToInt(ShootBall.shootPower) <= 5f)
+            powerText.text = Mathf.CeilToInt(shootBall.shootPower).ToString();
+            if (Mathf.CeilToInt(shootBall.shootPower) <= 5f)
             {
                 powerText.color = negative;
                 powerTextPercent.color = negative;
@@ -71,7 +73,7 @@ public class LevelScoring : MonoBehaviour
                 powerText.color = Color.white;
                 powerTextPercent.color = Color.white;
             }
-            if (ShootBall.shootAngle >= 140 || ShootBall.shootAngle <= -140)
+            if (shootBall.shootAngle >= 140 || shootBall.shootAngle <= -140)
             {
                 angleText.color = negative;
                 angleTextDegree.color = negative;
@@ -81,13 +83,13 @@ public class LevelScoring : MonoBehaviour
                 angleText.color = Color.white;
                 angleTextDegree.color = Color.white;
             }
-            if (ShootBall.shootAngle + 90 > 180)
+            if (shootBall.shootAngle + 90 > 180)
             {
-                angleText.text = Mathf.CeilToInt(ShootBall.shootAngle - 270).ToString();
+                angleText.text = Mathf.CeilToInt(shootBall.shootAngle - 270).ToString();
             }
             else
             {
-                angleText.text = Mathf.CeilToInt(ShootBall.shootAngle + 90).ToString();
+                angleText.text = Mathf.CeilToInt(shootBall.shootAngle + 90).ToString();
             }
         }
         else if (ballStill && Time.time - timeOfBallRelease > 0.1f)

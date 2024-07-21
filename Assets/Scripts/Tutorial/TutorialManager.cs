@@ -196,9 +196,11 @@ public class BallInputTutorial : TutorialState
     [SerializeField]protected Transform fakeCursor;
     [SerializeField]protected LineRenderer ballToCursorLR;
     protected Transform playerBall;
+    ShootBall shootBall;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
+        shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         ShootBall.onShoot += OnBallShoot;
         playerBall = GameObject.FindGameObjectWithTag("Player").transform;
         tutorialAnimator.Play("TeachBallInput");
@@ -206,7 +208,7 @@ public class BallInputTutorial : TutorialState
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (ShootBall.liningUpShot)
+        if (shootBall.liningUpShot)
         {
             if (ballInputParent.activeInHierarchy)
             {

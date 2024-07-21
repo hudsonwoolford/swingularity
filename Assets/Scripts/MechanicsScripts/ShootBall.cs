@@ -11,10 +11,10 @@ using UnityEngine.SceneManagement;
 public class ShootBall : MonoBehaviour
 {
     [SerializeField] Transform planetTransform;
+    [SerializeField] public float maxPower { get; private set; } = 30f; //max power the player can input
+    [HideInInspector] public float swingDelay = 0.5f; //max power the player can input
+    [HideInInspector] public bool pullBack = false; //max power the player can input
     [Header("Power")]
-    [SerializeField] public static float maxPower = 30f; //max power the player can input
-    [HideInInspector] public static float swingDelay = 0.5f; //max power the player can input
-    [HideInInspector] public static bool pullBack = false; //max power the player can input
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
     [Header("Straight Arrow")]
     [SerializeField] bool straight;
@@ -34,7 +34,6 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] float animLength; //Length of animation when hit the hole
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
-    [SerializeField] float animScale; //Scale of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
     [SerializeField] float ballSpinSpeed;
     [SerializeField] Material ballHackModeMat;
@@ -51,10 +50,12 @@ public class ShootBall : MonoBehaviour
     [SerializeField] AudioObj hitBall;
     [SerializeField] AudioObj quasarDeath;
     [SerializeField] AudioSource ballAudioSrc;
-    [HideInInspector] public static float shootPower;
-    [HideInInspector] public static float shootAngle;
+    [HideInInspector] public float shootPower { get; private set; }
+    [HideInInspector] public float shootAngle { get; private set; }
 
-    public static bool liningUpShot;
+    public bool liningUpShot { get; private set; }
+    public bool astronautFading { get; private set; } = false;
+    private const float animScale = 0.75f;
 
     AstronautMatController astronautMatController;
     MeshRenderer ballRenderer;
@@ -78,7 +79,6 @@ public class ShootBall : MonoBehaviour
 
     bool swingHit;
 
-    public static bool astronautFading = false; 
     bool movedAstronaut = false;
     GameObject childObj;
 
@@ -754,6 +754,7 @@ public class ShootBall : MonoBehaviour
         while (timeCounter < animLength){
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
+            progress = Mathf.Clamp01(progress);
             //Failsafe here
             if((hole.position - transform.position).magnitude < 1.5f){
                 transform.position = hole.GetComponent<Collider>().ClosestPoint(transform.position);

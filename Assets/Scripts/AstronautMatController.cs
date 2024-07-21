@@ -14,22 +14,24 @@ public class AstronautMatController : MonoBehaviour
     [SerializeField] Animator astronautAnim;    
     [SerializeField] float transitionDuration;
     [SerializeField] float animConversionFloat;
+    ShootBall shootBall;
     public bool isIdle { get; private set; }
     bool left;
     float lerpVal;
 
     void Start(){
+        shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
         EndFade();
     }
     void Update(){
         isIdle = GetIdleState();
-        lerpVal = Mathf.Lerp(10/50, 1, ShootBall.shootPower/100f);
+        lerpVal = Mathf.Lerp(10/50, 1, shootBall.shootPower/100f);
         GolfSwingPullBack();
-        astronautAnim.SetBool("liningUp", ShootBall.liningUpShot && ShootBall.shootPower > 10f);
+        astronautAnim.SetBool("liningUp", shootBall.liningUpShot && shootBall.shootPower > 10f);
                         // astronautAnim.SetBool("swing", (!ShootBall.liningUpShot));
-        if(ShootBall.astronautFading){
+        if(shootBall.astronautFading){
             astronautAnim.Play("Idle", 0);
         }
     }
@@ -57,7 +59,7 @@ public class AstronautMatController : MonoBehaviour
     
     void GolfSwingPullBack(){
         // if(ShootBall.shootAngle > 1)
-        left = ShootBall.shootAngle >= 0;
+        left = shootBall.shootAngle >= 0;
         astronautAnim.SetBool("left", left);
         astronautAnim.SetFloat("pullbackPos", lerpVal);
     }
@@ -86,8 +88,8 @@ public class AstronautMatController : MonoBehaviour
 
         yield return new WaitUntil(() => !astronautAnim.IsInTransition(0) && GetState());
         float offset = Mathf.Lerp(0, 4.5f/23f, 1-lerpVal);
-        ShootBall.swingDelay = 4.5f/23f - offset;
-        ShootBall.pullBack = true;
+        shootBall.swingDelay = 4.5f/23f - offset;
+        shootBall.pullBack = true;
 
 
         if(left){

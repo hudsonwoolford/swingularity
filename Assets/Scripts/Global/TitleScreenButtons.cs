@@ -118,7 +118,21 @@ public class TitleScreenButtons : MonoBehaviour
         ngSizeBtns[1].onClick.AddListener(() => SetGalaxySize(1));
         ngSizeBtns[2].onClick.AddListener(() => SetGalaxySize(3));
 
-        
+        if (GameManager.LevelManager.currentUniverse.name != null && GameManager.SaveLoadManager.RetrieveSave(GameManager.LevelManager.currentUniverse.name + ".txt") != null)
+        {
+            continueBtn.transform.GetChild(0).gameObject.SetActive(true);
+            continueBtn.transform.GetChild(1).gameObject.SetActive(false);
+            continueBtn.transform.GetChild(2).gameObject.SetActive(true);
+            continueBtn.interactable = true;
+            continueBtn.onClick.AddListener(() => Continue());
+        }
+        else
+        {
+            continueBtn.transform.GetChild(0).gameObject.SetActive(false);
+            continueBtn.transform.GetChild(1).gameObject.SetActive(true);
+            continueBtn.transform.GetChild(2).gameObject.SetActive(false);
+            continueBtn.interactable = false;
+        }
     }
     private void Update()
     {
