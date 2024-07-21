@@ -132,15 +132,15 @@ public abstract class TutorialState
     }
     public virtual void OnUpdate()
     {
-
+        //called on update
     }
     public virtual void OnExit()
     {
-
+        //called when tutorial state progressed
     }
     public virtual void DisableState()
     {
-        //disable smth
+        //disable state
     }
 }
 [System.Serializable]

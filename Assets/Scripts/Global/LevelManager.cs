@@ -472,7 +472,6 @@ public class LevelManager : MonoBehaviour
     void SetGalaxiesEvent(GalaxyParams[] galaxyParams) => currentProceduralUniverse = galaxyParams; //Sets the current universe
     void SetUniverseEvent(UniverseParams universeParams)
     {
-        galaxyIndex = 0;
         currentUniverse = universeParams; //Sets the current universe
     }
     void LevelInitiation(GalaxyData theme) => currentTheme = theme;//Just sets theme, called by procedural level generation in start before generation
@@ -523,6 +522,10 @@ public class LevelManager : MonoBehaviour
     void UnpauseGame() => ballInput = true;
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
+        if(scene.name == "Main Menu")
+        {
+            galaxyIndex = 0;
+        }
         chosenOption = true;
         ballInput = true;
         levelComplete = false;
