@@ -380,7 +380,7 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0;//deleting line
         lr.positionCount = 0; //deleting line
 
-        if(shootPower < 10f)
+        if(Mathf.CeilToInt(shootPower) <= 5f)
         {
             if (colIcons) { DrawCollisionIcons(); }
             liningUpShot = false;

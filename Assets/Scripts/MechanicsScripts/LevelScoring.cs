@@ -61,7 +61,7 @@ public class LevelScoring : MonoBehaviour
         if (ShootBall.liningUpShot)
         {
             powerText.text = Mathf.CeilToInt(ShootBall.shootPower).ToString();
-            if (ShootBall.shootPower < 10f)
+            if (Mathf.CeilToInt(ShootBall.shootPower) <= 5f)
             {
                 powerText.color = negative;
                 powerTextPercent.color = negative;
