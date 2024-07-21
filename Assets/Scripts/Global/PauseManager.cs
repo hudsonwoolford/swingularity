@@ -35,6 +35,7 @@ public class PauseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (paused && Time.timeScale != 0) { Time.timeScale = 0; }
         PauseInput();
     }
     void PauseInput()
