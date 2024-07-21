@@ -279,6 +279,7 @@ public class LevelManager : MonoBehaviour
             GameManager.SaveLoadManager.Save();
             GameManager.SaveLoadManager.Load(currentUniverse.name + ".txt");
             GameManager.SceneHandling.LoadScene("Galaxies", false);
+            GameManager.SaveLoadManager.IncrementSupernovae(currentUniverse.numGalaxies * currentUniverse.relativeDifficulty * 5);
         }
     }
     public void EnableBallInput(bool enable) //usually used by tutorial and dialogue

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00089400576, g: 0.00083436834, b: 0.0008091211, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -603,12 +603,12 @@ PrefabInstance:
     - target: {fileID: 7412713880203986835, guid: 269beaa398e8568408c08a6750a0b470,
         type: 3}
       propertyPath: intervals.Array.data[0]
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7412713880203986835, guid: 269beaa398e8568408c08a6750a0b470,
         type: 3}
       propertyPath: intervals.Array.data[1]
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1901,7 +1901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 6
   specificSeed: 1
-  darkMatter: 1
+  darkMatter: 0
   seed: {x: 65.43677, y: 67.527954, z: 103.95868}
 --- !u!23 &1279274039
 MeshRenderer:
