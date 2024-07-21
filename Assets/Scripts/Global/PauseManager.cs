@@ -99,8 +99,7 @@ public class PauseManager : MonoBehaviour
     }
     public void RestartGalaxy()
     {
-        initSystem?.Invoke(GameManager.LevelManager.currentGalaxy, GameManager.LevelManager.currentProceduralUniverse[GameManager.LevelManager.galaxyIndex], LevelManager.allGalaxyData[GameManager.LevelManager.currentProceduralUniverse[GameManager.LevelManager.galaxyIndex].galaxyDataIndex]);
-        GameManager.SceneHandling.LoadScene(GameManager.LevelManager.currentGalaxy[0], true);
+        GameManager.LevelManager.RestartGalaxy();
         unpauseGame?.Invoke();
     }
     public void ResumeButton()

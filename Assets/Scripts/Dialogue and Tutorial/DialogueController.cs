@@ -98,6 +98,7 @@ public class DialogueController : MonoBehaviour
         NPCDialogueText.text = "";
         //clear queue
         paragraphs.Clear();
+        p = "";
 
         //return bool to false
         isConversation = false;

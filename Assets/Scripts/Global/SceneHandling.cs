@@ -64,7 +64,7 @@ public class SceneHandling : MonoBehaviour
         //level generation wait
         if(waitForLevelGeneration)
         {
-            loadingDescription.text = "Generating level...";
+            loadingDescription.text = GameManager.LevelManager.procedural ? "Generating level..." : "Loading level...";
             while (!levelGenerated)
             {
                 if (LevelGenerator.Instance != null)

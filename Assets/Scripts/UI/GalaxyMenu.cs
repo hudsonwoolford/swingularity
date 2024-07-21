@@ -702,8 +702,8 @@ public class GalaxyMenu : MonoBehaviour
             true,
             scoreSum <= 0,
             scoreSum <= -3 || shotsSum == 5,
-            shotsSum == 5,
-            starCollected
+            starCollected,
+            shotsSum == 5
         };
         StartCoroutine(AnimateStars(starScore));
         galaxyList = GameManager.LevelManager.currentProceduralUniverse;

@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static LevelManager;
+using static GalaxyGenerator;
 
 public class LevelManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public int galaxyIndex { get; private set; }
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
+    [SerializeField] public bool isReset { get; private set; } = false; //Whether you are currently playing a resetted galaxy or not
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
     [Header("Parameters")]
     [SerializeField] LevelGenStaticReferences levelStaticValue;
@@ -287,6 +289,10 @@ public class LevelManager : MonoBehaviour
         //Debug.Log("Ball input " + enable);
         ballInput = enable;
     }
+    public void ResetGalaxy()
+    {
+
+    }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {
         return completedLevels.Contains(level);
@@ -305,6 +311,10 @@ public class LevelManager : MonoBehaviour
 
         DetermineCurrentLevelIndex(false);
         string nextName = levelIndex < currentGalaxy.Length-1 ? currentGalaxy[levelIndex+1] : "Galaxies";
+        if(SceneManager.GetActiveScene().name == "Mythical_4")
+        {
+            nextName = "Credits";
+        }
 
         while (!chosenOption)
         {
@@ -385,7 +395,14 @@ public class LevelManager : MonoBehaviour
     #region EventFunctions
     public void SetLevelParams(LevelParams lp)
     {
+      
         levelParams = lp;
+    }
+    public void RestartGalaxy()
+    {
+        initSystem?.Invoke(currentGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
+        GameManager.SceneHandling.LoadScene(currentGalaxy[0], true);
+        isReset = true;
     }
     void CompleteCurrentLevel() //Adds the current level to completed level array
     {
@@ -406,10 +423,12 @@ public class LevelManager : MonoBehaviour
         procedural = false;
         currentGalaxy = galaxy;
 
+        levelIndex = 0;
        for (int i = 0; i < currentProceduralUniverse.Length; i++)
         {
             if (currentProceduralUniverse[i] == galaxyParams) { galaxyIndex = i; break; }
         }
+        isReset = false;
     }
     void SetProceduralGalaxyLevels(string[] galaxy, LevelParams[] galaxyLevels, GalaxyParams galaxyParams, GalaxyData theme) //Sets the current galaxy levels, we also know it cannot be procedural
     {
@@ -423,6 +442,7 @@ public class LevelManager : MonoBehaviour
         {
             if (currentProceduralUniverse[i] == galaxyParams) { galaxyIndex = i; break; }
         }
+        isReset = false;
     }
     void SetGalaxiesEvent(GalaxyParams[] galaxyParams) => currentProceduralUniverse = galaxyParams; //Sets the current universe
     void SetUniverseEvent(UniverseParams universeParams) => currentUniverse = universeParams; //Sets the current universe
@@ -436,8 +456,8 @@ public class LevelManager : MonoBehaviour
             true,
             scoreSum <= 0,
             scoreSum <= -3 || shotsSum == 5,
-            shotsSum == 5,
-            collectedStar
+            collectedStar,
+            shotsSum == 5
         };
         int starTotal = 0;
         for (int i = 0; i < currentProceduralUniverse[galaxyIndex].collectedStars.Length; i++)

@@ -141,9 +141,8 @@ public class LevelScoring : MonoBehaviour
     IEnumerator LevelFailed()
     {
         ShootBall.death?.Invoke(3);
-        HoleEnd();
         yield return new WaitForSeconds(1.25f);
-        ShootBall.onHole?.Invoke();
+        GameManager.LevelManager.RestartGalaxy();
     }
     #endregion
 
