@@ -21,7 +21,9 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private float typeSpeed = 5;
     [SerializeField] private float minParagraphInterval = 5;
     [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
+    [SerializeField] private char crackleCharacter;
     [SerializeField] AudioObj talkObj;
+    [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
     [SerializeField] char[] soundCharacters;
 
@@ -114,11 +116,17 @@ public class DialogueController : MonoBehaviour
         {
             //wait multiplier
             waitMultiplier = 1;
-
+            if(c == crackleCharacter)
+            {
+                originalText = originalText.Remove(characterIteration, 1);
+                alphaIndex--;
+                GameManager.SFXManager.PlaySFX(staticObject);
+            }
             if(currentDialogueTxt.revealNameLater && c =='@')
             {
+                alphaIndex--;
                 NPCNameText.text = currentDialogueTxt.speakerName;
-                originalText = originalText.Replace(c, ' ');
+                originalText = originalText.Remove(characterIteration);
             }
             foreach (CharacterTypeInfo ct in characterTypeInfo)
             {
@@ -171,6 +179,11 @@ public class DialogueController : MonoBehaviour
         for (int i = 0; i < p.Length; i++)
         {
             bool hideChar = false;
+            if (p[i] == crackleCharacter)
+            {
+                //GameManager.SFXManager.PlaySFX(staticObject);
+                hideChar = true;
+            }
             if (p[i] == '@' && currentDialogueTxt.revealNameLater)
             {
                 hideChar = true;
