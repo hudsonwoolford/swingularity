@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public int levelIndex { get; private set; } = 0; //The index of the current level
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
     [SerializeField] public bool isReset { get; private set; } = false; //Whether you are currently playing a resetted galaxy or not
+    [SerializeField] public bool isPointCard { get; private set; } = false; //Whether point card is enabled
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
     [Header("Parameters")]
     [SerializeField] LevelGenStaticReferences levelStaticValue;
@@ -297,6 +298,13 @@ public class LevelManager : MonoBehaviour
     {
         return completedLevels.Contains(level);
     }
+    public void MenuUIButton() //Called by the "Next" button
+    {
+        StopAllCoroutines();
+        levelMenuAnimator.Play("DisableMenu");
+        GameManager.SceneHandling.LoadScene("Galaxies", false);
+        chosenOption = true;
+    }
     public void NextLevelUIButton() //Called by the "Next" button
     {
         chosenOption = true;
@@ -304,33 +312,38 @@ public class LevelManager : MonoBehaviour
     #region Next Level UI
     IEnumerator NextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
+        isPointCard = true;
         levelMenuAnimator.Play("ShowMenu");
         scoreText.enabled = true;
         streakText.enabled = false;
         hioStreakText.enabled = false;
 
+        chosenOption = false;
         DetermineCurrentLevelIndex(false);
+        string currentName = SceneManager.GetActiveScene().name;
         string nextName = levelIndex < currentGalaxy.Length-1 ? currentGalaxy[levelIndex+1] : "Galaxies";
-        if(SceneManager.GetActiveScene().name == "Mythical_4")
+        if (SceneManager.GetActiveScene().name == "Mythical_4")
         {
             nextName = "Credits";
         }
-
         while (!chosenOption)
         {
             yield return new WaitForFixedUpdate();
         }
+
         levelIndex++;
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
 
         GameManager.SceneHandling.LoadScene(nextName, nextName != "Galaxies");
+        isPointCard = false;
     }
     IEnumerator ProceduralNextLevelUI() //Handles the UI that displays when you've completed the level, asynchronously loads the following level
     {
         if (currentProceduralGalaxy == null || currentProceduralGalaxy.Length == 0)
         {
             GameManager.SceneHandling.LoadScene("LevelGen", true);
+
             yield break;
         }
 
@@ -340,6 +353,8 @@ public class LevelManager : MonoBehaviour
             GameManager.SceneHandling.LoadScene("LevelGen", true);
             yield break;
         }
+
+        isPointCard = true;
         //enable things
         levelMenuAnimator.Play("ShowMenu");
         scoreText.enabled = true;
@@ -355,18 +370,23 @@ public class LevelManager : MonoBehaviour
             setUniverse?.Invoke(cU);
         }
         //determine next level string
+        string currentName = SceneManager.GetActiveScene().name;
         string sceneName = levelIndex < 4 ? SceneManager.GetActiveScene().name/*"Procedural Galaxy"*/ : "Galaxies";
         levelParams = currentProceduralGalaxy[Mathf.Clamp(levelIndex + 1, 0, currentProceduralGalaxy.Length-1)];
-        
+        chosenOption = false;
+
         while (!chosenOption)
         {
+
             yield return new WaitForFixedUpdate();
         }
+
         levelIndex = levelIndex < 4 ? levelIndex + 1 : 0;
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
 
         GameManager.SceneHandling.LoadScene(sceneName, sceneName != "Galaxies");
+        isPointCard = false;
     }
     void DetermineCurrentLevelIndex(bool determineProcedural)
     {
@@ -498,6 +518,7 @@ public class LevelManager : MonoBehaviour
     void UnpauseGame() => ballInput = true;
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
+        chosenOption = true;
         ballInput = true;
         levelComplete = false;
     }
