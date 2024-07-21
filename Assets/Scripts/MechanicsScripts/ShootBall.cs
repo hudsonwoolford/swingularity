@@ -199,7 +199,6 @@ public class ShootBall : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && Input.GetKey(KeyCode.LeftControl) && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
@@ -730,13 +729,13 @@ public class ShootBall : MonoBehaviour
         StopCoroutine(nameof(BallStillTiming));
         Vector3 velocity = rb.velocity;
         bool clockwise = DetermineOrbitType(velocity, hitPoint - hole.position);
-        StartCoroutine(StartAnimation(hole, hitPoint, velocity, clockwise, Vector3.Distance(hitPoint, hole.position)));
+        StartCoroutine(StartAnimation(hole, hitPoint, clockwise));
         yield return new WaitForSeconds(animLength);
         onHole?.Invoke();
         inPortal = false;
         triggerReset?.Invoke();
     }
-    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, Vector3 velocityDir, bool clockwise, float distance){
+    IEnumerator StartAnimation(Transform hole, Vector3 hitPoint, bool clockwise){
         holeAnim?.Invoke();
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
