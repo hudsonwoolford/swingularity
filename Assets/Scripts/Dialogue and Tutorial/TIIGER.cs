@@ -57,7 +57,7 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Interact()
     {
-        if(!isTransitioning && dialogueShown)
+        if(!isTransitioning && dialogueShown && !dialogueQueued)
         {
             dialogueController.DisplayNextParagraph();
         }
@@ -70,6 +70,8 @@ public class TIIGER : EventTalkableNPC
     {
         isTransitioning = true;
         GameManager.LevelManager.EnableBallInput(false);
+        dialogueController.EndConversation();
+
         Time.timeScale = 0;
 
         //animation
