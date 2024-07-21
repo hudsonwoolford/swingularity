@@ -20,7 +20,6 @@ public class CustomizeElement : MonoBehaviour
     public MaterialCustomizationElement matElement;
     [Header("Element References")]
     [SerializeField] Material[] whiteMaterials;
-    [SerializeField] TextMeshProUGUI labelTxt;
     [SerializeField] TextMeshProUGUI requiredSupernovaeTxt;
     [SerializeField] Button equipButton;
     [SerializeField] MeshRenderer materialElementRenderer;
@@ -40,7 +39,8 @@ public class CustomizeElement : MonoBehaviour
     }
     void UpdateUIElements()
     {
-        requiredSupernovaeTxt.text = matElement.requiredSupernovae.ToString();
+        string cost = matElement.requiredSupernovae.ToString("00000");
+        requiredSupernovaeTxt.text = cost;
         if(SaveLoadManager.currentGlobalSave!=null)
         {
             equipButton.interactable = SaveLoadManager.currentGlobalSave.totalSupernovae >= matElement.requiredSupernovae;
