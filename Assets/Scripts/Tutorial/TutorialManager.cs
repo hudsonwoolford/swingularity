@@ -12,6 +12,7 @@ public class TutorialManager : MonoBehaviour
     public TeachHoleTutorial teachHoleTutorial = new TeachHoleTutorial();
     public TeachHackMode teachHackMode = new TeachHackMode();
     public TeachResetTutorial resetTutorial = new TeachResetTutorial();
+    public TeachPause teachPause = new TeachPause();
     public TeachNothing teachNothing = new TeachNothing();
     public bool isPullingBack { get; private set; }
     TutorialState currentState;
@@ -83,6 +84,7 @@ public class TutorialManager : MonoBehaviour
         teachHoleTutorial.DisableState();
         teachHackMode.DisableState();
         resetTutorial.DisableState();
+        teachPause.DisableState();
     }
     #endregion
     #region Event Functions
@@ -302,13 +304,50 @@ public class TeachHackMode : TutorialState
     {
         GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("HideHackMode");
-        tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
+        tutorialManager.ChangeTutorialState(tutorialManager.teachPause);
         HackMode.onHackMode -= OnHackMode;
     }
     public override void DisableState()
     {
         hackModeParent.SetActive(false);
         HackMode.onHackMode -= OnHackMode;//safety
+        base.DisableState();
+    }
+}
+[System.Serializable]
+public class TeachPause : TutorialState
+{
+    [SerializeField] protected GameObject pauseParent;
+    public override void OnEnter(Animator ta, TutorialManager tm)
+    {
+        base.OnEnter(ta, tm);
+        PauseManager.pauseGame += OnPause;
+        pauseParent.SetActive(true);
+
+        GameManager.LevelManager.EnableBallInput(false);
+        tutorialAnimator.Play("TeachPauseTutorial");
+        tutorialAnimator.Play("PauseKeybindBlink");
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
+    }
+    void OnPause()
+    {
+        GameManager.LevelManager.EnableBallInput(true);
+        tutorialAnimator.Play("HidePauseTutorial");
+        tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
+        PauseManager.pauseGame -= OnPause;
+    }
+    
+    public override void DisableState()
+    {
+        pauseParent.SetActive(false);
+        PauseManager.pauseGame -= OnPause;//safety
         base.DisableState();
     }
 }
@@ -360,6 +399,7 @@ public class TeachResetTutorial : TutorialState
         base.DisableState();
     }
 }
+
 
 
 
