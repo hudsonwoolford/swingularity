@@ -31,6 +31,7 @@ public class CustomizeElement : MonoBehaviour
     public void InitElement()
     {
         UpdateUIElements();
+        equipButton.onClick.AddListener(() => setAstronautCustomization(matElement));
     }
     public void AnimateMaterialBalls(bool enable)
     {
@@ -56,7 +57,6 @@ public class CustomizeElement : MonoBehaviour
     {
         mpb = new MaterialPropertyBlock();
         ceAnimator = GetComponent<Animator>();
-        equipButton.onClick.AddListener(() => setAstronautCustomization(matElement));
     }
     private void OnValidate()
     {
@@ -64,7 +64,13 @@ public class CustomizeElement : MonoBehaviour
     }
     void SetAstronautMaterials(MaterialCustomizationElement mce)
     {
-
+        foreach (Material wm in whiteMaterials)
+        {
+            wm.SetColor("_Color", mce.matColor);
+            wm.SetFloat("_Metallic", mce.metallic);
+            wm.SetFloat("_Glossiness", mce.metallic);
+        }
+        Debug.Log("set");
     }
     private void OnEnable()
     {

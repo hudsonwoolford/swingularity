@@ -201,6 +201,7 @@ public class SaveLoadManager : MonoBehaviour
     public void IncrementSupernovae(int increment)
     {
         currentGlobalSave.totalSupernovae += increment;
+        SaveGlobalSave();
     }
     void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {

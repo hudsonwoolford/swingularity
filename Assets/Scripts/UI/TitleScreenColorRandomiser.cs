@@ -10,7 +10,7 @@ public class TitleScreenColorRandomiser : MonoBehaviour
     void Start(){
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
         int index = UnityEngine.Random.Range(0, 9);
-        while(index == 6){
+        while(index == 6 || index == 5){
             index = UnityEngine.Random.Range(0, 9);
         }
         blackHole.RandomHole(index);

@@ -48,7 +48,8 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Slider ngDifficultySldr;
     [SerializeField] TextMeshProUGUI difficultyNumber;
     [SerializeField] Gradient difficultyColorGrad;
-    [Header("Customization Element")]
+    [Header("Customization UI")]
+    [SerializeField] TextMeshProUGUI starCoinTxt;
     [SerializeField] Transform customizationParent;
     [SerializeField] GameObject customizationElement;
     [SerializeField] CustomizeElement.MaterialCustomizationElement[] materialCustomizationElements;
@@ -87,6 +88,10 @@ public class TitleScreenButtons : MonoBehaviour
         PopulateCustomizationElements();
         SetGalaxySize(1);
         UpdateDifficulty();
+        if(SaveLoadManager.currentGlobalSave!=null)
+        {
+            starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
+        }
         ngMenu = false;
         skybox.SetFloat("_Rotation", rotation);
         //normal ui

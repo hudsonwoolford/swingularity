@@ -452,7 +452,7 @@ public class LevelManager : MonoBehaviour
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
-        GameManager.SaveLoadManager.IncrementSupernovae(starTotal);
+        GameManager.SaveLoadManager.IncrementSupernovae(starTotal * currentUniverse.relativeDifficulty);
         setUniverse?.Invoke(universeParams);
         GameManager.SaveLoadManager.Save();
     }
