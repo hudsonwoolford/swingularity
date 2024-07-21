@@ -11,12 +11,13 @@ public class TIIGER : EventTalkableNPC
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
     [SerializeField] private Button skipButton;
+    [SerializeField] private MeshRenderer ballRenderer;
+    private Material hologramMaterial;
     private bool isTransitioning;
     public bool dialogueShown { get; private set; }
     public delegate void OnEnableDialogue(bool enable);
     public static OnEnableDialogue onEnableDialogue;
 
-    Material hologramMaterial;
 
     private void Awake()
     {
@@ -34,7 +35,7 @@ public class TIIGER : EventTalkableNPC
     {
         tgrAnimator.Play("DisableDialogue");
         skipButton.onClick.AddListener(() => dialogueController.EndConversation());
-        hologramMaterial = GetComponent<MeshRenderer>().material;
+        hologramMaterial = ballRenderer.GetComponent<MeshRenderer>().material;
     }
     protected override void Update()
     {

@@ -4907,7 +4907,8 @@ Transform:
   m_LocalPosition: {x: 58.022644, y: -496.00555, z: 332.12872}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 920148315392034271}
   m_Father: {fileID: 3685824261119620600}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5369,7 +5370,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -35, y: -26}
+  m_AnchoredPosition: {x: -35, y: -27.5}
   m_SizeDelta: {x: 725, y: 83.5}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &8943772923912243997
@@ -5436,7 +5437,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -18215,7 +18216,6 @@ GameObject:
   - component: {fileID: 920148315392034271}
   - component: {fileID: 6929038933184713917}
   - component: {fileID: 1927376794669189396}
-  - component: {fileID: 4258630169162446468}
   m_Layer: 17
   m_Name: T.I.I.G.E.R Ball
   m_TagString: Untagged
@@ -18231,11 +18231,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4336986446259678257}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 58.022644, y: -496.00555, z: 334.52872}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 140.59068, y: 140.59068, z: 140.59068}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 6750354794945834323}
+  m_Father: {fileID: 2668576944465883174}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6929038933184713917
@@ -18288,121 +18288,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4258630169162446468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4336986446259678257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3262009d1f0f36948816f67fd2141e62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventTriggeredDialogues:
-  - name: Earth_0 - Human Discovery
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Earth_0
-    dialogueText: {fileID: 11400000, guid: 96e01ed1cc397e743887c5624be06e80, type: 2}
-    numCalls: 0
-  - name: Earth_1 - Reaction to hole 1
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Earth_1
-    dialogueText: {fileID: 11400000, guid: 7da1a7131af23904daa7e8fa193ce9ef, type: 2}
-    numCalls: 0
-  - name: Earth_2 - Reaction to hole 2
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Earth_2
-    dialogueText: {fileID: 11400000, guid: 0d7889bc99028924ebfde676e8b095d4, type: 2}
-    numCalls: 0
-  - name: Desert_0-Meeting at desert galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Desert_0
-    dialogueText: {fileID: 11400000, guid: 54753d31f3921254ea2d08c57e6c7a5d, type: 2}
-    numCalls: 0
-  - name: Desert_4-Slight Acknowledgement
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Desert_4
-    dialogueText: {fileID: 11400000, guid: 7d281c044710ec9469ddc26610c8f420, type: 2}
-    numCalls: 0
-  - name: Fire_0-Introduction to Fire Galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Fire_0
-    dialogueText: {fileID: 11400000, guid: 2e313d3c2de70e54481d4d771d89d5b2, type: 2}
-    numCalls: 0
-  - name: Ice_0-Introduction to Ice Galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Ice_0
-    dialogueText: {fileID: 11400000, guid: 8664e1cbf10dbb94fbe8ae74f3383d22, type: 2}
-    numCalls: 0
-  - name: Goop_0-Discovers human in Goop Galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Goop_0
-    dialogueText: {fileID: 11400000, guid: 3841dbfab3ff1124ea50b265fad790ff, type: 2}
-    numCalls: 0
-  - name: Waste_0-Explanation of Caddi lore
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Waste_0
-    dialogueText: {fileID: 11400000, guid: 335fe220879edcc498ea351aa0bbb223, type: 2}
-    numCalls: 0
-  - name: Mythical_0-Reconsideration of humanity
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Mythical_0
-    dialogueText: {fileID: 11400000, guid: e1dacb026d50d304192eec9c6da0cabe, type: 2}
-    numCalls: 0
-  - name: Mythical_4-Congratulations
-    dialogueEvent: 2
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 1
-    allowedScenes:
-    - Mythical_4
-    dialogueText: {fileID: 11400000, guid: 693c50ff18920784fb5d373e1d928c9e, type: 2}
-    numCalls: 0
-  dialogueController: {fileID: 4909709126668849538}
-  tgrAnimator: {fileID: 7863821362741866646}
-  skipButton: {fileID: 8798063175844109583}
 --- !u!1 &4390808425102682816
 GameObject:
   m_ObjectHideFlags: 0
@@ -31940,6 +31825,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6750354794945834323}
+  - component: {fileID: 6876017216152914672}
   m_Layer: 0
   m_Name: TIIGER FULL
   m_TagString: Untagged
@@ -31959,11 +31845,126 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 920148315392034271}
   - {fileID: 3685824261119620600}
   m_Father: {fileID: 3603051198868054648}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6876017216152914672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8231728948407191182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3262009d1f0f36948816f67fd2141e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventTriggeredDialogues:
+  - name: Earth_0 - Human Discovery
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Earth_0
+    dialogueText: {fileID: 11400000, guid: 96e01ed1cc397e743887c5624be06e80, type: 2}
+    numCalls: 0
+  - name: Earth_1 - Reaction to hole 1
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Earth_1
+    dialogueText: {fileID: 11400000, guid: 7da1a7131af23904daa7e8fa193ce9ef, type: 2}
+    numCalls: 0
+  - name: Earth_2 - Reaction to hole 2
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Earth_2
+    dialogueText: {fileID: 11400000, guid: 0d7889bc99028924ebfde676e8b095d4, type: 2}
+    numCalls: 0
+  - name: Desert_0-Meeting at desert galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Desert_0
+    dialogueText: {fileID: 11400000, guid: 54753d31f3921254ea2d08c57e6c7a5d, type: 2}
+    numCalls: 0
+  - name: Desert_4-Slight Acknowledgement
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Desert_4
+    dialogueText: {fileID: 11400000, guid: 7d281c044710ec9469ddc26610c8f420, type: 2}
+    numCalls: 0
+  - name: Fire_0-Introduction to Fire Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Fire_0
+    dialogueText: {fileID: 11400000, guid: 2e313d3c2de70e54481d4d771d89d5b2, type: 2}
+    numCalls: 0
+  - name: Ice_0-Introduction to Ice Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Ice_0
+    dialogueText: {fileID: 11400000, guid: 8664e1cbf10dbb94fbe8ae74f3383d22, type: 2}
+    numCalls: 0
+  - name: Goop_0-Discovers human in Goop Galaxy
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Goop_0
+    dialogueText: {fileID: 11400000, guid: 3841dbfab3ff1124ea50b265fad790ff, type: 2}
+    numCalls: 0
+  - name: Waste_0-Explanation of Caddi lore
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Waste_0
+    dialogueText: {fileID: 11400000, guid: 335fe220879edcc498ea351aa0bbb223, type: 2}
+    numCalls: 0
+  - name: Mythical_0-Reconsideration of humanity
+    dialogueEvent: 0
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Mythical_0
+    dialogueText: {fileID: 11400000, guid: e1dacb026d50d304192eec9c6da0cabe, type: 2}
+    numCalls: 0
+  - name: Mythical_4-Congratulations
+    dialogueEvent: 2
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 1
+    allowedScenes:
+    - Mythical_4
+    dialogueText: {fileID: 11400000, guid: 693c50ff18920784fb5d373e1d928c9e, type: 2}
+    numCalls: 0
+  dialogueController: {fileID: 4909709126668849538}
+  tgrAnimator: {fileID: 7863821362741866646}
+  skipButton: {fileID: 8798063175844109583}
+  ballRenderer: {fileID: 1927376794669189396}
 --- !u!1 &8242003350059857079
 GameObject:
   m_ObjectHideFlags: 0
