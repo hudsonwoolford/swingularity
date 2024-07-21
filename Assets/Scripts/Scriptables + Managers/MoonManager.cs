@@ -163,6 +163,7 @@ public class MoonManager : MonoBehaviour
         {
             mockProgress += Mathf.PI * 2 / points;
             Vector3 dir = RotateAround(rotation, new Vector3(centre.x + semiMajorAxis * Mathf.Cos(mockProgress), centre.y + semiMinorAxis * Mathf.Sin(mockProgress)), orbitPlanet.transform.position);
+            dir.z = 15;
             lr.SetPosition(i, dir);
         }
     }

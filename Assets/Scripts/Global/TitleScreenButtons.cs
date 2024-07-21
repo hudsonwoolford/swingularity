@@ -54,7 +54,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] GameObject customizationElement;
     [SerializeField] CustomizeElement.MaterialCustomizationElement[] materialCustomizationElements;
     [SerializeField] float customizationHeightJump, customizationWidthJump;
-    [SerializeField] int customizationColumns, customizationRows;
+    [SerializeField] int customizationColumns;
     [Header("Miscellaneous Params")]
     [SerializeField] Button shopBackBtn;
     [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
@@ -506,15 +506,28 @@ public class TitleScreenButtons : MonoBehaviour
     void PopulateCustomizationElements()
     {
         customizeElements = new CustomizeElement[materialCustomizationElements.Length];
+        int numRows = Mathf.CeilToInt(materialCustomizationElements.Length / customizationColumns);
+
+        int columnTracker = 0;
+        int rowTracker = 0;
         for (int i = 0; i < materialCustomizationElements.Length; i++)
         {
+
             CustomizeElement cE = Instantiate(customizationElement, customizationParent).GetComponent<CustomizeElement>();
             customizeElements[i] = cE;
 
-            cE.transform.localPosition = new Vector3(customizationWidthJump, 0, 0) * (i % customizationRows) + new Vector3(0, customizationHeightJump, 0) * (i % customizationColumns);
+            cE.transform.localPosition =new Vector3(columnTracker * customizationWidthJump, rowTracker * customizationHeightJump, 0);
 
             cE.matElement = materialCustomizationElements[i];
             cE.InitElement();
+
+            columnTracker++;
+            if(columnTracker % customizationColumns == 0)
+            {
+                columnTracker %= customizationColumns;
+                rowTracker++;
+            }
+
         }
     }
     #endregion
