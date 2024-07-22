@@ -12,11 +12,14 @@ public class PauseManager : MonoBehaviour
     public static PauseGame pauseGame;
     public delegate void UnpauseGame();
     public static UnpauseGame unpauseGame;
-
+    
     [SerializeField]
     string[] dontPauseScene;
+    [SerializeField]
+    Sprite[] pauseButtonSprites;
     Canvas pausecanvas;
     bool settingsMenu;
+    bool isDontPauseScene;
 
     Animator pauseAnim;
 
@@ -30,6 +33,7 @@ public class PauseManager : MonoBehaviour
     void Start()
     {
         settingsCanvas.enabled = false;
+        pauseAnim.Play("DisablePauseMenu");
     }
 
     // Update is called once per frame
@@ -44,13 +48,7 @@ public class PauseManager : MonoBehaviour
         {
             if(!paused)
             {
-                foreach (string s in dontPauseScene)
-                {
-                    if (SceneManager.GetActiveScene().name == s)
-                    {
-                        return;
-                    }
-                }
+                if(isDontPauseScene) { return; }
                 pauseGame?.Invoke();
             }
             else{
@@ -69,33 +67,40 @@ public class PauseManager : MonoBehaviour
     {
         paused = true;
         Time.timeScale = 0;
-        pauseAnim.Play("ShowMenu");
+        pauseAnim.Play("ShowPauseMenu");
         settingsMenu = false;
     }
     void Unpause()
     {
         paused = false;
         Time.timeScale = 1;
-        pauseAnim.Play("HideMenu");
+        pauseAnim.Play("HidePauseMenu");
         settingsMenu = false;
+    }
+    public void PauseButton()
+    {
+        if (!paused)
+        {
+            pauseGame?.Invoke();
+        }
     }
     public void SettingsButton()
     {
         //settingsCanvas.enabled = true;
         SettingsManager.enableSettingsMenu?.Invoke(true);
-        pauseAnim.Play("HideMenu");
+        pauseAnim.Play("HidePauseMenu");
         settingsMenu = true;
     }
     void SettingsBackButton(bool enable)
     {
         if(enable || !settingsMenu) { return; }
-        pauseAnim.Play("ShowMenu");
+        pauseAnim.Play("ShowPauseMenu");
         settingsMenu = false;
     }
     void EscapeSettings()
     {
         SettingsManager.enableSettingsMenu?.Invoke(false);
-        pauseAnim.Play("ShowMenu");
+        pauseAnim.Play("ShowPauseMenu");
         settingsMenu = false;
     }
     public void RestartGalaxy()
@@ -111,14 +116,30 @@ public class PauseManager : MonoBehaviour
     {
         unpauseGame?.Invoke();
     }
+    void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        foreach (string s in dontPauseScene)
+        {
+           if(scene.name==s)
+           {
+                isDontPauseScene = true;
+                pausecanvas.enabled = false;
+                return;
+           }
+           isDontPauseScene = false;
+        }
+        pausecanvas.enabled = true;
+    }
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsBackButton;
         pauseGame += Pause;
         unpauseGame += Unpause;
     }
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsBackButton;
         pauseGame -= Pause;
         unpauseGame -= Unpause;
