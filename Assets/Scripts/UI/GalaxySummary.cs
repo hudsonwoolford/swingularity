@@ -18,7 +18,8 @@ public class GalaxySummary : MonoBehaviour
     [SerializeField] TextMeshProUGUI universeSeedTxt;
     [SerializeField] TextMeshProUGUI universeShotsTxt;
     [SerializeField] TextMeshProUGUI universeTimeTxt;
-    [SerializeField] TextMeshProUGUI universeProgressTxt;
+    [SerializeField] TextMeshProUGUI universeProgressNumTxt;
+    [SerializeField] TextMeshProUGUI universeProgressPercTxt;
     [SerializeField] Slider progressSlider;
     [SerializeField] Image progressSliderFill;
     [SerializeField] TextMeshProUGUI universeStarsTxt;
@@ -78,7 +79,9 @@ public class GalaxySummary : MonoBehaviour
         //progress
         float numPossibleStars = uni.numGalaxies * 5f == 0 ? 1 : uni.numGalaxies * 5f;
         float progress = (float)uni.numStars / (numPossibleStars);
-        universeProgressTxt.text = "Progress: " + SetColor(Mathf.RoundToInt(progress*100).ToString(), colorGrad.Evaluate(1 - progress));
+        universeProgressNumTxt.text = Mathf.RoundToInt(progress * 100).ToString();
+        universeProgressNumTxt.color = colorGrad.Evaluate(1 - progress);
+        universeProgressPercTxt.color = colorGrad.Evaluate(1 - progress);
         progressSlider.value = progress;
         progressSliderFill.color = colorGrad.Evaluate(1 - progress);
         //shots and time
