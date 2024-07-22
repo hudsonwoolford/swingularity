@@ -421,9 +421,14 @@ public class LevelManager : MonoBehaviour
     }
     public void RestartGalaxy()
     {
-        initSystem?.Invoke(currentGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
+        if(!procedural)
+        {
+            initSystem?.Invoke(currentGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
+        }
+        levelIndex = 0;
         if(procedural)
         {
+            initProceduralSystem?.Invoke(currentGalaxy, currentProceduralGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
             levelParams = currentProceduralGalaxy[0];
         }
         GameManager.SceneHandling.LoadScene(currentGalaxy[0], true);
