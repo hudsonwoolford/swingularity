@@ -147,13 +147,26 @@ public class MappingHandling : MonoBehaviour
         deathMessageIndex                       = index;
         ShowDeathMessage();
     }
+    void Pause(){
+        flagArrow.gameObject.SetActive(false);
+        ballArrow.gameObject.SetActive(false);
+    }
+    void UnPause(){
+        flagArrow.gameObject.SetActive(true);
+        ballArrow.gameObject.SetActive(true);
+    }
     private void OnEnable()
     {
         ShootBall.death += SetDeathMessage;
+        PauseManager.pauseGame -= Pause;
+        PauseManager.unpauseGame -= UnPause;
     }
     private void OnDisable()
     {
         ShootBall.death -= SetDeathMessage;
+        PauseManager.pauseGame -= Pause;
+        PauseManager.unpauseGame += UnPause;
+
 
     }
     private void OnDrawGizmosSelected()
