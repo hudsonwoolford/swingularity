@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -46,6 +47,10 @@ public class SaveLoadManager : MonoBehaviour
         }
         RetrieveUniverseSaves();
         LoadSettings();
+        if(saves.Length > 0)
+        {
+            Load(saves[0].Name);
+        }
     }
     void Start()
     {
@@ -72,6 +77,7 @@ public class SaveLoadManager : MonoBehaviour
             trackRealSave.Add(saveFiles[i]);
         }
         saves = trackRealSave.ToArray();
+        Array.Sort(saves, (s1, s2) => s2.LastAccessTime.CompareTo(s1.LastAccessTime));
     }
     #region Setting Saving
     void SettingsEnabled(bool enable)
