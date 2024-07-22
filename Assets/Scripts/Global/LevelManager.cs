@@ -335,7 +335,13 @@ public class LevelManager : MonoBehaviour
         levelIndex++;
         chosenOption = false;
         levelMenuAnimator.Play("DisableMenu");
-
+        
+        if(nextName == "Credits")
+        {
+            GameManager.SceneHandling.LoadScene(nextName, false);
+            isPointCard = false;
+            yield break;
+        }
         GameManager.SceneHandling.LoadScene(nextName, nextName != "Galaxies");
         isPointCard = false;
     }
