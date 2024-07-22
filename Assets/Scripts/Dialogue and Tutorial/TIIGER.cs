@@ -10,7 +10,6 @@ public class TIIGER : EventTalkableNPC
 
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
-    [SerializeField] private Button skipButton;
     [SerializeField] private MeshRenderer ballRenderer;
     private Material hologramMaterial;
     private bool isTransitioning;
@@ -34,7 +33,6 @@ public class TIIGER : EventTalkableNPC
     private void Start()
     {
         tgrAnimator.Play("DisableDialogue");
-        skipButton.onClick.AddListener(() => SkipConversation());
         hologramMaterial = ballRenderer.GetComponent<MeshRenderer>().material;
     }
     public void SkipConversation()

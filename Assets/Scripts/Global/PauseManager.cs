@@ -23,11 +23,13 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     string[] dontPauseScene;
     [SerializeField] Image pauseImage;
-    [SerializeField]
-    Sprite[] pauseButtonSprites;
+    [SerializeField] Sprite[] pauseButtonSprites;
+    [SerializeField] Button yesTutorialBtn;
+    [SerializeField] Button noTutorialBtn;
     Canvas pausecanvas;
     bool settingsMenu;
     bool isDontPauseScene;
+    bool openTutorialComfirmation;
 
     Animator pauseAnim;
     PauseButtonState pauseState;
@@ -45,6 +47,9 @@ public class PauseManager : MonoBehaviour
         settingsCanvas.enabled = false;
         pauseState = PauseButtonState.Normal;
         pauseAnim.Play("DisablePauseMenu");
+
+        yesTutorialBtn.onClick.AddListener(() => TutorialComfirmationButton(true));
+        noTutorialBtn.onClick.AddListener(() => TutorialComfirmationButton(false));
     }
 
     // Update is called once per frame
@@ -71,7 +76,7 @@ public class PauseManager : MonoBehaviour
     #region Input & Buttons
     void PauseInput()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard)
+        if (Input.GetKeyDown(KeyCode.Escape) & !TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard && !openTutorialComfirmation)
         {
             if(!paused)
             {
@@ -96,7 +101,7 @@ public class PauseManager : MonoBehaviour
         switch (pauseState)
         {
             case PauseButtonState.Normal:
-                if (!TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard)
+                if (!TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard && !openTutorialComfirmation)
                 {
                     pauseGame?.Invoke();
                 }
@@ -110,7 +115,8 @@ public class PauseManager : MonoBehaviour
             case PauseButtonState.Cross:
                 if (TutorialManager.instance != null)
                 {
-                    TutorialManager.instance.CompleteTutorial();
+                    pauseAnim.Play("ShowTutorialComfirmation", 1);
+                    openTutorialComfirmation = true;
                 }
                 break;
             default:
@@ -150,6 +156,19 @@ public class PauseManager : MonoBehaviour
     {
         unpauseGame?.Invoke();
     }
+    void TutorialComfirmationButton(bool comfirm)
+    {
+        if (comfirm)
+        {
+            pauseAnim.Play("HideTutorialComfirmation");
+            TutorialManager.instance.CompleteTutorial();
+        }
+        else
+        {
+            pauseAnim.Play("HideTutorialComfirmation");
+        }
+        openTutorialComfirmation = false;
+    }
     #endregion
     #region Event Functions
     void UpdatePauseState()
@@ -166,6 +185,10 @@ public class PauseManager : MonoBehaviour
             }
             else
             {
+                if (openTutorialComfirmation)
+                {
+                    TutorialComfirmationButton(false);
+                }
                 pauseState = PauseButtonState.Normal;
             }
         }

@@ -34,6 +34,7 @@ public class CameraFollow : MonoBehaviour
         targetCameraSize = cameraSize;
         innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
 
+
         MasterStart();
     }  
     public void SetTargetZoom(float targetZoom) //this should be only called from tutorial
@@ -57,7 +58,7 @@ public class CameraFollow : MonoBehaviour
     void MasterStart()
     {
         flag = GameObject.FindGameObjectWithTag("Hole").transform;
-        transform.position = new Vector3(startPos.x, startPos.y, transform.position.z);
+        transform.position = new Vector3(ball.position.x, ball.position.y, -10);
 
         if (cameraPath == null) 
         {
