@@ -310,6 +310,14 @@ public class TeachHoleTutorial : TutorialState
         GameManager.LevelManager.EnableBallInput(true);
         tutorialManager.ChangeTutorialState(tutorialManager.teachNothing);
     }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        if(GameManager.LevelManager.isPointCard && tutorialParent.activeInHierarchy)
+        {
+            DisableState();
+        }
+    }
     public override void EnableState()
     {
         base.EnableState();
@@ -408,6 +416,7 @@ public class TeachPause : TutorialState
 public class TeachResetTutorial : TutorialState
 {
     protected bool ballReset = false;
+    protected bool ballShot = false;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
@@ -433,6 +442,7 @@ public class TeachResetTutorial : TutorialState
     }
     void OnBallShoot()
     {
+        ballShot = true;
         ShootBall.onShoot -= OnBallShoot;
         tutorialManager.CallCoroutine(ResetTutorial());
     }
@@ -444,6 +454,7 @@ public class TeachResetTutorial : TutorialState
     }
     public override void EnableState()
     {
+        if(!ballShot) { return; }
         base.EnableState();
     }
     public override void DisableState()
