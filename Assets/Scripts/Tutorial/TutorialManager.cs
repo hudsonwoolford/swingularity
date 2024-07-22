@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static TutorialManager instance;
     [SerializeField] Animator tutorialAnimator;
     Transform playerBall;
     public ScrollPanTutorial scrollPanTutorial = new ScrollPanTutorial();
@@ -16,6 +17,18 @@ public class TutorialManager : MonoBehaviour
     public TeachNothing teachNothing = new TeachNothing();
     public bool isPullingBack { get; private set; }
     TutorialState currentState;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }    
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
     private IEnumerator Start()
     {
         if(!SettingsManager.userSettings.hints) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); yield break; }

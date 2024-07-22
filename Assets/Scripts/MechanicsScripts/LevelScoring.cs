@@ -59,7 +59,6 @@ public class LevelScoring : MonoBehaviour
         powerText.text = "——";
     }
     private void Update(){
-        levelCanvas.enabled = !LevelManager.levelComplete;
         if (shootBall.liningUpShot)
         {
             powerText.text = Mathf.CeilToInt(shootBall.shootPower).ToString();

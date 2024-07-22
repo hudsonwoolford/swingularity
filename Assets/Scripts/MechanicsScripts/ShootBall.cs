@@ -259,7 +259,7 @@ public class ShootBall : MonoBehaviour
             foreach(Material mat in astronautFadeMats){
                 mat.SetFloat("_Cutoff", 1 - progress);    
             }
-            timeCounter += Time.deltaTime;
+            timeCounter += Time.unscaledDeltaTime;
             yield return null;
         }
         timeCounter = 0;
@@ -288,7 +288,7 @@ public class ShootBall : MonoBehaviour
             foreach(Material mat in astronautFadeMats){
                 mat.SetFloat("_Cutoff", progress);    
             }
-            timeCounter += Time.deltaTime;
+            timeCounter += Time.unscaledDeltaTime;
             yield return null;
         }
         foreach(Material mat in astronautFadeMats){

@@ -34,8 +34,12 @@ public class TIIGER : EventTalkableNPC
     private void Start()
     {
         tgrAnimator.Play("DisableDialogue");
-        skipButton.onClick.AddListener(() => dialogueController.EndConversation());
+        skipButton.onClick.AddListener(() => SkipConversation());
         hologramMaterial = ballRenderer.GetComponent<MeshRenderer>().material;
+    }
+    public void SkipConversation()
+    {
+        dialogueController.EndConversation();
     }
     protected override void Update()
     {

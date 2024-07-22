@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using static GalaxyGenerator;
 
 public class PauseManager : MonoBehaviour
 {
+    enum PauseButtonState
+    { 
+        Normal,
+        Skip,
+        Cross
+    }
+
     [SerializeField] Canvas settingsCanvas;
     public delegate void PauseGame();
     public static PauseGame pauseGame;
@@ -15,6 +22,7 @@ public class PauseManager : MonoBehaviour
     
     [SerializeField]
     string[] dontPauseScene;
+    [SerializeField] Image pauseImage;
     [SerializeField]
     Sprite[] pauseButtonSprites;
     Canvas pausecanvas;
@@ -22,8 +30,10 @@ public class PauseManager : MonoBehaviour
     bool isDontPauseScene;
 
     Animator pauseAnim;
+    PauseButtonState pauseState;
 
     public static bool paused;
+
     private void Awake()
     {
         pausecanvas = GetComponent<Canvas>();
@@ -33,6 +43,7 @@ public class PauseManager : MonoBehaviour
     void Start()
     {
         settingsCanvas.enabled = false;
+        pauseState = PauseButtonState.Normal;
         pauseAnim.Play("DisablePauseMenu");
     }
 
@@ -40,8 +51,24 @@ public class PauseManager : MonoBehaviour
     void Update()
     {
         if (paused && Time.timeScale != 0) { Time.timeScale = 0; }
+        UpdatePauseState();
         PauseInput();
     }
+    void Pause()
+    {
+        paused = true;
+        Time.timeScale = 0;
+        pauseAnim.Play("ShowPauseMenu");
+        settingsMenu = false;
+    }
+    void Unpause()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        pauseAnim.Play("HidePauseMenu");
+        settingsMenu = false;
+    }
+    #region Input & Buttons
     void PauseInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard)
@@ -63,26 +90,33 @@ public class PauseManager : MonoBehaviour
             }
         }
     }
-    void Pause()
-    {
-        paused = true;
-        Time.timeScale = 0;
-        pauseAnim.Play("ShowPauseMenu");
-        settingsMenu = false;
-    }
-    void Unpause()
-    {
-        paused = false;
-        Time.timeScale = 1;
-        pauseAnim.Play("HidePauseMenu");
-        settingsMenu = false;
-    }
     public void PauseButton()
     {
-        if (!paused)
+        UpdatePauseState();
+        switch (pauseState)
         {
-            pauseGame?.Invoke();
+            case PauseButtonState.Normal:
+                if (!TIIGER.Instance.dialogueShown && !SceneHandling.loadingScreen && !GameManager.LevelManager.isPointCard)
+                {
+                    pauseGame?.Invoke();
+                }
+                break;
+            case PauseButtonState.Skip:
+                if(TIIGER.Instance != null)
+                {
+                    TIIGER.Instance.SkipConversation();
+                }
+                break;
+            case PauseButtonState.Cross:
+                if (TutorialManager.instance != null)
+                {
+                    TutorialManager.instance.CompleteTutorial();
+                }
+                break;
+            default:
+                break;
         }
+        UpdatePauseState();
     }
     public void SettingsButton()
     {
@@ -116,6 +150,39 @@ public class PauseManager : MonoBehaviour
     {
         unpauseGame?.Invoke();
     }
+    #endregion
+    #region Event Functions
+    void UpdatePauseState()
+    {
+        if(TIIGER.Instance.dialogueShown)
+        {
+            pauseState = PauseButtonState.Skip;
+        }
+        else
+        {
+            if(TutorialManager.instance != null)
+            {
+                pauseState = PauseButtonState.Cross;
+            }
+            else
+            {
+                pauseState = PauseButtonState.Normal;
+            }
+        }
+        switch (pauseState) {
+            case PauseButtonState.Normal:
+                pauseImage.sprite = pauseButtonSprites[0];
+                break;
+            case PauseButtonState.Skip:
+                pauseImage.sprite = pauseButtonSprites[1];
+                break;
+            case PauseButtonState.Cross:
+                pauseImage.sprite = pauseButtonSprites[2];
+                break;
+            default:
+                break;
+        }
+    }
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         foreach (string s in dontPauseScene)
@@ -130,8 +197,13 @@ public class PauseManager : MonoBehaviour
         }
         pausecanvas.enabled = true;
     }
+    void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor)
+    {
+        pausecanvas.enabled = false;
+    }
     private void OnEnable()
     {
+        LevelScoring.onScore += OnScore;
         SceneManager.sceneLoaded += OnSceneLoad;
         SettingsManager.enableSettingsMenu += SettingsBackButton;
         pauseGame += Pause;
@@ -139,10 +211,11 @@ public class PauseManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        LevelScoring.onScore -= OnScore;
         SceneManager.sceneLoaded -= OnSceneLoad;
         SettingsManager.enableSettingsMenu -= SettingsBackButton;
         pauseGame -= Pause;
         unpauseGame -= Unpause;
     }
-
+    #endregion
 }
