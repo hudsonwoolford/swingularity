@@ -60,6 +60,7 @@ public class QuasarGenerator : MonoBehaviour
     Material distortMat;
     CelestialMass cMass;
     BoxCollider bCollider;
+    BoxCollider zoneCollider;
 
     float intervalTime = 0;
     int currentInterval = 0;
@@ -156,6 +157,7 @@ public class QuasarGenerator : MonoBehaviour
         lowerBeamParent.localScale = new Vector3(lowerBeamParent.localScale.x, Mathf.Max(radius - 0.255f, 0), lowerBeamParent.localScale.z);
         upperBeamParent.localScale = new Vector3(upperBeamParent.localScale.x, radius, upperBeamParent.localScale.z);
         bCollider.size = new Vector3(1, Mathf.Max(radius * 8.25f, 0.1f), 1);
+        zoneCollider.size = new Vector3(1, Mathf.Max(maxRadius * 8.25f, 0.1f), 1);
         bCollider.enabled = radius == 0 ? false : true;
         bool shrinking = maxRadius <= radius ? false : true;
         if(Application.isPlaying)
@@ -291,6 +293,7 @@ public class QuasarGenerator : MonoBehaviour
         if (distortionQuad == null) { distortionQuad = distortRenderer.transform; }
         if (cMass == null) { cMass = GetComponent<CelestialMass>(); }
         if (bCollider == null) { bCollider = GetComponent<BoxCollider>(); }
+        if (zoneCollider == null) { zoneCollider = transform.GetChild(0).GetComponent<BoxCollider>(); }
         //Property block null checks
         if (sphereBlock == null) { sphereBlock = new MaterialPropertyBlock(); }
         if (distortBlock == null) { distortBlock = new MaterialPropertyBlock(); }

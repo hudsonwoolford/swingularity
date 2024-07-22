@@ -78,6 +78,7 @@ public class ShootBall : MonoBehaviour
     bool inPortal;
 
     bool swingHit;
+    bool collidedWithNoZone = false;
 
     bool movedAstronaut = false;
     GameObject childObj;
@@ -206,6 +207,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
+
             ballStillTimer += Time.deltaTime;
             if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length < 2)
             {
@@ -720,6 +722,15 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(ResetDelay(0.3f, other.gameObject));
 
+        }
+        print("o");
+        if(other.gameObject.CompareTag("NoShotZone")){
+            collidedWithNoZone = true;
+        }
+    }
+    private void OnTriggerExit(Collider other) {
+        if(other.gameObject.CompareTag("NoShotZone")){
+            collidedWithNoZone = false;
         }
     }
     IEnumerator FinishedLevel(Transform hole, Vector3 hitPoint)
