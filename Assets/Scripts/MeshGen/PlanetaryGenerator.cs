@@ -27,13 +27,14 @@ public class PlanetaryGenerator : MonoBehaviour
     #region CraterGeneration
     private static Crater[] GenerateRandomCraters(Vector3[] vertices, TerrainVar terrainVar)
     {
-        List<Crater> craters = new List<Crater>(terrainVar.craterSettings.numCraters);
+        List<Crater> craters = new List<Crater>(terrainVar.craterSettings.numCraters); //crater list
         UnityEngine.Random.InitState(terrainVar.generalSettings.seed);
         for (int i = 0; i < terrainVar.craterSettings.numCraters; i++)
         {
             float radius = Mathf.Lerp(terrainVar.craterSettings.minCraterSize, terrainVar.craterSettings.maxCraterSize, ApplyBias(UnityEngine.Random.value, terrainVar.craterSettings.craterBias));
             Vector3 centre = UnityEngine.Random.onUnitSphere;
             float floorHeight = UnityEngine.Random.Range(-0.25f, 0f);
+            //check for intersection
             bool intersecting = false;
             for(int u = 0; u < craters.Count; u++){
                 if (Vector3.Distance(centre, craters[u].centre) <= craters[u].radius + radius + 2 * terrainVar.craterSettings.rimWidth / terrainVar.craterSettings.craterIntersectionTolerance){
@@ -41,7 +42,8 @@ public class PlanetaryGenerator : MonoBehaviour
                     break;
                 }
             }
-            if (!intersecting){
+            if (!intersecting) //only allow non intersection
+            { 
                 Crater crater = new Crater(radius, centre, floorHeight);
                 craters.Add(crater);
             }
