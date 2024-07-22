@@ -122,12 +122,30 @@ public class TutorialManager : MonoBehaviour
             playerBall = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
+    void OnGamePause()
+    {
+        if(currentState != null)
+        {
+            currentState.DisableState();
+        }
+    }
+    void OnGameUnpause()
+    {
+        if (currentState != null)
+        {
+            currentState.EnableState();
+        }
+    }
     private void OnEnable()
     {
+        PauseManager.pauseGame += OnGamePause;
+        PauseManager.unpauseGame += OnGameUnpause;
         SceneManager.sceneLoaded += OnSceneLoad;
     }
     private void OnDisable()
     {
+        PauseManager.unpauseGame -= OnGameUnpause;
+        PauseManager.pauseGame -= OnGamePause;
         SceneManager.sceneLoaded -= OnSceneLoad;
         GameManager.LevelManager.EnableBallInput(true);
     }
@@ -136,6 +154,7 @@ public class TutorialManager : MonoBehaviour
 [System.Serializable]
 public abstract class TutorialState
 {
+    [SerializeField] protected GameObject tutorialParent;
     protected TutorialManager tutorialManager;
     protected Animator tutorialAnimator;
     public virtual void OnEnter(Animator ta, TutorialManager tm)
@@ -151,15 +170,20 @@ public abstract class TutorialState
     {
         //called when tutorial state progressed
     }
+    public virtual void EnableState()
+    {
+        tutorialParent.SetActive(true);
+        //enable state
+    }
     public virtual void DisableState()
     {
+        tutorialParent.SetActive(false);
         //disable state
     }
 }
 [System.Serializable]
 public class ScrollPanTutorial : TutorialState
 {
-    [SerializeField] protected GameObject scrollPanParent;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
@@ -167,7 +191,7 @@ public class ScrollPanTutorial : TutorialState
     }
     private IEnumerator EnterScrollPan()
     {
-        scrollPanParent.SetActive(true);
+        tutorialParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachScroll");
         tutorialAnimator.Play("ScrollAnim");
@@ -192,20 +216,22 @@ public class ScrollPanTutorial : TutorialState
         }
         tutorialAnimator.Play("HideScrollPan");
         yield return new WaitForSecondsRealtime(0.3f);
-        scrollPanParent.SetActive(false);
+        tutorialParent.SetActive(false);
         GameManager.LevelManager.EnableBallInput(true);
         tutorialManager.ChangeTutorialState(tutorialManager.ballInputTutorial);
+    }
+    public override void EnableState()
+    {
+        base.EnableState();
     }
     public override void DisableState()
     {
         base.DisableState();
-        scrollPanParent.SetActive(false);
     }
 }
 [System.Serializable]
 public class BallInputTutorial : TutorialState
 {
-    [SerializeField]protected GameObject ballInputParent;
     [SerializeField]protected Transform fakeCursor;
     [SerializeField]protected LineRenderer ballToCursorLR;
     protected Transform playerBall;
@@ -223,15 +249,15 @@ public class BallInputTutorial : TutorialState
         base.OnUpdate();
         if (shootBall.liningUpShot)
         {
-            if (ballInputParent.activeInHierarchy)
+            if (tutorialParent.activeInHierarchy)
             {
-                ballInputParent.SetActive(false);
+                tutorialParent.SetActive(false);
             }
             return;
         }
-        if (!ballInputParent.activeInHierarchy)
+        if (!tutorialParent.activeInHierarchy)
         {
-            ballInputParent.SetActive(true);
+            tutorialParent.SetActive(true);
         }
         if (tutorialManager.isPullingBack)
         {
@@ -249,17 +275,19 @@ public class BallInputTutorial : TutorialState
         tutorialManager.ChangeTutorialState(tutorialManager.teachHoleTutorial);
         ShootBall.onShoot -= OnBallShoot;
     }
+    public override void EnableState()
+    {
+        base.EnableState();
+    }
     public override void DisableState()
     {
         base.DisableState();
         ShootBall.onShoot -= OnBallShoot;//safety
-        ballInputParent.SetActive(false);
     }
 }
 [System.Serializable]
 public class TeachHoleTutorial : TutorialState
 {
-    [SerializeField] protected GameObject teachHoleParent;
     protected CameraFollow cameraFollow;
     Coroutine holeCoroutine;
     public override void OnEnter(Animator ta, TutorialManager tm)
@@ -273,20 +301,23 @@ public class TeachHoleTutorial : TutorialState
         GameManager.LevelManager.EnableBallInput(false);
         cameraFollow.SetTargetZoom(12);
         Time.timeScale = 0.2f;
-        teachHoleParent.SetActive(true);
+        tutorialParent.SetActive(true);
         tutorialAnimator.Play("TeachHoleTutorial");
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSeconds(3f * 0.2f);
         tutorialAnimator.Play("HideHoleTutorial");
-        yield return new WaitForSecondsRealtime(0.3f);
+        yield return new WaitForSeconds(0.3f * 0.2f);
         Time.timeScale = 1;
         GameManager.LevelManager.EnableBallInput(true);
         tutorialManager.ChangeTutorialState(tutorialManager.teachNothing);
+    }
+    public override void EnableState()
+    {
+        base.EnableState();
     }
     public override void DisableState()
     {
         base.DisableState();
         if(holeCoroutine != null) { tutorialManager.StopCallCoroutine(holeCoroutine); Time.timeScale = 1; }
-        teachHoleParent.SetActive(false);
     }
 }
 [System.Serializable]
@@ -297,12 +328,11 @@ public class TeachNothing : TutorialState
 [System.Serializable]
 public class TeachHackMode : TutorialState
 {
-    [SerializeField] protected GameObject hackModeParent;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
         HackMode.onHackMode += OnHackMode;
-        hackModeParent.SetActive(true);
+        tutorialParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachHackMode");
         tutorialAnimator.Play("HackModeKeybindBlink");
@@ -313,7 +343,7 @@ public class TeachHackMode : TutorialState
     }
     public override void OnExit()
     {
-        hackModeParent.SetActive(false);
+        tutorialParent.SetActive(false);
         HackMode.onHackMode -= OnHackMode;//safety
         base.OnExit();
     }
@@ -324,22 +354,24 @@ public class TeachHackMode : TutorialState
         tutorialManager.ChangeTutorialState(tutorialManager.teachPause);
         HackMode.onHackMode -= OnHackMode;
     }
+    public override void EnableState()
+    {
+        base.EnableState();
+    }
     public override void DisableState()
     {
-        hackModeParent.SetActive(false);
-        HackMode.onHackMode -= OnHackMode;//safety
         base.DisableState();
+        HackMode.onHackMode -= OnHackMode;//safety
     }
 }
 [System.Serializable]
 public class TeachPause : TutorialState
 {
-    [SerializeField] protected GameObject pauseParent;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
         PauseManager.pauseGame += OnPause;
-        pauseParent.SetActive(true);
+        tutorialParent.SetActive(true);
 
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachPauseTutorial");
@@ -351,7 +383,7 @@ public class TeachPause : TutorialState
     }
     public override void OnExit()
     {
-        pauseParent.SetActive(false);
+        tutorialParent.SetActive(false);
         PauseManager.pauseGame -= OnPause;//safety
         base.OnExit();
     }
@@ -362,18 +394,19 @@ public class TeachPause : TutorialState
         tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
         PauseManager.pauseGame -= OnPause;
     }
-    
+    public override void EnableState()
+    {
+        base.EnableState();
+    }
     public override void DisableState()
     {
-        pauseParent.SetActive(false);
-        PauseManager.pauseGame -= OnPause;//safety
         base.DisableState();
+        PauseManager.pauseGame -= OnPause;//safety
     }
 }
 [System.Serializable]
 public class TeachResetTutorial : TutorialState
 {
-    [SerializeField] protected GameObject resetTutorialParent;
     protected bool ballReset = false;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
@@ -384,12 +417,12 @@ public class TeachResetTutorial : TutorialState
     }
     IEnumerator ResetTutorial()
     {
-        resetTutorialParent.SetActive(true);
+        tutorialParent.SetActive(true);
         tutorialAnimator.Play("TeachResetTutorial");
         tutorialAnimator.Play("ResetKeybindBlink");
         Time.timeScale = 0.2f;
-        float timeOffset = Time.unscaledTime;
-        while (!ballReset && Time.unscaledTime - timeOffset < 3f)
+        float timeOffset = Time.time;
+        while (!ballReset && Time.time - timeOffset < 3 * 0.2f)
         {
             yield return null;
         }
@@ -409,13 +442,16 @@ public class TeachResetTutorial : TutorialState
         ShootBall.holeAnim -= OnBallReset;
         ShootBall.triggerReset -= OnBallReset;
     }
+    public override void EnableState()
+    {
+        base.EnableState();
+    }
     public override void DisableState()
     {
-        resetTutorialParent.SetActive(false);
+        base.DisableState();
         ShootBall.holeAnim -= OnBallReset;
         ShootBall.onShoot -= OnBallShoot; //safety
         ShootBall.triggerReset -= OnBallReset; //safety
-        base.DisableState();
     }
 }
 

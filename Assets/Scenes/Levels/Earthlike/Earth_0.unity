@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.001431421, g: 0.001323971, b: 0.0012143247, a: 1}
+  m_IndirectSpecularColor: {r: 0.0007188704, g: 0.0006308441, b: 0.00055688946, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3748,19 +3748,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialAnimator: {fileID: 1699333124}
   scrollPanTutorial:
-    scrollPanParent: {fileID: 89767500}
+    tutorialParent: {fileID: 89767500}
   ballInputTutorial:
-    ballInputParent: {fileID: 1760175746}
+    tutorialParent: {fileID: 1760175746}
     fakeCursor: {fileID: 810926331}
     ballToCursorLR: {fileID: 124595390}
   teachHoleTutorial:
-    teachHoleParent: {fileID: 724480282}
+    tutorialParent: {fileID: 724480282}
   teachHackMode:
-    hackModeParent: {fileID: 729921326}
+    tutorialParent: {fileID: 729921326}
   resetTutorial:
-    resetTutorialParent: {fileID: 1318278934}
+    tutorialParent: {fileID: 1318278934}
   teachPause:
-    pauseParent: {fileID: 850628854}
+    tutorialParent: {fileID: 850628854}
+  teachNothing:
+    tutorialParent: {fileID: 0}
 --- !u!95 &1699333124
 Animator:
   serializedVersion: 5

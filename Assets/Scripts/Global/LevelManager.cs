@@ -427,6 +427,10 @@ public class LevelManager : MonoBehaviour
             levelParams = currentProceduralGalaxy[0];
         }
         GameManager.SceneHandling.LoadScene(currentGalaxy[0], true);
+        if(TutorialManager.instance != null)
+        {
+            TutorialManager.instance.CompleteTutorial();
+        }
         isReset = true;
     }
     void CompleteCurrentLevel() //Adds the current level to completed level array

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 
@@ -148,24 +149,25 @@ public class MappingHandling : MonoBehaviour
         ShowDeathMessage();
     }
     void Pause(){
+        Debug.Log("Paused");
         flagArrow.gameObject.SetActive(false);
         ballArrow.gameObject.SetActive(false);
     }
     void UnPause(){
-        flagArrow.gameObject.SetActive(true);
+        ballArrow.gameObject.SetActive(true);
         ballArrow.gameObject.SetActive(true);
     }
     private void OnEnable()
     {
         ShootBall.death += SetDeathMessage;
-        PauseManager.pauseGame -= Pause;
-        PauseManager.unpauseGame -= UnPause;
+        PauseManager.pauseGame += Pause;
+        PauseManager.unpauseGame += UnPause;
     }
     private void OnDisable()
     {
         ShootBall.death -= SetDeathMessage;
         PauseManager.pauseGame -= Pause;
-        PauseManager.unpauseGame += UnPause;
+        PauseManager.unpauseGame -= UnPause;
 
 
     }
