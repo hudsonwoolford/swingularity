@@ -209,7 +209,7 @@ public class ShootBall : MonoBehaviour
         while(ballStillTimer <= ballStillTime){
 
             ballStillTimer += Time.deltaTime;
-            if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length < 2)
+            if(rb.velocity.magnitude >= 0.1f || Physics.OverlapSphere(rb.position, 0.25f, ignoreStill).Length < 2 || collidedWithNoZone)
             {
                 ballStill = false;
                 yield break;
@@ -316,6 +316,18 @@ public class ShootBall : MonoBehaviour
         Vector3 force = Vector3.zero;
         while(Input.GetMouseButton(0)) 
         {
+            if(PauseManager.paused) //cant shoot while paused
+            {
+                if (simulatedObj != null)
+                {
+                    Destroy(simulatedObj);
+                }
+                slr.positionCount = 0;//deleting line
+                lr.positionCount = 0; //deleting line
+                liningUpShot = false; 
+                if (colIcons) { DrawCollisionIcons(); }
+                yield break; 
+            }
             stopGravity?.Invoke();
             dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
@@ -438,6 +450,7 @@ public class ShootBall : MonoBehaviour
         astronautMatController.EndFade();
 
         deathDelay = false;
+        collidedWithNoZone = false;
         liningUpShot = false;
         DrawCollisionIcons();
     }
