@@ -30,7 +30,6 @@ public class SceneHandling : MonoBehaviour
     }
     public void LoadScene(string sceneName, bool waitForLevelGeneration)
     {
-        Debug.Log(loadingScreen);
         StartCoroutine(LoadSceneCoroutine(sceneName, waitForLevelGeneration));
     }
     IEnumerator LoadSceneCoroutine(string sceneName, bool waitForLevelGeneration)

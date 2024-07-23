@@ -736,7 +736,6 @@ public class ShootBall : MonoBehaviour
             StartCoroutine(ResetDelay(0.3f, other.gameObject));
 
         }
-        print("o");
         if(other.gameObject.CompareTag("NoShotZone")){
             collidedWithNoZone = true;
         }
