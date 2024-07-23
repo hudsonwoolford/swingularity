@@ -17,6 +17,7 @@ public class TitleScreenButtons : MonoBehaviour
     [Header("Main Screen UI")]
     [SerializeField] Button continueBtn;
     [SerializeField] Button myUniverseBtn;
+    [SerializeField] Button newUniverseBtn;
     [SerializeField] Button customiseBtn;
     [SerializeField] Button settingsBtn;
     [SerializeField] Button quitBtn;
@@ -120,18 +121,15 @@ public class TitleScreenButtons : MonoBehaviour
 
         if (GameManager.LevelManager.currentUniverse.name != null && GameManager.SaveLoadManager.RetrieveSave(GameManager.LevelManager.currentUniverse.name + ".txt") != null)
         {
-            continueBtn.transform.GetChild(0).gameObject.SetActive(true);
-            continueBtn.transform.GetChild(1).gameObject.SetActive(false);
-            continueBtn.transform.GetChild(2).gameObject.SetActive(true);
-            continueBtn.interactable = true;
+            continueBtn.gameObject.SetActive(true);
+            newUniverseBtn.gameObject.SetActive(false);
             continueBtn.onClick.AddListener(() => Continue());
         }
         else
         {
-            continueBtn.transform.GetChild(0).gameObject.SetActive(false);
-            continueBtn.transform.GetChild(1).gameObject.SetActive(true);
-            continueBtn.transform.GetChild(2).gameObject.SetActive(false);
-            continueBtn.interactable = false;
+            continueBtn.gameObject.SetActive(false);
+            newUniverseBtn.gameObject.SetActive(true);
+            newUniverseBtn.onClick.AddListener(() => NewGame());
         }
     }
     private void Update()
@@ -472,18 +470,15 @@ public class TitleScreenButtons : MonoBehaviour
         {
             if (GameManager.LevelManager.currentUniverse.name != null && GameManager.SaveLoadManager.RetrieveSave(GameManager.LevelManager.currentUniverse.name + ".txt") != null)
             {
-                continueBtn.transform.GetChild(0).gameObject.SetActive(true);
-                continueBtn.transform.GetChild(1).gameObject.SetActive(false);
-                continueBtn.transform.GetChild(2).gameObject.SetActive(true);
-                continueBtn.interactable = true;
+                continueBtn.gameObject.SetActive(true);
+                newUniverseBtn.gameObject.SetActive(false);
                 continueBtn.onClick.AddListener(() => Continue());
             }
             else
             {
-                continueBtn.transform.GetChild(0).gameObject.SetActive(false);
-                continueBtn.transform.GetChild(1).gameObject.SetActive(true);
-                continueBtn.transform.GetChild(2).gameObject.SetActive(false);
-                continueBtn.interactable = false;
+                continueBtn.gameObject.SetActive(false);
+                newUniverseBtn.gameObject.SetActive(true);
+                newUniverseBtn.onClick.AddListener(() => NewGame());
             }
             ngMenu = false;
             ngMenuAnim.Play("HideNGMenu");
