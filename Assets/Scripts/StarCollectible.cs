@@ -184,6 +184,7 @@ public class StarCollectible : MonoBehaviour
     {
         if (collectedOnShot)
         {
+            collectedOnShot = false;
             CollectibleReset();
         }
 

@@ -62,7 +62,7 @@ public class SaveLoadManager : MonoBehaviour
         {
             currentUniverseSave.totalTime += Time.unscaledDeltaTime;
         }
-        if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) { currentGlobalSave.unlockedInfinite = !currentGlobalSave.unlockedInfinite; }
+        if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) { if (SceneManager.GetActiveScene().name == "Main Menu") { currentGlobalSave.unlockedInfinite = !currentGlobalSave.unlockedInfinite; } }
     }
     void RetrieveUniverseSaves()
     {

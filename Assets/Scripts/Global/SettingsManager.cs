@@ -52,7 +52,6 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] SettingsSlider sfxVolElement;
     [SerializeField] SettingsSlider musicVolElement;
     [Header("Game Elements")]
-    [SerializeField] OptionScroll windowModeElement;
     [SerializeField] SettingsToggle customCursorTgl;
     [SerializeField] SettingsToggle hintsTgl;
     [SerializeField] SettingsToggle dialogueTgl;
@@ -128,7 +127,6 @@ public class SettingsManager : MonoBehaviour
         SetSlider(sfxVolElement.defaultValue, ref sfxVolElement);
         SetSlider(musicVolElement.defaultValue, ref musicVolElement);
 
-        SetScrollOption(windowModeElement.defaultValueIndex, ref windowModeElement);
         SetToggleButton(customCursorTgl.defaultValue, ref customCursorTgl);
         SetToggleButton(hintsTgl.defaultValue, ref hintsTgl);
         SetToggleButton(dialogueTgl.defaultValue, ref dialogueTgl);
@@ -148,7 +146,6 @@ public class SettingsManager : MonoBehaviour
         SetSlider(userSettings.sfxVolume / div, ref sfxVolElement);
         SetSlider(userSettings.musicVolume / div, ref musicVolElement);
 
-        SetScrollOption(userSettings.windowMode, ref windowModeElement);
         SetToggleButton(userSettings.customCursor, ref customCursorTgl);
         SetToggleButton(userSettings.hints, ref hintsTgl);
         SetToggleButton(userSettings.dialogue, ref dialogueTgl);
@@ -196,20 +193,6 @@ public class SettingsManager : MonoBehaviour
     }
     void SetGameVariables() //Applies only game variables
     {
-        userSettings.windowMode = windowModeElement.currentValue;
-        switch (userSettings.windowMode)
-        {
-            case 0:
-                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-                Screen.fullScreen = true;
-                break;
-            case 1:
-                Screen.fullScreenMode = FullScreenMode.Windowed;
-                Screen.fullScreen = false;
-                break;
-            default:
-                break;
-        }
         userSettings.customCursor = customCursorTgl.currentValue;
         if (userSettings.customCursor)
         {
@@ -217,6 +200,7 @@ public class SettingsManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("null");
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
 
@@ -372,7 +356,7 @@ public class SettingsManager : MonoBehaviour
         }
 
         //Option scroll buttons
-        OptionScroll[] oScrolls = new OptionScroll[] {  windowModeElement, planetResElement, screenResElement, antiAliasingElement };
+        OptionScroll[] oScrolls = new OptionScroll[] { planetResElement, screenResElement, antiAliasingElement };
         for (int i = 0;i < oScrolls.Length; i++)
         {
             int currentIndex = i; //needs to be initialized in function
@@ -438,10 +422,9 @@ public class SettingsManager : MonoBehaviour
 public class UserSettings
 {
     public float masterVolume = 0.5f;
-    public float sfxVolume = 0.25f;
-    public float musicVolume = 0.25f;
+    public float sfxVolume = 0.2f;
+    public float musicVolume = 0.3f;
 
-    public int windowMode = 0;
     public bool customCursor = true;
     public bool hints = true;
     public bool dialogue = true;
@@ -459,7 +442,6 @@ public class UserSettings
             sfxVolume = this.sfxVolume,
             musicVolume = this.musicVolume,
 
-            windowMode = this.windowMode,
             customCursor = this.customCursor,
             hints = this.hints,
             dialogue = this.dialogue,
