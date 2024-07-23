@@ -145,11 +145,10 @@ public class MappingHandling : MonoBehaviour
         canvasAnimator.Play("ShowOOB");
     }
     void SetDeathMessage(int index){
-        deathMessageIndex                       = index;
+        deathMessageIndex = index;
         ShowDeathMessage();
     }
     void Pause(){
-        Debug.Log("Paused");
         flagArrow.gameObject.SetActive(false);
         ballArrow.gameObject.SetActive(false);
     }
