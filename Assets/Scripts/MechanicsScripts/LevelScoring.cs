@@ -197,6 +197,7 @@ public class LevelScoring : MonoBehaviour
         else{
             numShotsText.color = neutral;
         }
+        if (numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
     }
     void Pause(){
         canvasAnimator.Play("Slide Out");
@@ -211,7 +212,6 @@ public class LevelScoring : MonoBehaviour
         if(resetUI){
             EnableOrDisableResetUI(false);
         }
-        if(numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
     }
     private void OnEnable()
     {
