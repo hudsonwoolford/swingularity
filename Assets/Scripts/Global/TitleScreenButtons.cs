@@ -171,6 +171,8 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideSaveLoadMenu");
         ngMenuAnim.Play("HideCampaignCreationMenu");
         menuAnim.Play("HideMenu");
+        ngDifficultySldr.targetGraphic.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value / 10);
+        difficultyNumber.color = difficultyColorGrad.Evaluate(ngDifficultySldr.value / 10);
         currentNGMenuState = NGMenuState.OptionsMenu;
     }
     void Customise(){
