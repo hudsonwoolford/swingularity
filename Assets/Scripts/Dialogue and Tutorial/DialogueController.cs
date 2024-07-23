@@ -127,7 +127,7 @@ public class DialogueController : MonoBehaviour
             {
                 alphaIndex--;
                 NPCNameText.text = currentDialogueTxt.speakerName;
-                originalText = originalText.Remove(characterIteration);
+                originalText = originalText.Remove(characterIteration, 1);
             }
             foreach (CharacterTypeInfo ct in characterTypeInfo)
             {

@@ -427,11 +427,11 @@ public class LevelManager : MonoBehaviour
     }
     public void RestartGalaxy()
     {
+        levelIndex = 0;
         if(!procedural)
         {
             initSystem?.Invoke(currentGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
         }
-        levelIndex = 0;
         if(procedural)
         {
             initProceduralSystem?.Invoke(currentGalaxy, currentProceduralGalaxy, currentProceduralUniverse[galaxyIndex], allGalaxyData[currentProceduralUniverse[galaxyIndex].galaxyDataIndex]);
