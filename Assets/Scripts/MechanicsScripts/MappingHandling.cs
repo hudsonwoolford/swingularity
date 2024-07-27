@@ -176,5 +176,16 @@ public class MappingHandling : MonoBehaviour
         float width = height * Camera.main.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
         Gizmos.DrawWireCube(Vector3.zero, camSize - Vector3.one * smallerBounds);
+
+        
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        for (int i = 0; i < boundsPoints.Length; i++)
+        {
+            Gizmos.DrawLine(boundsPoints[i].transform.position, boundsPoints[(i + 1) % boundsPoints.Length].transform.position);
+            Gizmos.DrawCube(boundsPoints[i].transform.position, Vector3.one * 50);
+        }
     }
 }

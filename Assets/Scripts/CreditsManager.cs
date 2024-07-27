@@ -27,6 +27,6 @@ public class CreditsManager : MonoBehaviour
 
     IEnumerator EndCredits(){
         yield return new WaitForSeconds(30f);
-        GameManager.SceneHandling.LoadScene("MainMenu", false);
+        GameManager.SceneHandling.LoadScene("Main Menu", false);
     }
 }
