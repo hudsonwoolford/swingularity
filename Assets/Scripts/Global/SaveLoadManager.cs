@@ -24,6 +24,7 @@ public class SaveLoadManager : MonoBehaviour
         public UserSettings userSettings = new UserSettings();
         public int totalSupernovae = 0;
         public bool unlockedInfinite;
+        public CustomizeElement.MaterialCustomizationElement cosmetic;
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
@@ -87,11 +88,18 @@ public class SaveLoadManager : MonoBehaviour
     }
     void CreateGlobalSave()
     {
+        CustomizeElement.MaterialCustomizationElement mce = new CustomizeElement.MaterialCustomizationElement{
+            requiredSupernovae = 0,
+            matColor = Color.white,
+            metallic = 0.275f,
+            smoothness = 0.895f
+        };
         GlobalSave settingsSave = new GlobalSave
         {
             userSettings = new UserSettings(),
             totalSupernovae = 0,
-            unlockedInfinite = false
+            unlockedInfinite = false,
+            cosmetic = mce
         };
 
         string jsonSave = JsonUtility.ToJson(settingsSave, true);

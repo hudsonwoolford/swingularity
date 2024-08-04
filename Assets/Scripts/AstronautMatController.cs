@@ -18,11 +18,22 @@ public class AstronautMatController : MonoBehaviour
     public bool isIdle { get; private set; }
     bool left;
     float lerpVal;
+    [SerializeField] Material[] whiteMaterials;
+
 
     void Start(){
         shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
+
+        CustomizeElement.MaterialCustomizationElement mce = SaveLoadManager.currentGlobalSave.cosmetic;
+        foreach (Material wm in whiteMaterials)
+        {
+            wm.SetColor("_Color", mce.matColor);
+            wm.SetFloat("_Metallic", mce.metallic);
+            wm.SetFloat("_Glossiness", mce.metallic);
+        }
+
         EndFade();
     }
     void Update(){

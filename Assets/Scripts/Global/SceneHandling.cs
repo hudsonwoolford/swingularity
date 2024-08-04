@@ -16,6 +16,8 @@ public class SceneHandling : MonoBehaviour
 
     private const float MAX_PROGRESS = 0.98f;
     public static bool loadingScreen { get; private set; }
+    MaterialPropertyBlock mpb;
+
     // Start is called before the first frame update
     void Start()
     {
