@@ -106,7 +106,7 @@ public class GalaxyMenu : MonoBehaviour
         else
         {
             bool notLMSet = false;
-            if(GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
+            if(GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0 && GameManager.LevelManager.currentProceduralUniverse.Length == galaxyList.Length)
             {
                 for (int i = 0; i < galaxyList.Length; i++)
                 {

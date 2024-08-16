@@ -62,7 +62,7 @@ public class SaveLoadManager : MonoBehaviour
         {
             currentUniverseSave.totalTime += Time.unscaledDeltaTime;
         }
-        if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) { if (SceneManager.GetActiveScene().name == "Main Menu") { currentGlobalSave.unlockedInfinite = !currentGlobalSave.unlockedInfinite; } }
+        //if(Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I)) { if (SceneManager.GetActiveScene().name == "Main Menu") { currentGlobalSave.unlockedInfinite = !currentGlobalSave.unlockedInfinite; } }
     }
     void RetrieveUniverseSaves()
     {
@@ -213,6 +213,12 @@ public class SaveLoadManager : MonoBehaviour
     }
     void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {
+        //NO INFINITE IN DEMO
+        if(currentGlobalSave!=null)
+        {
+            currentGlobalSave.unlockedInfinite = false;
+        }
+
         bool matchNonLevel = false;
         foreach (string s in nonLevelScenes)
         {
@@ -232,7 +238,7 @@ public class SaveLoadManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Mythical_4")
         {
-            currentGlobalSave.unlockedInfinite = true;
+            currentGlobalSave.unlockedInfinite = false; //DEMO CHANGE TO FALSE
             SaveGlobalSave();
         }
     }
