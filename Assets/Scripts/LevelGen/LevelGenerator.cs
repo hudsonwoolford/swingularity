@@ -195,10 +195,9 @@ public class LevelGenerator : MonoBehaviour
             
         }
         specialObjects = new SpecialObject[levelParams.specialObjects.Length];
-        LevelGenStaticReferences.SpecialObjectMultWrapper[] inherentMult = levelStatic.inherentSpecialMultipliers;
+        LevelGenStaticReferences.SpecialObjectInfoWrapper[] inherentMult = levelStatic.inherentSpecialMultipliers;
         for (int i = 0; i < levelParams.specialObjects.Length; i++)
         {
-
             Vector2 inherentMultiplier = Array.Find(inherentMult, t => t.specialType == levelParams.specialObjects[i]).minMaxMultiplier;
             SpecialObject newSpecialObject = new SpecialObject(levelParams.specialObjects[i], Mathf.RoundToInt(numPerObj[i] * UnityEngine.Random.Range(inherentMultiplier.x, inherentMultiplier.y)), GenerateStar, GenerateQuasar);
             specialObjects[i] = newSpecialObject;
@@ -278,14 +277,17 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        float minSize = 0; //min planet size for the corresponding special object
+
         //Moon priority to bigger planets
         if (moonIndex >= 0 && specialObjects[moonIndex].amount > 0)
         {
             int moonAmount = 0;
             List<int> removeIndices = new List<int>();
+            minSize = Array.Find<LevelGenStaticReferences.SpecialObjectInfoWrapper>(levelStatic.inherentSpecialMultipliers, s => s.specialType == SpecialType.Moon).minPlanetSize;
             for (int u = 0; u < availableIndices.Count; u++)
             {
-                if (level.planetSizes[availableIndices[u]] > levelStatic.moonCutoffSize)
+                if (level.planetSizes[availableIndices[u]] > minSize)
                 {
                     replacers.Add((availableIndices[u], replaceObjects[moonIndex].Item2));
                     replaceObjects[moonIndex] = (replaceObjects[moonIndex].Item1 - 1, replaceObjects[moonIndex].Item2);
@@ -305,8 +307,6 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-
-
         //Setting the return array
         for (int i = 0; i < numSpecial; i++)
         {
@@ -316,17 +316,27 @@ public class LevelGenerator : MonoBehaviour
             int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
             SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
 
-            //if enough space is left for black hole to spawn
-            if (chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
+            //verify remaining planets are big enough
+            minSize = Array.Find<LevelGenStaticReferences.SpecialObjectInfoWrapper>(levelStatic.inherentSpecialMultipliers, s => s.specialType == chosenObject.type).minPlanetSize;
+            List<int> possibleIndices = new List<int>();
+            for (int x = 0; x < availableIndices.Count; x++)
             {
-                replaceObjects.Remove(replaceObjects[randomSpecial]);
-                if (replaceObjects.Count == 0) { break; } //no more objects to choose from
-                randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
-                chosenObject = replaceObjects[randomSpecial].Item2;
+                if (level.planetSizes[availableIndices[x]] >= minSize)
+                {
+                    possibleIndices.Add(availableIndices[x]);
+                }
+            }
+            
+            //if not enough planets with min size
+            if((chosenObject.type == SpecialType.BlackHole && possibleIndices.Count<2) || (chosenObject.type != SpecialType.BlackHole && possibleIndices.Count < 1))
+            {
+                replaceObjects.Remove(Array.Find<(int, SpecialObject)>(replaceObjects.ToArray(), s => s.Item2.type == chosenObject.type)); //remove object as no eligible planets
+                continue;
             }
 
             //Determining replacement index and adding object
-            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+            int index = possibleIndices[UnityEngine.Random.Range(0, possibleIndices.Count)];
+            possibleIndices.Remove(index);
             availableIndices.Remove(index);
             replacers.Add((index, chosenObject));
 
@@ -340,13 +350,28 @@ public class LevelGenerator : MonoBehaviour
             //Doubling with black holes
             if (chosenObject.type == SpecialType.BlackHole)
             {
-                index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+                index = possibleIndices[UnityEngine.Random.Range(0, possibleIndices.Count)];
+                possibleIndices.Remove(index);
                 availableIndices.Remove(index);
                 replacers.Add((index, chosenObject));
                 i++;
             }
         }
+
         //Goop planets are not limited to planets - 2
+
+        //get planets with min size
+        availableIndices.Clear();
+        minSize = Array.Find<LevelGenStaticReferences.SpecialObjectInfoWrapper>(levelStatic.inherentSpecialMultipliers, s => s.specialType == SpecialType.DarkMatter).minPlanetSize;
+        for (int i = 0; i < ignoreIndices.Length; i++)
+        {
+            if (level.planetSizes[ignoreIndices[i]] >= minSize)
+            {
+                availableIndices.Add(ignoreIndices[i]);
+            }
+        }
+
+        //add special objcet
         availableIndices = ignoreIndices.ToList();
         for (int i = 0; i < replaceObjects.Count; i++)
         {
@@ -947,156 +972,156 @@ public class LevelGenerator : MonoBehaviour
         Vector3 camSize = new Vector3(width, height);
         return camSize;
     }
-    public static (int, SpecialObject)[] TotalCalculateReplacementIndices(ProceduralLevelGeneration.Level level, int seed, LevelGenerator.SpecialObject[] specialObjects, LevelGenStaticReferences levelStatic)
-    {
-        Physics.SyncTransforms();
-        UnityEngine.Random.InitState(seed);
-        if (level.planetPoints.Length == 0) { return null; }
-        int[] ignoreIndices = new int[2];
-        float farthestDistance = 0;
-        for (int x = 0; x < level.planetPoints.Length; x++)
-        {
-            for (int y = 0; y < level.planetPoints.Length; y++)
-            {
-                if(y == x) { continue; }
-                float distance = Vector2.Distance(level.planetPoints[x], level.planetPoints[y]);
-                if  (distance > farthestDistance)
-                {
-                    farthestDistance = distance;
-                    if(UnityEngine.Random.Range(0, 1) == 0){
-                        ignoreIndices[0] = x; ignoreIndices[1] = y;
-                    }
-                    else{
-                        ignoreIndices[0] = y; ignoreIndices[1] = x;
-                    }
-                }
-            }
-        }
+    //public static (int, SpecialObject)[] TotalCalculateReplacementIndices(ProceduralLevelGeneration.Level level, int seed, LevelGenerator.SpecialObject[] specialObjects, LevelGenStaticReferences levelStatic)
+    //{
+    //    Physics.SyncTransforms();
+    //    UnityEngine.Random.InitState(seed);
+    //    if (level.planetPoints.Length == 0) { return null; }
+    //    int[] ignoreIndices = new int[2];
+    //    float farthestDistance = 0;
+    //    for (int x = 0; x < level.planetPoints.Length; x++)
+    //    {
+    //        for (int y = 0; y < level.planetPoints.Length; y++)
+    //        {
+    //            if(y == x) { continue; }
+    //            float distance = Vector2.Distance(level.planetPoints[x], level.planetPoints[y]);
+    //            if  (distance > farthestDistance)
+    //            {
+    //                farthestDistance = distance;
+    //                if(UnityEngine.Random.Range(0, 1) == 0){
+    //                    ignoreIndices[0] = x; ignoreIndices[1] = y;
+    //                }
+    //                else{
+    //                    ignoreIndices[0] = y; ignoreIndices[1] = x;
+    //                }
+    //            }
+    //        }
+    //    }
         
-                List<(int, SpecialObject)> replaceObjects = new List<(int, SpecialObject)>(specialObjects.Length); //Takes all the special object that replace a planet
-        int numSpecial = 0; //number of objects
-        int moonIndex = -1;
-        for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
-        {
-            //Filters on whether they are replace objects or not
-            if (specialObjects[i].type == (SpecialType.Star) || specialObjects[i].type == (SpecialType.NeutronStar))
-            {
-                numSpecial += specialObjects[i].amount;
-                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
-            }
-            else if (specialObjects[i].type == (SpecialType.Moon))
-            {
-                numSpecial += specialObjects[i].amount;
-                moonIndex = replaceObjects.Count;
-                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
-            }
-            else if (specialObjects[i].type == SpecialType.BlackHole)
-            {
-                numSpecial += specialObjects[i].amount * 2;
-                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
-            }
-            else if (specialObjects[i].type == SpecialType.DarkMatter)
-            {
-                numSpecial += specialObjects[i].amount;
-                replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
-            }
-        }
-        numSpecial = Mathf.Clamp(numSpecial, 0, level.numPlanets - 2); //Allow space for 2 normal planets
+    //            List<(int, SpecialObject)> replaceObjects = new List<(int, SpecialObject)>(specialObjects.Length); //Takes all the special object that replace a planet
+    //    int numSpecial = 0; //number of objects
+    //    int moonIndex = -1;
+    //    for (int i = 0; i < specialObjects.Length; i++) //Iterates through current objects set in inspector
+    //    {
+    //        //Filters on whether they are replace objects or not
+    //        if (specialObjects[i].type == (SpecialType.Star) || specialObjects[i].type == (SpecialType.NeutronStar))
+    //        {
+    //            numSpecial += specialObjects[i].amount;
+    //            replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
+    //        }
+    //        else if (specialObjects[i].type == (SpecialType.Moon))
+    //        {
+    //            numSpecial += specialObjects[i].amount;
+    //            moonIndex = replaceObjects.Count;
+    //            replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
+    //        }
+    //        else if (specialObjects[i].type == SpecialType.BlackHole)
+    //        {
+    //            numSpecial += specialObjects[i].amount * 2;
+    //            replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
+    //        }
+    //        else if (specialObjects[i].type == SpecialType.DarkMatter)
+    //        {
+    //            numSpecial += specialObjects[i].amount;
+    //            replaceObjects.Add((specialObjects[i].amount, specialObjects[i]));
+    //        }
+    //    }
+    //    numSpecial = Mathf.Clamp(numSpecial, 0, level.numPlanets - 2); //Allow space for 2 normal planets
 
-        List<(int, SpecialObject)> replacers = new List<(int, SpecialObject)>(); //Preparing return array
-        List<int> availableIndices = new List<int>(); //Prevents overlapping indices
-        for (int i = 0; i < level.numPlanets; i++)
-        {
-            if (i != ignoreIndices[0] && i != ignoreIndices[1])
-            {
-                availableIndices.Add(i);
-            }
-        }
+    //    List<(int, SpecialObject)> replacers = new List<(int, SpecialObject)>(); //Preparing return array
+    //    List<int> availableIndices = new List<int>(); //Prevents overlapping indices
+    //    for (int i = 0; i < level.numPlanets; i++)
+    //    {
+    //        if (i != ignoreIndices[0] && i != ignoreIndices[1])
+    //        {
+    //            availableIndices.Add(i);
+    //        }
+    //    }
 
-        //Moon priority to bigger planets
-        if (moonIndex >= 0 && specialObjects[moonIndex].amount > 0)
-        {
-            int moonAmount = 0;
-            List<int> removeIndices = new List<int>();
-            for (int u = 0; u < availableIndices.Count; u++)
-            {
-                if (level.planetSizes[availableIndices[u]] > levelStatic.moonCutoffSize)
-                {
-                    replacers.Add((availableIndices[u], replaceObjects[moonIndex].Item2));
-                    replaceObjects[moonIndex] = (replaceObjects[moonIndex].Item1 - 1, replaceObjects[moonIndex].Item2);
-                    removeIndices.Add(availableIndices[u]);
-                    moonAmount++;
-                    if (replaceObjects[moonIndex].Item1 <= 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            numSpecial -= moonAmount;
-            replaceObjects.Remove(replaceObjects[moonIndex]);
-            for (int i = 0; i < removeIndices.Count; i++)
-            {
-                availableIndices.Remove(removeIndices[i]);
-            }
-        }
+    //    //Moon priority to bigger planets
+    //    if (moonIndex >= 0 && specialObjects[moonIndex].amount > 0)
+    //    {
+    //        int moonAmount = 0;
+    //        List<int> removeIndices = new List<int>();
+    //        for (int u = 0; u < availableIndices.Count; u++)
+    //        {
+    //            if (level.planetSizes[availableIndices[u]] > levelStatic.moonCutoffSize)
+    //            {
+    //                replacers.Add((availableIndices[u], replaceObjects[moonIndex].Item2));
+    //                replaceObjects[moonIndex] = (replaceObjects[moonIndex].Item1 - 1, replaceObjects[moonIndex].Item2);
+    //                removeIndices.Add(availableIndices[u]);
+    //                moonAmount++;
+    //                if (replaceObjects[moonIndex].Item1 <= 0)
+    //                {
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //        numSpecial -= moonAmount;
+    //        replaceObjects.Remove(replaceObjects[moonIndex]);
+    //        for (int i = 0; i < removeIndices.Count; i++)
+    //        {
+    //            availableIndices.Remove(removeIndices[i]);
+    //        }
+    //    }
 
 
 
-        //Setting the return array
-        for (int i = 0; i < numSpecial; i++)
-        {
-            if (replaceObjects.Count == 0) { break; } //no more objects to choose from
+    //    //Setting the return array
+    //    for (int i = 0; i < numSpecial; i++)
+    //    {
+    //        if (replaceObjects.Count == 0) { break; } //no more objects to choose from
 
-            //Choosing random special object
-            int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
-            SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
+    //        //Choosing random special object
+    //        int randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
+    //        SpecialObject chosenObject = replaceObjects[randomSpecial].Item2;
 
-            //if enough space is left for black hole to spawn
-            if (chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
-            {
-                replaceObjects.Remove(replaceObjects[randomSpecial]);
-                if (replaceObjects.Count == 0) { break; } //no more objects to choose from
-                randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
-                chosenObject = replaceObjects[randomSpecial].Item2;
-            }
+    //        //if enough space is left for black hole to spawn
+    //        if (chosenObject.type == SpecialType.BlackHole && numSpecial - i < 2)
+    //        {
+    //            replaceObjects.Remove(replaceObjects[randomSpecial]);
+    //            if (replaceObjects.Count == 0) { break; } //no more objects to choose from
+    //            randomSpecial = UnityEngine.Random.Range(0, replaceObjects.Count);
+    //            chosenObject = replaceObjects[randomSpecial].Item2;
+    //        }
 
-            //Determining replacement index and adding object
-            int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
-            availableIndices.Remove(index);
-            replacers.Add((index, chosenObject));
+    //        //Determining replacement index and adding object
+    //        int index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+    //        availableIndices.Remove(index);
+    //        replacers.Add((index, chosenObject));
 
-            //Subtracting from amount on that object
-            replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1 - 1, replaceObjects[randomSpecial].Item2);
-            if (replaceObjects[randomSpecial].Item1 <= 0)
-            {
-                replaceObjects.Remove(replaceObjects[randomSpecial]);
-            }
+    //        //Subtracting from amount on that object
+    //        replaceObjects[randomSpecial] = (replaceObjects[randomSpecial].Item1 - 1, replaceObjects[randomSpecial].Item2);
+    //        if (replaceObjects[randomSpecial].Item1 <= 0)
+    //        {
+    //            replaceObjects.Remove(replaceObjects[randomSpecial]);
+    //        }
 
-            //Doubling with black holes
-            if (chosenObject.type == SpecialType.BlackHole)
-            {
-                index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
-                availableIndices.Remove(index);
-                replacers.Add((index, chosenObject));
-                i++;
-            }
-        }
-        //Goop planets are not limited to planets - 2
-        for (int i = 0; i < replaceObjects.Count; i++)
-        {
-            if (replaceObjects[i].Item2.type == SpecialType.DarkMatter)
-            {
-                for (int u = 0; u < replaceObjects[i].Item1 && u < 2; u++)
-                {
-                    int index = ignoreIndices[UnityEngine.Random.Range(0, 1)];
-                    availableIndices.Remove(index);
-                    replacers.Add((index, replaceObjects[i].Item2));
-                }
-            }
-        }
+    //        //Doubling with black holes
+    //        if (chosenObject.type == SpecialType.BlackHole)
+    //        {
+    //            index = availableIndices[UnityEngine.Random.Range(0, availableIndices.Count)];
+    //            availableIndices.Remove(index);
+    //            replacers.Add((index, chosenObject));
+    //            i++;
+    //        }
+    //    }
+    //    //Goop planets are not limited to planets - 2
+    //    for (int i = 0; i < replaceObjects.Count; i++)
+    //    {
+    //        if (replaceObjects[i].Item2.type == SpecialType.DarkMatter)
+    //        {
+    //            for (int u = 0; u < replaceObjects[i].Item1 && u < 2; u++)
+    //            {
+    //                int index = ignoreIndices[UnityEngine.Random.Range(0, 1)];
+    //                availableIndices.Remove(index);
+    //                replacers.Add((index, replaceObjects[i].Item2));
+    //            }
+    //        }
+    //    }
 
-        return replacers.ToArray();
-    }
+    //    return replacers.ToArray();
+    //}
     #endregion
     void OnDrawGizmosSelected()
     {

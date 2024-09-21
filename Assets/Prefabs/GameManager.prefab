@@ -13462,6 +13462,7 @@ GameObject:
   - component: {fileID: 5939061644711756215}
   - component: {fileID: 4959181068883625748}
   - component: {fileID: 1710918585013653351}
+  - component: {fileID: 5273953326536977944}
   m_Layer: 0
   m_Name: Music Manager
   m_TagString: Untagged
@@ -13601,6 +13602,10 @@ MonoBehaviour:
     loopEndOffset: 0
     loopBeginOffset: 0
     volume: 0.4
+  passFilter: {fileID: 5273953326536977944}
+  pausedVolMult: 0
+  pausedPassFrequency: 1250
+  pausedResonance: 10
 --- !u!82 &4959181068883625748
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13781,6 +13786,31 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
   reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!169 &5273953326536977944
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3299009280354736227}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3

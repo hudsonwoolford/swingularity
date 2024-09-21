@@ -26,6 +26,15 @@ public class MusicManager : MonoBehaviour
     [SerializeField] string[] menuScenes;
     [SerializeField] MusicData menuMusic;
     [SerializeField] MusicData[] galaxyClips;
+    [Header("Low Pass Filter")]
+    [SerializeField] AudioLowPassFilter passFilter;
+    [SerializeField] float pausedVolMult;
+    [Range(10, 22000)]
+    [SerializeField] int pausedPassFrequency;
+    [Range(1, 10)]
+    [SerializeField] float pausedResonance;
+    float lowPassFadeDuration = 0.25f;
+    Coroutine lowPassFadeRoutine;
     MusicData currentMusic;
     void Awake()
     {
@@ -35,6 +44,9 @@ public class MusicManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        passFilter.cutoffFrequency = pausedPassFrequency;
+        passFilter.lowpassResonanceQ = pausedResonance;
+        passFilter.enabled = false;
         UpdateSourceVolume();
     }
 
@@ -136,13 +148,41 @@ public class MusicManager : MonoBehaviour
         musicSource1.volume = SettingsManager.userSettings.musicVolume * currentMusic.volume;
         musicSource2.volume = SettingsManager.userSettings.musicVolume * currentMusic.volume;
     }
+    void LowPassChange(bool paused)
+    {
+        if(lowPassFadeRoutine != null) { StopCoroutine(lowPassFadeRoutine); }
+        lowPassFadeRoutine = StartCoroutine(LowPassFade(paused));
+    }
+    IEnumerator LowPassFade(bool paused)
+    {
+        passFilter.enabled |= paused;
+
+        float timeTracker = 0f;
+        float startFrequency = passFilter.cutoffFrequency;
+        float targetFrequency = paused ? pausedPassFrequency : 10000;
+
+        while (timeTracker < lowPassFadeDuration)
+        {
+            passFilter.cutoffFrequency = Mathf.Lerp(startFrequency, targetFrequency, timeTracker/lowPassFadeDuration);
+
+            timeTracker += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        passFilter.cutoffFrequency = targetFrequency;
+        passFilter.enabled = paused;
+    }
     void OnEnable()
     {
+        PauseManager.pauseGame += () => LowPassChange(true);
+        PauseManager.unpauseGame += () => LowPassChange(false);
         SettingsManager.applySettingsVar += UpdateSourceVolume;
         SceneManager.sceneLoaded += OnLoadScene;
     }
     void OnDisable()
     {
+        PauseManager.pauseGame -= () => LowPassChange(true);
+        PauseManager.unpauseGame -= () => LowPassChange(false);
         SettingsManager.applySettingsVar -= UpdateSourceVolume;
         SceneManager.sceneLoaded -= OnLoadScene;
     }

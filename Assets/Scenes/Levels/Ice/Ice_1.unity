@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0010140461, g: 0.0009396712, b: 0.00092851574, a: 1}
+  m_IndirectSpecularColor: {r: 0.0016922677, g: 0.0015911582, b: 0.0015177437, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -302,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 2
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 39.451187, y: -137.06189, z: -176.78691}
 --- !u!23 &428927700
 MeshRenderer:
@@ -474,6 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 2
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -49.717346, y: -186.56488, z: 131.52415}
 --- !u!23 &837449064
 MeshRenderer:
@@ -810,22 +812,22 @@ PrefabInstance:
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.x
-      value: -9.439946
+      value: -9.317145
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.y
-      value: 1.5674548
+      value: 1.5002235
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.x
-      value: -7.440053
+      value: -7.5628533
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.y
-      value: 0.4725452
+      value: 0.53977644
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
@@ -835,7 +837,12 @@ PrefabInstance:
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: particleSpeed
-      value: 0.114
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: 240.68
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
@@ -1132,6 +1139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 2
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -18.727173, y: -196.45749, z: -36.917953}
 --- !u!23 &1591778868
 MeshRenderer:
@@ -1231,6 +1239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 2
   specificSeed: 1
+  darkMatter: 0
   seed: {x: -93.442276, y: -39.027435, z: -47.593872}
 --- !u!23 &1772655130
 MeshRenderer:

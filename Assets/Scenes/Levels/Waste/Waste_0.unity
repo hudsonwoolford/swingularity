@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0010445106, g: 0.0009889896, b: 0.00097101735, a: 1}
+  m_IndirectSpecularColor: {r: 0.0016922677, g: 0.0015911582, b: 0.0015177437, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -595,6 +595,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
         type: 3}
+      propertyPath: bigNoiseOffset
+      value: -479
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
+        type: 3}
       propertyPath: starSchemeIndex
       value: 5
       objectReference: {fileID: 0}
@@ -747,6 +752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 5
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 69.407104, y: -37.10916, z: -147.38763}
 --- !u!23 &837449064
 MeshRenderer:
@@ -1091,6 +1097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 5
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 60.19082, y: 6.580658, z: -148.5862}
 --- !u!23 &1591778868
 MeshRenderer:
