@@ -9,6 +9,7 @@ public class SpaceShipManager : MonoBehaviour
     [SerializeField] AnimationClip[] possibleFlybys;
     [SerializeField] Animator animControl;
     [SerializeField] Vector2 minMaxAnimInterval;
+    [SerializeField] bool dontAnimate;
     [Header("Colors and Thrust")]
     [SerializeField][ColorUsageAttribute(true,true)] Color glowCol;
     [SerializeField] Color thrustCol;
@@ -43,8 +44,11 @@ public class SpaceShipManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y);
-        animTime=currentAnimInterval-0.5f;
+        if(!dontAnimate)
+        {
+            animTime=currentAnimInterval-0.5f;
+            currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y);
+        }
         #if UNITY_EDITOR
         startGlowMat = new Material(glowMat);
         #endif
@@ -54,7 +58,10 @@ public class SpaceShipManager : MonoBehaviour
     }
     void FixedUpdate()
     {
-        AnimationHandling();
+        if(!dontAnimate)
+        {
+            AnimationHandling();
+        }
 
         velocity = transform.position - posLastUpdate;
         SetParticleLifetime();

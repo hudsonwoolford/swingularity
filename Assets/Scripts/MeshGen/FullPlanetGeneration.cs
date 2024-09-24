@@ -1089,6 +1089,13 @@ public class FullPlanetGeneration : MonoBehaviour
 
         copyMat.CopyMatchingPropertiesFromMaterial(material); //copy planet material properties
 
+        //Atmospheres
+        GameObject[] atmospheres = { newObj.transform.GetChild(1).gameObject, newObj.transform.GetChild(2).gameObject, newObj.transform.GetChild(3).gameObject };
+        for (int i = 0; i < 3; i++)
+        {
+            atmospheres[i].GetComponent<AtmosphereHandler>().enabled = true;
+        }
+
         MeshFilter newMeshFilter = newObj.GetComponent<MeshFilter>();           //store the new mesh filter
         MeshRenderer newMeshRenderer = newObj.GetComponent<MeshRenderer>();     //store the new mesh renderer
 
