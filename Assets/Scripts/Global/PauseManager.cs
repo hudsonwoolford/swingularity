@@ -36,6 +36,8 @@ public class PauseManager : MonoBehaviour
 
     public static bool paused;
 
+    [SerializeField] public bool hideHUD = false; 
+
     private void Awake()
     {
         pausecanvas = GetComponent<Canvas>();
@@ -218,7 +220,9 @@ public class PauseManager : MonoBehaviour
            }
            isDontPauseScene = false;
         }
-        pausecanvas.enabled = true;
+        if(!hideHUD){
+            pausecanvas.enabled = true;
+        }
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor)
     {

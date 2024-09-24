@@ -57,6 +57,7 @@ public class LevelScoring : MonoBehaviour
         powerText.color = Color.white;
         angleText.text = "——";
         powerText.text = "——";
+        gameObject.SetActive(!GameManager.PauseManager.hideHUD);
     }
     private void Update(){
         if (shootBall.liningUpShot)
