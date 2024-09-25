@@ -13,6 +13,7 @@ public class CameraFollow : MonoBehaviour
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] bool zoomOnHoleEnd;
+    [SerializeField] bool debugCam;
     [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
@@ -26,6 +27,8 @@ public class CameraFollow : MonoBehaviour
     public static PolygonCollider2D innerShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
+
+    bool camLock = false;
 
     public void InitPositions(Vector2 startPosSent, Vector2 endPosSent, float maxSizeSent){
         startPos = startPosSent;
@@ -76,11 +79,21 @@ public class CameraFollow : MonoBehaviour
         cameraPath.points = PolygonPositions(startPos, endPos, sizeScalar, 0, 0); //scaled down version of inner shape
     }
 
+    void Update(){
+        if(debugCam){
+            if(Input.GetKeyDown(KeyCode.L)){
+                camLock = !camLock;
+            }
+        }
+    }
     // Update is called once per frame
     public void LateUpdate()
-    {
+    {   
+
         if(LevelManager.levelComplete) { return; }
-        CamBehaviour();
+        if(!camLock){
+            CamBehaviour();
+        }
     }
     void CamBehaviour(){
         Vector2 camSize = CalculateCamsize(Camera.main.orthographicSize);
@@ -330,7 +343,7 @@ public class CameraFollow : MonoBehaviour
         panning = false;
     }
     void ZoomIn(){
-        if(zoomOnHoleEnd){
+        if(zoomOnHoleEnd && !camLock){
             lockCamera = false;
             targetCameraSize = Mathf.Clamp(targetCameraSize - 5, cameraMinMax.x, cameraMinMax.y);
             finalZoom = true;

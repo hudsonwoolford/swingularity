@@ -24,7 +24,9 @@ public class MusicManager : MonoBehaviour
     [SerializeField] AnimationCurve crossFadeIn;
     [Header("Music Clips")]
     [SerializeField] string[] menuScenes;
+    [SerializeField] string[] noMusicScenes;
     [SerializeField] MusicData menuMusic;
+    [SerializeField] MusicData nullMusic;
     [SerializeField] MusicData[] galaxyClips;
     [Header("Low Pass Filter")]
     [SerializeField] AudioLowPassFilter passFilter;
@@ -68,6 +70,13 @@ public class MusicManager : MonoBehaviour
             if (menuScenes[i] == scene)
             {
                 return menuMusic;
+            }
+        }
+        for (int i = 0; i < noMusicScenes.Length; i++)
+        {
+            if (noMusicScenes[i] == scene)
+            {
+                return nullMusic;
             }
         }
         //check for galaxy type music
