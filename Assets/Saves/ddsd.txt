@@ -6,7 +6,7 @@
         "size": "Medium",
         "completedGalaxies": 0,
         "numGalaxies": 7,
-        "numStars": 4,
+        "numStars": 6,
         "proceduralUniverse": false
     },
     "allGalaxies": [
@@ -21,13 +21,13 @@
             "possibleSpecial": [],
             "collectedStars": [
                 true,
-                true,
-                true,
+                false,
+                false,
                 true,
                 false
             ],
             "requiredStars": 0,
-            "bestScore": "-6"
+            "bestScore": "+6"
         },
         {
             "name": "TRIANGULUM M33",
@@ -50,9 +50,32 @@
             ],
             "requiredStars": 2,
             "bestScore": "——"
+        },
+        {
+            "name": "Whirlpool NGC",
+            "seed": 108,
+            "relativeDifficulty": 3,
+            "galaxyDataIndex": 3,
+            "possibleTypes": [
+                2
+            ],
+            "possibleSpecial": [
+                0,
+                1,
+                2
+            ],
+            "collectedStars": [
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            "requiredStars": 5,
+            "bestScore": "——"
         }
     ],
-    "totalTime": 91.72146606445313,
-    "totalShots": 13,
-    "supernovae": 20
+    "totalTime": 262.6465759277344,
+    "totalShots": 39,
+    "supernovae": 30
 }

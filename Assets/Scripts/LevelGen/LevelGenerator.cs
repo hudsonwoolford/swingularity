@@ -121,6 +121,7 @@ public class LevelGenerator : MonoBehaviour
     {
         generationProgress = 0;
         LevelManager.notifyProcedural?.Invoke(true);
+        
         SetLevelParams();
         mainCam = Camera.main; //Cache camera
         resolution = SettingsManager.userSettings.planetRes;

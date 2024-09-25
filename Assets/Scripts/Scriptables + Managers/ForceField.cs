@@ -33,7 +33,6 @@ public class ForceField : MonoBehaviour
     [HideInInspector]
     [SerializeField] int hitIterator;
 
-    public AudioSource src;
     private MaterialPropertyBlock pBlock;
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
@@ -69,7 +68,6 @@ public class ForceField : MonoBehaviour
             interactableObject.Add(astronaut);
         }
 
-        src = GameObject.FindGameObjectWithTag("SRC").GetComponent<AudioSource>();
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         forceMat = meshRenderer.sharedMaterial;

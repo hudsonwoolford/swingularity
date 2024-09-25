@@ -422,6 +422,51 @@ public class ShootBall : MonoBehaviour
         cols.Clear();
         liningUpShot = false;
     }
+    public IEnumerator ArtificialShot(float angle, float strength)
+    {
+        liningUpShot = true;
+
+        Vector2 dir = Vector2.zero; //direction to the initial mouse pos, also the direction of the ball
+        float dist = 0; //distance from initial mouse pos
+        Vector3 force = Vector3.zero;
+
+        if (PauseManager.paused) //cant shoot while paused
+        {
+            yield break;
+        }
+
+        angle *= Mathf.Deg2Rad;
+        dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        dist = strength * maxPower; //stops the player from doing insanely powerful shots, is also where it is scaled
+        force = dist * dir.normalized;
+
+        shootPower = strength * 100;
+
+        RaycastHit hit;
+        bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
+        Vector2 normal = (transform.position - hit.transform.position).normalized;
+
+        shootAngle = -Vector2.SignedAngle(normal, dir);
+
+        StopCoroutine(BallStillTiming(ballStillTimeVal));
+        onSwing?.Invoke(); //invoke shoot event
+
+        yield return new WaitUntil(() => pullBack);
+        yield return new WaitForSeconds(swingDelay);
+
+        //unfreeze position
+        ballStill = false;
+        movedAstronaut = false;
+
+        ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, 1 - force.magnitude / maxPower) + UnityEngine.Random.Range(-0.15f, 0.15f);
+        GameManager.SFXManager.PlaySFX(hitBall, ballAudioSrc, Mathf.Clamp01(force.magnitude / maxPower * 2));
+        onShoot?.Invoke(); //invoke shoot event
+
+        rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        rb.AddForce(force, ForceMode.Impulse); //adding force
+
+        liningUpShot = false;
+    }
     void BallReset()
     {
         if(inPortal) { return; }

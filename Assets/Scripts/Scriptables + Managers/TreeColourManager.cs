@@ -29,6 +29,7 @@ public class TreeColourManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(mr == null) { mr = GetComponent<MeshRenderer>(); }
         if (!mr.HasPropertyBlock()) { return; }
         ApplyPBlocks();
     }

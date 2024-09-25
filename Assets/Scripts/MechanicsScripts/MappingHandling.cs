@@ -185,7 +185,7 @@ public class MappingHandling : MonoBehaviour
         for (int i = 0; i < boundsPoints.Length; i++)
         {
             Gizmos.DrawLine(boundsPoints[i].transform.position, boundsPoints[(i + 1) % boundsPoints.Length].transform.position);
-            Gizmos.DrawCube(boundsPoints[i].transform.position, Vector3.one * 50);
+            //Gizmos.DrawCube(boundsPoints[i].transform.position, Vector3.one * 50);
         }
     }
 }
