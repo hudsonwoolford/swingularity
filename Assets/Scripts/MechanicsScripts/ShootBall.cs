@@ -193,10 +193,10 @@ public class ShootBall : MonoBehaviour
                 rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
             ballStill = false;
-            childObj.transform.up =
-            Vector3.Slerp(childObj.transform.up, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
-            childObj.transform.forward =
-            Vector3.Slerp(childObj.transform.forward, rb.velocity.normalized, Time.deltaTime * 3.5f * ballSpinSpeed);
+            childObj.transform.right =
+            Vector3.Slerp(childObj.transform.right, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
+            // childObj.transform.forward =
+            // Vector3.Slerp(childObj.transform.forward, rb.velocity.normalized, Time.deltaTime * 3.5f * ballSpinSpeed);
         }
 
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
