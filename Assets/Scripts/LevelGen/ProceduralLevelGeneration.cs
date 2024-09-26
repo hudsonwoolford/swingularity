@@ -68,7 +68,7 @@ public static class ProceduralLevelGeneration
 
         for (int i = 0; i < poisson.Length; i++){
             planetPoints[i] = poisson[i].Item1;
-            planetSizes[i] = poisson[i].Item2;
+            planetSizes[i] = poisson[i].Item2 * radiusScale;
         }
 
         UnityEngine.Random.InitState(seed);
