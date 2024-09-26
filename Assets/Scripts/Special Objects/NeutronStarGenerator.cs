@@ -108,7 +108,7 @@ public class NeutronStarGenerator : SunGenerator
             float distance = wSum.magnitude;
             Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
             //allP[i].velocity = polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
-            allP[i].position = new Vector2(wSum.x * particleSpeed / distance + pos.x, wSum.y * particleSpeed / distance + pos.y);
+            allP[i].position = new Vector3(wSum.x * particleSpeed / distance + pos.x, wSum.y * particleSpeed / distance + pos.y, transform.position.z);
             //allP[i].velocity = Vector3.one * 10;
         }
 
