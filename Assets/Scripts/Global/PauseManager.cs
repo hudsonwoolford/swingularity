@@ -223,6 +223,9 @@ public class PauseManager : MonoBehaviour
         if(!hideHUD){
             pausecanvas.enabled = true;
         }
+        else{
+            pausecanvas.enabled = false;
+        }
     }
     void OnScore(string score, int scoreRelToPar, int totalShots, Color scoreColor)
     {
