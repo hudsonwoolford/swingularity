@@ -10,6 +10,10 @@ public class AutomaticBallShooter : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] float power;
     [SerializeField] KeyCode shootKey;
+    [SerializeField] AnimationCurve pullbackCurve;
+    [SerializeField] float waitTime;
+    [SerializeField] float pullbackTime;
+    [SerializeField] bool dynamicPullbackTime;
     [Header("Simulation")]
     [SerializeField] int simSteps;
     [SerializeField] LayerMask excludeLayer;
@@ -19,6 +23,7 @@ public class AutomaticBallShooter : MonoBehaviour
     Transform environment;
     Vector2[] simPoints;
     bool started;
+    float timePressed;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +43,16 @@ public class AutomaticBallShooter : MonoBehaviour
     {
         if (Input.GetKeyDown(shootKey))
         {
-            StartCoroutine(shootBall.ArtificialShot(bearing, power));
+            timePressed = 0;
+        }
+        if(Input.GetKey(shootKey))
+        {
+            timePressed += Time.deltaTime;
+        }
+        if(Input.GetKeyUp(shootKey))
+        {
+            if(!dynamicPullbackTime) { timePressed = pullbackTime; }
+            StartCoroutine(shootBall.ArtificialShot(bearing, power, timePressed, waitTime, pullbackCurve));
         }
     }
     private void OnValidate()

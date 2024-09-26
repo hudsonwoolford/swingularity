@@ -422,7 +422,7 @@ public class ShootBall : MonoBehaviour
         cols.Clear();
         liningUpShot = false;
     }
-    public IEnumerator ArtificialShot(float angle, float strength)
+    public IEnumerator ArtificialShot(float angle, float strength, float pullTime, float waitTime, AnimationCurve evaluationCurve)
     {
         liningUpShot = true;
 
@@ -435,6 +435,73 @@ public class ShootBall : MonoBehaviour
             yield break;
         }
 
+        float timer = 0;
+
+        RaycastHit hit;
+        bool rayHit = false;
+        Vector2 normal = Vector2.zero;
+        while (timer < pullTime)
+        {
+            if (PauseManager.paused) //cant shoot while paused
+            {
+                if (simulatedObj != null)
+                {
+                    Destroy(simulatedObj);
+                }
+                slr.positionCount = 0;//deleting line
+                lr.positionCount = 0; //deleting line
+                liningUpShot = false;
+                if (colIcons) { DrawCollisionIcons(); }
+                yield break;
+            }
+
+            stopGravity?.Invoke();
+            dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+            dist = dir.magnitude;
+
+            dist = Mathf.Lerp(0, strength * maxPower, evaluationCurve.Evaluate(timer / pullTime)); //stops the player from doing insanely powerful shots, is also where it is scaled
+            shootPower = Mathf.Pow(dist / maxPower, 2.5f) * 100;
+            force = dist * dir.normalized;
+
+            rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
+            normal = (transform.position - hit.transform.position).normalized;
+            Vector2 mouseNormal = -dir;
+
+            shootAngle = -Vector2.SignedAngle(normal, dir);
+            if (rayHit) //this happens if the player is about to shoot directly onto a planet
+            {
+                if (Vector3.Dot(mouseNormal, normal) > 0)
+                {
+                    float right = -Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)) / Mathf.Abs(Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)));
+                    Vector3[] tangentVectors = CalculateTangentVector(hit.transform.GetComponent<SphereCollider>(), rb.position);
+                    if (tangentVectors.Length == 0)
+                    {
+                        tangentVectors = new Vector3[2] { new Vector3(-normal.y, normal.x, 0), new Vector3(normal.y, -normal.x, 0) };
+                    }
+                    Vector3 chosenVector = right > 0 ? tangentVectors[0] : tangentVectors[1];
+
+                    float minDot = Vector3.Dot(-chosenVector, normal);
+                    if (Vector3.Dot(mouseNormal.normalized, normal) > minDot)
+                    {
+                        dir = chosenVector;
+
+                        float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
+                        dist *= dotPower;
+
+                    }
+                }
+
+            }
+            force = dist * dir.normalized;
+
+            PerformSimulation(rb.position, force, rb.velocity);
+
+            timer += Time.deltaTime;
+            yield return null; //wait for next frame
+        }
+
+        yield return new WaitForSeconds(waitTime);
+
         angle *= Mathf.Deg2Rad;
         dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         dist = strength * maxPower; //stops the player from doing insanely powerful shots, is also where it is scaled
@@ -442,11 +509,18 @@ public class ShootBall : MonoBehaviour
 
         shootPower = strength * 100;
 
-        RaycastHit hit;
-        bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
-        Vector2 normal = (transform.position - hit.transform.position).normalized;
+        rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
+        normal = (transform.position - hit.transform.position).normalized;
 
         shootAngle = -Vector2.SignedAngle(normal, dir);
+
+        if (simulatedObj != null)
+        {
+            Destroy(simulatedObj);
+        }
+        slr.positionCount = 0;//deleting line
+        if (colIcons) { DrawCollisionIcons(); }
+
 
         StopCoroutine(BallStillTiming(ballStillTimeVal));
         onSwing?.Invoke(); //invoke shoot event
