@@ -9,6 +9,7 @@ public class LevelGenStaticReferences : ScriptableObject
     {
         public float baseMultiplier;
         public List<Vector2> nestedRegionSizes;
+        public int maxPlanets;
     }
     [System.Serializable]
     public struct SpecialObjectInfoWrapper
