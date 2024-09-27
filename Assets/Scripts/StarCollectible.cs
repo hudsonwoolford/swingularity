@@ -122,6 +122,7 @@ public class StarCollectible : MonoBehaviour
     {
         if(LevelManager.levelComplete) { return; }
         if(collectionAnimRoutine != null) { StopCoroutine(collectionAnimRoutine); }
+        GetComponent<Collider>().enabled = true;
         GameManager.SFXManager.PlaySFX(lostAudio);
         starObj.SetActive(false);
         transform.position = chosenPos;
@@ -169,6 +170,7 @@ public class StarCollectible : MonoBehaviour
     #endregion
     void CollectStar()
     {
+        GetComponent<Collider>().enabled = false;
         GameManager.SFXManager.PlaySFX(collectionAudio);
         collectionAnimRoutine = StartCoroutine(CollectionAnimation());
     }
