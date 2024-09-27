@@ -141,6 +141,8 @@ public class MappingHandling : MonoBehaviour
     }
     void ShowDeathMessage()
     {
+        flagArrow.gameObject.SetActive(false);
+        ballArrow.gameObject.SetActive(false);
         deathMessageTxt.text = deathMessages[deathMessageIndex].ToUpper();
         canvasAnimator.Play("ShowOOB");
     }
@@ -156,17 +158,23 @@ public class MappingHandling : MonoBehaviour
         ballArrow.gameObject.SetActive(true);
         ballArrow.gameObject.SetActive(true);
     }
+    void Reset(){
+        ballArrow.gameObject.SetActive(true);
+        ballArrow.gameObject.SetActive(true);
+    }
     private void OnEnable()
     {
         ShootBall.death += SetDeathMessage;
         PauseManager.pauseGame += Pause;
         PauseManager.unpauseGame += UnPause;
+        ShootBall.triggerReset += Reset;
     }
     private void OnDisable()
     {
         ShootBall.death -= SetDeathMessage;
         PauseManager.pauseGame -= Pause;
         PauseManager.unpauseGame -= UnPause;
+        ShootBall.triggerReset -= Reset;
 
 
     }
