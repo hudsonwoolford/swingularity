@@ -101,6 +101,16 @@ public class CameraFollow : MonoBehaviour
         }
         Vector3 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
         Vector3 oldBallPos = new Vector3(ball.position.x, ball.position.y, -10);
+                // if(Input.mouseScrollDelta.y >= 0){
+        //     oldBallPos = 
+        // }
+        // else{
+        //     Vector2 middle = (startPos + endPos) / 2;
+        //     oldBallPos = new Vector3(middle.x, middle.y, -10);
+        // }
+        // if(panning){
+        //     oldMousePos = oldBallPos;
+        // }
         float oldZoom = Camera.main.orthographicSize;
         targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
         Camera.main.orthographicSize = cameraSize;
@@ -113,7 +123,12 @@ public class CameraFollow : MonoBehaviour
             transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, transform.position.z);
         }
         else{
+            Vector3 noPanZoomDir = ZoomPos(oldBallPos, transform.position, oldZoom);
+
+            Vector2 closestNoPanZoomPos = panningPath.ClosestPoint(new Vector2(transform.position.x + noPanZoomDir.x, transform.position.y + noPanZoomDir.y));
+
             //Following ball and zooming
+            transform.position = new Vector3(closestNoPanZoomPos.x, closestNoPanZoomPos.y, transform.position.z);
             if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
             Vector3 targetPos = Vector3.zero;
 
@@ -155,8 +170,8 @@ public class CameraFollow : MonoBehaviour
             // Vector2 targetClamped = cameraPath.ClosestPoint(new Vector2(targetPos.x, targetPos.y));
             // targetPos = new Vector3 (targetClamped.x, targetClamped.y, transform.position.z);
 
-            if (cameraSize > defaultCameraSize){
-                float camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
+            if (targetCameraSize > defaultCameraSize){
+                float camLerpVal = targetCameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
 
                 Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y);
                 Vector2 flagProgressPos = new Vector2 (flag.position.x, startPos.y);
@@ -172,7 +187,6 @@ public class CameraFollow : MonoBehaviour
                 Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
                 targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
             }                   
-
             transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
         }
     }
