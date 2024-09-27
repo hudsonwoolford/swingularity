@@ -103,7 +103,9 @@ public class LevelGenerator : MonoBehaviour
     Camera mainCam;
     Vector2 camSize;
     bool xOry;
-
+    
+    float maxDifficultyPlanets;
+    
     #endregion
     private void Awake()
     {
@@ -147,7 +149,7 @@ public class LevelGenerator : MonoBehaviour
         if(!init) {levelInit?.Invoke(levelStatic.possibleGalaxySchemes[0]);}  //Initiation failsafe
 
         //Sets the level generation settings
-        float[] levelGenSettings = new float[10]{
+        float[] levelGenSettings = new float[11]{
             minPlanets,
             maxPlanets,
             levelStatic.minSize,
@@ -157,7 +159,8 @@ public class LevelGenerator : MonoBehaviour
             (regionSize.x - levelStatic.maxSize/2),
             (regionSize.y - levelStatic.maxSize/2),
             levelStatic.samplesBeforeRejection,
-            levelStatic.offsetScale
+            levelStatic.offsetScale,
+            maxDifficultyPlanets
         };
 
         //Calculates level based off settings
@@ -183,6 +186,7 @@ public class LevelGenerator : MonoBehaviour
         levelStatic = LevelManager.levelStatic;
 
         float specialObjMultiplier = levelStatic.specialObjectMultipliers[levelParams.difficulty - 1] * 1.75f;
+        maxDifficultyPlanets = levelStatic.regionSizes[levelParams.difficulty - 1].maxPlanets;
 
         possiblePlanetTypes = levelParams.themes;
 

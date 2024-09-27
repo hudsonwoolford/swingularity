@@ -61,8 +61,9 @@ public static class ProceduralLevelGeneration
         float radiusScale = levelGenSettings[5];
         Vector2 regionBounds = new Vector2 (levelGenSettings[6], levelGenSettings[7]);
         int numSamplesBeforeRejection = (int)levelGenSettings[8];
+        int maxDifficultyPlanets = (int)levelGenSettings[10];
 
-        (Vector3, float)[] poisson = PoissonDiskSampling(seed, minSize, maxSize, bias, regionBounds, numSamplesBeforeRejection);
+        (Vector3, float)[] poisson = PoissonDiskSampling(seed, minSize, maxSize, bias, regionBounds, numSamplesBeforeRejection, maxDifficultyPlanets);
         Vector3[] planetPoints = new Vector3[poisson.Length];
         float[] planetSizes = new float[poisson.Length];
 
@@ -91,7 +92,7 @@ public static class ProceduralLevelGeneration
         return new Level(poisson.Length, planetSizes, planetPoints, planetSeeds, planetTypes, regionBounds);
     }
 
-    public static (Vector3, float)[] PoissonDiskSampling(int seed, float minRadius, float maxRadius, float sizeBias, Vector2 regionBounds, int numSamplesBeforeRejection){
+    public static (Vector3, float)[] PoissonDiskSampling(int seed, float minRadius, float maxRadius, float sizeBias, Vector2 regionBounds, int numSamplesBeforeRejection, int maxPlanets){
         //Cell diagonal is same length as radius
         float cellSize = minRadius/Mathf.Sqrt(2);
         int[,] grid = new int[Mathf.CeilToInt(regionBounds.x/cellSize), Mathf.CeilToInt(regionBounds.y/cellSize)];
@@ -133,6 +134,14 @@ public static class ProceduralLevelGeneration
                 spawnPoints.RemoveAt(spawnIndex);
             }
         }
+
+        int numRemoved = points.Count - maxPlanets;
+        for(int i = 0; i < numRemoved; i++){
+            UnityEngine.Random.InitState(seed + i *78);
+            int index = UnityEngine.Random.Range(0, points.Count);
+            points.Remove(points[index]);
+        }
+
         Vector3[] pointsArray = VectorConversion(points.ToArray());
 
         (Vector3, float)[] result = new (Vector3, float)[pointsArray.Length];

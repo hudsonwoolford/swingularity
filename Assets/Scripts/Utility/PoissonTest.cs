@@ -14,7 +14,7 @@ public class PoissonTest : MonoBehaviour
 
     (Vector3, float)[] spheres;
     void OnValidate(){
-       spheres = ProceduralLevelGeneration.PoissonDiskSampling(seed, minRadius, maxRadius, sizeBias,regionSize, rejectionSamples);
+       spheres = ProceduralLevelGeneration.PoissonDiskSampling(seed, minRadius, maxRadius, sizeBias,regionSize, rejectionSamples, 21470000);
     }
 
     void OnDrawGizmos(){
