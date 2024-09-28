@@ -41,6 +41,14 @@ public class AutomaticBallShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.LeftAlt)) { Vector2 shot = OptimalShot();
+            if(shot != Vector2.zero)
+            {
+                bearing = shot.x;
+                power = shot.y;
+            }
+
+        }
         if (Input.GetKeyDown(shootKey))
         {
             timePressed = 0;
@@ -54,6 +62,36 @@ public class AutomaticBallShooter : MonoBehaviour
             if(!dynamicPullbackTime) { timePressed = pullbackTime; }
             StartCoroutine(shootBall.ArtificialShot(bearing, power, timePressed, waitTime, pullbackCurve));
         }
+    }
+    Vector2 OptimalShot()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 dir = mousePos - (Vector2)transform.position;
+        int startingAngle = (int)(Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        for (int ang = startingAngle; ang < startingAngle + 360; ang++)
+        {
+            for (float pow = 0.1f; pow < 1; pow+=0.1f)
+            {
+                bearing = ang;
+                power = pow;
+
+                MockSimulate();
+
+                for (int i = 1; i < simPoints.Length; i+=3)
+                {
+                    RaycastHit rayHit;
+                    if (Physics.Raycast(simPoints[i - 1], (simPoints[i] - simPoints[i - 1]).normalized, out rayHit, (simPoints[i] - simPoints[i - 1]).magnitude))
+                    {
+                        if(rayHit.transform.CompareTag("Hole"))
+                        {
+                            return new Vector2(ang, pow);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return Vector2.zero;
     }
     private void OnValidate()
     {

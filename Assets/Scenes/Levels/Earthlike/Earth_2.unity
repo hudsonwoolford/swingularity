@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0011478009, g: 0.0010323651, b: 0.0009506331, a: 1}
+  m_IndirectSpecularColor: {r: 0.0010242463, g: 0.0009406305, b: 0.0009149318, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 91.3575, y: 29.469849, z: 78.46376}
 --- !u!23 &69263791
 MeshRenderer:
@@ -270,6 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 38.79811, y: -112.008484, z: -168.03053}
 --- !u!23 &204426207
 MeshRenderer:
@@ -526,6 +528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 74.44275, y: -196.39777, z: -29.61914}
 --- !u!23 &893333994
 MeshRenderer:
@@ -625,6 +628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetType: 0
   specificSeed: 1
+  darkMatter: 0
   seed: {x: 42.486923, y: 183.78592, z: 223.43459}
 --- !u!23 &1333632979
 MeshRenderer:
@@ -1444,6 +1448,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119318888659353616, guid: 6b22623ac2a29f848a8c3902dfd352e5,
+        type: 3}
+      propertyPath: power
+      value: 0.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119318888659353616, guid: 6b22623ac2a29f848a8c3902dfd352e5,
+        type: 3}
+      propertyPath: bearing
+      value: 191
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

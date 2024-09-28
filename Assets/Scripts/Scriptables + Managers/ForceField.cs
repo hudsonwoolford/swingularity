@@ -108,6 +108,12 @@ public class ForceField : MonoBehaviour
         Color c = pData.forceFieldColor;
         frontColor = new Color(c.r, c.g, c.b, 0);
         fresnelColor = c * intensityMult;
+
+        //DEBUG
+        if (planet.GetComponent<MoonManager>() != null)
+        {
+            cMass.doNotAffect = true;
+        }
     }
     void SetPBlockProp()
     {
