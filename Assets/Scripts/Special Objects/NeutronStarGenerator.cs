@@ -98,7 +98,7 @@ public class NeutronStarGenerator : SunGenerator
         int polarity = !invertPolarity ? 1 : -1;
         for (int i = 0; i < numAlive; i++)
         {
-            Vector2 pos = allP[i].position;
+            Vector2 pos = transform.position + transform.InverseTransformPoint(allP[i].position);
             if (allP[i].remainingLifetime < allP[i].startLifetime / 1.5f && Vector2.Distance(pos, transform.position) < transform.localScale.x / 2)
             {
                 allP[i].velocity = Vector2.zero;
@@ -108,7 +108,7 @@ public class NeutronStarGenerator : SunGenerator
             float distance = wSum.magnitude;
             Vector2 nextPoint = new Vector2(wSum.x / distance, wSum.y / distance);
             //allP[i].velocity = polarity * nextPoint * Time.fixedDeltaTime * particleSpeed;
-            allP[i].position = new Vector3(wSum.x * particleSpeed / distance + pos.x, wSum.y * particleSpeed / distance + pos.y, transform.position.z);
+            allP[i].position = transform.TransformPoint(new Vector3(wSum.x * particleSpeed / distance + pos.x, wSum.y * particleSpeed / distance + pos.y, transform.position.z)-transform.position);
             //allP[i].velocity = Vector3.one * 10;
         }
 
@@ -122,6 +122,7 @@ public class NeutronStarGenerator : SunGenerator
             allParticles[i] = new ParticleSystem.Particle[particleSystems[i].main.maxParticles];
         }
     }
+
     void DrawMagneticField()
     {
         Vector2 offset = new Vector2(-xSeg / 2 * cellSize, -ySeg / 2 * cellSize);

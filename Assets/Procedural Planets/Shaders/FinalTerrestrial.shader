@@ -250,17 +250,32 @@ Shader "Custom/FinalTerrestrial"
             o.vertPos = v.vertex;
             o.normal = v.normal;
 
-
+            float3 worldScale = float3(
+            length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x)), // scale x axis
+            length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)), // scale y axis
+            length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z))  // scale z axis
+            );
             //Fresnel (fade out when close to body)
-            float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-            float3 relCameraPos = float3(worldPos.xy, _WorldSpaceCameraPos.z);
-            float3 bodyWorldCenter = mul(unity_ObjectToWorld, float4(0,0,0,1)).xyz;
-            float camRadiiFromSurface = (length(bodyWorldCenter - relCameraPos) - bodyScale) / bodyScale;
-            float fresnelT = smoothstep(0,1,camRadiiFromSurface);
-            float3 viewDir = normalize(worldPos - relCameraPos);
-            float3 normWorld = normalize(mul(unity_ObjectToWorld, float4(v.normal,0)));
-            float fresStrength = lerp(_FresnelStrengthNear, _FresnelStrengthFar, fresnelT);
-            o.fresnel = saturate(fresStrength * pow(1 + dot(viewDir, normWorld), _FresnelPower));
+            //float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+            //float3 relCameraPos = float3(worldPos.xy, _WorldSpaceCameraPos.z);
+            //float3 bodyWorldCenter = mul(unity_ObjectToWorld, float4(0,0,0,1)).xyz;
+            //float camRadiiFromSurface = (length(bodyWorldCenter - relCameraPos) - bodyScale) / bodyScale;
+            //float fresnelT = smoothstep(0,1,camRadiiFromSurface);
+            //float3 viewDir = normalize(worldPos - relCameraPos);
+            //float3 normWorld = normalize(mul(unity_ObjectToWorld, float4(v.normal,0)));
+            //float fresStrength = lerp(_FresnelStrengthNear, _FresnelStrengthFar, fresnelT);
+            //o.fresnel = saturate(fresStrength * pow(1 + dot(viewDir, normWorld), _FresnelPower));
+
+            // Fresnel (fade out when close to body)
+			float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+			float3 bodyWorldCentre = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
+			float camRadiiFromSurface = (length(bodyWorldCentre - _WorldSpaceCameraPos.xyz) - bodyScale) / bodyScale;
+			float fresnelT = smoothstep(0,1,camRadiiFromSurface);
+			float3 viewDir = normalize(worldPos - _WorldSpaceCameraPos.xyz);
+			float3 normWorld = normalize(mul(unity_ObjectToWorld, float4(v.normal,0)));
+			float fresStrength = lerp(_FresnelStrengthNear, _FresnelStrengthFar, fresnelT);
+			o.fresnel = saturate(fresStrength * pow(1 + dot(viewDir, normWorld), _FresnelPower));
+            o.fresnel = 0;
         }
 
 

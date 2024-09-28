@@ -21,6 +21,6 @@ public class AtmosphereHandler : MonoBehaviour
     public void ScaleAtmosphere()
     {
         if (atmosphere == null) { atmosphere = GetComponent<Light>(); }
-        atmosphere.range = transform.parent.localScale.x / scaleRatio;
+        atmosphere.range = transform.parent.lossyScale.x / scaleRatio;
     }
 }
