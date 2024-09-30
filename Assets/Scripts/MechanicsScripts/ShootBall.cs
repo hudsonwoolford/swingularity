@@ -532,7 +532,7 @@ public class ShootBall : MonoBehaviour
         ballStill = false;
         movedAstronaut = false;
 
-        ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, 1 - force.magnitude / maxPower) + UnityEngine.Random.Range(-0.15f, 0.15f);
+        ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, 1 - force.magnitude / maxPower);
         GameManager.SFXManager.PlaySFX(hitBall, ballAudioSrc, Mathf.Clamp01(force.magnitude / maxPower * 2));
         onShoot?.Invoke(); //invoke shoot event
 
