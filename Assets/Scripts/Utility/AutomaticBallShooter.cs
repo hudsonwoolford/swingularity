@@ -93,7 +93,8 @@ public class AutomaticBallShooter : MonoBehaviour
         }
         return Vector2.zero;
     }
-    private void OnValidate()
+
+    private void OnDrawGizmos()
     {
         if(!Application.isPlaying || !started) { return; }
         
@@ -101,9 +102,6 @@ public class AutomaticBallShooter : MonoBehaviour
         {
             MockSimulate();
         }
-    }
-    private void OnDrawGizmosSelected()
-    {
         float ang = bearing * Mathf.Deg2Rad;
         Vector2 dir = new Vector2(Mathf.Cos(ang), Mathf.Sin(ang));
 
