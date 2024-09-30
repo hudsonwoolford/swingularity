@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0009537746, g: 0.00089135324, b: 0.0008724986, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015189854, g: 0.0014101006, b: 0.0013688242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -465,13 +465,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293daa8024f40f241aba01d0268cb405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 427315520
-  resolution: 512
-  regionSize: {x: 0, y: 0}
-  possiblePlanetTypes: 05000000
+  seed: 427796112
+  resolution: 1024
+  regionSize: {x: 20, y: 20}
+  possiblePlanetTypes: 04000000
   specialObjects:
-  - type: 0
-    amount: 1
+  - type: 2
+    amount: 2
   - type: 5
     amount: 1
   - type: 4
@@ -482,7 +482,7 @@ MonoBehaviour:
     amount: 1
   - type: 2
     amount: 1
-  generateCollectible: 1
+  generateCollectible: 0
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
   planetGeneratorPrefab: {fileID: 4185493507399609543, guid: b249e2594de07e04da3d9dab466706c0,
     type: 3}
@@ -500,7 +500,7 @@ MonoBehaviour:
     type: 3}
   audioSrcPrefab: {fileID: 3271912196737945231, guid: b27aead6328eeb94e80db071b8cca62f,
     type: 3}
-  astronaut: {fileID: 0}
+  astronaut: {fileID: 2412882714300987247}
   starCollectiblePrefab: {fileID: 1558331757705019381, guid: 08e5b33348adeba42b32fb8323822936,
     type: 3}
 --- !u!4 &866247461
