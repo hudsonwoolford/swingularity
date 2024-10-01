@@ -71,7 +71,7 @@ public class TabletFramer : MonoBehaviour
 
         yield return new WaitForSeconds((float)mainClip.length);
 
-        //StartCoroutine(UnframeCamera());
+        StartCoroutine(UnframeCamera());
     }
     IEnumerator UnframeCamera()
     {
