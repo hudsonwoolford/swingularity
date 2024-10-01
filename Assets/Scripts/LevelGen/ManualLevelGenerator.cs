@@ -23,6 +23,8 @@ public class ManualLevelGenerator : MonoBehaviour
     Texture2D planetTexture;
     GameObject player;
     bool procedural = false;
+
+    [SerializeField] bool justVisuals = false;
     private void Awake()
     {
         if(Instance == null)
@@ -192,6 +194,11 @@ public class ManualLevelGenerator : MonoBehaviour
         {
             forceField = GenerateForcefield(newPlanet.transform);
             forceField.transform.parent = environment;
+            if(justVisuals){
+                forceField.GetComponent<Collider>().isTrigger = true;
+                forceField.GetComponent<ForceField>().autoMass = false;
+                forceField.GetComponent<CelestialMass>().mass = 0;
+            }
         }
 
         newPlanet.transform.parent = allPlanetParent;
