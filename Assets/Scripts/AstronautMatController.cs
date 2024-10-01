@@ -45,6 +45,9 @@ public class AstronautMatController : MonoBehaviour
         if(shootBall.astronautFading){
             astronautAnim.Play("Idle", 0);
         }
+                emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
+        emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
+
     }
 
     public void StartFade(){
