@@ -438,7 +438,7 @@ public class ShootBall : MonoBehaviour
         dist = strength * maxPower; //stops the player from doing insanely powerful shots, is also where it is scaled
         force = dist * dir.normalized;
 
-        shootPower = strength * 100;
+        shootPower = Mathf.Pow(dist / maxPower, 2.5f) * 100;
 
         RaycastHit hit;
         bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
