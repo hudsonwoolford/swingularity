@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class ChaoticPerspective : MonoBehaviour
 {
-    [SerializeField] float maxDistance = 100f;
+    [SerializeField] float maxDistance = 75f;
     const float constantFactor = 60f;
     [SerializeField] float originalScale = 1f; // Set this to the original scale of the object
 
+    Vector3 camPos = new Vector3(0f, 5, -50);
     void Start()
     {
         originalScale = transform.localScale.x;
 
         // Calculate the direction from the camera to the object
-        Vector3 viewDir = (transform.position - Camera.main.transform.position).normalized;
+        Vector3 viewDir = (transform.position - camPos).normalized;
 
         // Choose a random distance within the range
         float chosenDist = UnityEngine.Random.Range(0, maxDistance);
 
         // Move the object to a new position based on the chosen distance
-        transform.position = Camera.main.transform.position + viewDir * chosenDist;
+        transform.position = camPos + viewDir * chosenDist;
 
         // Adjust the scale to maintain the same apparent size
         float scaleFactor = chosenDist / constantFactor;
