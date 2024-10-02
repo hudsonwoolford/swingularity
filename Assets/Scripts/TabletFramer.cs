@@ -11,36 +11,63 @@ public class TabletFramer : MonoBehaviour
     [SerializeField] VideoClip mainClip;
     [SerializeField] VideoClip loopClip;
     [SerializeField] float transitionDuration;
+    [SerializeField] CameraState currentState;
+    enum CameraState
+    {
+        Framed,
+        Unframed
+    }
 
-    bool framed;
     Vector3 startingPos;
     Quaternion startingRot;
     // Start is called before the first frame update
     void Start()
     {
-        videoPlayer.clip = loopClip;
+        //GetComponent<Animator>().enabled = false;
+
+        videoPlayer.clip = mainClip;
         videoPlayer.Play();
+        videoPlayer.time += 2f;
+
+
+        startingPos = transform.position;
+        startingRot = transform.rotation;
+
+        if (currentState == CameraState.Framed)
+        {
+            transform.position = frameCamera.position;
+            transform.rotation = frameCamera.rotation;
+        }
+        //StartCoroutine(UnframeCamera());
+        StartCoroutine(WaitForNextClip());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(framed)
-        {
-            transform.position = frameCamera.position;
-            transform.rotation = frameCamera.rotation;
-        }
-        if(Input.GetKeyDown(KeyCode.Space) && !framed)
+        //if(currentState == CameraState.Framed)
+        //{
+        //    transform.position = frameCamera.position;
+        //    transform.rotation = frameCamera.rotation;
+        //}
+        if(Input.GetKeyDown(KeyCode.Space) && currentState == CameraState.Unframed)
         {
             StartCoroutine(FrameCamera());
         }
+        if (Input.GetKeyDown(KeyCode.Space) && currentState == CameraState.Framed)
+        {
+            StartCoroutine(UnframeCamera());
+        }
     }
-    public void FrameCameraVoid()
+    IEnumerator WaitForNextClip()
     {
-        StartCoroutine(FrameCamera());
+        yield return new WaitForSeconds((float)mainClip.length-2f);
+        videoPlayer.clip = loopClip; videoPlayer.Play();
     }
     IEnumerator FrameCamera()
     {
+        videoPlayer.clip = loopClip; videoPlayer.Stop(); videoPlayer.time = 0; videoPlayer.Play();
+
         Vector3 startPos = transform.position;
         startingPos = transform.position;
         startingRot = transform.rotation;
@@ -56,13 +83,13 @@ public class TabletFramer : MonoBehaviour
         timer = transitionDuration;
         WhileLoopLogic();
 
-        framed = true;
+        currentState = CameraState.Framed;
 
         void WhileLoopLogic()
         {
             transform.position = Vector3.Lerp(startPos, frameCamera.position, transitionCurve.Evaluate(timer / transitionDuration));
             transform.rotation = Quaternion.Lerp(startingRot, frameCamera.rotation, transitionCurve.Evaluate(timer / transitionDuration));
-            if(transitionCurve.Evaluate(timer / transitionDuration) > 0.66f && videoPlayer.clip != mainClip)
+            if(transitionCurve.Evaluate(timer / transitionDuration) > 0.56f && videoPlayer.clip != mainClip)
             {
                 videoPlayer.clip = mainClip;
                 videoPlayer.Play();
@@ -75,7 +102,10 @@ public class TabletFramer : MonoBehaviour
     }
     IEnumerator UnframeCamera()
     {
-        framed = false;
+        yield return new WaitForSeconds(0.5f);
+
+        currentState = CameraState.Unframed;
+
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
 
@@ -96,5 +126,6 @@ public class TabletFramer : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, startingPos, transitionCurve.Evaluate(timer / transitionDuration));
             transform.rotation = Quaternion.Lerp(startRot, startingRot, transitionCurve.Evaluate(timer / transitionDuration));
         }
+        GetComponent<Animator>().enabled = true;
     }
 }
