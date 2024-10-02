@@ -9,6 +9,23 @@ public class MockPlanet : MonoBehaviour
     [SerializeField] public bool specificSeed;
     [SerializeField] public bool darkMatter;
     [SerializeField] public Vector3 seed;
+
+    private void OnDrawGizmos()
+    {
+        Color[] typeColor = new Color[]
+        {
+            Color.green,
+            Color.yellow,
+            Color.blue,
+            Color.red,
+            new Color(0.5f, 0, 0.5f, 1),
+            Color.white,
+            Color.magenta
+        };
+
+        Gizmos.color = typeColor[(int)planetType] * 0.8f;
+        Gizmos.DrawSphere(transform.position, transform.localScale.x/2);
+    }
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(MockPlanet))]
