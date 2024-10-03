@@ -113,6 +113,7 @@ public class ForceField : MonoBehaviour
     {
         //null checks
         if (meshRenderer == null) { meshRenderer = GetComponent<MeshRenderer>(); }
+        if (meshFilter == null) { meshFilter = GetComponent<MeshFilter>(); }
         if (forceMat == null) { forceMat = meshRenderer.sharedMaterial; }
         if (pBlock == null) { pBlock = new MaterialPropertyBlock(); }
 
