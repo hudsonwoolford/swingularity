@@ -15,7 +15,6 @@ Material:
   m_InvalidKeywords:
   - _BIOMEA_ON
   - _BIOMEB_ON
-  - _OCEAN_ON
   - _SWAPBIOME_ON
   - _UseFresnel
   m_LightmapFlags: 4
@@ -37,11 +36,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalTextureA:
-        m_Texture: {fileID: 2800000, guid: 10a98ef36b981b045b960698bc7d5cc3, type: 3}
+        m_Texture: {fileID: 2800000, guid: ae835be02a0e9f04da60b0f96a2f694b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalTextureB:
-        m_Texture: {fileID: 2800000, guid: 10a98ef36b981b045b960698bc7d5cc3, type: 3}
+        m_Texture: {fileID: 2800000, guid: d592405f9342d8d4babe71442386da2f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalTextureP:
@@ -51,8 +50,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _BeachBlendDst: 0.015
-    - _BeachBlendEnd: 0.032
-    - _BeachBlendIntensity: 1.56
+    - _BeachBlendEnd: 0.042
+    - _BeachBlendIntensity: 0.58
     - _BiomeA: 1
     - _BiomeAEnd: 0.45
     - _BiomeB: 1
@@ -66,45 +65,45 @@ Material:
     - _FresnelPower: 8
     - _FresnelStrengthFar: 5
     - _FresnelStrengthNear: 2
-    - _Gain: 1
+    - _Gain: 0.73
     - _GroundBlendEnd: 1.15
     - _GroundBlendIntensity: 0.13
-    - _Lacunarity: 0.77
-    - _MetallicA: 0
+    - _Lacunarity: 0.33
+    - _MetallicA: 0.792
     - _MetallicB: 0
     - _MetallicP: 0
     - _Multiplier: 0.29
     - _NormalPower: 1
-    - _NormalPowerA: 0.46
-    - _NormalPowerB: 0.38
+    - _NormalPowerA: 0.33
+    - _NormalPowerB: 0.57
     - _NormalPowerP: -0.2
     - _NormalScale: 1
-    - _NormalScaleA: 0.38
-    - _NormalScaleB: 0.38
+    - _NormalScaleA: 0.28
+    - _NormalScaleB: 0.14
     - _NormalScaleP: 2.57
-    - _Ocean: 1
-    - _OceanBlendEnd: 0.11
-    - _OceanBlendIntensity: 1.06
+    - _Ocean: 0
+    - _OceanBlendEnd: 0.13
+    - _OceanBlendIntensity: 0.52
     - _Octaves: 4
-    - _Persistence: 1.41
+    - _Persistence: 1.8
     - _Polar: 0
     - _PolarBlendEnd: 0.1
-    - _PolarBlendIntensity: 8.77
-    - _PolarHeight: 0.86
-    - _Scale: 1.01
-    - _SeaLevel: 1.04
-    - _SmoothnessA: 0
+    - _PolarBlendIntensity: 9.25
+    - _PolarHeight: 19.06
+    - _Scale: 0.71
+    - _SeaLevel: 1
+    - _SmoothnessA: 0.565
     - _SmoothnessB: 0
     - _SmoothnessP: 0
-    - _SteepMultiplierA: 2.71
-    - _SteepMultiplierB: 2.71
+    - _SteepMultiplierA: 2.63
+    - _SteepMultiplierB: 2.63
     - _SteepMultiplierP: 0
     - _SwapBiome: 1
     - _UseFresnel: 1
-    - _VegetationLineA: 0.12
-    - _VegetationLineB: 0.12
-    - _VegetationLineHarshnessA: 7.038832
-    - _VegetationLineHarshnessB: 7.038832
+    - _VegetationLineA: 0.117
+    - _VegetationLineB: 0.117
+    - _VegetationLineHarshnessA: 4.94
+    - _VegetationLineHarshnessB: 4.94
     - _VegetationLineHarshnessP: 1.86
     - _VegetationLineP: 0.205
     - _WarpGain: 1
@@ -116,31 +115,31 @@ Material:
     - bodyScale: 1
     m_Colors:
     - _ColorOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _FlatColorA: {r: 1, g: 0.94160974, b: 0.26100624, a: 1}
-    - _FlatColorAVariant: {r: 0.53342545, g: 0.5566038, b: 0, a: 1}
-    - _FlatColorB: {r: 0.040583827, g: 0.08184046, b: 0.4528302, a: 1}
-    - _FlatColorBVariant: {r: 0.24150053, g: 0.34554628, b: 0.764151, a: 1}
+    - _FlatColorA: {r: 0, g: 0, b: 0, a: 1}
+    - _FlatColorAVariant: {r: 0.6415094, g: 0.21198139, b: 0.08170167, a: 1}
+    - _FlatColorB: {r: 0.53333336, g: 0.5862178, b: 0.65882355, a: 1}
+    - _FlatColorBVariant: {r: 0.015686277, g: 0.023981627, b: 0.039215688, a: 1}
     - _FlatColorP: {r: 0, g: 0.5888243, b: 0.8396226, a: 1}
     - _FlatColorPVariant: {r: 0.51957995, g: 0.7043159, b: 0.7924528, a: 1}
-    - _FresnelColor: {r: 1, g: 0.7421383, b: 0.94978446, a: 1}
-    - _HighElevationColorA: {r: 0.72505856, g: 0, b: 1, a: 1}
-    - _HighElevationColorB: {r: 0, g: 1, b: 0.82268715, a: 1}
+    - _FresnelColor: {r: 0.6, g: 0.6695157, b: 0.7647059, a: 1}
+    - _HighElevationColorA: {r: 0.9150943, g: 0.45983237, b: 0.20287468, a: 1}
+    - _HighElevationColorB: {r: 0.7775454, g: 0.8515545, b: 0.9528302, a: 1}
     - _HighElevationColorP: {r: 1, g: 1, b: 1, a: 1}
-    - _HighElevationSteepColorA: {r: 0.6067014, g: 0, b: 0.8018868, a: 1}
-    - _HighElevationSteepColorB: {r: 0, g: 0.8, b: 0.38074264, a: 1}
+    - _HighElevationSteepColorA: {r: 0.2830189, g: 0.16687435, b: 0.16687435, a: 1}
+    - _HighElevationSteepColorB: {r: 0.09812211, g: 0.18046829, b: 0.3301887, a: 1}
     - _HighElevationSteepColorP: {r: 0.71675867, g: 0.8584906, b: 0.8206269, a: 1}
     - _NormalOffset: {r: 0, g: 0, b: 0, a: 1}
-    - _NormalOffsetA: {r: 1054.518, g: 1540.0017, b: 409.31964, a: 0}
-    - _NormalOffsetB: {r: 1054.518, g: 1540.0017, b: 409.31964, a: 0}
+    - _NormalOffsetA: {r: 1153.0702, g: 936.5481, b: 491.92172, a: 0}
+    - _NormalOffsetB: {r: 238.18213, g: 301.65607, b: 412.2114, a: 0}
     - _NormalOffsetP: {r: 752.2873, g: 739.02155, b: 1024.9899, a: 0}
-    - _Offset: {r: 1494.7949, g: 1000.28625, b: 616.2653, a: 0}
-    - _SeabedColor: {r: 0.7392353, g: 0.5511655, b: 2.9960785, a: 0.3529412}
+    - _Offset: {r: 582.53357, g: 911.11975, b: 478.49118, a: 0}
+    - _SeabedColor: {r: 0.0036044791, g: 0.018743837, b: 0.254717, a: 1}
     - _ShorelineColor: {r: 1, g: 0.88971794, b: 0.61960787, a: 1}
-    - _ShorelineColorA: {r: 0.94598335, g: 0.7688679, b: 1, a: 1}
-    - _ShorelineColorB: {r: 0.2216981, g: 1, b: 0.57787013, a: 1}
+    - _ShorelineColorA: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+    - _ShorelineColorB: {r: 0.43137255, g: 0.54114443, b: 0.69803923, a: 1}
     - _ShorelineColorP: {r: 0.654902, g: 0.9372549, b: 1, a: 1}
-    - _SteepColorA: {r: 0.9339623, g: 0.79191214, b: 0.12775902, a: 1}
-    - _SteepColorB: {r: 0, g: 0.43396002, b: 0.8509804, a: 1}
+    - _SteepColorA: {r: 0, g: 0, b: 0, a: 1}
+    - _SteepColorB: {r: 0.14901961, g: 0.18911083, b: 0.25490198, a: 1}
     - _SteepColorP: {r: 0.7783019, g: 1, b: 0.95223886, a: 1}
-    - _WarpOffset: {r: 1725.4893, g: 1796.3041, b: 601.8655, a: 0}
+    - _WarpOffset: {r: 730.56934, g: 815.76624, b: 445.1283, a: 0}
   m_BuildTextureStacks: []
