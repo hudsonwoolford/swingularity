@@ -516,7 +516,6 @@ public class LevelManager : MonoBehaviour
             currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();  
         }
         UniverseParams universeParams = currentUniverse;
-        Debug.Log(starTotal);
         universeParams.numStars += starTotal;
         GameManager.SaveLoadManager.IncrementSupernovae(starTotal * currentUniverse.relativeDifficulty);
         setUniverse?.Invoke(universeParams);

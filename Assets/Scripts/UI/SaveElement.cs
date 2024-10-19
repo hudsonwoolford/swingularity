@@ -49,6 +49,7 @@ public class SaveElement : MonoBehaviour
     }
     void OnValidate()
     {
+        if (Application.isPlaying) { return; }
         SetElementValues();
     }
     void CopySeed()

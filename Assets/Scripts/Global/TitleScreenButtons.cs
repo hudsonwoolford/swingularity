@@ -66,6 +66,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] float speed;
     Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
+    bool mainMenuShown = false;
     bool ngMenu;
     bool onlyNGMenu;
     NGMenuState currentNGMenuState;
@@ -94,7 +95,11 @@ public class TitleScreenButtons : MonoBehaviour
         {
             starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
         }
+
+        mainMenuShown = false;
         ngMenu = false;
+
+
         skybox.SetFloat("_Rotation", rotation);
         //normal ui
         myUniverseBtn.onClick.AddListener(() => LoadGame());
@@ -124,6 +129,11 @@ public class TitleScreenButtons : MonoBehaviour
     }
     private void Update()
     {
+        if(Input.anyKeyDown && !mainMenuShown)
+        {
+            menuAnim.Play("ContinueShowMenu");
+            mainMenuShown = true;
+        }
         if (Input.GetKeyDown(KeyCode.Escape) && ngMenu)
         {
             StartCoroutine(EnableNewGameMenu(false));
@@ -146,7 +156,6 @@ public class TitleScreenButtons : MonoBehaviour
         }
         GetLastGameObjectSelected();
     }
-
 
     void GetLastGameObjectSelected() {
         if (eventSystem == null) { eventSystem = EventSystem.current; }
