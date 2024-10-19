@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UISFX : MonoBehaviour
 {
@@ -23,7 +24,15 @@ public class UISFX : MonoBehaviour
     }
     void SubscribeAllButtons()
     {
-        Button[] allButtons = GameObject.FindObjectsOfType<Button>();
+        List<Button> allButtons = GameObject.FindObjectsOfType<Button>().ToList();
+
+        for (int i = allButtons.Count-1; i >= 0; i--)
+        {
+            if (allButtons[i].gameObject.GetComponent<NoSoundButton>()!=null)
+            {
+                allButtons.RemoveAt(i);
+            }
+        }
 
         foreach (Button button in allButtons)
         {

@@ -64,6 +64,7 @@ public class SpaceShipManager : MonoBehaviour
         }
 
         velocity = transform.position - posLastUpdate;
+
         SetParticleLifetime();
         posLastUpdate = transform.position;
     }
