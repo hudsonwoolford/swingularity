@@ -194,13 +194,17 @@ public class TitleScreenButtons : MonoBehaviour
         currentNGMenuState = NGMenuState.OptionsMenu;
     }
     void Customise(){
-        menuAnim.Play("HideMenuSpeed");
-        cameraAnim.Play("CameraToShop");
-        ngMenuAnim.Play("HideCreationMenu");
-        ngMenuAnim.Play("HideSaveLoadMenu");
-        shopAnim.Play("ShowShopDelay");
-        ngMenuAnim.Play("HideCampaignCreationMenu");
-        StartCoroutine(AnimateCustomizeMaterials(0.75f, true));
+        //DEMO WORK, CHANGED BUTTON TO STORE PAGE
+        Application.OpenURL("https://store.steampowered.com/app/3272450/Swingularity/");
+
+
+        //menuAnim.Play("HideMenuSpeed");
+        //cameraAnim.Play("CameraToShop");
+        //ngMenuAnim.Play("HideCreationMenu");
+        //ngMenuAnim.Play("HideSaveLoadMenu");
+        //shopAnim.Play("ShowShopDelay");
+        //ngMenuAnim.Play("HideCampaignCreationMenu");
+        //StartCoroutine(AnimateCustomizeMaterials(0.75f, true));
     }
     void QuitCustomise(){
         menuAnim.Play("ShowMenuWithDelay");
@@ -482,16 +486,18 @@ public class TitleScreenButtons : MonoBehaviour
     }
     IEnumerator EnableNewGameMenu(bool enable)
     {
-        if (SaveLoadManager.currentGlobalSave != null)
-        {
-            infiniteGroup.interactable = SaveLoadManager.currentGlobalSave.unlockedInfinite;
-            infiniteGroup.alpha = !infiniteGroup.interactable ? 0.25f : 1f;
-        }
-        else
-        {
+        //DEMO EDITING - DONT WANT INFINITE UNLOCKED
+        //if (SaveLoadManager.currentGlobalSave != null)
+        //{
+        //    infiniteGroup.interactable = SaveLoadManager.currentGlobalSave.unlockedInfinite;
+        //    infiniteGroup.alpha = !infiniteGroup.interactable ? 0.25f : 1f;
+        //}
+        //else
+        //{
             infiniteGroup.interactable = false;
             infiniteGroup.alpha = 0.25f;
-        }
+        //}
+        //END DEMO EDITING
         if (enable)
         {
             PopulateSaves();

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.001323115, g: 0.0012108574, b: 0.0011326433, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2861,7 +2861,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 200, y: -191}
-  m_SizeDelta: {x: 1013.74, y: 200}
+  m_SizeDelta: {x: 1250, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &374209997
 MonoBehaviour:
@@ -2883,7 +2883,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlocked by completing the home universe
+  m_text: Playable by downloading the full game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b9917d82bd2006499b48f2bd3cb3cf2, type: 2}
   m_sharedMaterial: {fileID: -1664077629006440949, guid: 3b9917d82bd2006499b48f2bd3cb3cf2,
@@ -13590,7 +13590,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HOME UNIVERSE
+  m_text: DEMO UNIVERSE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b9917d82bd2006499b48f2bd3cb3cf2, type: 2}
   m_sharedMaterial: {fileID: -1664077629006440949, guid: 3b9917d82bd2006499b48f2bd3cb3cf2,
@@ -14150,7 +14150,7 @@ GameObject:
   - component: {fileID: 486927622}
   - component: {fileID: 486927624}
   m_Layer: 5
-  m_Name: Customise
+  m_Name: WishlistBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23293,7 +23293,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -200, y: -191}
-  m_SizeDelta: {x: 1000, y: 200}
+  m_SizeDelta: {x: 1250, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &828870685
 MonoBehaviour:
@@ -23315,7 +23315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Begin your Swingularity experience here
+  m_text: 'Sample your Swingularity experience here
 
 '
   m_isRightToLeft: 0
@@ -30009,7 +30009,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HOME UNIVERSE
+  m_text: DEMO UNIVERSE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b9917d82bd2006499b48f2bd3cb3cf2, type: 2}
   m_sharedMaterial: {fileID: -1664077629006440949, guid: 3b9917d82bd2006499b48f2bd3cb3cf2,
@@ -32070,9 +32070,9 @@ MonoBehaviour:
     name: 
     seed: 0
     relativeDifficulty: 5
-    size: Medium
+    size: Small
     completedGalaxies: 0
-    numGalaxies: 7
+    numGalaxies: 2
     numStars: 0
     proceduralUniverse: 0
   levelStatic: {fileID: 11400000, guid: 7fae442c9a685f6458701ed55765d43b, type: 2}
@@ -40762,7 +40762,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CUSTOMISE
+  m_text: STEAM PAGE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b9917d82bd2006499b48f2bd3cb3cf2, type: 2}
   m_sharedMaterial: {fileID: -1664077629006440949, guid: 3b9917d82bd2006499b48f2bd3cb3cf2,
@@ -41385,7 +41385,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "+ The standard experience\n+ Curated levels\n+ Tutorial guidance \n"
+  m_text: "+ A shortened experience\n+ Snapshots of real levels\n+ Tutorial guidance
+    \n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b9917d82bd2006499b48f2bd3cb3cf2, type: 2}
   m_sharedMaterial: {fileID: -1664077629006440949, guid: 3b9917d82bd2006499b48f2bd3cb3cf2,
@@ -53948,7 +53949,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7503894499831182}
-  m_LocalRotation: {x: 0.25885826, y: -0.6390364, z: -0.05803642, w: 0.72198105}
+  m_LocalRotation: {x: -0.065114394, y: -0.5865566, z: -0.76834095, w: 0.24771665}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.018376064, y: 0.018376064, z: 0.018376064}
   m_ConstrainProportionsScale: 1

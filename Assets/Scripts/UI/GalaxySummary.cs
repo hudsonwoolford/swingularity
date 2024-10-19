@@ -94,7 +94,7 @@ public class GalaxySummary : MonoBehaviour
             universeSupernovaeTxt.text = (SaveLoadManager.currentUniverseSave.supernovae).ToString();
         }
         //seed, stars, supernovae, and difficulty
-        universeSeedTxt.text = !uni.proceduralUniverse ? "Seed: " + SetColor("Campaign", colorGrad.Evaluate(0)) :  "Seed: " + uni.seed.ToString();
+        universeSeedTxt.text = !uni.proceduralUniverse ? "Seed: " + SetColor("Demo", colorGrad.Evaluate(0)) :  "Seed: " + uni.seed.ToString();
         universeStarsTxt.text = uni.numStars.ToString();
         universeDifficultyMult.text = !uni.proceduralUniverse ? "x" + SetColor("5", colorGrad.Evaluate(0.5f)) : "x" + SetColor(uni.relativeDifficulty.ToString(), colorGrad.Evaluate(uni.relativeDifficulty/10));
     }
