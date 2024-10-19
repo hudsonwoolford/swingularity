@@ -19,6 +19,8 @@ public class SkyboxManager : MonoBehaviour
 
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
+        RenderSettings.skybox = runtimeSkyboxMat;
+
         if (scene.name == "Galaxies")
         {
             UnityEngine.Random.InitState(GameManager.LevelManager.currentUniverse.seed);
