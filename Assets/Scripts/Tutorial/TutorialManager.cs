@@ -375,13 +375,15 @@ public class TeachHackMode : TutorialState
 [System.Serializable]
 public class TeachPause : TutorialState
 {
+    ShootBall shootBall;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
-        PauseManager.pauseGame += OnPause;
+        PauseManager.pauseGame += OnEndState;
+        ShootBall.onShoot += OnEndState;
         tutorialParent.SetActive(true);
 
-        GameManager.LevelManager.EnableBallInput(false);
+        GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("TeachPauseTutorial");
         tutorialAnimator.Play("PauseKeybindBlink");
     }
@@ -392,15 +394,16 @@ public class TeachPause : TutorialState
     public override void OnExit()
     {
         tutorialParent.SetActive(false);
-        PauseManager.pauseGame -= OnPause;//safety
+        ShootBall.onShoot -= OnEndState; //safety
+        PauseManager.pauseGame -= OnEndState;//safety
         base.OnExit();
     }
-    void OnPause()
+    void OnEndState()
     {
-        GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("HidePauseTutorial");
         tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
-        PauseManager.pauseGame -= OnPause;
+        ShootBall.onShoot -= OnEndState;
+        PauseManager.pauseGame -= OnEndState;
     }
     public override void EnableState()
     {
@@ -409,7 +412,8 @@ public class TeachPause : TutorialState
     public override void DisableState()
     {
         base.DisableState();
-        PauseManager.pauseGame -= OnPause;//safety
+        ShootBall.onShoot -= OnEndState; //safety
+        PauseManager.pauseGame -= OnEndState;//safety
     }
 }
 [System.Serializable]

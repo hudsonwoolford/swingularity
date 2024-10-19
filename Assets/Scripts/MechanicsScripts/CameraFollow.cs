@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] bool lockCamera;
     [SerializeField] bool zoomOnHoleEnd;
     [SerializeField] bool debugCam;
-    [SerializeField] float sizeScalar = 1, smoothness = 0.3f, lerpSpeed;  //smoothness of camera movement
+    [SerializeField] float sizeScalar = 1, smoothness = 0.3f, zoomSensitivity = 0.75f;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball, flag;                            //ball transform
@@ -77,6 +77,30 @@ public class CameraFollow : MonoBehaviour
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
         cameraPath.points = PolygonPositions(startPos, endPos, sizeScalar, 0, 0); //scaled down version of inner shape
+
+        Vector2 targetPos = ball.position; //camera focuses ball by default
+        float showLevelThreshold = cameraMinMax.x;
+        if (targetCameraSize > showLevelThreshold) //start focusing the level instead of the ball
+        {
+            float camLerpVal = targetCameraSize.Remap(showLevelThreshold, cameraMinMax.y, 0, 1);
+
+            Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y); //ball position along x-axis of level
+            Vector2 flagProgressPos = new Vector2(flag.position.x, startPos.y); //flag position along x-axis of level
+            Vector2 midpoint = (startPos + endPos) / 2; //midpoint of the level
+
+            Vector2 pathDir = (endPos - startPos).normalized;
+            float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x / 5f, -(midpoint - ballProgressPos).magnitude, (midpoint - ballProgressPos).magnitude);
+            if (((midpoint - flagProgressPos).magnitude > (ballProgressPos - flagProgressPos).magnitude))
+            {
+                moveMag = -moveMag;
+            }
+
+            Vector2 movePoint = pathDir * moveMag + ballProgressPos;
+            Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
+            targetPos = alteredTargetpos;
+
+        }
+        transform.position = new Vector3(targetPos.x, targetPos.y, -10);//smoothdamp function for smoothness
     }
 
     void Update(){
@@ -99,116 +123,80 @@ public class CameraFollow : MonoBehaviour
         Vector2 camSize = CalculateCamsize(Camera.main.orthographicSize);
         panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / Camera.main.aspect - camSize.x, 35-camSize.y);
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) //right click to pan
         {
             StartCoroutine(Panning());
         }
-        if(Input.GetMouseButton(2)){
+        if(Input.GetMouseButton(2)) //middle click to reset
+        {
             panning = false;
         }
-        //if ((Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0)) && focusBall) 
-        //{
-        //    targetCameraSize = defaultCameraSize;
-        //}
-        if (!Input.GetMouseButton(0) && Time.timeScale != 0){
-            targetCameraSize -= Input.mouseScrollDelta.y;
+        if (!Input.GetMouseButton(0) && !PauseManager.paused) //not shooting (left click) and unpaused 
+        {
+            targetCameraSize = Mathf.Clamp(targetCameraSize - Input.mouseScrollDelta.y * zoomSensitivity, cameraMinMax.x, cameraMinMax.y); //adjust camera size with scroll
         }
-        Vector3 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-        Vector3 oldBallPos = new Vector3(ball.position.x, ball.position.y, -10);
-                // if(Input.mouseScrollDelta.y >= 0){
-        //     oldBallPos = 
-        // }
-        // else{
-        //     Vector2 middle = (startPos + endPos) / 2;
-        //     oldBallPos = new Vector3(middle.x, middle.y, -10);
-        // }
-        // if(panning){
-        //     oldMousePos = oldBallPos;
-        // }
-        float oldZoom = Camera.main.orthographicSize;
-        targetCameraSize = Mathf.Clamp(targetCameraSize, cameraMinMax.x, cameraMinMax.y);
-        Camera.main.orthographicSize = cameraSize;
-        cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
 
-        Vector2 zoomDir = ZoomPos(oldMousePos, transform.position, oldZoom);
-        Vector2 closestZoomPos = panningPath.ClosestPoint(new Vector2(transform.position.x + zoomDir.x, transform.position.y + zoomDir.y));
+        Vector2 targetPos = ball.position; //camera focuses ball by default
+        if(!panning) { LevelPositioningLogic(); }
+        ZoomingAndPositioningLogic();
 
-        if (panning) {
-            transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, transform.position.z);
-        }
-        else{
-            Vector3 noPanZoomDir = ZoomPos(oldBallPos, transform.position, oldZoom);
-
-            Vector2 closestNoPanZoomPos = panningPath.ClosestPoint(new Vector2(transform.position.x + noPanZoomDir.x, transform.position.y + noPanZoomDir.y));
-
-            //Following ball and zooming
-            transform.position = new Vector3(closestNoPanZoomPos.x, closestNoPanZoomPos.y, transform.position.z);
-            if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
-            Vector3 targetPos = Vector3.zero;
-
-            // float camLerpVal = 0;
-            // if (cameraSize > defaultCameraSize){
-            //     camLerpVal = cameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-            // }  
-            // Vector3 levelMiddle = (startPos + endPos)/2;
-            // Vector3 ballOrMiddle = Vector3.Lerp(oldBallPos, new Vector3(levelMiddle.x, levelMiddle.y, transform.position.z), camLerpVal);
-
-
-            if(lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
+        //END OF FUNCTION
+        void LevelPositioningLogic()
+        {
             if (!panningPath.OverlapPoint(new Vector2(ball.position.x, ball.position.y)) && !finalZoom) //out of boundaries
             {
                 Vector2 closestPoint = panningPath.ClosestPoint(new Vector2(ball.position.x, ball.position.y)); //closest point on boundary perimeter to position
-                targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
+                targetPos = closestPoint; //adjust target position to boundary position
             }
-            else
+
+            float showLevelThreshold = cameraMinMax.x;
+            if (targetCameraSize > showLevelThreshold) //start focusing the level instead of the ball
             {
-                targetPos = new Vector3(ball.position.x, ball.position.y, -10); //ball position in camera z
-            }
+                float camLerpVal = targetCameraSize.Remap(showLevelThreshold, cameraMinMax.y, 0, 1);
 
-
-            // if (!cameraPath.OverlapPoint(new Vector2(ballOrMiddle.x, ballOrMiddle.y)) && !finalZoom) //out of boundaries
-            // {
-            //     Vector2 closestPoint = cameraPath.ClosestPoint(new Vector2(ballOrMiddle.x, ballOrMiddle.y)); //closest point on boundary perimeter to position
-            //     targetPos = new Vector3(closestPoint.x, closestPoint.y, transform.position.z); //smoothdamp function for smoothness
-            // }
-            // else
-            // {
-            //     targetPos = new Vector3(ballOrMiddle.x, ballOrMiddle.y, transform.position.z); //ball position in camera z
-            // }   
-
-            // transform.position += zoomPos;
-            // Vector2 transformClamped = cameraPath.ClosestPoint(new Vector2 (transform.position.x, transform.position.y));
-            // transform.position = new Vector3 (transformClamped.x, transformClamped.y, transform.position.z);
-
-            // targetPos += zoomPos;
-            // Vector2 targetClamped = cameraPath.ClosestPoint(new Vector2(targetPos.x, targetPos.y));
-            // targetPos = new Vector3 (targetClamped.x, targetClamped.y, transform.position.z);
-
-            if (targetCameraSize > defaultCameraSize){
-                float camLerpVal = targetCameraSize.Remap(defaultCameraSize, cameraMinMax.y, 0, 1);
-
-                Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y);
-                Vector2 flagProgressPos = new Vector2 (flag.position.x, startPos.y);
-                Vector2 midpoint = (startPos + endPos) / 2;
+                Vector2 ballProgressPos = new Vector2(targetPos.x, startPos.y); //ball position along x-axis of level
+                Vector2 flagProgressPos = new Vector2(flag.position.x, startPos.y); //flag position along x-axis of level
+                Vector2 midpoint = (startPos + endPos) / 2; //midpoint of the level
 
                 Vector2 pathDir = (endPos - startPos).normalized;
-                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x/5f, -(midpoint - ballProgressPos).magnitude, (midpoint - ballProgressPos).magnitude);
-                if(((midpoint - flagProgressPos).magnitude > (ballProgressPos - flagProgressPos).magnitude)){
+                float moveMag = Mathf.Clamp(CalculateCamsize(cameraMinMax.y).x / 5f, -(midpoint - ballProgressPos).magnitude, (midpoint - ballProgressPos).magnitude);
+                if (((midpoint - flagProgressPos).magnitude > (ballProgressPos - flagProgressPos).magnitude))
+                {
                     moveMag = -moveMag;
                 }
 
                 Vector2 movePoint = pathDir * moveMag + ballProgressPos;
                 Vector2 alteredTargetpos = Vector2.Lerp(targetPos, movePoint, camLerpVal);
-                targetPos = new Vector3(alteredTargetpos.x, alteredTargetpos.y, -10);
-            }                   
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothness);//smoothdamp function for smoothness
+                targetPos = alteredTargetpos;
+
+            }
+            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(targetPos.x, targetPos.y, -10), ref vel, smoothness);//smoothdamp function for smoothness
+        }
+        void ZoomingAndPositioningLogic()
+        {
+            //cache old positions
+            Vector2 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+            Vector2 oldBallPos = targetPos;
+            float oldZoom = Camera.main.orthographicSize;
+
+            //adjust camera size to target
+            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
+            Camera.main.orthographicSize = cameraSize;
+
+            //dertermine which way the camera should move while zooming
+            Vector2 zoomDir = panning ? ZoomPos(oldMousePos, oldZoom) : ZoomPos(oldBallPos, oldZoom); //if panning zoom in on mouse, else ball
+            Vector2 closestZoomPos = panningPath.ClosestPoint((Vector2)transform.position + zoomDir);
+
+            if (lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
+            //set canera position with position adjusted for zoom
+            transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, -10);
         }
     }
-    Vector3 ZoomPos(Vector3 oldMousePos, Vector3 oldCamPos, float oldZoom){
-            Vector3 length = oldMousePos - transform.position;
+    Vector3 ZoomPos(Vector2 oldMousePos, float oldZoom){
+            Vector2 length = oldMousePos - (Vector2)transform.position;
             float zoomScaleFactor = oldZoom / GetComponent<Camera>().orthographicSize;
-            Vector3 scaledLength = length / zoomScaleFactor;
-            Vector3 deltaLength = length - scaledLength;
+            Vector2 scaledLength = length / zoomScaleFactor;
+            Vector2 deltaLength = length - scaledLength;
             return deltaLength;
     }
     IEnumerator Panning()
@@ -221,7 +209,6 @@ public class CameraFollow : MonoBehaviour
             Vector2 difference = mousePos - startMousePos;
 
             Vector2 nextPos = new Vector2(transform.position.x - difference.x, transform.position.y - difference.y);
-
 
             float buffer = 0.1f;
             Vector2 bufferedNextPos = Vector2.zero;
