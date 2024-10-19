@@ -20939,6 +20939,7 @@ GameObject:
   m_Component:
   - component: {fileID: 298861291375000072}
   - component: {fileID: 764846880712675598}
+  - component: {fileID: 4562343755190445274}
   - component: {fileID: 6884808680904501316}
   - component: {fileID: 8516467241224486234}
   m_Layer: 0
@@ -20977,6 +20978,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSrc: {fileID: 6884808680904501316}
   interfaceSrc: {fileID: 8516467241224486234}
+--- !u!114 &4562343755190445274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5048733615201966557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09f44e4d9df1b44c82f2f367d5758aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickAudio: {fileID: 11400000, guid: d212b5260aa5fae42948ab1452edf58a, type: 2}
 --- !u!82 &6884808680904501316
 AudioSource:
   m_ObjectHideFlags: 0
@@ -24968,6 +24982,52 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &6238260700149766120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7962080099644864160}
+  - component: {fileID: 3650970294014971063}
+  m_Layer: 0
+  m_Name: Skybox Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7962080099644864160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6238260700149766120}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 826.7929, y: 429.0592, z: 3911.5264}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3603051198868054648}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3650970294014971063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6238260700149766120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1047a56f619da664685415188d4c86c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Rotation: 0
+  skyboxMat: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
 --- !u!1 &6272813048220640991
 GameObject:
   m_ObjectHideFlags: 0
@@ -25389,7 +25449,6 @@ MonoBehaviour:
   streakText: {fileID: 1134935617838595126}
   hioStreakText: {fileID: 9074412887599772782}
   completedLevels: []
-  currentProceduralGalaxy: []
 --- !u!114 &8065378934985327223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27948,6 +28007,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7307963198834534181}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: ResumeButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6981148135271211006
 GameObject:
   m_ObjectHideFlags: 0
@@ -28357,7 +28428,6 @@ GameObject:
   - component: {fileID: 6419980820932037006}
   - component: {fileID: 7843219329015335270}
   - component: {fileID: 6309341337394775281}
-  - component: {fileID: 8263332154999665365}
   m_Layer: 0
   m_Name: MasterEventSystem
   m_TagString: Untagged
@@ -28415,19 +28485,6 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
---- !u!114 &8263332154999665365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7212706494597370575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d09f44e4d9df1b44c82f2f367d5758aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickAudio: {fileID: 11400000, guid: d212b5260aa5fae42948ab1452edf58a, type: 2}
 --- !u!1 &7219526252395829121
 GameObject:
   m_ObjectHideFlags: 0
@@ -29223,6 +29280,7 @@ Transform:
   - {fileID: 4323144046243654735}
   - {fileID: 298861291375000072}
   - {fileID: 6419980820932037006}
+  - {fileID: 7962080099644864160}
   - {fileID: 6750354794945834323}
   m_Father: {fileID: 0}
   m_RootOrder: 0

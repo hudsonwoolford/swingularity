@@ -217,7 +217,7 @@ public class ScrollPanTutorial : TutorialState
         timeoffset = Time.time;
         tutorialAnimator.Play("TeachPanReset");
         tutorialAnimator.Play("ResetPanAnim");
-        while (!Input.GetMouseButton(2) && Time.time - timeoffset < 30)
+        while (!(Input.GetMouseButton(2)||Input.GetKeyDown(KeyCode.E)) && Time.time - timeoffset < 30)
         {
             yield return null;
         }

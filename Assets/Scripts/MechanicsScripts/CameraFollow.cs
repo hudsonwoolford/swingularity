@@ -124,11 +124,11 @@ public class CameraFollow : MonoBehaviour
         Vector2 camSize = CalculateCamsize(Camera.main.orthographicSize);
         panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / Camera.main.aspect - camSize.x, 35-camSize.y);
 
-        if (Input.GetMouseButtonDown(1)) //right click to pan
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space)) //right click to pan
         {
             StartCoroutine(Panning());
         }
-        if(Input.GetMouseButton(2)) //middle click to reset
+        if(Input.GetMouseButton(2) || Input.GetKeyDown(KeyCode.E)) //middle click to reset
         {
             panning = false;
         }

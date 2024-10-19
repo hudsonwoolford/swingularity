@@ -77,6 +77,7 @@ public class GalaxyMenu : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] AudioSource starAudioSrc;
     [SerializeField] AudioObj scrollGalaxyAudio;
+    [SerializeField] AudioObj playGalaxyAudio;
     [SerializeField] AudioObj showStarAudio;
     [SerializeField] AudioObj fiveStarAudio;
     Image[] dotSelectedImgs;
@@ -170,6 +171,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     void PlayGalaxy()
     {
+        GameManager.SFXManager.PlaySFX(playGalaxyAudio);
         if(GameManager.LevelManager.procedural)
         {
             SetProceduralGalaxy(galaxyList[focusedGalaxy]);

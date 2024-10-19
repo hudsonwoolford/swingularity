@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static SceneHandling SceneHandling { get; private set; }
     public static SFXManager SFXManager {get; private set; }
     public static MusicManager MusicManager {get; private set; }
+    public static SkyboxManager SkyboxManager { get; private set; }
     private void Awake()
     {
         if (Instance != null)
@@ -33,7 +34,8 @@ public class GameManager : MonoBehaviour
         SaveLoadManager = GetComponentInChildren<SaveLoadManager>(true);
         SceneHandling = GetComponentInChildren<SceneHandling>(true);
         SFXManager = GetComponentInChildren<SFXManager>(true);
-        MusicManager = GetComponentInChildren<MusicManager>(true); 
+        MusicManager = GetComponentInChildren<MusicManager>(true);
+        SkyboxManager = GetComponentInChildren<SkyboxManager>(true);
     }
     private void Start()
     {

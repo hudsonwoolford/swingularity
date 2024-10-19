@@ -62,7 +62,6 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
     [SerializeField] string proceduralGalaxiesScene;
-    [SerializeField] Material skybox;
     [SerializeField] float speed;
     Vector3 saveElementParentOrigin;
     float rotation = 0.02f;
@@ -83,7 +82,10 @@ public class TitleScreenButtons : MonoBehaviour
         CreationMenu,
         CampaignCreationMenu
     }
-
+    private void Awake()
+    {
+        
+    }
     void Start()
     {
         saveElementParentOrigin = saveElementParent.localPosition;
@@ -108,7 +110,7 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenu = false;
 
 
-        skybox.SetFloat("_Rotation", rotation);
+        GameManager.SkyboxManager._Rotation = rotation;
         //normal ui
         myUniverseBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
@@ -160,7 +162,7 @@ public class TitleScreenButtons : MonoBehaviour
             if (rotation > 360) {
                 rotation = 0;
             }
-            skybox.SetFloat("_Rotation", rotation);
+            GameManager.SkyboxManager._Rotation = rotation;
         }
         GetLastGameObjectSelected();
     }
