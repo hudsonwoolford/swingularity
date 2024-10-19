@@ -68,6 +68,7 @@ public class TutorialManager : MonoBehaviour
         }
         currentState = newState;
         currentState.OnEnter(tutorialAnimator, this);
+        currentState.EnableState();
     }
     public void CompleteTutorial()
     {
@@ -172,12 +173,18 @@ public abstract class TutorialState
     }
     public virtual void EnableState()
     {
-        tutorialParent.SetActive(true);
+        if(tutorialParent != null)
+        {
+            tutorialParent.SetActive(true);
+        }
         //enable state
     }
     public virtual void DisableState()
     {
-        tutorialParent.SetActive(false);
+        if(tutorialParent != null)
+        {
+            tutorialParent.SetActive(false);
+        }
         //disable state
     }
 }
@@ -240,7 +247,6 @@ public class BallInputTutorial : TutorialState
     {
         base.OnEnter(ta, tm);
         shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
-        ShootBall.onShoot += OnBallShoot;
         playerBall = GameObject.FindGameObjectWithTag("Player").transform;
         tutorialAnimator.Play("TeachBallInput");
     }
@@ -278,6 +284,7 @@ public class BallInputTutorial : TutorialState
     public override void EnableState()
     {
         base.EnableState();
+        ShootBall.onShoot += OnBallShoot;
     }
     public override void DisableState()
     {
@@ -339,7 +346,6 @@ public class TeachHackMode : TutorialState
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
-        HackMode.onHackMode += OnHackMode;
         tutorialParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(false);
         tutorialAnimator.Play("TeachHackMode");
@@ -365,6 +371,7 @@ public class TeachHackMode : TutorialState
     public override void EnableState()
     {
         base.EnableState();
+        HackMode.onHackMode += OnHackMode;
     }
     public override void DisableState()
     {
@@ -375,14 +382,11 @@ public class TeachHackMode : TutorialState
 [System.Serializable]
 public class TeachPause : TutorialState
 {
-    ShootBall shootBall;
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
-        PauseManager.pauseGame += OnEndState;
-        ShootBall.onShoot += OnEndState;
-        tutorialParent.SetActive(true);
 
+        tutorialParent.SetActive(true);
         GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("TeachPauseTutorial");
         tutorialAnimator.Play("PauseKeybindBlink");
@@ -408,6 +412,8 @@ public class TeachPause : TutorialState
     public override void EnableState()
     {
         base.EnableState();
+        PauseManager.pauseGame += OnEndState;
+        ShootBall.onShoot += OnEndState;
     }
     public override void DisableState()
     {
@@ -424,9 +430,6 @@ public class TeachResetTutorial : TutorialState
     public override void OnEnter(Animator ta, TutorialManager tm)
     {
         base.OnEnter(ta, tm);
-        ShootBall.triggerReset += OnBallReset;
-        ShootBall.holeAnim += OnBallReset;
-        ShootBall.onShoot += OnBallShoot;
     }
     IEnumerator ResetTutorial()
     {
@@ -458,7 +461,11 @@ public class TeachResetTutorial : TutorialState
     }
     public override void EnableState()
     {
-        if(!ballShot) { return; }
+        ShootBall.triggerReset += OnBallReset;
+        ShootBall.holeAnim += OnBallReset;
+        ShootBall.onShoot += OnBallShoot;
+
+        if (!ballShot) { return; } //stops from enabling parent (base function)
         base.EnableState();
     }
     public override void DisableState()

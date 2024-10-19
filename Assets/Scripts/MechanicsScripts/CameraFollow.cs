@@ -132,9 +132,9 @@ public class CameraFollow : MonoBehaviour
         {
             panning = false;
         }
-        if (!Input.GetMouseButton(0) && !PauseManager.paused) //not shooting (left click) and unpaused 
+        if (!Input.GetMouseButton(0)) //not shooting (left click)
         {
-            targetCameraSize = Mathf.Clamp(targetCameraSize - Input.mouseScrollDelta.y * zoomSensitivity, cameraMinMax.x, cameraMinMax.y); //adjust camera size with scroll
+            targetCameraSize = Mathf.Clamp(targetCameraSize - Input.mouseScrollDelta.y * zoomSensitivity * Time.timeScale, cameraMinMax.x, cameraMinMax.y); //adjust camera size with scroll
         }
 
         Vector2 targetPos = ball.position; //camera focuses ball by default
@@ -180,7 +180,7 @@ public class CameraFollow : MonoBehaviour
             Vector2 ballPos = targetPos;
 
             //adjust camera size to target
-            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, moveSmoothness);
+            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness);
             Camera.main.orthographicSize = cameraSize;
 
             //dertermine which way the camera should move while zooming

@@ -278,6 +278,7 @@ public class LevelManager : MonoBehaviour
                 {
                     currentProceduralUniverse[i].collectedStars[x] = true;
                 }
+                currentProceduralUniverse[i].bestScore = "0";
             }
             GameManager.SaveLoadManager.Save();
             GameManager.SaveLoadManager.Load(currentUniverse.name + ".txt");
@@ -515,6 +516,7 @@ public class LevelManager : MonoBehaviour
             currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();  
         }
         UniverseParams universeParams = currentUniverse;
+        Debug.Log(starTotal);
         universeParams.numStars += starTotal;
         GameManager.SaveLoadManager.IncrementSupernovae(starTotal * currentUniverse.relativeDifficulty);
         setUniverse?.Invoke(universeParams);

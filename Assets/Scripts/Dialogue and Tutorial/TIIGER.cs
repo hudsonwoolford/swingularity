@@ -99,6 +99,7 @@ public class TIIGER : EventTalkableNPC
         dialogueController.TogglePauseDialogue();
         yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
         dialogueController.TogglePauseDialogue();
+        Debug.Log("GO");
 
         isTransitioning = false;
     }

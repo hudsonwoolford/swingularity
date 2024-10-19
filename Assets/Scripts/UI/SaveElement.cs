@@ -21,11 +21,13 @@ public class SaveElement : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeText;
     [SerializeField] TextMeshProUGUI progressText;
     [SerializeField] TextMeshProUGUI progressPercentText;
+    [SerializeField] Button saveElementButton;
     [Header("Procedural")]
-    [SerializeField] TMP_InputField seedText;
     [SerializeField] GameObject proceduralInfo;
+    [SerializeField] TextMeshProUGUI seedText;
     [SerializeField] TextMeshProUGUI difficultyText;
     [SerializeField] TextMeshProUGUI sizeText;
+    [SerializeField] Button copyBtn;
     [Header("Campaign")]
     [SerializeField] GameObject mainCampaignInfo;
     //[SerializeField] TextMeshProUGUI progressText;
@@ -43,21 +45,43 @@ public class SaveElement : MonoBehaviour
     {
         CreateBallImage();
         SetElementValues();
+        copyBtn.onClick.AddListener(() => CopySeed());
     }
     void OnValidate()
     {
         SetElementValues();
     }
+    void CopySeed()
+    {
+        GUIUtility.systemCopyBuffer = uniParams.seed.ToString();
+        saveElementButton.Select();
+    }
     void SetElementValues()
     {
         nameText.text = uniParams.name;
         timeText.text = lastAccessTime;
+
         if(procedural)
         {
             proceduralInfo.SetActive(true);
             mainCampaignInfo.SetActive(false);
             difficultyText.text = uniParams.relativeDifficulty.ToString();
             seedText.text = "Seed: " + uniParams.seed.ToString();
+
+            if(Application.isPlaying)
+            {
+                seedText.ForceMeshUpdate();
+                if(seedText.textInfo.characterCount > 0)
+                {
+                    Vector3 midRight = (seedText.textInfo.characterInfo[seedText.textInfo.characterInfo.Length - 1].topRight + seedText.textInfo.characterInfo[seedText.textInfo.characterInfo.Length - 1].bottomRight)/2;
+                    Vector3 worldRight = seedText.transform.TransformPoint(midRight);
+                    copyBtn.transform.position = new Vector3(copyBtn.transform.position.x, worldRight.y, worldRight.z-0.08f);
+                }
+
+
+
+            }
+
             sizeText.text = uniParams.size;
             difficultyText.color = difficultyCol;
             sizeText.color = sizeCol;

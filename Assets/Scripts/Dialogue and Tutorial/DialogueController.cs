@@ -95,6 +95,10 @@ public class DialogueController : MonoBehaviour
     {
         currentDialogueTxt = null;
         StopAllCoroutines();
+        paragraphIntervalCoroutine = null;
+        paragraphIntervalCoroutine = null;
+
+
         NPCDialogueText.text = "";
         //clear queue
         paragraphs.Clear();
@@ -102,6 +106,7 @@ public class DialogueController : MonoBehaviour
 
         //return bool to false
         isConversation = false;
+        isTyping = false;
     }
     private IEnumerator TypeDialogueText(string p)
     {
