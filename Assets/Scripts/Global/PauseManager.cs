@@ -154,10 +154,6 @@ public class PauseManager : MonoBehaviour
     {
         unpauseGame?.Invoke();
     }
-    public void MenuButton()
-    {
-        unpauseGame?.Invoke();
-    }
     void TutorialComfirmationButton(bool comfirm)
     {
         if (comfirm)

@@ -96,7 +96,15 @@ public class TitleScreenButtons : MonoBehaviour
             starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
         }
 
-        mainMenuShown = false;
+        if(Time.time == 0)
+        {
+            mainMenuShown = false;
+        }
+        else
+        {
+            menuAnim.Play("ContinueShowMenu", 0, 1);
+            mainMenuShown = true;
+        }
         ngMenu = false;
 
 
@@ -287,7 +295,7 @@ public class TitleScreenButtons : MonoBehaviour
         FileInfo[] saveInfos = SaveLoadManager.saves;
 
         SaveElement[] allElements = saveElementParent.GetComponentsInChildren<SaveElement>(true);
-        Array.Sort(saveInfos, (s1, s2) => s2.LastAccessTime.CompareTo(s1.LastAccessTime));
+        Array.Sort(saveInfos, (s1, s2) => s2.LastWriteTime.CompareTo(s1.LastWriteTime));
         for (int i = 0; i < allElements.Length; i++)
         {
             Destroy(allElements[i].gameObject);
@@ -316,7 +324,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastAccessTime.ToString("dd.MM.yy hh:mm"), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastWriteTime.ToString("dd.MM.yy hh:mm"), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion

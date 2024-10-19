@@ -78,7 +78,7 @@ public class SaveLoadManager : MonoBehaviour
             trackRealSave.Add(saveFiles[i]);
         }
         saves = trackRealSave.ToArray();
-        Array.Sort(saves, (s1, s2) => s2.LastAccessTime.CompareTo(s1.LastAccessTime));
+        Array.Sort(saves, (s1, s2) => s2.LastWriteTime.CompareTo(s1.LastWriteTime));
     }
     #region Setting Saving
     void SettingsEnabled(bool enable)
@@ -154,7 +154,7 @@ public class SaveLoadManager : MonoBehaviour
         string jsonSave = JsonUtility.ToJson(currentUniverseSave, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", jsonSave);
-        File.SetLastAccessTime(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", System.DateTime.Now);
+        File.SetLastWriteTime(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", System.DateTime.Now);
         #if UNITY_EDITOR
                 AssetDatabase.Refresh();
         #endif
@@ -164,8 +164,9 @@ public class SaveLoadManager : MonoBehaviour
         string jsonSave = JsonUtility.ToJson(save, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + fileName, jsonSave);
+        File.SetLastWriteTime(Application.dataPath + saveFolder + fileName, System.DateTime.Now);
         #if UNITY_EDITOR
-            AssetDatabase.Refresh();
+        AssetDatabase.Refresh();
         #endif
         currentUniverseSave = save;
 
