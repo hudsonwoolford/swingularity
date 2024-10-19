@@ -14,7 +14,8 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] bool lockCamera;
     [SerializeField] bool zoomOnHoleEnd;
     [SerializeField] bool debugCam;
-    [SerializeField] float sizeScalar = 1, smoothness = 0.3f, zoomSensitivity = 0.75f;  //smoothness of camera movement
+    [SerializeField] float moveSmoothness = 0.25f, zoomSmoothness = 0.5f;  //smoothness of camera movement
+    [SerializeField] float sizeScalar = 1, zoomSensitivity = 0.75f;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball, flag;                            //ball transform
@@ -170,24 +171,23 @@ public class CameraFollow : MonoBehaviour
                 targetPos = alteredTargetpos;
 
             }
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(targetPos.x, targetPos.y, -10), ref vel, smoothness);//smoothdamp function for smoothness
+            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(targetPos.x, targetPos.y, -10), ref vel, moveSmoothness);//smoothdamp function for smoothness
         }
         void ZoomingAndPositioningLogic()
         {
             //cache old positions
-            Vector2 oldMousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-            Vector2 oldBallPos = targetPos;
-            float oldZoom = Camera.main.orthographicSize;
+            Vector2 mousePos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+            Vector2 ballPos = targetPos;
 
             //adjust camera size to target
-            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, smoothness);
+            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, moveSmoothness);
             Camera.main.orthographicSize = cameraSize;
 
             //dertermine which way the camera should move while zooming
-            Vector2 zoomDir = panning ? ZoomPos(oldMousePos, oldZoom) : ZoomPos(oldBallPos, oldZoom); //if panning zoom in on mouse, else ball
+            Vector2 zoomDir = panning ? ZoomPos(mousePos, cameraSize) : ZoomPos(ballPos, cameraSize); //if panning zoom in on mouse, else ball
             Vector2 closestZoomPos = panningPath.ClosestPoint((Vector2)transform.position + zoomDir);
 
-            if (lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, smoothness); return; }
+            if (lockCamera) { transform.position = Vector3.SmoothDamp(transform.position, new Vector3(startPos.x, startPos.y, -10), ref vel, moveSmoothness); return; }
             //set canera position with position adjusted for zoom
             transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, -10);
         }

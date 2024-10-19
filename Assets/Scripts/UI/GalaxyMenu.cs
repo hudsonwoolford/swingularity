@@ -366,6 +366,11 @@ public class GalaxyMenu : MonoBehaviour
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
 
+        if(!instant)
+        {
+            GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+        }
+
         if(zoomIn)
         {
             menuAnim.Play("HideMenu");
@@ -741,6 +746,10 @@ public class GalaxyMenu : MonoBehaviour
         {
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
         }
+
+        yield return new WaitForSecondsRealtime(0.25f);
+        StartCoroutine(ZoomGalaxy(false, false));
+
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
     }
