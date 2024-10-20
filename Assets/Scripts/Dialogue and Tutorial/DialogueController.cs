@@ -145,11 +145,11 @@ public class DialogueController : MonoBehaviour
             }
 
             //dialogue noise
-            if (characterIteration % 4 == 0) //every fourth characteer
+            if (characterIteration % 6 == 0) //every sixth characteer
             {
                 if (soundCharacters.Contains(char.ToUpper(c))) //if it is a sound character
                 {
-                    tgrAudioSrc.pitch = Mathf.Lerp(0.05f, 0.25f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
+                    tgrAudioSrc.pitch = Mathf.Lerp(0.125f, 0.225f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
                     GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
                 }
             }
