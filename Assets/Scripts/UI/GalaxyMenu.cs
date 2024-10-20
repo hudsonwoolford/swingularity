@@ -83,6 +83,7 @@ public class GalaxyMenu : MonoBehaviour
     //DEMO
     [Header("Demo")]
     [SerializeField] DemoCongrats demoCongrats;
+    [SerializeField] AudioObj demoCongratsAudio;
     //END DEMO
 
     Image[] dotSelectedImgs;
@@ -763,10 +764,12 @@ public class GalaxyMenu : MonoBehaviour
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
 
+        yield return new WaitForSecondsRealtime(0.15f);
         //DEMO
         if(demoEnd)
         {
             demoCongrats.ShowMenu();
+            GameManager.SFXManager.PlaySFX(demoCongratsAudio);
         }
         //END DEMO
     }
