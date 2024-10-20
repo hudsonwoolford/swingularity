@@ -18,6 +18,7 @@ public class SaveLoadManager : MonoBehaviour
         public float totalTime = 0f;
         public int totalShots = 0;
         public int supernovae = 0;
+        public string lastSaveTime = "20.10.24 14:35";
     }
     public class GlobalSave
     {
@@ -150,21 +151,21 @@ public class SaveLoadManager : MonoBehaviour
         currentUniverseSave.universeParams = GameManager.LevelManager.currentUniverse;
         currentUniverseSave.allGalaxies = GameManager.LevelManager.currentProceduralUniverse;
         currentUniverseSave.supernovae = currentUniverseSave.universeParams.numStars * currentUniverseSave.universeParams.relativeDifficulty;
+        currentUniverseSave.lastSaveTime = System.DateTime.Now.ToString("dd.MM.yy hh:mm");
 
         string jsonSave = JsonUtility.ToJson(currentUniverseSave, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", jsonSave);
-        File.SetLastWriteTime(Application.dataPath + saveFolder + currentUniverseSave.universeParams.name + ".txt", System.DateTime.Now);
         #if UNITY_EDITOR
                 AssetDatabase.Refresh();
         #endif
     }
     public void CreateSave(string fileName, UniverseSave save)
     {
+        save.lastSaveTime = System.DateTime.Now.ToString("dd.MM.yy hh:mm");
         string jsonSave = JsonUtility.ToJson(save, true);
 
         File.WriteAllText(Application.dataPath + saveFolder + fileName, jsonSave);
-        File.SetLastWriteTime(Application.dataPath + saveFolder + fileName, System.DateTime.Now);
         #if UNITY_EDITOR
         AssetDatabase.Refresh();
         #endif
