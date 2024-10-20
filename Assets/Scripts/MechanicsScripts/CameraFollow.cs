@@ -181,7 +181,7 @@ public class CameraFollow : MonoBehaviour
             Vector2 ballPos = targetPos;
 
             //adjust camera size to target
-            cameraSize = Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness);
+            cameraSize = Mathf.Clamp(Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness), cameraMinMax.x, cameraMinMax.y);
             Camera.main.orthographicSize = cameraSize;
 
             //dertermine which way the camera should move while zooming

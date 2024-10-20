@@ -66,6 +66,7 @@ public class PauseManager : MonoBehaviour
         paused = true;
         Time.timeScale = 0;
         pauseAnim.Play("ShowPauseMenu");
+        pauseAnim.Play("HidePauseButton");
         settingsMenu = false;
     }
     void Unpause()
@@ -73,6 +74,7 @@ public class PauseManager : MonoBehaviour
         paused = false;
         Time.timeScale = 1;
         pauseAnim.Play("HidePauseMenu");
+        pauseAnim.Play("ShowPauseButton");
         settingsMenu = false;
     }
     #region Input & Buttons
@@ -135,7 +137,7 @@ public class PauseManager : MonoBehaviour
     }
     void SettingsBackButton(bool enable)
     {
-        if(enable || !settingsMenu) { return; }
+        if (enable || !settingsMenu) { return; }
         pauseAnim.Play("ShowPauseMenu");
         settingsMenu = false;
     }
