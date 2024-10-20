@@ -80,6 +80,11 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] AudioObj playGalaxyAudio;
     [SerializeField] AudioObj showStarAudio;
     [SerializeField] AudioObj fiveStarAudio;
+    //DEMO
+    [Header("Demo")]
+    [SerializeField] DemoCongrats demoCongrats;
+    //END DEMO
+
     Image[] dotSelectedImgs;
     Vector3 cameraOrigin;
     Transform mainCam;
@@ -748,12 +753,22 @@ public class GalaxyMenu : MonoBehaviour
         {
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
         }
+        //DEMO
+        bool demoEnd = galaxyList[focusedGalaxy].name == "TRIANGULUM M33";
+        //END DEMO
 
         yield return new WaitForSecondsRealtime(0.25f);
         StartCoroutine(ZoomGalaxy(false, false));
 
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
+
+        //DEMO
+        if(demoEnd)
+        {
+            demoCongrats.ShowMenu();
+        }
+        //END DEMO
     }
     private void OnEnable()
     {
