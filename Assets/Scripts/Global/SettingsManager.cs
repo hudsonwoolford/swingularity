@@ -89,6 +89,7 @@ public class SettingsManager : MonoBehaviour
         previousSelectedTab = audioTabBtn.gameObject;
 
         SetButtonFunctions();
+        applySettingsVar?.Invoke();
     }
 
     // Update is called once per frame
@@ -421,9 +422,9 @@ public class SettingsManager : MonoBehaviour
 [System.Serializable]
 public class UserSettings
 {
-    public float masterVolume = 0.5f;
-    public float sfxVolume = 0.2f;
-    public float musicVolume = 0.3f;
+    public float masterVolume = 0.75f;
+    public float sfxVolume = 0.375f;
+    public float musicVolume = 0.45f;
 
     public bool customCursor = true;
     public bool hints = true;

@@ -22,6 +22,7 @@ public class AstronautMatController : MonoBehaviour
 
 
     void Start(){
+        transform.position = new Vector3(transform.position.x, transform.position.z, -100);
         shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
