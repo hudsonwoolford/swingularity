@@ -135,7 +135,6 @@ public class CameraFollow : MonoBehaviour
         if (!Input.GetMouseButton(0)) //not shooting (left click)
         {
             targetCameraSize = Mathf.Clamp(targetCameraSize - Input.mouseScrollDelta.y * zoomSensitivity * Time.timeScale, cameraMinMax.x, cameraMinMax.y); //adjust camera size with scroll
-            Debug.Log(targetCameraSize);
         }
 
         Vector2 targetPos = ball.position; //camera focuses ball by default
