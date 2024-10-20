@@ -157,7 +157,7 @@ public class ForceField : MonoBehaviour
         }
         hitTime[hitIterator].y = hitPower; //hit power array var
 
-        GameManager.SFXManager.PlaySFX(bump, Mathf.Clamp01(hitPower / 50)); //noise
+        GameManager.SFXManager.PlaySFX(bump, hitPower/50 * 5f); //noise
 
         //property setting
         pBlock.SetVectorArray("_HitPos", hitPos);
