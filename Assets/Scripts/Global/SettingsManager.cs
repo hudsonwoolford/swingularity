@@ -423,8 +423,8 @@ public class SettingsManager : MonoBehaviour
 public class UserSettings
 {
     public float masterVolume = 0.75f;
-    public float sfxVolume = 0.5625f;
-    public float musicVolume = 0.5625f;
+    public float sfxVolume = 0.375f;
+    public float musicVolume = 0.45f;
 
     public bool customCursor = true;
     public bool hints = true;
