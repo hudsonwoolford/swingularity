@@ -764,7 +764,7 @@ public class GalaxyMenu : MonoBehaviour
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
 
-        yield return new WaitForSecondsRealtime(0.15f);
+        yield return new WaitForSecondsRealtime(0.4f);
         //DEMO
         if(demoEnd)
         {
