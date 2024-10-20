@@ -298,21 +298,25 @@ public class TitleScreenButtons : MonoBehaviour
     void PopulateSaves()
     {
         if (SaveLoadManager.saves == null || SaveLoadManager.saves.Length == 0) { return; }
-        FileInfo[] saveInfos = SaveLoadManager.saves;
+        SaveLoadManager.UniverseSave[] uniSaves = new SaveLoadManager.UniverseSave[SaveLoadManager.saves.Length];
+        for (int i = 0; i < uniSaves.Length; i++)
+        {
+            uniSaves[i] = GameManager.SaveLoadManager.RetrieveSave(SaveLoadManager.saves[i].Name);
+        }
 
         SaveElement[] allElements = saveElementParent.GetComponentsInChildren<SaveElement>(true);
-        Array.Sort(saveInfos, (s1, s2) => s2.LastWriteTime.CompareTo(s1.LastWriteTime));
+        Array.Sort(uniSaves, (s1, s2) => s2.lastSaveTime.CompareTo(s1.lastSaveTime));
         for (int i = 0; i < allElements.Length; i++)
         {
             Destroy(allElements[i].gameObject);
         }
-        for (int i = 0; i < saveInfos.Length; i++)
+        for (int i = 0; i < uniSaves.Length; i++)
         {
             RectTransform tr = Instantiate(saveElementObj, saveElementParent).GetComponent<RectTransform>();
             tr.localPosition += new Vector3(0, elementHeightJump * i, 0);
 
             //Temporary bc no save load functionality
-            LevelManager.UniverseParams uni = GameManager.SaveLoadManager.RetrieveSave(saveInfos[i].Name).universeParams;
+            LevelManager.UniverseParams uni = uniSaves[i].universeParams;
             if (uni == null) { continue; }
             Color sizeColor = Color.white;
             if (uni.size == "Small")
@@ -330,7 +334,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, saveInfos[i].LastWriteTime.ToString("dd.MM.yy hh:mm"), uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, uniSaves[i].lastSaveTime, uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion
