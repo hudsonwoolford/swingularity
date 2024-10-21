@@ -17,6 +17,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] float moveSmoothness = 0.25f, zoomSmoothness = 0.5f;  //smoothness of camera movement
     [SerializeField] float sizeScalar = 1, zoomSensitivity = 0.75f;  //smoothness of camera movement
     //[SerializeField] bool focusBall = true;
+    Camera mainCam;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
     Transform ball, flag;                            //ball transform
     Vector3 vel;
@@ -37,7 +38,7 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / mainCam.aspect, 35); //to scale version
 
 
         MasterStart();
@@ -48,20 +49,22 @@ public class CameraFollow : MonoBehaviour
     }
     private void Awake()
     {
+        mainCam = GetComponent<Camera>();
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / Camera.main.aspect, 35); //to scale version
+        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / mainCam.aspect, 35); //to scale version
     }
     // Start is called before the first frame update
     void Start() 
     {
-        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * Camera.main.aspect), innerShape.bounds.extents.y / 2) *1.3f;
+        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * mainCam.aspect), innerShape.bounds.extents.y / 2) *1.3f;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
         MasterStart();
     }
     void MasterStart()
     {
+        mainCam.orthographicSize = defaultCameraSize;
         flag = GameObject.FindGameObjectWithTag("Hole").transform;
         transform.position = new Vector3(ball.position.x, ball.position.y, -10);
 
@@ -121,8 +124,8 @@ public class CameraFollow : MonoBehaviour
         }
     }
     void CamBehaviour(){
-        Vector2 camSize = CalculateCamsize(Camera.main.orthographicSize);
-        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / Camera.main.aspect - camSize.x, 35-camSize.y);
+        Vector2 camSize = CalculateCamsize(mainCam.orthographicSize);
+        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / mainCam.aspect - camSize.x, 35-camSize.y);
 
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space)) //right click to pan
         {
@@ -181,7 +184,7 @@ public class CameraFollow : MonoBehaviour
 
             //adjust camera size to target
             cameraSize = Mathf.Clamp(Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness), cameraMinMax.x, cameraMinMax.y);
-            Camera.main.orthographicSize = cameraSize;
+            mainCam.orthographicSize = cameraSize;
 
             //dertermine which way the camera should move while zooming
             Vector2 zoomDir = panning ? ZoomPos(mousePos, cameraSize) : ZoomPos(ballPos, cameraSize); //if panning zoom in on mouse, else ball
@@ -192,20 +195,22 @@ public class CameraFollow : MonoBehaviour
             transform.position = new Vector3(closestZoomPos.x, closestZoomPos.y, -10);
         }
     }
-    Vector3 ZoomPos(Vector2 oldMousePos, float oldZoom){
-            Vector2 length = oldMousePos - (Vector2)transform.position;
-            float zoomScaleFactor = oldZoom / GetComponent<Camera>().orthographicSize;
+    Vector3 ZoomPos(Vector2 oldPos, float oldZoom){
+            //VIEW FRUSTRUM BUGS OCCURED HERE DUE TO DIVIDE BY ZERO, THIS AREA MAY STILL BE AFFECTED, BUT I THINK IT IS FIXED
+            Vector2 length = oldPos - (Vector2)transform.position;
+            float zoomScaleFactor = oldZoom / mainCam.orthographicSize;
             Vector2 scaledLength = length / zoomScaleFactor;
+            //Debug.LogFormat("Camera Orthagraphic Size: {0} | Old Zoom {1} | Zoom Scale Factor {2}", mainCam.orthographicSize, oldZoom, zoomScaleFactor);
             Vector2 deltaLength = length - scaledLength;
             return deltaLength;
     }
     IEnumerator Panning()
     {
         panning = true;
-        Vector2 startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 startMousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         while (Input.GetMouseButton(1) && panning)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             Vector2 difference = mousePos - startMousePos;
 
             Vector2 nextPos = new Vector2(transform.position.x - difference.x, transform.position.y - difference.y);
@@ -239,7 +244,7 @@ public class CameraFollow : MonoBehaviour
             }
 
             transform.position = new Vector3(bufferedNextPos.x, bufferedNextPos.y, transform.position.z);
-            startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            startMousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             yield return null;
         }
     }
@@ -251,8 +256,8 @@ public class CameraFollow : MonoBehaviour
         {
             end += Vector2.one * 0.001f;
         }
-        float height = Camera.main.orthographicSize * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
+        float height = mainCam.orthographicSize * 2; //camera height in units
+        float width = height * mainCam.aspect;       //camera width in units
         height += featherY;
         width += featherX;
         Vector3 camSize = new Vector3(width, height);
@@ -298,7 +303,7 @@ public class CameraFollow : MonoBehaviour
             end += Vector2.one * 0.001f;
         }
         float height = camSizeVar * 2; //camera height in units
-        float width = height * Camera.main.aspect;       //camera width in units
+        float width = height * mainCam.aspect;       //camera width in units
         height += featherY;
         width += featherX;
         Vector3 camSize = new Vector3(width, height);
@@ -359,7 +364,7 @@ public class CameraFollow : MonoBehaviour
     Vector2 CalculateCamsize(float orthoSize)
     {
         float height = orthoSize * 2; //camera height in units
-        float width = height * Camera.main.aspect; //camera width in units
+        float width = height * mainCam.aspect; //camera width in units
         return new Vector2(width, height);
     }
     private void OnEnable()

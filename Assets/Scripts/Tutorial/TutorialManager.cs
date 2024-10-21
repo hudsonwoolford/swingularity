@@ -398,7 +398,7 @@ public class TeachPause : TutorialState
     public override void OnExit()
     {
         tutorialParent.SetActive(false);
-        ShootBall.onShoot -= OnEndState; //safety
+        ShootBall.onSwing -= OnEndState; //safety
         PauseManager.pauseGame -= OnEndState;//safety
         base.OnExit();
     }
@@ -406,19 +406,19 @@ public class TeachPause : TutorialState
     {
         tutorialAnimator.Play("HidePauseTutorial");
         tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
-        ShootBall.onShoot -= OnEndState;
+        ShootBall.onSwing -= OnEndState;
         PauseManager.pauseGame -= OnEndState;
     }
     public override void EnableState()
     {
         base.EnableState();
         PauseManager.pauseGame += OnEndState;
-        ShootBall.onShoot += OnEndState;
+        ShootBall.onSwing += OnEndState;
     }
     public override void DisableState()
     {
         base.DisableState();
-        ShootBall.onShoot -= OnEndState; //safety
+        ShootBall.onSwing -= OnEndState; //safety
         PauseManager.pauseGame -= OnEndState;//safety
     }
 }
@@ -438,7 +438,7 @@ public class TeachResetTutorial : TutorialState
         tutorialAnimator.Play("ResetKeybindBlink");
         Time.timeScale = 0.2f;
         float timeOffset = Time.time;
-        while (!ballReset && Time.time - timeOffset < 3 * 0.2f)
+        while (!ballReset && Time.time - timeOffset < 2.5f * 0.2f)
         {
             yield return null;
         }
