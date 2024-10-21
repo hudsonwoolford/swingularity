@@ -67,7 +67,7 @@ public class ShootBall : MonoBehaviour
     List<CelestialMass> planets = new List<CelestialMass>();
     Vector3 mousePos;
     Vector3 origin, trueOrigin;
-    Vector3 posLastFrame;
+    Vector2 lastClickPos;
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
@@ -168,12 +168,13 @@ public class ShootBall : MonoBehaviour
         }
         mousePos = Input.mousePosition; //screen position of mouse
         mousePos = main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0)); //world position, z value is camera near clip plane
+        if(Input.GetMouseButtonDown(0)) { lastClickPos = mousePos; }
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if(Input.GetMouseButtonDown(0) && LevelManager.ballInput && !astronautFading && astronautMatController.isIdle)
+            if((Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)) && !liningUpShot && LevelManager.ballInput && !astronautFading && astronautMatController.isIdle)
             {
-                if(Vector2.Distance(mousePos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
+                if(Vector2.Distance(lastClickPos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
                     StartCoroutine(LineUpShot());
                     if(showBallPos)
@@ -201,7 +202,6 @@ public class ShootBall : MonoBehaviour
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
-        posLastFrame = transform.position;
     }
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
@@ -304,7 +304,6 @@ public class ShootBall : MonoBehaviour
     {
         rb.constraints = RigidbodyConstraints.FreezeAll;
         liningUpShot = true;
-        Vector2 startingMousePos = mousePos; //stores the initial mousepos
         //lr setup
         lr.positionCount = verts;
         //local variable declaration
@@ -327,7 +326,7 @@ public class ShootBall : MonoBehaviour
                 yield break; 
             }
             stopGravity?.Invoke();
-            dir = startingMousePos - new Vector2(mousePos.x, mousePos.y);
+            dir = lastClickPos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
