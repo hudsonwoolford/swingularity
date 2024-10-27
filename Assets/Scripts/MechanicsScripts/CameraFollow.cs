@@ -383,6 +383,7 @@ public class CameraFollow : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
+        if(mainCam == null) { mainCam = Camera.main; }
         //scene view visuals
         Vector2[] polygon = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, 1 * sizeScalar, 0, 0);
         Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, cameraMinMax.y, 1 * sizeScalar, 0, 0);
