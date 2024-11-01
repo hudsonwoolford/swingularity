@@ -75,10 +75,9 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] SpecialObjectIcon[] iconSprites;
     [SerializeField] TextMeshProUGUI bestScoreTxt;
     [Header("Sounds")]
-    [SerializeField] AudioSource starAudioSrc;
     [SerializeField] AudioObj scrollGalaxyAudio;
-    [SerializeField] AudioObj playGalaxyAudio;
-    [SerializeField] AudioObj showStarAudio;
+    [SerializeField] AudioObj zoomGalaxyAudio;
+    [SerializeField] AudioObj[] starAudios = new AudioObj[5];
     [SerializeField] AudioObj fiveStarAudio;
     //DEMO
     [Header("Demo")]
@@ -177,7 +176,6 @@ public class GalaxyMenu : MonoBehaviour
     }
     void PlayGalaxy()
     {
-        GameManager.SFXManager.PlaySFX(playGalaxyAudio);
         if(GameManager.LevelManager.procedural)
         {
             SetProceduralGalaxy(galaxyList[focusedGalaxy]);
@@ -374,8 +372,9 @@ public class GalaxyMenu : MonoBehaviour
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
 
-        if(!instant)
+        if(!instant && zoomIn)
         {
+            GameManager.SFXManager.PlaySFX(zoomGalaxyAudio);
             GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
         }
 
@@ -739,8 +738,7 @@ public class GalaxyMenu : MonoBehaviour
         for (int i = 0; i < stars.Length; i++)
         {
             if (!stars[i]) { continue; }
-            starAudioSrc.pitch = starStartPitch + starPitchInterval * realIteration;
-            GameManager.SFXManager.PlaySFX(showStarAudio, starAudioSrc, 1);
+            GameManager.SFXManager.PlaySFX(starAudios[realIteration]);
             float timeTracker = 0;
             while (timeTracker < starScaleDuration)
             {
@@ -753,6 +751,7 @@ public class GalaxyMenu : MonoBehaviour
         if(realIteration == 5)
         {
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
         //DEMO
         bool demoEnd = galaxyList[focusedGalaxy].name == "TRIANGULUM M33";
