@@ -26,6 +26,7 @@ public class LevelScoring : MonoBehaviour
     [SerializeField] Color positive, neutral, negative;
     bool hackMode, ballStill;
     bool resetUI;
+    bool levelFailing;
     ShootBall shootBall;
 
     [Serializable]
@@ -142,9 +143,11 @@ public class LevelScoring : MonoBehaviour
     }
     IEnumerator LevelFailed()
     {
+        levelFailing = true;
         ShootBall.death?.Invoke(3);
         yield return new WaitForSeconds(1.25f);
         GameManager.LevelManager.RestartGalaxy();
+        levelFailing = false;
     }
     #endregion
 
@@ -208,7 +211,7 @@ public class LevelScoring : MonoBehaviour
     }
     void OnBallStill()
     {
-        if (numShots == 12 && !LevelManager.levelComplete) { StartCoroutine(LevelFailed()); }
+        if (numShots == 12 && !LevelManager.levelComplete && !levelFailing) { StartCoroutine(LevelFailed()); }
 
         ballStill = true;
         if(resetUI){

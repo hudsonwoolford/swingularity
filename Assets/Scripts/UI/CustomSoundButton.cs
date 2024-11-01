@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoSoundButton : MonoBehaviour
+public class CustomSoundButton : MonoBehaviour
 {
+    public AudioObj customSound;
 }
