@@ -16,21 +16,16 @@ public class ShootBall : MonoBehaviour
     [HideInInspector] public bool pullBack = false; //max power the player can input
     [Header("Power")]
     [SerializeField] float moveScale; //how much moving your mouse can affect the power
-    [Header("Straight Arrow")]
-    [SerializeField] bool straight;
-    [SerializeField] LineRenderer lr; //line renderer
-    [SerializeField] float maxLength; //how big can the arrow get (straight)
-    [SerializeField] LayerMask playerLayer, obstacles; //the layer that the player and only the player is on
-    [SerializeField] int verts; //how detailed is the arrow / how many vertices
+
     [Header("Simulated arrow")]
     [SerializeField] bool simulated;
     [SerializeField] bool colIcons = true, showBallPos = false;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
-    [SerializeField] LayerMask simulationLayer;
     [SerializeField] LayerMask excludeLayer;
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
+    [Header("Other Parameters")]
     [SerializeField] float maxLengthSim; //line can become pretty long, this is the limiter
     [SerializeField] float animLength; //Length of animation when hit the hole
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
@@ -38,6 +33,7 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float ballSpinSpeed;
     [SerializeField] Material ballHackModeMat;
 
+    [SerializeField] LayerMask obstacles;
     [SerializeField] LayerMask ignoreStill;
 
     [SerializeField] GameObject astronaut;
@@ -138,7 +134,6 @@ public class ShootBall : MonoBehaviour
         main = Camera.main;
         defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
-        lr.positionCount = 0; //no line
 
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
@@ -304,8 +299,6 @@ public class ShootBall : MonoBehaviour
     {
         rb.constraints = RigidbodyConstraints.FreezeAll;
         liningUpShot = true;
-        //lr setup
-        lr.positionCount = verts;
         //local variable declaration
         Vector2 dir = Vector2.zero; //direction to the initial mouse pos, also the direction of the ball
         float dist = 0; //distance from initial mouse pos
@@ -320,7 +313,6 @@ public class ShootBall : MonoBehaviour
                     Destroy(simulatedObj);
                 }
                 slr.positionCount = 0;//deleting line
-                lr.positionCount = 0; //deleting line
                 liningUpShot = false; 
                 if (colIcons) { DrawCollisionIcons(); }
                 yield break; 
@@ -371,15 +363,7 @@ public class ShootBall : MonoBehaviour
             }
 
             forceLastFrame = force;
-            if(!straight) {yield return null; continue;}
 
-            float powerPercent = dist / maxPower; //percentage of max power
-            float lengthPercent = powerPercent * maxLength; //percentage of max length
-            Vector2 vertStep = lengthPercent / verts * dir.normalized; //the translation of each vert
-            for (int i = 0; i < verts; i++)
-            {
-                lr.SetPosition(i, new Vector2(transform.position.x,transform.position.y) + i * vertStep); //setting positions relative to ball
-            }
             yield return null; //wait for next frame
         }
 
@@ -388,7 +372,6 @@ public class ShootBall : MonoBehaviour
             Destroy(simulatedObj);
         }
         slr.positionCount = 0;//deleting line
-        lr.positionCount = 0; //deleting line
 
         if(Mathf.CeilToInt(shootPower) <= 5f)
         {
@@ -446,7 +429,6 @@ public class ShootBall : MonoBehaviour
                     Destroy(simulatedObj);
                 }
                 slr.positionCount = 0;//deleting line
-                lr.positionCount = 0; //deleting line
                 liningUpShot = false;
                 if (colIcons) { DrawCollisionIcons(); }
                 yield break;
@@ -552,7 +534,6 @@ public class ShootBall : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
-        lr.positionCount = 0; //no line
         slr.positionCount =0; //no line
         ballStill = false;
         if(Vector3.Distance(originalPos, rb.position)>0.05f)
@@ -716,52 +697,6 @@ public class ShootBall : MonoBehaviour
         {
             RecursiveLayer(t, layer);
         }
-    }
-    void SimulateScene(Vector3 forceVar)
-    {
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        Physics.simulationMode = SimulationMode.Script; //manual control over time
-        if(simulatedObj==null) //instantiation new ball if it doesn't exist
-        {
-            simulatedObj = Instantiate(simulationBall, transform.position, transform.rotation);
-            srb = simulatedObj.GetComponent<Rigidbody>();
-            srb.GetComponent<SimulationBall>().Init(this);
-        }
-
-        SceneManager.MoveGameObjectToScene(simulatedObj, simulationScene); //moves ball to simulation scene
-        Vector3 oVelo = srb.velocity;
-        Vector3 oAlo  = srb.angularVelocity;
-        Vector3 oPos  = simulatedObj.transform.position;
-        Quaternion oRot  = simulatedObj.transform.rotation;
-        
-        srb.velocity = rb.velocity;
-        srb.AddForce(forceVar, ForceMode.Impulse); //force that would happen if mouse release
-
-        slr.positionCount = 0;
-        slr.positionCount = maxstep; //setting up lr
-        
-        float length = 0; //will keep track of line length to be compared against maxlength
-        for (int i = 0; i < maxstep; i++) //for each step
-        {
-            if (i>0){physicsScene.Simulate(Time.fixedDeltaTime); length += (simulatedObj.transform.position - slr.GetPosition(i-1)).magnitude;} //actual simulation and length addition
-            if (length >= maxLengthSim)
-            {
-                Vector3 dir = simulatedObj.transform.position - slr.GetPosition(i - 1).normalized; //dir from prev point to current point
-                float distToFinal = maxLengthSim - (length -= (simulatedObj.transform.position - slr.GetPosition(i - 1)).magnitude); //dist from prev point to maxlength
-                Vector3 finalPoint = slr.GetPosition(i - 1) + dir * distToFinal; //final point in the line
-                slr.SetPosition(i, finalPoint); 
-                slr.positionCount = i;
-                break;
-            }
-            srb.AddForce(ArtificialGravity.GravityForceAtPoint(srb.position, planets.ToArray(), rb.mass));
-            slr.SetPosition(i, simulatedObj.transform.position); //lr position of the ball at current step point
-        }
-        srb.velocity = oVelo;
-        srb.angularVelocity = oAlo;
-        simulatedObj.transform.position = oPos;
-        simulatedObj.transform.rotation = oRot;
-        Physics.simulationMode = SimulationMode.FixedUpdate; //going back to normal fixed update
-        if (colIcons) { DrawCollisionIcons(); } //After fully simulated for the frame, draws the icons for collisions
     }
     #endregion
     #region CollisionIcons
