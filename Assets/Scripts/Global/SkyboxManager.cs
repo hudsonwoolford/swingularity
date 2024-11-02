@@ -25,7 +25,7 @@ public class SkyboxManager : MonoBehaviour
         {
             UnityEngine.Random.InitState(GameManager.LevelManager.currentUniverse.seed);
         }
-        else if (GameManager.LevelManager.procedural)
+        else if (GameManager.LevelManager.procedural && GameManager.LevelManager.currentProceduralGalaxy != null)
         {
             UnityEngine.Random.InitState(GameManager.LevelManager.currentProceduralGalaxy[GameManager.LevelManager.levelIndex].seed);
         }

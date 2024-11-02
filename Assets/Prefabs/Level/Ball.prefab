@@ -38,7 +38,7 @@ Transform:
   - {fileID: 6045859997558720167}
   - {fileID: 6552500728204593237}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &839160731959639197
 SphereCollider:
@@ -104,23 +104,10 @@ MonoBehaviour:
   swingDelay: 0.5
   pullBack: 0
   moveScale: 5
-  straight: 0
-  lr: {fileID: 8389457743702238614}
-  maxLength: 4
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  obstacles:
-    serializedVersion: 2
-    m_Bits: 3585
-  verts: 20
   simulated: 1
   colIcons: 1
   showBallPos: 0
   slr: {fileID: 4156436077573313242}
-  simulationLayer:
-    serializedVersion: 2
-    m_Bits: 128
   excludeLayer:
     serializedVersion: 2
     m_Bits: 4096
@@ -131,10 +118,13 @@ MonoBehaviour:
   maxstep: 30
   maxLengthSim: 10
   animLength: 1.5
-  animSmoothing: 0.15
+  animSmoothing: 0.02
   astronautAnimLength: 0.25
-  ballSpinSpeed: 0
+  ballSpinSpeed: 0.5
   ballHackModeMat: {fileID: 2100000, guid: b7a9a2845fd313245bf5474611d2671a, type: 2}
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 8145
   ignoreStill:
     serializedVersion: 2
     m_Bits: 4087
