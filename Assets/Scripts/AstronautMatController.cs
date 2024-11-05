@@ -27,7 +27,7 @@ public class AstronautMatController : MonoBehaviour
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
         emmissionFade.SetColor("_Color", GameManager.LevelManager.currentTheme.ballColor * 0.65f/6f);    
 
-        CustomizeElement.MaterialCustomizationElement mce = SaveLoadManager.currentGlobalSave.cosmetic;
+        ShopItem.MaterialCustomizationElement mce = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.astronautMaterialElement).materialCustomizationElement;
         foreach (Material wm in whiteMaterials)
         {
             wm.SetColor("_Color", mce.matColor);

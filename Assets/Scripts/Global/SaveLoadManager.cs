@@ -23,13 +23,18 @@ public class SaveLoadManager : MonoBehaviour
     public class GlobalSave
     {
         public UserSettings userSettings = new UserSettings();
-        public int totalSupernovae = 0;
         public bool unlockedInfinite;
-        public CustomizeElement.MaterialCustomizationElement cosmetic;
+
+        //customization
+        public int totalSupernovae = 0;
+        public string astronautMaterialElement;
+        public string golfBallTrailElement;
+        public string astronautHatElement;
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
     [SerializeField] string[] nonLevelScenes; //Folder containing settings
+
     public static UniverseSave currentUniverseSave { get; private set; }
     public static GlobalSave currentGlobalSave { get; private set; }
     public static FileInfo[] saves { get; private set; }
@@ -48,7 +53,7 @@ public class SaveLoadManager : MonoBehaviour
             CreateGlobalSave();
         }
         RetrieveUniverseSaves();
-        LoadSettings();
+        LoadGlobal();
         if(saves.Length > 0)
         {
             Load(saves[0].Name);
@@ -81,29 +86,32 @@ public class SaveLoadManager : MonoBehaviour
         saves = trackRealSave.ToArray();
         Array.Sort(saves, (s1, s2) => s2.LastWriteTime.CompareTo(s1.LastWriteTime));
     }
-    #region Setting Saving
+    #region Global Saving
     void SettingsEnabled(bool enable)
     {
-        if (enable) { LoadSettings(); }
+        if (enable) { LoadGlobal(); }
         else { SaveGlobalSave(); }
     }
     void CreateGlobalSave()
     {
-        CustomizeElement.MaterialCustomizationElement mce = new CustomizeElement.MaterialCustomizationElement{
-            requiredSupernovae = 0,
-            matColor = Color.white,
-            metallic = 0.275f,
-            smoothness = 0.895f
-        };
-        GlobalSave settingsSave = new GlobalSave
+        //default customization settings
+        string mce = GameManager.CustomizationManager._DefaultShopItem.name;
+        string gbte = mce;
+        string ahe = mce;
+
+        //creating actual save
+        GlobalSave globalSave = new GlobalSave
         {
             userSettings = new UserSettings(),
-            totalSupernovae = 0,
             unlockedInfinite = false,
-            cosmetic = mce
+
+            totalSupernovae = 0,
+            astronautMaterialElement = mce,
+            golfBallTrailElement = gbte,
+            astronautHatElement = ahe
         };
 
-        string jsonSave = JsonUtility.ToJson(settingsSave, true);
+        string jsonSave = JsonUtility.ToJson(globalSave, true);
 
         File.WriteAllText(Application.dataPath + settingsSaveFolder + "UserSettings.txt", jsonSave);
 
@@ -112,7 +120,7 @@ public class SaveLoadManager : MonoBehaviour
 #endif
         Debug.Log("Create new save");
 
-        currentGlobalSave = settingsSave;
+        currentGlobalSave = globalSave;
     }
     void SaveGlobalSave()
     {
@@ -127,7 +135,7 @@ public class SaveLoadManager : MonoBehaviour
                 AssetDatabase.Refresh();
         #endif
     }
-    void LoadSettings()
+    void LoadGlobal()
     {
         string path = Application.dataPath + settingsSaveFolder + "UserSettings.txt";
         if (File.Exists(path))

@@ -49,15 +49,8 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Slider ngDifficultySldr;
     [SerializeField] TextMeshProUGUI difficultyNumber;
     [SerializeField] Gradient difficultyColorGrad;
-    [Header("Customization UI")]
-    [SerializeField] TextMeshProUGUI starCoinTxt;
-    [SerializeField] Transform customizationParent;
-    [SerializeField] GameObject customizationElement;
-    [SerializeField] CustomizeElement.MaterialCustomizationElement[] materialCustomizationElements;
-    [SerializeField] float customizationHeightJump, customizationWidthJump;
-    [SerializeField] int customizationColumns;
     [Header("Miscellaneous Params")]
-    [SerializeField] Button shopBackBtn;
+    [SerializeField] ShopManager shopManager;
     [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
@@ -73,7 +66,6 @@ public class TitleScreenButtons : MonoBehaviour
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
-    CustomizeElement[] customizeElements;
 
     private enum NGMenuState
     {
@@ -90,13 +82,9 @@ public class TitleScreenButtons : MonoBehaviour
     {
         saveElementParentOrigin = saveElementParent.localPosition;
         eventSystem = EventSystem.current;
-        PopulateCustomizationElements();
         SetGalaxySize(1);
         UpdateDifficulty();
-        if(SaveLoadManager.currentGlobalSave!=null)
-        {
-            starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
-        }
+
 
         if(Time.time == 0)
         {
@@ -115,7 +103,6 @@ public class TitleScreenButtons : MonoBehaviour
         myUniverseBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         customiseBtn.onClick.AddListener(() => Customise());
-        shopBackBtn.onClick.AddListener(() => QuitCustomise());
         quitBtn.onClick.AddListener(() => QuitGame());
         //options ui
         optionsBackBtn.onClick.AddListener(() => OptionBackBtn());
@@ -200,13 +187,14 @@ public class TitleScreenButtons : MonoBehaviour
         ngMenuAnim.Play("HideSaveLoadMenu");
         shopAnim.Play("ShowShopDelay");
         ngMenuAnim.Play("HideCampaignCreationMenu");
-        StartCoroutine(AnimateCustomizeMaterials(0.75f, true));
+        shopManager.EnableShop(0.75f, true);
     }
-    void QuitCustomise(){
+    //unity event button, called by subscribing in inspector
+    public void QuitCustomise(){
         menuAnim.Play("ShowMenuWithDelay");
         shopAnim.Play("FadeShopDelay");
         cameraAnim.Play("ShopToCamera");
-        StartCoroutine(AnimateCustomizeMaterials(0f, false));
+        shopManager.EnableShop(0f, false);
     }
     void LoadGame() {
         onlyNGMenu = false;
@@ -533,43 +521,6 @@ public class TitleScreenButtons : MonoBehaviour
 
     void OnDisable(){
         SettingsManager.enableSettingsMenu -= DisableSettings;
-    }
-    #endregion
-    #region Customization UI
-    IEnumerator AnimateCustomizeMaterials(float delay, bool enable)
-    {
-        yield return new WaitForSeconds(delay);
-        foreach (CustomizeElement cE in customizeElements)
-        {
-            cE.AnimateMaterialBalls(enable);
-        }
-    }
-    void PopulateCustomizationElements()
-    {
-        customizeElements = new CustomizeElement[materialCustomizationElements.Length];
-        int numRows = Mathf.CeilToInt(materialCustomizationElements.Length / customizationColumns);
-
-        int columnTracker = 0;
-        int rowTracker = 0;
-        for (int i = 0; i < materialCustomizationElements.Length; i++)
-        {
-
-            CustomizeElement cE = Instantiate(customizationElement, customizationParent).GetComponent<CustomizeElement>();
-            customizeElements[i] = cE;
-
-            cE.transform.localPosition =new Vector3(columnTracker * customizationWidthJump, rowTracker * customizationHeightJump, 0);
-
-            cE.matElement = materialCustomizationElements[i];
-            cE.InitElement();
-
-            columnTracker++;
-            if(columnTracker % customizationColumns == 0)
-            {
-                columnTracker %= customizationColumns;
-                rowTracker++;
-            }
-
-        }
     }
     #endregion
 }

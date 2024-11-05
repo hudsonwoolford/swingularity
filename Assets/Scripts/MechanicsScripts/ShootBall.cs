@@ -122,7 +122,6 @@ public class ShootBall : MonoBehaviour
     {
         origin = transform.position;
         trueOrigin = origin;
-        tr = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         astronautMatController = GameObject.FindGameObjectWithTag("Astronaut").GetComponent<AstronautMatController>();
         ballRenderer = GetComponentInChildren<MeshRenderer>(true);
@@ -134,6 +133,8 @@ public class ShootBall : MonoBehaviour
         main = Camera.main;
         defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
+
+        tr = Instantiate(GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj, transform).GetComponent<TrailRenderer>();
 
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
@@ -813,7 +814,7 @@ public class ShootBall : MonoBehaviour
         holeAnim?.Invoke();
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
-        GetComponent<TrailRenderer>().enabled = false;
+        tr.enabled = false;
 
         float timeCounter = 0;
         Material mat = defaultBallMat;
