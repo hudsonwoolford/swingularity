@@ -46,6 +46,7 @@ public class ManualLevelGenerator : MonoBehaviour
         allPlanetParent.gameObject.tag = "PlanetParent";
 
         levelInit?.Invoke(GameManager.LevelManager.currentTheme);  //Initiation failsafe
+        resolution = SettingsManager.userSettings.planetRes;
         frontTexture = new RenderTexture(resolution, resolution, 0);
         backTexture = new RenderTexture(resolution, resolution, 0);
         planetTexture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false);
