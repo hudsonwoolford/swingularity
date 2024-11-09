@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -11,57 +9,62 @@ public class UISFX : MonoBehaviour
 {
     [SerializeField] AudioObj clickAudio;
     UnityAction<AudioObj> callAction;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Dictionary<Button, AudioObj> buttonDict = new Dictionary<Button, AudioObj>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void SubscribeAllButtons()
     {
         List<Button> allButtons = GameObject.FindObjectsOfType<Button>().ToList();
-        Dictionary<Button, AudioObj> buttonDict = new Dictionary<Button, AudioObj>();
+        List<Button> newButtons = new List<Button>();
 
-        for (int i = allButtons.Count-1; i >= 0; i--)
+        for (int i = allButtons.Count - 1; i >= 0; i--)
         {
-            //no sound / custom sound button
             CustomSoundButton csb;
-            if (allButtons[i].gameObject.TryGetComponent<CustomSoundButton>(out csb))
+            if (allButtons[i].gameObject.TryGetComponent(out csb))
             {
-                //if it has a cutsom sound
-                if(csb.customSound != null)
+                if (csb.customSound != null)
                 {
-                    buttonDict.Add(allButtons[i], csb.customSound);
-                    continue;
+                    if(TryAddNew(allButtons[i], csb.customSound))
+                    {
+                        newButtons.Add(allButtons[i]);
+                    }
                 }
-
-                //no sound
-                allButtons.RemoveAt(i);
                 continue;
             }
 
-            buttonDict.Add(allButtons[i], clickAudio);
+            if (TryAddNew(allButtons[i], clickAudio))
+            {
+                newButtons.Add(allButtons[i]);
+            }
         }
 
-        foreach (var b in buttonDict.Keys)
+        foreach (var b in newButtons)
         {
-            b.onClick.RemoveListener(() => callAction.Invoke(buttonDict[b]));
             b.onClick.AddListener(() => callAction.Invoke(buttonDict[b]));
         }
-    }
 
+        bool TryAddNew(Button button, AudioObj obj)
+        {
+            if (buttonDict.ContainsKey(button))
+            {
+                return false;
+            }
+            buttonDict.Add(button, obj);
+            return true;
+        }
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SubscribeAllButtons();
+    }
     private void OnEnable()
     {
         callAction = (a) => GameManager.SFXManager.PlaySFX(a);
-        SceneManager.sceneLoaded += (a , b) => SubscribeAllButtons();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= (a, b) => SubscribeAllButtons();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
 }
