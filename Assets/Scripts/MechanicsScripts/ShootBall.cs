@@ -19,10 +19,11 @@ public class ShootBall : MonoBehaviour
 
     [Header("Simulated arrow")]
     [SerializeField] bool simulated;
-    [SerializeField] bool colIcons = true, showBallPos = false;
+    [SerializeField] bool colIcons = true;
     [SerializeField] LineRenderer slr; //line renderer, simulated line renderer
     [SerializeField] LayerMask excludeLayer;
     [SerializeField] GameObject simulationBall, collisionVisual; //ball prefab with no scripts attached, just for physics
+    [SerializeField] float animateSpeed;
     [Range(0, 2000)]
     [SerializeField] int maxstep; //how many time steps taken (simulated);
     [Header("Other Parameters")]
@@ -71,6 +72,7 @@ public class ShootBall : MonoBehaviour
     bool deathDelay;
     float ballStillTimer = 0f;
     float ballStillTimeVal = 0.2f;
+    float lineOffset = 0f;
     bool inPortal;
 
     bool swingHit;
@@ -135,6 +137,9 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0; //no line
 
         tr = Instantiate(GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj, transform).GetComponent<TrailRenderer>();
+        slr.widthCurve = tr.widthCurve;
+        slr.material = tr.material; 
+        slr.textureScale = tr.textureScale;
 
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
@@ -173,8 +178,6 @@ public class ShootBall : MonoBehaviour
                 if(Vector2.Distance(lastClickPos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
                     StartCoroutine(LineUpShot());
-                    if(showBallPos)
-                    { StartCoroutine(ShowBallSpeed()); }
                 }
             }
         }
@@ -194,10 +197,17 @@ public class ShootBall : MonoBehaviour
             Vector3.Slerp(childObj.transform.right, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
         }
 
+        if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
+    }
+    void AnimateLine()
+    {
+        lineOffset += animateSpeed * Time.deltaTime;
+        lineOffset = lineOffset > 3 ? 0 : lineOffset;
+        slr.material.SetVector("_Offset", new Vector4(0, lineOffset));
     }
     IEnumerator BallStillTiming(float ballStillTime){
         while(ballStillTimer <= ballStillTime){
@@ -739,39 +749,6 @@ public class ShootBall : MonoBehaviour
 
         }
         colPos.Clear(); //clears all collision positions
-    }
-    IEnumerator ShowBallSpeed()
-    {
-        float simTime = 0;
-        float endTime = 20 / maxstep;
-        if(endTime == 0)
-        {
-            endTime = 1;
-        }
-        GradientAlphaKey[] alphas = slr.colorGradient.alphaKeys;
-        while(liningUpShot)
-        {
-            GradientColorKey[] color = new GradientColorKey[5];
-            color[0] = new GradientColorKey(Color.red, 0f);
-            color[1] = new GradientColorKey(Color.red, simTime / endTime-0.1f);
-            color[2] = new GradientColorKey(Color.white, simTime / endTime);
-            color[3] = new GradientColorKey(Color.red, simTime / endTime+0.1f);
-            color[4] = new GradientColorKey(Color.red, 1f);
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(color, slr.colorGradient.alphaKeys);
-            slr.colorGradient = gradient;
-            simTime += Time.deltaTime;
-            print(simTime);
-            if(simTime > endTime)
-            {
-                color[4] = new GradientColorKey(Color.white, 1f);
-                gradient.SetKeys(color, slr.colorGradient.alphaKeys);
-                simTime = 0;
-            }
-            yield return null;
-        }
-        
-        yield return new WaitForFixedUpdate();
     }
     #endregion
     #region OnTrueFunc

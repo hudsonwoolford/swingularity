@@ -159,7 +159,7 @@ public class BlackHoleGenerator : MonoBehaviour
         if(correspondent == null) { return; }
         if (collision.gameObject.tag == "Player" && canTravel) //Player or simulated player
         {
-            TrailRenderer trailRenderer = collision.gameObject.GetComponent<TrailRenderer>();
+            TrailRenderer trailRenderer = collision.gameObject.GetComponentInChildren<TrailRenderer>();
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
             trailRenderer.Clear();
