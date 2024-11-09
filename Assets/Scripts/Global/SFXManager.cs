@@ -31,7 +31,6 @@ public class SFXManager : MonoBehaviour
     }
     public void PlaySFX(AudioObj audio, float dynamicAudioScalar)
     {
-
         sfxSrc.PlayOneShot(audio.clip, audio.inherentVol * dynamicAudioScalar);
     }
     private void ManageSRCSettings()
