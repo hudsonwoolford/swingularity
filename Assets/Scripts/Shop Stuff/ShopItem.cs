@@ -40,7 +40,7 @@ public class ShopItem : ScriptableObject
         public GameObject trailRendObj;
     }
 }
-
+#if UNITY_EDITOR
 #region Custom Inspector Stuff
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct)]
 public class ConditionalPropAttribute : UnityEngine.PropertyAttribute
@@ -103,5 +103,5 @@ public class ShowIfDrawer : PropertyDrawer
     }
 }
 #endregion
-
+#endif
 
