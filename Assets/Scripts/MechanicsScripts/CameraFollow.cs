@@ -120,11 +120,11 @@ public class CameraFollow : MonoBehaviour
     }
     // Update is called once per frame
     public void LateUpdate()
-    {
-        if (SceneHandling.loadingScreen) { return; }
+    {   
+        if(Time.timeScale == 0) { return; }
+        if(SceneHandling.loadingScreen) { return; }
         if (LevelManager.levelComplete) { return; }
-        if (!camLock)
-        {
+        if(!camLock){
             CamBehaviour();
         }
     }
@@ -189,7 +189,7 @@ public class CameraFollow : MonoBehaviour
             Vector2 ballPos = targetPos;
 
             //adjust camera size to target
-            cameraSize = Mathf.Clamp(Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness), cameraMinMax.x, cameraMinMax.y);
+            cameraSize = Mathf.Clamp(Mathf.SmoothDamp(cameraSize, targetCameraSize, ref sizeVelocity, zoomSmoothness, float.PositiveInfinity, Mathf.Max(0.000001f, Time.deltaTime)), cameraMinMax.x, cameraMinMax.y);
             mainCam.orthographicSize = cameraSize;
 
             //dertermine which way the camera should move while zooming

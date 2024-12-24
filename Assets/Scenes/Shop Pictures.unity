@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0011036249, g: 0.0009925722, b: 0.000943689, a: 1}
+  m_IndirectSpecularColor: {r: 0.0011408933, g: 0.001090052, b: 0.0010390108, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -245,7 +245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!20 &92287119
 Camera:
   m_ObjectHideFlags: 0
@@ -279,15 +279,15 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 39
-  orthographic: 0
-  orthographic size: 1.5
+  field of view: 30
+  orthographic: 1
+  orthographic size: 0.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8600000, guid: 42189feed489c0a45a37804023e05a26, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -543,7 +543,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451483281}
   m_LocalRotation: {x: -0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.8, z: 4.3}
+  m_LocalPosition: {x: 0, y: -1.4, z: 4.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -564,7 +564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d88d30a8ef87c40884f72518ffdccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopItem: {fileID: 11400000, guid: c78adfc0e014b184999dede3a39d78f3, type: 2}
+  shopItem: {fileID: 11400000, guid: 0c5865c03b75a0e4ea264e3b479153f6, type: 2}
   update: 0
 --- !u!1 &524336724
 GameObject:
