@@ -22,6 +22,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private float minParagraphInterval = 5;
     [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
     [SerializeField] private char crackleCharacter;
+    [SerializeField] AudioObj startConvoObj;
     [SerializeField] AudioObj talkObj;
     [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
@@ -42,6 +43,8 @@ public class DialogueController : MonoBehaviour
     private const float MAX_TYPE_TIME = 0.1f;
     public void StartConversation(DialogueText dialogueText)
     {
+        tgrAudioSrc.PlayOneShot(startConvoObj.clip, startConvoObj.inherentVol);
+
         currentDialogueTxt = dialogueText;
         isConversation = true;
         //update speaker name
@@ -145,11 +148,11 @@ public class DialogueController : MonoBehaviour
             }
 
             //dialogue noise
-            if (characterIteration % 6 == 0) //every sixth characteer
+            if ((characterIteration-1) % 2 == 0) //every third characteer
             {
                 if (soundCharacters.Contains(char.ToUpper(c))) //if it is a sound character
                 {
-                    tgrAudioSrc.pitch = Mathf.Lerp(0.125f, 0.225f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
+                    tgrAudioSrc.pitch = Mathf.Lerp(0.9f, 0.95f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
                     GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
                 }
             }
