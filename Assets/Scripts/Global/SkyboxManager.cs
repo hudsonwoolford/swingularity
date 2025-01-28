@@ -8,7 +8,7 @@ public class SkyboxManager : MonoBehaviour
     public float _Rotation;
 
     [SerializeField] private Material skyboxMat;  // The original material (reference to asset)
-    [SerializeField] private float menuExposure = 0.7f;
+    [SerializeField] private float menuExposure = 1f;
     private Material runtimeSkyboxMat;  // A runtime instance of the material
     float lastRotation;
     void Awake()
