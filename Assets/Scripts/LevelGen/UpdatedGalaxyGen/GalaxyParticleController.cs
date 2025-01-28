@@ -46,6 +46,8 @@ public class GalaxyParticleController : MonoBehaviour
     private ParticleSystem.Particle[] particles;
     private int numParticles;
 
+    private bool visible; //whether the particles are visible to the player
+
     private struct Polar2{
         public float r;
         public float theta;
@@ -119,6 +121,7 @@ public class GalaxyParticleController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!visible) { return; }
         if(hasUpdated && !calculateUpdate) { return; }
         hasUpdated = true;
         if (starParticles == null)
@@ -214,5 +217,13 @@ public class GalaxyParticleController : MonoBehaviour
     {
         hasUpdated = false;
         starParticles.Stop();
+    }
+    private void OnBecameVisible()
+    {
+        visible = true;
+    }
+    private void OnBecameInvisible()
+    {
+        visible = false;
     }
 }

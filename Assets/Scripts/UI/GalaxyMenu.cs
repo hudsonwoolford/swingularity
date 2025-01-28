@@ -85,6 +85,8 @@ public class GalaxyMenu : MonoBehaviour
     //END DEMO
 
     Image[] dotSelectedImgs;
+    Transform[] galaxyDots;
+    Transform selectedDot;
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
@@ -103,7 +105,6 @@ public class GalaxyMenu : MonoBehaviour
     void Start()
     {
         if(started) { return; }
-        
 
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
@@ -145,12 +146,12 @@ public class GalaxyMenu : MonoBehaviour
         infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
 
         focusedGalaxy = Mathf.Clamp(GameManager.LevelManager.galaxyIndex, 0, galaxyList.Length);
+        galaxyVel = new Vector3[galaxyCons.Length];
         Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
         for (int i = 0; i < galaxyCons.Length; i++)
         {
             galaxyCons[i].transform.position = galaxyPos[i];
         }
-        EnableDisableGalaxies(false);
         started = true;
     }
     void Update()
@@ -196,10 +197,8 @@ public class GalaxyMenu : MonoBehaviour
     #region Buttons
     void MoveButton(int dir)
     {
-        if(!isMoving)
-        {
-            StartCoroutine(MoveGalaxies(dir));
-        }
+        focusedGalaxy = LoopValue((focusedGalaxy + dir), 0, galaxySummaries.Length);
+        GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
     }
     void ZoomButton(bool zoomIn)
     {
@@ -226,11 +225,15 @@ public class GalaxyMenu : MonoBehaviour
     void DotButton(int dotIndex)
     {
         int movement = dotIndex - focusedGalaxy;
-        StartCoroutine(MoveGalaxies(movement));
+        if(movement != 0)
+        {
+            GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+            focusedGalaxy = LoopValue(focusedGalaxy+movement, 0, galaxySummaries.Length);
+        }
     }
     void MenuInput()
     {
-        if(!zoomedIn)
+        if(!zoomedIn && !isMoving)
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
@@ -442,22 +445,6 @@ public class GalaxyMenu : MonoBehaviour
         }
         return targetPositions;
     }
-    void EnableDisableGalaxies(bool enableAll) //enables or disables galaxies, onscreen or offscreen
-    {
-        for (int i = 0; i < galaxyCons.Length; i++)
-        {
-            if((Mathf.Abs(i-focusedGalaxy)<=1 || enableAll))
-            {
-                galaxyCons[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                galaxyCons[i].gameObject.SetActive(false);
-            }
-            if (i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
-            else { dotSelectedImgs[i].enabled = true; }
-        }
-    }
     void CreateControllers() //Instantiates all galaxies
     {
         starCount.text = GameManager.LevelManager.currentUniverse.numStars.ToString();
@@ -500,17 +487,19 @@ public class GalaxyMenu : MonoBehaviour
         }
 
         float halfLength = ((galaxyCons.Length-1) / 2) * dotDistanceInterval;
-        dotSelectedImgs = new Image[galaxyCons.Length];
+        galaxyDots = new Transform[galaxyCons.Length];
         for (int i = 0; i < galaxyCons.Length; i++) //dot button creation
         {
             RectTransform t = Instantiate(dotButton, transform).GetComponent<RectTransform>();
+            galaxyDots[i] = t;
+            t.GetChild(0).GetComponent<Image>().enabled = false;
             t.localPosition = new Vector3(dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
             int callIndex = i;
             t.gameObject.GetComponent<Button>().onClick.AddListener(() => DotButton(callIndex));
-            dotSelectedImgs[i] = t.GetChild(0).GetComponent<Image>();
-            if(i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
-            else { dotSelectedImgs[i].enabled = true; }
         }
+        selectedDot = Instantiate(dotButton, transform).transform;
+        selectedDot.GetChild(0).GetComponent<Image>().enabled = true;
+        selectedDot.position = galaxyDots[focusedGalaxy].position;
     }
     #endregion
     #region Utility

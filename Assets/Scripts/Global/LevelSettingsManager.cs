@@ -90,6 +90,8 @@ public class LevelSettingsManager : MonoBehaviour
     }
 public static int ConvertTextToSeed(string text)
 {
+    if(text == null) { return 0; }
+
     int convertedSeed = 0;
     int signMult = 1;
     int multiplier = 1;
