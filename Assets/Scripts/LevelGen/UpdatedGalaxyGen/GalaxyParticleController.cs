@@ -77,6 +77,8 @@ public class GalaxyParticleController : MonoBehaviour
         particles = new ParticleSystem.Particle[starParticles.particleCount];
         numParticles = starParticles.GetParticles(particles);
 
+        RandomizeVars(galaxySeed);
+
         for (int i = 0; i < numSamples * numIterations; i++){
             int seed = (int)particles[i].randomSeed;
             
@@ -86,7 +88,15 @@ public class GalaxyParticleController : MonoBehaviour
             particleIndexing.Add(seed, (i, polarPos.theta));
 
             UnityEngine.Random.InitState(seed);
+            Color particleCol = Color.Lerp(col1, col2, UnityEngine.Random.value);
+            Color col = Color.Lerp(particleCol, col3, UnityEngine.Random.value);
+
+            particles[i].startColor = col;
         }
+
+
+        RunParticleUpdate();
+
         
         starParticles.SetParticles(particles);
     }
@@ -115,12 +125,17 @@ public class GalaxyParticleController : MonoBehaviour
         {
             starParticles = GetComponent<ParticleSystem>();
         }
-        RandomizeVars(galaxySeed);
+        
 
 
         //particles = new ParticleSystem.Particle[starParticles.particleCount]; //ENABLING THIS CAUSES ISSUES W ITH GARBAGE COLLECTOR
+        if(stationary){return;}
+        RunParticleUpdate();
 
+        starParticles.SetParticles(particles);
+    }
 
+    void RunParticleUpdate(){
         for (int i = 0; i < numParticles; i++){
             int seed = (int)particles[i].randomSeed;
 
@@ -145,16 +160,7 @@ public class GalaxyParticleController : MonoBehaviour
             newZ += ModifiedSin(newPos.x, waveAmplitude, waveFrequency, Time.time * speed);
             Vector3 pos = new Vector3(newPos.x, newPos.y, newZ);
             particles[i].position = pos;
-            
-            Color particleCol = Color.Lerp(col1, col2, UnityEngine.Random.value);
-            Color col = Color.Lerp(particleCol, col3, UnityEngine.Random.value);
-
-            particles[i].startColor = col;
-
-
-        }
-
-        starParticles.SetParticles(particles);
+            }
     }
 
     float CalculateMaxDistance()
