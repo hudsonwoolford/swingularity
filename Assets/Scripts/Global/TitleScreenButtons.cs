@@ -73,7 +73,6 @@ public class TitleScreenButtons : MonoBehaviour
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
-    CustomizeElement[] customizeElements;
 
     private enum NGMenuState
     {
@@ -90,14 +89,8 @@ public class TitleScreenButtons : MonoBehaviour
     {
         saveElementParentOrigin = saveElementParent.localPosition;
         eventSystem = EventSystem.current;
-        PopulateCustomizationElements();
         SetGalaxySize(1);
         UpdateDifficulty();
-        if(SaveLoadManager.currentGlobalSave!=null)
-        {
-            starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
-        }
-
         if(Time.time == 0)
         {
             mainMenuShown = false;
@@ -115,7 +108,6 @@ public class TitleScreenButtons : MonoBehaviour
         myUniverseBtn.onClick.AddListener(() => LoadGame());
         settingsBtn.onClick.AddListener(() => OpenSettings());
         customiseBtn.onClick.AddListener(() => Customise());
-        shopBackBtn.onClick.AddListener(() => QuitCustomise());
         quitBtn.onClick.AddListener(() => QuitGame());
         //options ui
         optionsBackBtn.onClick.AddListener(() => OptionBackBtn());
@@ -210,7 +202,6 @@ public class TitleScreenButtons : MonoBehaviour
         menuAnim.Play("ShowMenuWithDelay");
         shopAnim.Play("FadeShopDelay");
         cameraAnim.Play("ShopToCamera");
-        StartCoroutine(AnimateCustomizeMaterials(0f, false));
     }
     void LoadGame() {
         onlyNGMenu = false;
@@ -541,41 +532,5 @@ public class TitleScreenButtons : MonoBehaviour
         SettingsManager.enableSettingsMenu -= DisableSettings;
     }
     #endregion
-    #region Customization UI
-    IEnumerator AnimateCustomizeMaterials(float delay, bool enable)
-    {
-        yield return new WaitForSeconds(delay);
-        foreach (CustomizeElement cE in customizeElements)
-        {
-            cE.AnimateMaterialBalls(enable);
-        }
-    }
-    void PopulateCustomizationElements()
-    {
-        customizeElements = new CustomizeElement[materialCustomizationElements.Length];
-        int numRows = Mathf.CeilToInt(materialCustomizationElements.Length / customizationColumns);
 
-        int columnTracker = 0;
-        int rowTracker = 0;
-        for (int i = 0; i < materialCustomizationElements.Length; i++)
-        {
-
-            CustomizeElement cE = Instantiate(customizationElement, customizationParent).GetComponent<CustomizeElement>();
-            customizeElements[i] = cE;
-
-            cE.transform.localPosition =new Vector3(columnTracker * customizationWidthJump, rowTracker * customizationHeightJump, 0);
-
-            cE.matElement = materialCustomizationElements[i];
-            cE.InitElement();
-
-            columnTracker++;
-            if(columnTracker % customizationColumns == 0)
-            {
-                columnTracker %= customizationColumns;
-                rowTracker++;
-            }
-
-        }
-    }
-    #endregion
 }
