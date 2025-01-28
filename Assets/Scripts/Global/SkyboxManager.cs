@@ -8,6 +8,7 @@ public class SkyboxManager : MonoBehaviour
     public float _Rotation;
 
     [SerializeField] private Material skyboxMat;  // The original material (reference to asset)
+    [SerializeField] private float menuExposure = 0.7f;
     private Material runtimeSkyboxMat;  // A runtime instance of the material
     float lastRotation;
     void Awake()
@@ -20,6 +21,15 @@ public class SkyboxManager : MonoBehaviour
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         RenderSettings.skybox = runtimeSkyboxMat;
+
+        if(scene.name == "Main Menu" || scene.name == "Galaxies")
+        {
+            runtimeSkyboxMat.SetFloat("_Exposure", menuExposure);
+        }
+        else
+        {
+            runtimeSkyboxMat.SetFloat("_Exposure", 1);
+        }
 
         if (scene.name == "Galaxies")
         {
