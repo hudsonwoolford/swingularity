@@ -50,8 +50,8 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            ShootBall.triggerReset?.Invoke();
             ShootBall.death.Invoke(0);
+            ShootBall.triggerReset?.Invoke();
             GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
         }
         
@@ -155,11 +155,11 @@ public class MappingHandling : MonoBehaviour
         ballArrow.gameObject.SetActive(false);
     }
     void UnPause(){
-        ballArrow.gameObject.SetActive(true);
+        flagArrow.gameObject.SetActive(true);
         ballArrow.gameObject.SetActive(true);
     }
     void Reset(){
-        ballArrow.gameObject.SetActive(true);
+        flagArrow.gameObject.SetActive(true);
         ballArrow.gameObject.SetActive(true);
     }
     private void OnEnable()
