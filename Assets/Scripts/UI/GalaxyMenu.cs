@@ -79,7 +79,8 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] AudioObj zoomGalaxyAudio;
     [SerializeField] AudioObj[] starAudios = new AudioObj[5];
     [SerializeField] AudioObj fiveStarAudio;
-    Image[] dotSelectedImgs;
+    Transform[] galaxyDots;
+    Transform selectedDot;
     Vector3 cameraOrigin;
     Transform mainCam;
     GalaxyController[] galaxyCons; //array of controllers in the scene
@@ -90,11 +91,13 @@ public class GalaxyMenu : MonoBehaviour
     bool zoomedIn;
     bool started;
     Vector2 mouseStartPos;
+
+    Vector3 dotVel;
+    Vector3[] galaxyVel;
     // Start is called before the first frame update
     void Start()
     {
         if(started) { return; }
-        
 
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
@@ -136,29 +139,45 @@ public class GalaxyMenu : MonoBehaviour
         infoBackBtn.onClick.AddListener(() => InfoCardBackButton());
 
         focusedGalaxy = Mathf.Clamp(GameManager.LevelManager.galaxyIndex, 0, galaxyList.Length);
+        galaxyVel = new Vector3[galaxyCons.Length];
         Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
         for (int i = 0; i < galaxyCons.Length; i++)
         {
             galaxyCons[i].transform.position = galaxyPos[i];
         }
-        EnableDisableGalaxies(false);
         started = true;
     }
     void Update()
     {
         MenuInput();
+        MoveGalaxies();
+    }
+    void MoveGalaxies()
+    {
+        Vector3[] galaxyPos = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
+
+        for (int i = 0; i < galaxyCons.Length; i++)
+        {
+            if((isMoving || zoomedIn) && i == focusedGalaxy)
+            {
+                galaxyVel[i] = Vector3.zero;
+                continue;
+            }
+            galaxyCons[i].transform.position = Vector3.SmoothDamp(galaxyCons[i].transform.position, galaxyPos[i], ref galaxyVel[i],  0.15f);
+        }
+        selectedDot.transform.position = Vector3.SmoothDamp(selectedDot.transform.position, galaxyDots[focusedGalaxy].position, ref dotVel, 0.15f);
+
     }
     #region Buttons
     void MoveButton(int dir)
     {
-        if(!isMoving)
-        {
-            StartCoroutine(MoveGalaxies(dir));
-        }
+        focusedGalaxy = LoopValue((focusedGalaxy + dir), 0, galaxySummaries.Length);
+        GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
     }
     void ZoomButton(bool zoomIn)
     {
         if(focusedGalaxy == galaxySummaries.Length-1) { return; }
+
         if (!isMoving)
         {
             StartCoroutine(ZoomGalaxy(zoomIn, false));
@@ -183,11 +202,15 @@ public class GalaxyMenu : MonoBehaviour
     void DotButton(int dotIndex)
     {
         int movement = dotIndex - focusedGalaxy;
-        StartCoroutine(MoveGalaxies(movement));
+        if(movement != 0)
+        {
+            GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+            focusedGalaxy = LoopValue(focusedGalaxy+movement, 0, galaxySummaries.Length);
+        }
     }
     void MenuInput()
     {
-        if(!zoomedIn)
+        if(!zoomedIn && !isMoving)
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
@@ -359,20 +382,20 @@ public class GalaxyMenu : MonoBehaviour
     }
     IEnumerator ZoomGalaxy(bool zoomIn, bool instant)
     {
-        if(galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars){galaxySummaries[focusedGalaxy].Shake(); yield break; }
+        if (galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars) { galaxySummaries[focusedGalaxy].Shake(); yield break; }
         isMoving = true;
         zoomedIn = zoomIn;
         galaxyMenuCanvas.enabled = !zoomIn;
         Vector3 galaxyTarget = zoomIn ? zoomGalaxyPos : focusPosition;
         Vector3 cameraTarget = zoomIn ? zoomCameraPos : cameraOrigin;
 
-        if(!instant && zoomIn)
+        if (!instant && zoomIn)
         {
             GameManager.SFXManager.PlaySFX(zoomGalaxyAudio);
             GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
         }
 
-        if(zoomIn)
+        if (zoomIn)
         {
             menuAnim.Play("HideMenu");
             galaxySummaries[focusedGalaxy].EnableSummary(false);
@@ -384,16 +407,16 @@ public class GalaxyMenu : MonoBehaviour
         }
 
         float timeOfTransition = 0f; //timer
-        while(timeOfTransition < transitionDuration && !instant)
+        while (timeOfTransition < transitionDuration && !instant)
         {
             float progress = timeOfTransition / transitionDuration;
-            if(!zoomIn && progress > 0.5f)
+            if (!zoomIn && progress > 0.5f)
             {
                 menuAnim.Play("ShowMenu");
                 galaxySummaries[focusedGalaxy].EnableSummary(true);
             }
             mainCam.position = Vector3.Lerp(mainCam.position, cameraTarget, transitionCurve.Evaluate(progress));
-            galaxyCons[focusedGalaxy].transform.position = Vector3.Lerp(galaxyCons[focusedGalaxy].transform.position , galaxyTarget, transitionCurve.Evaluate(progress));
+            galaxyCons[focusedGalaxy].transform.position = Vector3.Lerp(galaxyCons[focusedGalaxy].transform.position, galaxyTarget, transitionCurve.Evaluate(progress));
 
             timeOfTransition += Time.deltaTime;
             yield return null;
@@ -402,7 +425,7 @@ public class GalaxyMenu : MonoBehaviour
         galaxyCons[focusedGalaxy].transform.position = galaxyTarget;
 
         isMoving = false;
-        if(!zoomIn)
+        if (!zoomIn)
         {
         }
         if (zoomIn)
@@ -411,27 +434,27 @@ public class GalaxyMenu : MonoBehaviour
             yield return new WaitForSeconds(infoCardAnim.GetCurrentAnimatorStateInfo(0).length);
         }
     }
-    IEnumerator MoveGalaxies(int dir)
-    {
-        isMoving = true;
-        GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
-        bool loopMove = focusedGalaxy + dir < 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
-        focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
-        Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
-        float timeOfTransition = 0f; //timer
-        while(timeOfTransition < transitionDuration) //loop to move galaxies in a certain timeframe
-        {
-            if (timeOfTransition > transitionDuration / 3) { EnableDisableGalaxies(loopMove); }
-            for (int i = 0; i < galaxyCons.Length; i++) //move each galaxy
-            {
-                galaxyCons[i].transform.position = Vector3.Lerp(galaxyCons[i].transform.position, targetPositions[i], transitionCurve.Evaluate(timeOfTransition/transitionDuration));
-            }
-            timeOfTransition += Time.deltaTime;
-            yield return null;
-        }
-        isMoving = false;
-        EnableDisableGalaxies(false);
-    }
+    //IEnumerator MoveGalaxies(int dir)
+    //{
+    //    isMoving = true;
+    //    GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+    //    bool loopMove = focusedGalaxy + dir < 0 || focusedGalaxy + dir >= galaxyCons.Length ? true : false;
+    //    focusedGalaxy = LoopValue(focusedGalaxy+dir, 0, galaxyCons.Length);
+    //    Vector3[] targetPositions = GalaxyPositions(galaxyCons.Length, focusedGalaxy);
+    //    float timeOfTransition = 0f; //timer
+    //    while(timeOfTransition < transitionDuration) //loop to move galaxies in a certain timeframe
+    //    {
+    //        if (timeOfTransition > transitionDuration / 3) { EnableDisableGalaxies(loopMove); }
+    //        for (int i = 0; i < galaxyCons.Length; i++) //move each galaxy
+    //        {
+    //            galaxyCons[i].transform.position = Vector3.Lerp(galaxyCons[i].transform.position, targetPositions[i], transitionCurve.Evaluate(timeOfTransition/transitionDuration));
+    //        }
+    //        timeOfTransition += Time.deltaTime;
+    //        yield return null;
+    //    }
+    //    isMoving = false;
+    //    EnableDisableGalaxies(false);
+    //}
     #endregion
     #region Galaxy Configuration
     Vector3[] GalaxyPositions(int numGalaxies, int focus) //returns positions of the galaxies based on the focus
@@ -446,22 +469,6 @@ public class GalaxyMenu : MonoBehaviour
             }
         }
         return targetPositions;
-    }
-    void EnableDisableGalaxies(bool enableAll) //enables or disables galaxies, onscreen or offscreen
-    {
-        for (int i = 0; i < galaxyCons.Length; i++)
-        {
-            if((Mathf.Abs(i-focusedGalaxy)<=1 || enableAll))
-            {
-                galaxyCons[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                galaxyCons[i].gameObject.SetActive(false);
-            }
-            if (i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
-            else { dotSelectedImgs[i].enabled = true; }
-        }
     }
     void CreateControllers() //Instantiates all galaxies
     {
@@ -505,17 +512,19 @@ public class GalaxyMenu : MonoBehaviour
         }
 
         float halfLength = ((galaxyCons.Length-1) / 2) * dotDistanceInterval;
-        dotSelectedImgs = new Image[galaxyCons.Length];
+        galaxyDots = new Transform[galaxyCons.Length];
         for (int i = 0; i < galaxyCons.Length; i++) //dot button creation
         {
             RectTransform t = Instantiate(dotButton, transform).GetComponent<RectTransform>();
+            galaxyDots[i] = t;
+            t.GetChild(0).GetComponent<Image>().enabled = false;
             t.localPosition = new Vector3(dotMiddle.x - halfLength + dotDistanceInterval * i, dotMiddle.y, dotMiddle.z);
             int callIndex = i;
             t.gameObject.GetComponent<Button>().onClick.AddListener(() => DotButton(callIndex));
-            dotSelectedImgs[i] = t.GetChild(0).GetComponent<Image>();
-            if(i != focusedGalaxy) { dotSelectedImgs[i].enabled = false; }
-            else { dotSelectedImgs[i].enabled = true; }
         }
+        selectedDot = Instantiate(dotButton, transform).transform;
+        selectedDot.GetChild(0).GetComponent<Image>().enabled = true;
+        selectedDot.position = galaxyDots[focusedGalaxy].position;
     }
     #endregion
     #region Utility
@@ -700,7 +709,7 @@ public class GalaxyMenu : MonoBehaviour
     void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected)
     {
         Start();
-        
+
         StartCoroutine(ZoomGalaxy(true, true));
         galaxySummaries[focusedGalaxy].DisableSummary();
         menuAnim.Play("DisableMenu");
