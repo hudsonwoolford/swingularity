@@ -754,7 +754,7 @@ public class LevelGenerator : MonoBehaviour
         {
             Vector3 angleVector = new Vector3(Mathf.Cos(ballRot), Mathf.Sin(ballRot), 0);
             initBallPos = candidates[farthestPlanets[1]].forceField.transform.position + angleVector * (candidates[farthestPlanets[1]].forceField.transform.localScale.x + ballRad);
-            if (!Physics.CheckSphere(initBallPos, ballRad - 0.05f))
+            if (!Physics.CheckSphere(initBallPos, ballRad))
             {
                 break;
             }
