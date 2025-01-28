@@ -44,6 +44,7 @@ public class GalaxyParticleController : MonoBehaviour
     new Dictionary<int, (int, float)>();
 
     private ParticleSystem.Particle[] particles;
+    private int numParticles;
 
     private struct Polar2{
         public float r;
@@ -57,7 +58,6 @@ public class GalaxyParticleController : MonoBehaviour
 
     void Start()
     {
-        Init(galaxySeed);
     }
 
     public void Init(int inputSeed){
@@ -75,7 +75,7 @@ public class GalaxyParticleController : MonoBehaviour
         starParticles.Emit(emitParams, numSamples * numIterations);
 
         particles = new ParticleSystem.Particle[starParticles.particleCount];
-        int numParticles = starParticles.GetParticles(particles);
+        numParticles = starParticles.GetParticles(particles);
 
         for (int i = 0; i < numSamples * numIterations; i++){
             int seed = (int)particles[i].randomSeed;
@@ -107,7 +107,7 @@ public class GalaxyParticleController : MonoBehaviour
         speed = UnityEngine.Random.Range(0.1f, 0.5f);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if(hasUpdated && !calculateUpdate) { return; }
         hasUpdated = true;
@@ -120,7 +120,6 @@ public class GalaxyParticleController : MonoBehaviour
 
         //particles = new ParticleSystem.Particle[starParticles.particleCount]; //ENABLING THIS CAUSES ISSUES W ITH GARBAGE COLLECTOR
 
-        int numParticles = starParticles.GetParticles(particles);
 
         for (int i = 0; i < numParticles; i++){
             int seed = (int)particles[i].randomSeed;
