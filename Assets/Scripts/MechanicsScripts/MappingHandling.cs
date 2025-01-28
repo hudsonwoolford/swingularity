@@ -155,12 +155,12 @@ public class MappingHandling : MonoBehaviour
         ballArrow.gameObject.SetActive(false);
     }
     void UnPause(){
-        ballArrow.gameObject.SetActive(true);
+        flagArrow.gameObject.SetActive(true);
         ballArrow.gameObject.SetActive(true);
     }
     void Reset(){
-        ballArrow.gameObject.SetActive(true);
-        ballArrow.gameObject.SetActive(true);
+        flagArrow.gameObject.SetActive(true);
+        flagArrow.gameObject.SetActive(true);
     }
     private void OnEnable()
     {
