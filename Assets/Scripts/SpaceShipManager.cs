@@ -30,8 +30,6 @@ public class SpaceShipManager : MonoBehaviour
     Vector3 posLastUpdate;
     float animTime, currentAnimInterval;
 
-    Material runtimeGlowMat;
-
     [Serializable]
     public struct SpaceShipTheme{
         [ColorUsageAttribute(true,true)] public Color glowCol;
@@ -42,7 +40,6 @@ public class SpaceShipManager : MonoBehaviour
 
     private void Awake()
     {
-        runtimeGlowMat = new Material(glowMat);
 
     }
     // Start is called before the first frame update
@@ -52,14 +49,6 @@ public class SpaceShipManager : MonoBehaviour
         {
             animTime=currentAnimInterval-0.5f;
             currentAnimInterval = UnityEngine.Random.Range(minMaxAnimInterval.x, minMaxAnimInterval.y);
-        }
-        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            if (renderers[i].sharedMaterial == glowMat)
-            {
-                renderers[i].material = runtimeGlowMat;
-            }
         }
 
         SetMatColor();
@@ -126,6 +115,16 @@ public class SpaceShipManager : MonoBehaviour
     }
     void SetMatColor() //Sets the glow material color
     {
-        runtimeGlowMat.SetColor("_EmissionColor", glowCol);
+        glowMat.SetColor("_EmissionColor", glowCol*0.6f);
+
+        //MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
+        //foreach (var mr in meshRenderers)
+        //{
+        //    if(mr.sharedMaterial == glowMat)
+        //    {
+        //        mr.material.SetColor("_EmissionColor", glowCol);
+        //    }
+        //}
+        
     }
 }

@@ -117,6 +117,7 @@ public class TIIGER : EventTalkableNPC
         tgrAnimator.SetBool("Speaking", false);
 
         //stop dialogue
+        dialogueController.DialogueCloseSounds();
         dialogueController.TogglePauseDialogue();
         yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
         dialogueController.TogglePauseDialogue();

@@ -42,6 +42,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] AnimationCurve starScaleCurve;
     [SerializeField] float starPitchInterval;
     [SerializeField] float starStartPitch;
+    [SerializeField] float coinFillSpeed = 0.1f;
     [Header("Main UI")]
     [SerializeField] Button rightBtn; //move buttons
     [SerializeField] Button leftBtn; //move buttons
@@ -74,11 +75,15 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Sprite[] starIcon;
     [SerializeField] SpecialObjectIcon[] iconSprites;
     [SerializeField] TextMeshProUGUI bestScoreTxt;
+    [SerializeField] TextMeshProUGUI coinsCollectionText;
     [Header("Sounds")]
     [SerializeField] AudioObj scrollGalaxyAudio;
     [SerializeField] AudioObj zoomGalaxyAudio;
     [SerializeField] AudioObj[] starAudios = new AudioObj[5];
     [SerializeField] AudioObj fiveStarAudio;
+    [SerializeField] AudioObj singleCoinAudio;
+    [SerializeField] AudioObj cashoutAudio;
+    [SerializeField] AudioSource galaxySrc;
     Transform[] galaxyDots;
     Transform selectedDot;
     Vector3 cameraOrigin;
@@ -760,6 +765,26 @@ public class GalaxyMenu : MonoBehaviour
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
             yield return new WaitForSecondsRealtime(0.5f);
         }
+
+        //COIN FEEDBACK
+        //Coins going up and down with pitch
+        //while(true)
+        //{
+        //    int displayCoins = realIteration;
+        //    int consecutiveCoinMoves = 0;
+        //    int nextDisplay = Mathf.RoundToInt(Mathf.Lerp(displayCoins, SaveLoadManager.currentGlobalSave.totalSupernovae, coinFillSpeed));
+        //    int dif = nextDisplay - displayCoins;
+        //    if (dif != 0)
+        //    {
+        //        consecutiveCoinMoves += (int)Mathf.Sign(dif);
+        //        galaxySrc.pitch = 1 + consecutiveCoinMoves * 0.01f;
+        //        GameManager.SFXManager.PlaySFX(singleCoinAudio, galaxySrc, singleCoinAudio.inherentVol);
+        //        displayCoins = Mathf.Max(nextDisplay, 0);
+        //    }
+        //    coinsCollectionText.text = displayCoins.ToString();
+        //    yield return new WaitForFixedUpdate();
+        //    break;
+        //}
 
         yield return new WaitForSecondsRealtime(0.25f);
         StartCoroutine(ZoomGalaxy(false, false));

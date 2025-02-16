@@ -25,6 +25,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] AudioObj startConvoObj;
     [SerializeField] AudioObj startConvoObj2;
     [SerializeField] AudioObj endConvoObj;
+    [SerializeField] AudioObj endConvoObj2;
     [SerializeField] AudioObj talkObj;
     [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
@@ -82,6 +83,7 @@ public class DialogueController : MonoBehaviour
         //nothing in queue
         if(paragraphs.Count == 0 && !isTyping)
         {
+            DialogueCloseSounds();
             EndConversation();
             return;
         }
@@ -105,10 +107,13 @@ public class DialogueController : MonoBehaviour
         //toggle pause boolean
         isPaused = !isPaused;
     }
-    public void EndConversation()
+    public void DialogueCloseSounds()
     {
         tgrAudioSrc.PlayOneShot(endConvoObj.clip, endConvoObj.inherentVol);
-
+        tgrAudioSrc.PlayOneShot(endConvoObj2.clip, endConvoObj2.inherentVol);
+    }
+    public void EndConversation()
+    {
         currentDialogueTxt = null;
         StopAllCoroutines();
         paragraphIntervalCoroutine = null;
