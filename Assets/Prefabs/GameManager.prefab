@@ -4075,7 +4075,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 3000, y: 2000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5445830125008106556
 CanvasRenderer:
@@ -7107,6 +7107,7 @@ MonoBehaviour:
     numCalls: 0
   dialogueController: {fileID: 377844702962078479}
   tgrAnimator: {fileID: 1339470235395063992}
+  dialogueCanvas: {fileID: 4786415364155220708}
   ballRenderer: {fileID: 7722723197751069647}
 --- !u!1 &1660333452577878646
 GameObject:
@@ -7856,8 +7857,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingLayerID: -672329885
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &2141366491635604075
 MonoBehaviour:
@@ -7936,6 +7937,8 @@ MonoBehaviour:
     hideCharacter: 1
   crackleCharacter: 37
   startConvoObj: {fileID: 11400000, guid: df71c93d355447549a6ef9ef72df169c, type: 2}
+  startConvoObj2: {fileID: 11400000, guid: 36d9d98e3cc9ba64dad1ee68a5ab8fc9, type: 2}
+  endConvoObj: {fileID: 11400000, guid: 256bf2abed89f9f4ea320ad30344fda2, type: 2}
   talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
   staticObject: {fileID: 11400000, guid: 7c3940f63f1939744a73ae18ad86a4b8, type: 2}
   tgrAudioSrc: {fileID: 4502132378727637396}
@@ -22303,6 +22306,8 @@ MonoBehaviour:
     hideCharacter: 1
   crackleCharacter: 37
   startConvoObj: {fileID: 11400000, guid: df71c93d355447549a6ef9ef72df169c, type: 2}
+  startConvoObj2: {fileID: 0}
+  endConvoObj: {fileID: 0}
   talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
   staticObject: {fileID: 11400000, guid: 7c3940f63f1939744a73ae18ad86a4b8, type: 2}
   tgrAudioSrc: {fileID: 7406317267415208035}
@@ -36714,6 +36719,7 @@ MonoBehaviour:
     numCalls: 0
   dialogueController: {fileID: 4909709126668849538}
   tgrAnimator: {fileID: 7863821362741866646}
+  dialogueCanvas: {fileID: 0}
   ballRenderer: {fileID: 1927376794669189396}
 --- !u!1 &8280990142284143501
 GameObject:

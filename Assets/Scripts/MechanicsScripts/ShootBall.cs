@@ -137,6 +137,7 @@ public class ShootBall : MonoBehaviour
         slr.positionCount = 0; //no line
 
         tr = Instantiate(GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj, transform).GetComponent<TrailRenderer>();
+        tr.transform.localPosition = new Vector3(0, 0, -0.3f);
         slr.widthCurve = tr.widthCurve;
         slr.material = tr.material; 
         slr.textureScale = tr.textureScale;

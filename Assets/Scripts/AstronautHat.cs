@@ -22,9 +22,9 @@ public class AstronautHat : MonoBehaviour
     }
     void Start()
     {
-        for (int i = 0; i < hatRenderer.sharedMaterials.Length; i++)
+        foreach (var m in hatRenderer.materials)
         {
-            fadeMaterials[i].SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
+            m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
         }
     }
 
