@@ -27,6 +27,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
     [SerializeField] char[] soundCharacters;
+    [Header("Debugging")]
+    [SerializeField] DialogueText testText;
 
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
@@ -41,6 +43,12 @@ public class DialogueController : MonoBehaviour
 
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
+
+    [ContextMenu("Test text")]
+    void TestText()
+    {
+        StartConversation(testText);
+    }
     public void StartConversation(DialogueText dialogueText)
     {
         tgrAudioSrc.PlayOneShot(startConvoObj.clip, startConvoObj.inherentVol);
@@ -129,7 +137,7 @@ public class DialogueController : MonoBehaviour
             {
                 originalText = originalText.Remove(characterIteration, 1);
                 alphaIndex--;
-                GameManager.SFXManager.PlaySFX(staticObject);
+                GameManager.SFXManager?.PlaySFX(staticObject);
             }
             if(currentDialogueTxt.revealNameLater && c =='@')
             {
@@ -153,7 +161,7 @@ public class DialogueController : MonoBehaviour
                 if (soundCharacters.Contains(char.ToUpper(c))) //if it is a sound character
                 {
                     tgrAudioSrc.pitch = Mathf.Lerp(0.9f, 0.95f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
-                    GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
+                    GameManager.SFXManager?.PlaySFX(talkObj, tgrAudioSrc, 1f);
                 }
             }
             yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed);

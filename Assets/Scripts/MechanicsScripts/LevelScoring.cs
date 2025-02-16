@@ -202,6 +202,17 @@ public class LevelScoring : MonoBehaviour
             numShotsText.color = neutral;
         }
     }
+    void OnDialogue(bool enable)
+    {
+        if (enable)
+        {
+            canvasAnimator.Play("Slide Out");
+        }
+        else
+        {
+            canvasAnimator.Play("Slide In");
+        }   
+    }
     void Pause(){
         canvasAnimator.Play("Slide Out");
     }
@@ -226,10 +237,12 @@ public class LevelScoring : MonoBehaviour
         ShootBall.onHole += HoleEnd;
         PauseManager.pauseGame += Pause;
         PauseManager.unpauseGame += UnPause;
+        TIIGER.onEnableDialogue += OnDialogue;
         HackMode.onHackMode += HackModeButton;
     }
     private void OnDisable()
     {
+        TIIGER.onEnableDialogue -= OnDialogue;
         ShootBall.onStill -= OnBallStill;
         LevelGenerator.levelGenerated -= CheckPar;
         ShootBall.onShoot -= IncrementScore;

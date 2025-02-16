@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Linq;
@@ -9,9 +10,14 @@ using System.Linq;
 public class ShopManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI starCoinTxt;
+    [SerializeField] private float coinFillSpeed;
+    [SerializeField] private AudioObj coinFillObj;
     [SerializeField] private GameObject customizationElement;
     [SerializeField] private float customizationHeightJump, customizationWidthJump;
     [SerializeField] private int customizationColumns;
+    [Header("Shopping")]
+    [SerializeField] private Button buyEquipButton;
+    [SerializeField] private TextMeshProUGUI buyEquipText;
     [Header("Tabs")]
     [SerializeField] private Button astronautMaterialBtn;
     [SerializeField] private Button golfTrailBtn;
@@ -23,22 +29,25 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private AnimationCurve transitionCurve;
 
     ShopItem[] shopItems;
+    CustomizeElement currentSelectedElement;
     CustomizeElement[] customizeElements;
     CanvasGroup currentTab;
     Button currentButton;
+    AudioSource shopSrc;
+    int displayCoins, consecutiveCoinMoves;
+    bool shopShown;
 
     void Start()
     {
+        shopSrc = GetComponent<AudioSource>();
         shopItems = GameManager.CustomizationManager._AllShopItems;
-        if (SaveLoadManager.currentGlobalSave != null)
-        {
-            starCoinTxt.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
-        }
+        
         PopulateCustomizationElements();
 
         astronautMaterialBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.AstronautMaterial, astronautMaterialBtn, false)));
         golfTrailBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.GolfBallTrail, golfTrailBtn, false)));
         astronautHatBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.AstronautHat, astronautHatBtn, false)));
+        buyEquipButton.onClick.AddListener(() => BuyEquipButton());
 
         DisableAllTabs();
         astronautMaterialCG.alpha = 1.0f; astronautMaterialCG.interactable = true; astronautMaterialCG.blocksRaycasts = true;
@@ -46,15 +55,74 @@ public class ShopManager : MonoBehaviour
         currentButton = astronautMaterialBtn;
         currentButton.GetComponent<Animator>().Play("Select");
     }
-
-    void Update()
+    private void Update()
     {
-
+        //
+        if (shopShown)
+        {
+            buyEquipButton.gameObject.SetActive(currentSelectedElement != null);
+            if (currentSelectedElement != null)
+            {
+                buyEquipText.text = currentSelectedElement.isUnlocked ? "EQUIP" : "BUY";
+            }
+        }
+    }
+    void FixedUpdate()
+    {
+        //Coins going up and down with pitch
+        if(shopShown)
+        {
+            int nextDisplay = Mathf.RoundToInt(Mathf.Lerp(displayCoins, SaveLoadManager.currentGlobalSave.totalSupernovae, coinFillSpeed));
+            int dif = nextDisplay - displayCoins;
+            if(dif != 0)
+            {
+                consecutiveCoinMoves += (int)Mathf.Sign(dif);
+                shopSrc.pitch = 1 + consecutiveCoinMoves * 0.01f;
+                GameManager.SFXManager.PlaySFX(coinFillObj, shopSrc, coinFillObj.inherentVol);
+                displayCoins = Mathf.Max(nextDisplay, 0);
+            }
+            else
+            {
+                displayCoins = SaveLoadManager.currentGlobalSave.totalSupernovae;
+                consecutiveCoinMoves = 0;
+            }
+            starCoinTxt.text = displayCoins.ToString();
+        }
+    }
+    void SelectButton(CustomizeElement element)
+    {
+        if (element==currentSelectedElement)
+        {
+            //element.buttonAnimator.Play("Reselect");
+        }
+        else
+        {
+            currentSelectedElement?.buttonAnimator.Play("Unselect");
+            element.buttonAnimator.Play("Select");
+        }
+        currentSelectedElement = element;
+    }
+    void BuyEquipButton()
+    {
+        if(currentSelectedElement == null) { return; }
+        //buy
+        if(!currentSelectedElement.isUnlocked) //locked
+        {
+            if (!currentSelectedElement.TryBuyItem()) //failed purchase
+            {
+                return;
+            }
+        }
+        currentSelectedElement.itemEquip?.Invoke();
+        currentSelectedElement?.buttonAnimator.Play("Unselect");
+        currentSelectedElement = null;
     }
     IEnumerator SwitchTab(ShopItem.ItemType itemType, Button thisButton, bool instant)
     {
         CanvasGroup currentGroup = currentTab;
         CanvasGroup nextGroup = null;
+        currentSelectedElement?.buttonAnimator.Play("Unselect");
+        currentSelectedElement = null;
 
         switch (itemType)
         {
@@ -109,9 +177,12 @@ public class ShopManager : MonoBehaviour
     }
     IEnumerator AnimateCustomizeMaterials(float delay, bool enable)
     {
+        displayCoins = 0;
+        shopShown = !enable ? enable : shopShown;
         yield return new WaitForSeconds(delay);
-        foreach (CustomizeElement cE in customizeElements)
+        if (SaveLoadManager.currentGlobalSave != null && enable)
         {
+            shopShown = enable;
         }
     }
     void DisableAllTabs()
@@ -165,7 +236,7 @@ public class ShopManager : MonoBehaviour
             cE.transform.localPosition = new Vector3(columnTracker * customizationWidthJump, rowTracker * customizationHeightJump, 0);
 
             cE._ShopItem = shopItems[i];
-            cE.InitElement();
+            cE.InitElement((x)=>SelectButton(x));
 
             columnTracker++;
             if (columnTracker % customizationColumns == 0)

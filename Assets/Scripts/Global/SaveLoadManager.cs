@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -30,6 +31,7 @@ public class SaveLoadManager : MonoBehaviour
         public string astronautMaterialElement;
         public string golfBallTrailElement;
         public string astronautHatElement;
+        public string[] unlockedShopItems;
     }
     [SerializeField] string saveFolder; //Folder containing saves
     [SerializeField] string settingsSaveFolder; //Folder containing settings
@@ -224,11 +226,20 @@ public class SaveLoadManager : MonoBehaviour
         #endif
         RetrieveUniverseSaves();
     }
+    public void UnlockShopItem(string shopItem)
+    {
+        if (!currentGlobalSave.unlockedShopItems.Contains(shopItem))
+        {
+            currentGlobalSave.unlockedShopItems = currentGlobalSave.unlockedShopItems.Concat(new string[] { shopItem }).ToArray();
+            SaveGlobalSave();
+        }
+    }
     public void IncrementSupernovae(int increment)
     {
         currentGlobalSave.totalSupernovae += increment;
         SaveGlobalSave();
     }
+    #region Delegates
     void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {
         bool matchNonLevel = false;
@@ -248,7 +259,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void OnHole()
     {
-        if (SceneManager.GetActiveScene().name == "Mythical_4")
+        if (SceneManager.GetActiveScene().name == "Mythical_4") //last level
         {
             currentGlobalSave.unlockedInfinite = true;
             SaveGlobalSave();
@@ -271,4 +282,5 @@ public class SaveLoadManager : MonoBehaviour
         SettingsManager.applySettingsVar -= SaveGlobalSave;
 
     }
+    #endregion
 }

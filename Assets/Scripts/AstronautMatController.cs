@@ -7,21 +7,33 @@ public class AstronautMatController : MonoBehaviour
 {
     [SerializeField] SkinnedMeshRenderer astronaut;
     [Header("Normal Materials")]
-    [SerializeField] Material alu, blackGloss, white, emmission;
+    [SerializeField] Material alu;
+    [SerializeField] Material blackGloss, white, emmission;
 
     [Header("Fade Materials")]
-    [SerializeField] Material aluFade, blackFade, whiteFade, emmissionFade;
+    [SerializeField] Material aluFade;
+    [SerializeField] Material blackFade, whiteFade, emmissionFade;
     [SerializeField] Animator astronautAnim;    
     [SerializeField] float transitionDuration;
     [SerializeField] float animConversionFloat;
+    [SerializeField] Material[] whiteMaterials;
+    [Header("Hats")]
+    [SerializeField] Transform hatParent;
     ShootBall shootBall;
     public bool isIdle { get; private set; }
     bool left;
     float lerpVal;
-    [SerializeField] Material[] whiteMaterials;
+
+    //astronaut hat
+    private AstronautHat astronautHat;
 
 
     void Start(){
+        GameObject hatObj = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.astronautHatElement).astronautHatElement.hatObj;
+        if(hatObj != null)
+        {
+            astronautHat = Instantiate(hatObj, hatParent).GetComponent<AstronautHat>();
+        }
         transform.position = new Vector3(transform.position.x, transform.position.z, -100);
         shootBall = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootBall>();
         emmission.SetColor("_EmissionColor", GameManager.LevelManager.currentTheme.ballColor * 0.25f/6f);    
@@ -57,6 +69,12 @@ public class AstronautMatController : MonoBehaviour
             aluFade
         };
         astronaut.materials = fadeMats;
+
+        //astronaut hat
+        if (astronautHat != null)
+        {
+            astronautHat.StartFade();
+        }
     }
     public void EndFade(){
         Material[] mats = new Material[5]{
@@ -68,6 +86,12 @@ public class AstronautMatController : MonoBehaviour
         };
         astronaut.materials = mats;
         astronautAnim.Play("Idle", 0);
+
+        //astronaut hat
+        if(astronautHat!=null)
+        {
+            astronautHat.EndFade();
+        }
     }
     
     void GolfSwingPullBack(){

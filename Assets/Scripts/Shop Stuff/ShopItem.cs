@@ -16,6 +16,8 @@ public class ShopItem : ScriptableObject
     public MaterialCustomizationElement materialCustomizationElement;
     [ConditionalProp("itemType", (int)ItemType.GolfBallTrail)]
     public GolfBallTrailElement golfBallTrailElement;
+    [ConditionalProp("itemType", (int)ItemType.AstronautHat)]
+    public AstronautHatElement astronautHatElement;
 
 
     //type definitons
@@ -38,6 +40,11 @@ public class ShopItem : ScriptableObject
     public struct GolfBallTrailElement
     {
         public GameObject trailRendObj;
+    }
+    [System.Serializable]
+    public struct AstronautHatElement
+    {
+        public GameObject hatObj;
     }
 }
 #if UNITY_EDITOR

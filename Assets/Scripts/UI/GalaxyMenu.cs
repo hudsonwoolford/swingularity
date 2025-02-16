@@ -158,7 +158,7 @@ public class GalaxyMenu : MonoBehaviour
 
         for (int i = 0; i < galaxyCons.Length; i++)
         {
-            if((isMoving || zoomedIn) && i == focusedGalaxy)
+            if(zoomedIn && i == focusedGalaxy)
             {
                 galaxyVel[i] = Vector3.zero;
                 continue;
@@ -171,8 +171,12 @@ public class GalaxyMenu : MonoBehaviour
     #region Buttons
     void MoveButton(int dir)
     {
-        focusedGalaxy = LoopValue((focusedGalaxy + dir), 0, galaxySummaries.Length);
-        GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+        int realMovement = Mathf.Clamp((focusedGalaxy + dir), 0, galaxySummaries.Length - 1) - focusedGalaxy;
+        focusedGalaxy += realMovement;
+        if(realMovement != 0)
+        {
+            GameManager.SFXManager.PlaySFX(scrollGalaxyAudio);
+        }
     }
     void ZoomButton(bool zoomIn)
     {

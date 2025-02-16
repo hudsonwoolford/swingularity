@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3245928208868472892}
   - component: {fileID: 783334164229528547}
   - component: {fileID: 5501677863905141298}
+  - component: {fileID: 8873185631051120772}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -374,3 +375,17 @@ PolygonCollider2D:
     m_Paths:
     - []
   m_UseDelaunayMesh: 0
+--- !u!114 &8873185631051120772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368257114206789907}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caeffdf7802268448a1c758e6d83aa5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogMat: {fileID: 2100000, guid: a64f53f0f732bc2439c64c423a6dc09e, type: 2}
+  blit: 1
