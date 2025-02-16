@@ -23,6 +23,8 @@ public class CustomizeElement : MonoBehaviour
     [SerializeField] AudioObj equipItemObj;
     [SerializeField] AudioObj lockedErrorObj;
     [SerializeField] AudioObj selectItemObj;
+    [SerializeField] Color selectedText;
+    [SerializeField] Color unselectedText;
 
     public delegate void ItemEquip();
     public ItemEquip itemEquip;
@@ -41,15 +43,19 @@ public class CustomizeElement : MonoBehaviour
         {
             if (SaveLoadManager.currentGlobalSave.astronautHatElement == _ShopItem.name || SaveLoadManager.currentGlobalSave.astronautMaterialElement == _ShopItem.name || SaveLoadManager.currentGlobalSave.golfBallTrailElement == _ShopItem.name)
             {
-                requiredSupernovaeTxt.text = "<color=yellow>Equipped</color>";
+                requiredSupernovaeTxt.text = "Equipped";
+                requiredSupernovaeTxt.color = selectedText;
                 supernovaeIcon.enabled = false;
             }
             else
             {
-                requiredSupernovaeTxt.text = "<color=green>Unlocked</color>";
+                requiredSupernovaeTxt.text = "Unlocked";
+                requiredSupernovaeTxt.color = unselectedText;
+
                 supernovaeIcon.enabled = false;
             }
         }
+
     }
     void UpdateUIElements()
     {
@@ -78,6 +84,8 @@ public class CustomizeElement : MonoBehaviour
         if (!isUnlocked)
         {
             //cost string
+             requiredSupernovaeTxt.color = selectedText;
+
             supernovaeIcon.enabled = true;
             string cost = _ShopItem.requiredSupernovae.ToString();
             requiredSupernovaeTxt.text = cost;
