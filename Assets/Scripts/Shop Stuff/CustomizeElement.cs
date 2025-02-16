@@ -61,6 +61,7 @@ public class CustomizeElement : MonoBehaviour
         //button interactable
         if (SaveLoadManager.currentGlobalSave != null)
         {
+            isUnlocked = false;
             foreach (var item in SaveLoadManager.currentGlobalSave.unlockedShopItems)
             {
                 isUnlocked |= item == _ShopItem.name;
