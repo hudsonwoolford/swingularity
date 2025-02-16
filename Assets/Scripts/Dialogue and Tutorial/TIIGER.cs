@@ -10,6 +10,7 @@ public class TIIGER : EventTalkableNPC
 
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private Animator tgrAnimator;
+    [SerializeField] private Canvas dialogueCanvas;
     [SerializeField] private MeshRenderer ballRenderer;
     private Material hologramMaterial;
     private bool isTransitioning;
@@ -93,6 +94,7 @@ public class TIIGER : EventTalkableNPC
         onEnableDialogue?.Invoke(true);
         dialogueShown = true;
         tgrAnimator.Play("ShowTgrDialogue");
+        tgrAnimator.SetBool("Speaking", true);
         dialogueController.StartConversation(dialogueText); //sets text
 
         //stop dialogue
@@ -111,7 +113,7 @@ public class TIIGER : EventTalkableNPC
         //animation
         onEnableDialogue?.Invoke(false);
         dialogueShown = false;
-        tgrAnimator.Play("HideTgrDialogue");
+        tgrAnimator.SetBool("Speaking", false);
 
         //stop dialogue
         dialogueController.TogglePauseDialogue();
@@ -123,6 +125,7 @@ public class TIIGER : EventTalkableNPC
     protected override void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
         base.OnSceneLoad(scene, loadSceneMode);
+        dialogueCanvas.worldCamera = Camera.main;
         if(dialogueShown)
         {
             dialogueController.EndConversation();

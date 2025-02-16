@@ -23,6 +23,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private CharacterTypeInfo[] characterTypeInfo;
     [SerializeField] private char crackleCharacter;
     [SerializeField] AudioObj startConvoObj;
+    [SerializeField] AudioObj startConvoObj2;
+    [SerializeField] AudioObj endConvoObj;
     [SerializeField] AudioObj talkObj;
     [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
@@ -44,6 +46,7 @@ public class DialogueController : MonoBehaviour
     public void StartConversation(DialogueText dialogueText)
     {
         tgrAudioSrc.PlayOneShot(startConvoObj.clip, startConvoObj.inherentVol);
+        tgrAudioSrc.PlayOneShot(startConvoObj2.clip, startConvoObj2.inherentVol);
 
         currentDialogueTxt = dialogueText;
         isConversation = true;
@@ -96,6 +99,8 @@ public class DialogueController : MonoBehaviour
     }
     public void EndConversation()
     {
+        tgrAudioSrc.PlayOneShot(endConvoObj.clip, endConvoObj.inherentVol);
+
         currentDialogueTxt = null;
         StopAllCoroutines();
         paragraphIntervalCoroutine = null;
