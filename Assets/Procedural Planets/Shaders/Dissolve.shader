@@ -21,8 +21,14 @@ Shader "Custom/Dissolve"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent"}
         LOD 200
+
+        Pass
+        {
+            ZWrite On
+            ColorMask 0
+        }
         
-        ZTest Always
+        ZWrite Off
         CGPROGRAM
 
         #pragma surface surf Standard vertex:vert fullforwardshadows alpha:blend
@@ -30,14 +36,13 @@ Shader "Custom/Dissolve"
         #pragma target 3.0
         #include "Includes/FractalNoise.cginc"
 
-        sampler2D _MainTex;
-
         struct Input
         {
             float2 uv_MainTex;
             float3 vertPos;
         };
 
+        sampler2D _MainTex;
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
@@ -69,6 +74,7 @@ Shader "Custom/Dissolve"
 
         }
         ENDCG
+        
     }
     FallBack "Diffuse"
 }

@@ -768,23 +768,39 @@ public class GalaxyMenu : MonoBehaviour
 
         //COIN FEEDBACK
         //Coins going up and down with pitch
-        //while(true)
-        //{
-        //    int displayCoins = realIteration;
-        //    int consecutiveCoinMoves = 0;
-        //    int nextDisplay = Mathf.RoundToInt(Mathf.Lerp(displayCoins, SaveLoadManager.currentGlobalSave.totalSupernovae, coinFillSpeed));
-        //    int dif = nextDisplay - displayCoins;
-        //    if (dif != 0)
-        //    {
-        //        consecutiveCoinMoves += (int)Mathf.Sign(dif);
-        //        galaxySrc.pitch = 1 + consecutiveCoinMoves * 0.01f;
-        //        GameManager.SFXManager.PlaySFX(singleCoinAudio, galaxySrc, singleCoinAudio.inherentVol);
-        //        displayCoins = Mathf.Max(nextDisplay, 0);
-        //    }
-        //    coinsCollectionText.text = displayCoins.ToString();
-        //    yield return new WaitForFixedUpdate();
-        //    break;
-        //}
+        int displayCoins = 0;
+        int consecutiveCoinMoves = 0;
+        int totalCoins = galaxyList[focusedGalaxy].relativeDifficulty * realIteration;
+
+        float coinTracker = 0;
+        int prevDisplay = 0;
+        infoCardAnim.Play("ShowCoins");
+        do
+        {
+            coinTracker = Mathf.Lerp(coinTracker, totalCoins, coinFillSpeed);
+            displayCoins = Mathf.RoundToInt(coinTracker);
+            coinsCollectionText.text = "+" + displayCoins.ToString();
+
+            Debug.Log($"{coinTracker} || {displayCoins} || {totalCoins}");
+
+            if(prevDisplay != displayCoins)
+            {
+                GameManager.SFXManager.PlaySFX(singleCoinAudio, galaxySrc, singleCoinAudio.inherentVol);
+                galaxySrc.pitch = 1 + consecutiveCoinMoves * 0.01f;
+            }
+
+            prevDisplay = displayCoins;
+            consecutiveCoinMoves += 1;
+            yield return new WaitForFixedUpdate();
+        } while (displayCoins < totalCoins);
+
+        yield return new WaitForSecondsRealtime(0.25f);
+
+        infoCardAnim.Play("CollectCoins");
+        GameManager.SFXManager.PlaySFX(cashoutAudio, galaxySrc, cashoutAudio.inherentVol);
+        yield return new WaitForSecondsRealtime(infoCardAnim.GetCurrentAnimatorStateInfo(1).length);
+        coinsCollectionText.transform.parent.gameObject.SetActive(false);
+
 
         yield return new WaitForSecondsRealtime(0.25f);
         StartCoroutine(ZoomGalaxy(false, false));

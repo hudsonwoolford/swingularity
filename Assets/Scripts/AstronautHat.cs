@@ -48,6 +48,10 @@ public class AstronautHat : MonoBehaviour
 
         //swap to fade materials
         hatRenderer.materials = fadeMaterials;
+        foreach (var m in hatRenderer.materials)
+        {
+            m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
+        }
     }
     public void EndFade()
     {
