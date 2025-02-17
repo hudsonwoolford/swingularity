@@ -48,6 +48,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Button leftBtn; //move buttons
     [SerializeField] Button zoomBtn; //move buttons
     [SerializeField] TextMeshProUGUI starCount;
+    [SerializeField] TextMeshProUGUI starCoinCount;
     [SerializeField] GameObject dotButton; //created in create galaxy funciton, one dot per galaxy
     [SerializeField] Vector3 dotMiddle;
     [SerializeField] float dotDistanceInterval;
@@ -482,6 +483,7 @@ public class GalaxyMenu : MonoBehaviour
     void CreateControllers() //Instantiates all galaxies
     {
         starCount.text = GameManager.LevelManager.currentUniverse.numStars.ToString();
+        starCoinCount.text = SaveLoadManager.currentGlobalSave.totalSupernovae.ToString();
         galaxyCons = new GalaxyController[galaxyList.Length + 1];
         galaxySummaries = new GalaxySummary[galaxyList.Length + 1];
         Vector3[] positions = GalaxyPositions(galaxyList.Length + 1, focusedGalaxy);
