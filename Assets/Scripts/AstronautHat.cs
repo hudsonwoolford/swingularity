@@ -9,6 +9,7 @@ public class AstronautHat : MonoBehaviour
 {
     [SerializeField] private Material[] defaultMaterials;
     [SerializeField] private Material[] fadeMaterials;
+    [SerializeField] private bool[] dynamicColors;
     [SerializeField] private Material syncFadeMat;
     [SerializeField] private string fadePropertyName;
     MeshRenderer hatRenderer;
@@ -22,10 +23,7 @@ public class AstronautHat : MonoBehaviour
     }
     void Start()
     {
-        foreach (var m in hatRenderer.materials)
-        {
-            m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
-        }
+        CalibrateMaterialInstances(false);
     }
 
     void Update()
@@ -48,10 +46,7 @@ public class AstronautHat : MonoBehaviour
 
         //swap to fade materials
         hatRenderer.materials = fadeMaterials;
-        foreach (var m in hatRenderer.materials)
-        {
-            m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
-        }
+        CalibrateMaterialInstances(true);
     }
     public void EndFade()
     {
@@ -62,6 +57,23 @@ public class AstronautHat : MonoBehaviour
 
         hatBlock.SetFloat(fadePropertyName, 1);
         hatRenderer.SetPropertyBlock(hatBlock);
+        CalibrateMaterialInstances(false);
+    }
+    void CalibrateMaterialInstances(bool fadeMats)
+    {
+        int i = 0;
+        foreach (var m in hatRenderer.materials)
+        {
+            if(fadeMats)
+            {
+                m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
+            }
+            if (dynamicColors != null && dynamicColors.Length > i && dynamicColors[i])
+            {
+                m.SetColor("_Color", GameManager.LevelManager.currentTheme.mainColor);
+            }
+            i++;
+        }
     }
 }
 
@@ -74,6 +86,7 @@ public class AstronautHatEditor : Editor
 
     SerializedProperty defaultMaterialsProp;
     SerializedProperty fadeMaterialsProp;
+    SerializedProperty dynamicColorsProp;
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -84,6 +97,7 @@ public class AstronautHatEditor : Editor
 
         defaultMaterialsProp.arraySize = mr.sharedMaterials.Length;
         fadeMaterialsProp.arraySize = mr.sharedMaterials.Length;
+        dynamicColorsProp.arraySize = mr.sharedMaterials.Length;
 
         DrawDefaultInspector();
 
@@ -96,6 +110,7 @@ public class AstronautHatEditor : Editor
 
         defaultMaterialsProp = serializedObject.FindProperty("defaultMaterials");
         fadeMaterialsProp = serializedObject.FindProperty("fadeMaterials");
+        dynamicColorsProp = serializedObject.FindProperty("dynamicColors");
     }
 }
 

@@ -22,7 +22,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public bool isReset { get; private set; } = false; //Whether you are currently playing a resetted galaxy or not
     [SerializeField] public bool isPointCard { get; private set; } = false; //Whether point card is enabled
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
+    public float[] _DifficultyStarMult => difficultyStarMult;
     [Header("Parameters")]
+    [SerializeField] float[] difficultyStarMult = new float[10];
     [SerializeField] LevelGenStaticReferences levelStaticValue;
     [SerializeField] GalaxyData[] galaxyDatas;
     [SerializeField] TextMeshProUGUI scoreText; //Text that displays score
@@ -517,7 +519,7 @@ public class LevelManager : MonoBehaviour
         }
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
-        GameManager.SaveLoadManager.IncrementSupernovae(starTotal * currentUniverse.relativeDifficulty);
+        GameManager.SaveLoadManager.IncrementSupernovae(Mathf.RoundToInt(starTotal * difficultyStarMult[currentUniverse.relativeDifficulty]));
         setUniverse?.Invoke(universeParams);
         GameManager.SaveLoadManager.Save();
     }
