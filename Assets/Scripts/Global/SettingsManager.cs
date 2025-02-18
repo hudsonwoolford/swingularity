@@ -40,13 +40,11 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] Texture2D customCursorTxtr;
     [SerializeField] Button applySettings;
     [SerializeField] Button backBtn;
-    [Header("Main Settings")]
-    [SerializeField] Button audioTabBtn;
-    [SerializeField] Button gameTabBtn;
-    [SerializeField] Button graphicsTabBtn;
-    [SerializeField] Button[] tabBtns;
-    [SerializeField] CanvasGroup[] settingsTabs;
-    [SerializeField] Image[] settingsTabHovers;
+    [SerializeField] Scrollbar settingsScrollBar;
+    [SerializeField] RectTransform scrollWindow;
+    [SerializeField] Vector3 scrollWindowOrigin;
+    [SerializeField] float maxScrollValue;
+
     [Header("Audio Elements")]
     [SerializeField] SettingsSlider masterVolElement;
     [SerializeField] SettingsSlider sfxVolElement;
@@ -66,7 +64,6 @@ public class SettingsManager : MonoBehaviour
     Animator settingsAnim;
     [SerializeField] EventSystem settingsEventsystem;
     bool menuOpen = false;
-    int currentTab;
     float transitionDuration = 0.05f;
     bool appliedSettings;
 
@@ -85,11 +82,11 @@ public class SettingsManager : MonoBehaviour
         settingsCanvas = GetComponent<Canvas>();
         settingsAnim = GetComponent<Animator>();
         settingsAnim.Play("DisableMenu");
-        currentTab = 0;
-        previousSelectedTab = audioTabBtn.gameObject;
 
         SetButtonFunctions();
+        settingsScrollBar.onValueChanged.AddListener((v) => OnSettingsScrollbar(v));
         applySettingsVar?.Invoke();
+        scrollWindowOrigin = scrollWindow.localPosition;
     }
 
     // Update is called once per frame
@@ -106,21 +103,17 @@ public class SettingsManager : MonoBehaviour
                 enableSettingsMenu?.Invoke(false);
             }
         }
+
         if(menuOpen){
-            applySettings.interactable = !appliedSettings;
-            int selectedOther = 0;
-            for(int i = 0; i < tabBtns.Length; i++){
-                if(settingsEventsystem.currentSelectedGameObject != tabBtns[i].gameObject){
-                    selectedOther++;
-                }
-            }
-
-            if(selectedOther == 3){
-                previousSelectedTab.GetComponent<Button>().Select();
-            }
-
+            settingsScrollBar.value += -Input.mouseScrollDelta.y / 15;
+            settingsScrollBar.value = Mathf.Clamp(settingsScrollBar.value, 0f, 1f);
         }
     }
+    void OnSettingsScrollbar(float value)
+    {
+        scrollWindow.localPosition = Vector3.Lerp(scrollWindowOrigin, scrollWindowOrigin + new Vector3(0, maxScrollValue, 0), value);
+    }
+
     #region Setting Variables
     public void SetDefaultVariables()
     {
@@ -299,41 +292,7 @@ public class SettingsManager : MonoBehaviour
     {
         appliedSettings = false;
     }
-    IEnumerator ChangeTab(int tabIndex) //Changes the tab with a transition animation
-    {
-        int prevIndex = currentTab;
-        currentTab = tabIndex;
 
-        float timeOfTransition = 0;
-        // settingsTabHovers[currentTab].color = new Color (1, 1, 1, 0);
-        // settingsTabHovers[prevIndex].color = new Color (1, 1, 1, 10f/255f);
-            tabBtns[currentTab].Select();
-            previousSelectedTab = tabBtns[currentTab].gameObject;
-
-            // for(int i = 0; i < tabBtns.Length; i++){
-                
-            //     if(i == currentTab){tabBtns[currentTab].interactable = false;}
-            //     else{tabBtns[currentTab].interactable = true;}
-            // }
-        if(prevIndex == currentTab) { yield break; }
-        while(timeOfTransition<transitionDuration)
-        {
-            float alpha = Mathf.Lerp(0, 1, timeOfTransition / transitionDuration);
-            settingsTabs[prevIndex].alpha = 1 - alpha;
-            settingsTabs[currentTab].alpha = alpha;
-
-            timeOfTransition += Time.unscaledDeltaTime;
-            yield return null;
-        }
-        settingsTabs[prevIndex].alpha = 0;
-        settingsTabs[currentTab].alpha = 1;
-
-        settingsTabs[prevIndex].interactable = false;
-        settingsTabs[prevIndex].blocksRaycasts = false;
-        settingsTabs[currentTab].interactable = true;
-        settingsTabs[currentTab].blocksRaycasts = true;
-
-    }
     void SetButtonFunctions() //Sets all listener functions for buttons
     {
         applySettings.onClick.AddListener(() => SetAllVariables());
@@ -392,11 +351,6 @@ public class SettingsManager : MonoBehaviour
             sToggles[i].currentValue = sToggles[i].defaultValue;
             sToggles[i].toggleImg.enabled = sToggles[i].currentValue;
         }
-
-        //tab buttons
-        audioTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(0)));
-        gameTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(1)));
-        graphicsTabBtn.onClick.AddListener(() => StartCoroutine(ChangeTab(2)));
     }
     #endregion
     private void OnEnable()
