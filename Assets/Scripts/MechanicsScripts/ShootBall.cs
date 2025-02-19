@@ -80,6 +80,7 @@ public class ShootBall : MonoBehaviour
 
     bool movedAstronaut = false;
     GameObject childObj;
+    (Sprite, Sprite, Color, Color) trailCollisionIcon;
 
     public delegate void OnShoot();
     public static OnShoot onShoot;
@@ -136,7 +137,17 @@ public class ShootBall : MonoBehaviour
         defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
 
-        tr = Instantiate(GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj, transform).GetComponent<TrailRenderer>();
+        GameObject trailRendPrefab = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj;
+        tr = Instantiate(trailRendPrefab, transform).GetComponent<TrailRenderer>();
+
+        TrailCollisionInfo trailCollisionInfo = trailRendPrefab.GetComponent<TrailCollisionInfo>();
+
+        trailCollisionIcon.Item1 = trailCollisionInfo.colImage1;
+        trailCollisionIcon.Item2 = trailCollisionInfo.colImage2;
+        trailCollisionIcon.Item3 = trailCollisionInfo.colImageColour1;
+        trailCollisionIcon.Item4 = trailCollisionInfo.colImageColour2;
+
+
         tr.transform.localPosition = new Vector3(0, 0, -0.3f);
         slr.widthCurve = tr.widthCurve;
         slr.material = tr.material; 
@@ -738,6 +749,8 @@ public class ShootBall : MonoBehaviour
         }
         for (int s = 0; s < cols.Count; s++) //iterates through colliders
         {
+
+
             cols[s].transform.position = colPos[s]; //sets the positions of the objects
             Vector3 closestPoint = new Vector3(1000, 1000);
             int index = 0;
@@ -747,8 +760,13 @@ public class ShootBall : MonoBehaviour
                     index = j;
                 }
             }
-            cols[s].transform.GetChild(1).GetComponent<SpriteRenderer>().color = slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
+            SpriteRenderer image1 = cols[s].transform.GetChild(0).GetComponent<SpriteRenderer>();
+            SpriteRenderer image2 = cols[s].transform.GetChild(1).GetComponent<SpriteRenderer>();
 
+            image1.sprite = trailCollisionIcon.Item1;
+            image2.sprite = trailCollisionIcon.Item2;
+            image1.color = trailCollisionIcon.Item3 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
+            image2.color = trailCollisionIcon.Item4 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
         }
         colPos.Clear(); //clears all collision positions
     }
