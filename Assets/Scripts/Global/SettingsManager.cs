@@ -108,6 +108,8 @@ public class SettingsManager : MonoBehaviour
             settingsScrollBar.value += -Input.mouseScrollDelta.y / 15;
             settingsScrollBar.value = Mathf.Clamp(settingsScrollBar.value, 0f, 1f);
         }
+        applySettings.gameObject.SetActive(!appliedSettings);
+
     }
     void OnSettingsScrollbar(float value)
     {
