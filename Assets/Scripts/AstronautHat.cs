@@ -9,7 +9,8 @@ public class AstronautHat : MonoBehaviour
 {
     [SerializeField] private Material[] defaultMaterials;
     [SerializeField] private Material[] fadeMaterials;
-    [SerializeField] private bool[] dynamicColors;
+    [SerializeField] private bool[] dynamicThemeColors;
+    [SerializeField] private bool[] dynamicPaintColors;
     [SerializeField] private Material syncFadeMat;
     [SerializeField] private string fadePropertyName;
     MeshRenderer hatRenderer;
@@ -68,9 +69,16 @@ public class AstronautHat : MonoBehaviour
             {
                 m.SetColor("_EdgeColor", syncFadeMat.GetColor("_EdgeColor"));
             }
-            if (dynamicColors != null && dynamicColors.Length > i && dynamicColors[i])
+            if (dynamicThemeColors != null && dynamicThemeColors.Length > i && dynamicThemeColors[i])
             {
                 m.SetColor("_Color", GameManager.LevelManager.currentTheme.mainColor);
+            }           
+            if (dynamicPaintColors != null && dynamicPaintColors.Length > i && dynamicPaintColors[i])
+            {
+                ShopItem.MaterialCustomizationElement mce = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.astronautMaterialElement).materialCustomizationElement;
+                m.SetColor("_Color", mce.matColor);
+                m.SetFloat("_Metallic", mce.metallic);
+                m.SetFloat("_Glossiness", mce.smoothness);
             }
             i++;
         }
@@ -86,7 +94,8 @@ public class AstronautHatEditor : Editor
 
     SerializedProperty defaultMaterialsProp;
     SerializedProperty fadeMaterialsProp;
-    SerializedProperty dynamicColorsProp;
+    SerializedProperty dynamicGlowColorsProp;
+    SerializedProperty dynamicMatteColorsProp;
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -97,7 +106,8 @@ public class AstronautHatEditor : Editor
 
         defaultMaterialsProp.arraySize = mr.sharedMaterials.Length;
         fadeMaterialsProp.arraySize = mr.sharedMaterials.Length;
-        dynamicColorsProp.arraySize = mr.sharedMaterials.Length;
+        dynamicGlowColorsProp.arraySize = mr.sharedMaterials.Length;
+        dynamicMatteColorsProp.arraySize = mr.sharedMaterials.Length;
 
         DrawDefaultInspector();
 
@@ -110,7 +120,8 @@ public class AstronautHatEditor : Editor
 
         defaultMaterialsProp = serializedObject.FindProperty("defaultMaterials");
         fadeMaterialsProp = serializedObject.FindProperty("fadeMaterials");
-        dynamicColorsProp = serializedObject.FindProperty("dynamicColors");
+        dynamicGlowColorsProp = serializedObject.FindProperty("dynamicThemeColors");
+        dynamicMatteColorsProp = serializedObject.FindProperty("dynamicPaintColors");
     }
 }
 

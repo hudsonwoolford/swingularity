@@ -144,7 +144,7 @@ public class CustomizeElement : MonoBehaviour
         {
             wm.SetColor("_Color", shopItem.materialCustomizationElement.matColor);
             wm.SetFloat("_Metallic", shopItem.materialCustomizationElement.metallic);
-            wm.SetFloat("_Glossiness", shopItem.materialCustomizationElement.metallic);
+            wm.SetFloat("_Glossiness", shopItem.materialCustomizationElement.smoothness);
         }
         SaveLoadManager.currentGlobalSave.astronautMaterialElement = shopItem.name;
         SettingsManager.applySettingsVar?.Invoke();
