@@ -380,6 +380,12 @@ public class ShootBall : MonoBehaviour
             yield break;
         }
         StopCoroutine(BallStillTiming(ballStillTimeVal));
+        
+        foreach (GameObject c in cols)
+        {
+            Destroy(c);
+        }
+        cols.Clear();
         onSwing?.Invoke(); //invoke shoot event
 
         yield return new WaitUntil(() => pullBack);
@@ -395,11 +401,6 @@ public class ShootBall : MonoBehaviour
 
         rb.AddForce(force, ForceMode.Impulse); //adding force
 
-        foreach (GameObject c in cols)
-        {
-            Destroy(c);
-        }
-        cols.Clear();
         liningUpShot = false;
     }
     public IEnumerator ArtificialShot(float angle, float strength, float pullTime, float waitTime, AnimationCurve evaluationCurve)
@@ -813,8 +814,6 @@ public class ShootBall : MonoBehaviour
         holeAnim?.Invoke();
         rb.constraints = RigidbodyConstraints.FreezePosition;
 
-        GetComponent<TrailRenderer>().enabled = false;
-
         float timeCounter = 0;
         Material mat = defaultBallMat;
         Vector3 velocity = rb.velocity;
@@ -828,6 +827,9 @@ public class ShootBall : MonoBehaviour
             timeCounter += Time.deltaTime;
             float progress = timeCounter/animLength;
             progress = Mathf.Clamp01(progress);
+            if(progress >= 0.5){
+                tr.emitting = false;
+            }
             //Failsafe here
             if((hole.position - transform.position).magnitude < 1.5f){
                 transform.position = hole.GetComponent<Collider>().ClosestPoint(transform.position);
@@ -853,66 +855,6 @@ public class ShootBall : MonoBehaviour
         }
         else
         {
-            return true;
-        }
-    }
-    private bool CheckSpiralDir(Vector3 velocity, Vector3 hitPoint, Transform hole){
-        Vector3 holeDir = hitPoint - hole.position;
-        velocity *= -1;
-        float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
-        if(angle < 0){
-            angle += 360;
-        }
-        else if(angle > 360){
-            angle = angle % 360;
-        }
-            if(((angle > 45)  && (angle < 90)) || ((angle < 315) && (angle > 270)) || ((angle < 135) && (angle < 90)) || ((angle > 225) && (angle < 270))){
-                 return true;
-            }
-            else{
-                return false;
-            }
-    }
-
-    private bool CheckSpiralDirOLD(Vector3 velocity, Vector3 hitPoint, Transform hole){
-        Vector3 holeDir = hitPoint - hole.position;
-        velocity *= -1;
-        float angle = ((Mathf.Atan2(velocity.y, velocity.x)) * Mathf.Rad2Deg);
-        print(angle);
-
-        if(holeDir.x > 0 && holeDir.y > 0){
-            if((angle > 45)){
-                 return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else if(holeDir.x > 0 && holeDir.y < 0){
-            if((angle > -45)){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else if(holeDir.x < 0 && holeDir.y > 0){
-            if((angle > 135)){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else if(holeDir.x < 0 && holeDir.y < 0){
-            if((angle > -135)){
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
             return true;
         }
     }
