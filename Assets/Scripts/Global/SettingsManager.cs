@@ -64,7 +64,6 @@ public class SettingsManager : MonoBehaviour
     Animator settingsAnim;
     [SerializeField] EventSystem settingsEventsystem;
     bool menuOpen = false;
-    float transitionDuration = 0.05f;
     bool appliedSettings;
 
     public static UserSettings userSettings = new UserSettings();
