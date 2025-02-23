@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class NebulaGenerator : MonoBehaviour
 {
-    [SerializeField] ParticleSystem nebula1;
-    [SerializeField] ParticleSystem nebula2;
+    [SerializeField] protected ParticleSystem nebula1;
+    [SerializeField] protected ParticleSystem nebula2;
     Vector2[] points = null;
-    // Start is called before the first frame update
+
     void Start()
     {
         if(CameraFollow.innerShape != null) { CalculateNebulaSize(); }
         if(GameManager.LevelManager.currentTheme != null) { ApplyParticleColors(); }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.K))
@@ -22,7 +21,7 @@ public class NebulaGenerator : MonoBehaviour
             ApplyParticleColors();
         }
     }
-    void CalculateNebulaSize()
+    protected virtual void CalculateNebulaSize()
     {
         points = CameraFollow.innerShape.points;
         if(points.Length <= 0) { Debug.LogWarning("CameraFollow inner shape contains no points. This is likely due to it not being initialised before this function was called."); return; } //safeguard
@@ -62,7 +61,7 @@ public class NebulaGenerator : MonoBehaviour
         nebula2.Clear();
         nebula2.Play();
     }
-    void ApplyParticleColors()
+    protected virtual void ApplyParticleColors()
     {
         ParticleSystem.MainModule main1 = nebula1.main;
         ParticleSystem.MainModule main2 = nebula2.main;
