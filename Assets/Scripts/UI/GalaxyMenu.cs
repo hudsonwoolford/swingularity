@@ -233,7 +233,7 @@ public class GalaxyMenu : MonoBehaviour
     }
     void MenuInput()
     {
-        if(!zoomedIn && !isMoving)
+        if(!zoomedIn)
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
