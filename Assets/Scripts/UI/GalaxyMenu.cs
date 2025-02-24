@@ -410,6 +410,8 @@ public class GalaxyMenu : MonoBehaviour
     }
     void ZoomGalaxy(bool zoomIn, bool instant)
     {
+        if (galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars) { galaxySummaries[focusedGalaxy].Shake(); return; }
+
         zoomedIn = zoomIn;
         if(instant)
         {
