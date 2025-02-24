@@ -7546,15 +7546,6 @@ MonoBehaviour:
     - Earth_1
     dialogueText: {fileID: 11400000, guid: 7da1a7131af23904daa7e8fa193ce9ef, type: 2}
     numCalls: 0
-  - name: Earth_2 - Reaction to hole 2
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Earth_2
-    dialogueText: {fileID: 11400000, guid: 0d7889bc99028924ebfde676e8b095d4, type: 2}
-    numCalls: 0
   - name: Desert_0-Meeting at desert galaxy
     dialogueEvent: 0
     numCallsRequired: 1
@@ -7572,51 +7563,6 @@ MonoBehaviour:
     allowedScenes:
     - Fire_0
     dialogueText: {fileID: 11400000, guid: 2e313d3c2de70e54481d4d771d89d5b2, type: 2}
-    numCalls: 0
-  - name: Ice_0-Introduction to Ice Galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Ice_0
-    dialogueText: {fileID: 11400000, guid: 8664e1cbf10dbb94fbe8ae74f3383d22, type: 2}
-    numCalls: 0
-  - name: Goop_0-Discovers human in Goop Galaxy
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Goop_0
-    dialogueText: {fileID: 11400000, guid: 3841dbfab3ff1124ea50b265fad790ff, type: 2}
-    numCalls: 0
-  - name: Waste_0-Explanation of Caddi lore
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Waste_0
-    dialogueText: {fileID: 11400000, guid: 335fe220879edcc498ea351aa0bbb223, type: 2}
-    numCalls: 0
-  - name: Mythical_0-Reconsideration of humanity
-    dialogueEvent: 0
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Mythical_0
-    dialogueText: {fileID: 11400000, guid: e1dacb026d50d304192eec9c6da0cabe, type: 2}
-    numCalls: 0
-  - name: Mythical_4-Congratulations
-    dialogueEvent: 2
-    numCallsRequired: 1
-    resubscribeAfterCall: 0
-    timeDelay: 0.25
-    allowedScenes:
-    - Mythical_4
-    dialogueText: {fileID: 11400000, guid: 693c50ff18920784fb5d373e1d928c9e, type: 2}
     numCalls: 0
   dialogueController: {fileID: 377844702962078479}
   tgrAnimator: {fileID: 1339470235395063992}
@@ -8504,7 +8450,7 @@ MonoBehaviour:
   NPCNameText: {fileID: 3688652927113324794}
   NPCDialogueText: {fileID: 1993478515509504144}
   typeSpeed: 10
-  minParagraphInterval: 2
+  minParagraphInterval: 1.5
   characterTypeInfo:
   - character: 8230
     waitMult: 15
@@ -8526,12 +8472,14 @@ MonoBehaviour:
     hideCharacter: 1
   crackleCharacter: 37
   startConvoObj: {fileID: 11400000, guid: df71c93d355447549a6ef9ef72df169c, type: 2}
-  startConvoObj2: {fileID: 11400000, guid: 36d9d98e3cc9ba64dad1ee68a5ab8fc9, type: 2}
+  startConvoObj2: {fileID: 11400000, guid: 0c8c92c80aac1eb42a5b60e80cdf1c9b, type: 2}
   endConvoObj: {fileID: 11400000, guid: 256bf2abed89f9f4ea320ad30344fda2, type: 2}
+  endConvoObj2: {fileID: 11400000, guid: 4f63270891b164e49bc84e02b50ab2f7, type: 2}
   talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
   staticObject: {fileID: 11400000, guid: 7c3940f63f1939744a73ae18ad86a4b8, type: 2}
   tgrAudioSrc: {fileID: 4502132378727637396}
   soundCharacters: 20004100420043004400450046004700480049004a004b004c004d004e004f0050005100520053005400550056005700580059005a00
+  testText: {fileID: 0}
 --- !u!95 &1339470235395063992
 Animator:
   serializedVersion: 5
@@ -22202,10 +22150,12 @@ MonoBehaviour:
   startConvoObj: {fileID: 11400000, guid: df71c93d355447549a6ef9ef72df169c, type: 2}
   startConvoObj2: {fileID: 0}
   endConvoObj: {fileID: 0}
+  endConvoObj2: {fileID: 0}
   talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
   staticObject: {fileID: 11400000, guid: 7c3940f63f1939744a73ae18ad86a4b8, type: 2}
   tgrAudioSrc: {fileID: 7406317267415208035}
   soundCharacters: 20004100420043004400450046004700480049004a004b004c004d004e004f0050005100520053005400550056005700580059005a00
+  testText: {fileID: 0}
 --- !u!82 &7406317267415208035
 AudioSource:
   m_ObjectHideFlags: 0

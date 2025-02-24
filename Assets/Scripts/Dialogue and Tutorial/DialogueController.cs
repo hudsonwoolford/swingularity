@@ -25,10 +25,13 @@ public class DialogueController : MonoBehaviour
     [SerializeField] AudioObj startConvoObj;
     [SerializeField] AudioObj startConvoObj2;
     [SerializeField] AudioObj endConvoObj;
+    [SerializeField] AudioObj endConvoObj2;
     [SerializeField] AudioObj talkObj;
     [SerializeField] AudioObj staticObject;
     [SerializeField] AudioSource tgrAudioSrc;
     [SerializeField] char[] soundCharacters;
+    [Header("Debugging")]
+    [SerializeField] DialogueText testText;
 
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
@@ -43,6 +46,12 @@ public class DialogueController : MonoBehaviour
 
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
+
+    [ContextMenu("Test text")]
+    void TestText()
+    {
+        StartConversation(testText);
+    }
     public void StartConversation(DialogueText dialogueText)
     {
         tgrAudioSrc.PlayOneShot(startConvoObj.clip, startConvoObj.inherentVol);
@@ -51,7 +60,7 @@ public class DialogueController : MonoBehaviour
         currentDialogueTxt = dialogueText;
         isConversation = true;
         //update speaker name
-        if(!dialogueText.revealNameLater)
+        if (!dialogueText.revealNameLater)
         {
             NPCNameText.text = dialogueText.speakerName;
         }
@@ -72,15 +81,16 @@ public class DialogueController : MonoBehaviour
     public void DisplayNextParagraph()
     {
         //nothing in queue
-        if(paragraphs.Count == 0 && !isTyping)
+        if (paragraphs.Count == 0 && !isTyping)
         {
+            DialogueCloseSounds();
             EndConversation();
             return;
         }
 
         if (!isTyping)
         {
-            if(paragraphIntervalCoroutine != null)
+            if (paragraphIntervalCoroutine != null)
             {
                 StopCoroutine(paragraphIntervalCoroutine);
             }
@@ -97,10 +107,13 @@ public class DialogueController : MonoBehaviour
         //toggle pause boolean
         isPaused = !isPaused;
     }
-    public void EndConversation()
+    public void DialogueCloseSounds()
     {
         tgrAudioSrc.PlayOneShot(endConvoObj.clip, endConvoObj.inherentVol);
-
+        tgrAudioSrc.PlayOneShot(endConvoObj2.clip, endConvoObj2.inherentVol);
+    }
+    public void EndConversation()
+    {
         currentDialogueTxt = null;
         StopAllCoroutines();
         paragraphIntervalCoroutine = null;
@@ -130,13 +143,13 @@ public class DialogueController : MonoBehaviour
         {
             //wait multiplier
             waitMultiplier = 1;
-            if(c == crackleCharacter)
+            if (c == crackleCharacter)
             {
                 originalText = originalText.Remove(characterIteration, 1);
                 alphaIndex--;
-                GameManager.SFXManager.PlaySFX(staticObject);
+                GameManager.SFXManager?.PlaySFX(staticObject);
             }
-            if(currentDialogueTxt.revealNameLater && c =='@')
+            if (currentDialogueTxt.revealNameLater && c == '@')
             {
                 alphaIndex--;
                 NPCNameText.text = currentDialogueTxt.speakerName;
@@ -144,7 +157,9 @@ public class DialogueController : MonoBehaviour
             }
             foreach (CharacterTypeInfo ct in characterTypeInfo)
             {
-                if(c == ct.character) { waitMultiplier = ct.waitMult;
+                if (c == ct.character)
+                {
+                    waitMultiplier = ct.waitMult;
                     if (ct.hideCharacter)
                     {
                         originalText = originalText.Replace(c, ' ');
@@ -153,12 +168,12 @@ public class DialogueController : MonoBehaviour
             }
 
             //dialogue noise
-            if ((characterIteration-1) % 2 == 0) //every third characteer
+            if ((characterIteration - 1) % 2 == 0) //every third characteer
             {
                 if (soundCharacters.Contains(char.ToUpper(c))) //if it is a sound character
                 {
                     tgrAudioSrc.pitch = Mathf.Lerp(0.9f, 0.95f, Array.IndexOf(soundCharacters, char.ToUpper(c)) / (float)soundCharacters.Length);
-                    GameManager.SFXManager.PlaySFX(talkObj, tgrAudioSrc, 1f);
+                    GameManager.SFXManager?.PlaySFX(talkObj, tgrAudioSrc, 1f);
                 }
             }
             yield return new WaitForSecondsRealtime(MAX_TYPE_TIME / typeSpeed);
@@ -213,7 +228,7 @@ public class DialogueController : MonoBehaviour
                     }
                 }
             }
-            if(!hideChar)
+            if (!hideChar)
             {
                 finishedPara.Append(p[i]);
             }

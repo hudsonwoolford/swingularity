@@ -21,7 +21,7 @@ public class TIIGER : EventTalkableNPC
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -51,16 +51,20 @@ public class TIIGER : EventTalkableNPC
         {
             StartCoroutine(HideDialogue());
         }
-        if(dialogueController.isConversation && LevelManager.ballInput)
+        if (dialogueController.isConversation && LevelManager.ballInput)
         {
             GameManager.LevelManager.EnableBallInput(false);
         }
         hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
-        if(dialogueQueued) { dialogueShown |= dialogueQueued; }
-        if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown && !dialogueQueued)
+        if (dialogueQueued) { dialogueShown |= dialogueQueued; }
+        if (Input.GetKeyDown(KeyCode.Escape) && dialogueShown && !dialogueQueued)
         {
             dialogueController.EndConversation();
             StartCoroutine(HideDialogue());
+        }
+
+        if(dialogueShown)
+        {
         }
     }
     public override void Interact()
@@ -97,9 +101,17 @@ public class TIIGER : EventTalkableNPC
         tgrAnimator.SetBool("Speaking", true);
         dialogueController.StartConversation(dialogueText); //sets text
 
-        //stop dialogue
         dialogueController.TogglePauseDialogue();
-        yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
+        float startTime = Time.time;
+        float length = 0.5f;
+        while (Time.time - startTime < length)
+        {
+            transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
+            transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
+            yield return null;
+        }
+        transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
+        transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
         dialogueController.TogglePauseDialogue();
 
         isTransitioning = false;
@@ -116,8 +128,20 @@ public class TIIGER : EventTalkableNPC
         tgrAnimator.SetBool("Speaking", false);
 
         //stop dialogue
+        dialogueController.DialogueCloseSounds();
         dialogueController.TogglePauseDialogue();
-        yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
+
+        float startTime = Time.time;
+        float length = 0.5f;
+        while (Time.time - startTime < length)
+        {
+            transform.localScale = Vector3.one * Camera.main.orthographicSize/8;
+            transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
+            yield return null;
+        }
+        transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
+        transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
+
         dialogueController.TogglePauseDialogue();
 
         isTransitioning = false;
@@ -126,7 +150,7 @@ public class TIIGER : EventTalkableNPC
     {
         base.OnSceneLoad(scene, loadSceneMode);
         dialogueCanvas.worldCamera = Camera.main;
-        if(dialogueShown)
+        if (dialogueShown)
         {
             dialogueController.EndConversation();
             StopAllCoroutines();

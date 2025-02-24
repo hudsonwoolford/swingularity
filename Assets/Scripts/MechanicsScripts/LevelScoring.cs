@@ -60,7 +60,8 @@ public class LevelScoring : MonoBehaviour
         powerText.text = "——";
         gameObject.SetActive(!GameManager.PauseManager.hideHUD);
     }
-    private void Update(){
+    private void Update()
+    {
         if (shootBall.liningUpShot)
         {
             powerText.text = Mathf.CeilToInt(shootBall.shootPower).ToString();
@@ -108,35 +109,43 @@ public class LevelScoring : MonoBehaviour
     //    timeOfBallRelease = Time.time;
     //    while(Time.time - timeOfBallRelease < ballNotifTime)
     //    {
-            
+
     //        yield return null;
     //    }
     //    EnableOrDisableResetUI(true);
     //}
-    void ResetButton(){
-        if(LevelManager.ballInput && !LevelManager.levelComplete){
+    void ResetButton()
+    {
+        if (LevelManager.ballInput && !LevelManager.levelComplete)
+        {
             ShootBall.triggerReset?.Invoke();
         }
     }
-    void EnableOrDisableResetUI(bool enable){
+    void EnableOrDisableResetUI(bool enable)
+    {
         resetUI = enable;
-        if(enable){
+        if (enable)
+        {
             canvasAnimator.Play("ResetUI");
         }
-        else{
+        else
+        {
             canvasAnimator.Play("NormalUI");
         }
     }
-    void HackModeButton(bool enable, Material mat){
-        if(!hackMode){
+    void HackModeButton(bool enable, Material mat)
+    {
+        if (!hackMode)
+        {
             ColorBlock colors = hackModeBtn.colors;
             colors.normalColor = GameManager.LevelManager.currentTheme.hackModeColor;
             hackModeBtn.colors = colors;
             hackMode = true;
         }
-        else{
+        else
+        {
             ColorBlock colors = hackModeBtn.colors;
-            colors.normalColor = new Color (1, 1, 1, 123f/255f);
+            colors.normalColor = new Color(1, 1, 1, 123f / 255f);
             hackModeBtn.colors = colors;
             hackMode = false;
         }
@@ -154,7 +163,7 @@ public class LevelScoring : MonoBehaviour
     void SetGalaxyAndHole() => holeNoText.text = (GameManager.LevelManager.levelIndex + 1).ToString(); //sets the hole number ui
     void CheckPar()
     {
-        if(GameManager.LevelManager.procedural) //Procedural level pars
+        if (GameManager.LevelManager.procedural) //Procedural level pars
         {
             par = GameManager.LevelManager.levelParams.levelPar;
         }
@@ -169,17 +178,17 @@ public class LevelScoring : MonoBehaviour
             return;
         }
         bool namedScore = false;
-        foreach(Score score in scores)
+        foreach (Score score in scores)
         {
-            if(par + score.scoreRelToPar == numShots) 
+            if (par + score.scoreRelToPar == numShots)
             {
                 namedScore = true;
                 currentScore = score.name;
                 break;
             }
         }
-        if(!namedScore) 
-        { 
+        if (!namedScore)
+        {
             currentScore = numShots.ToString() + " Shots";
         }
         onScore?.Invoke(currentScore.ToUpper(), numShots - par, numShots, scoreGradient.Evaluate(Mathf.Clamp01(((float)numShots / 5)) * 0.5f + 0.5f));
@@ -192,20 +201,36 @@ public class LevelScoring : MonoBehaviour
         numShots++;
 
         numShotsText.text = numShots.ToString();
-        if(numShots < par){
+        if (numShots < par)
+        {
             numShotsText.color = positive;
         }
-        else if(numShots > par){
+        else if (numShots > par)
+        {
             numShotsText.color = negative;
         }
-        else{
+        else
+        {
             numShotsText.color = neutral;
         }
     }
-    void Pause(){
+    void OnDialogue(bool enable)
+    {
+        if (enable)
+        {
+            canvasAnimator.Play("Slide Out");
+        }
+        else
+        {
+            canvasAnimator.Play("Slide In1");
+        }
+    }
+    void Pause()
+    {
         canvasAnimator.Play("Slide Out");
     }
-    void UnPause(){
+    void UnPause()
+    {
         canvasAnimator.Play("Slide In1");
 
     }
@@ -214,7 +239,8 @@ public class LevelScoring : MonoBehaviour
         if (numShots == 12 && !LevelManager.levelComplete && !levelFailing) { StartCoroutine(LevelFailed()); }
 
         ballStill = true;
-        if(resetUI){
+        if (resetUI)
+        {
             EnableOrDisableResetUI(false);
         }
     }
@@ -226,10 +252,12 @@ public class LevelScoring : MonoBehaviour
         ShootBall.onHole += HoleEnd;
         PauseManager.pauseGame += Pause;
         PauseManager.unpauseGame += UnPause;
+        TIIGER.onEnableDialogue += OnDialogue;
         HackMode.onHackMode += HackModeButton;
     }
     private void OnDisable()
     {
+        TIIGER.onEnableDialogue -= OnDialogue;
         ShootBall.onStill -= OnBallStill;
         LevelGenerator.levelGenerated -= CheckPar;
         ShootBall.onShoot -= IncrementScore;
