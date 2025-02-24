@@ -34,6 +34,7 @@ public class GalaxyMenu : MonoBehaviour
     [SerializeField] Vector3 maxRotation; //maximum rotation of galaxies
     [Header("Animations")]
     [SerializeField] float scrollSmoothness = 0.15f; //scales scrolling speed
+    [SerializeField] float scrollDelayTime = 0.15f; //scales scrolling speed
     [SerializeField] float zoomSmoothness = 0.2f; //scales zooming speed
     [SerializeField] float buttonThresholdTime; //time holding down key before starts scrolling smoothly
     [SerializeField] float starScaleDuration;
@@ -96,6 +97,7 @@ public class GalaxyMenu : MonoBehaviour
     bool zoomedIn;
     bool infoCardEnabled;
     bool started;
+    bool scrollStopper;
     Vector2 mouseStartPos;
 
     Vector3 dotVel;
@@ -243,7 +245,7 @@ public class GalaxyMenu : MonoBehaviour
             {
                 MoveButton(-1);
             }
-            if (Input.mouseScrollDelta.y != 0)
+            if (Input.mouseScrollDelta.y != 0 && !scrollStopper)
             {
                 if (Input.mouseScrollDelta.y < 0)
                 {
@@ -253,6 +255,8 @@ public class GalaxyMenu : MonoBehaviour
                 {
                     MoveButton(-1);
                 }
+                scrollStopper = true;
+                StartCoroutine(ScrollDelay());
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -276,6 +280,11 @@ public class GalaxyMenu : MonoBehaviour
             ZoomButton(true);
         }
     }
+    IEnumerator ScrollDelay(){
+        yield return new WaitForSeconds(scrollDelayTime);
+        scrollStopper = false;
+    }
+
     void SetManualGalaxy()
     {
         string[] galaxyLevels = new string[5];
