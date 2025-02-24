@@ -102,9 +102,9 @@ public class TIIGER : EventTalkableNPC
         dialogueController.StartConversation(dialogueText); //sets text
 
         dialogueController.TogglePauseDialogue();
-        float startTime = Time.time;
+        float startTime = Time.unscaledTime;
         float length = 0.5f;
-        while (Time.time - startTime < length)
+        while (Time.unscaledTime - startTime < length)
         {
             transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
             transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
