@@ -696,7 +696,7 @@ public class GalaxyMenu : MonoBehaviour
 
         return min + loopedValue;
     }
-    void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected)
+    void ShowScoredGalaxy(int scoreSum, int shotsSum, int parSum, bool starCollected, int prevGalaxyScore)
     {
         Start();
 
@@ -712,10 +712,10 @@ public class GalaxyMenu : MonoBehaviour
             starCollected,
             shotsSum == 5
         };
-        StartCoroutine(AnimateStars(starScore));
+        StartCoroutine(AnimateStars(starScore, prevGalaxyScore));
         galaxyList = GameManager.LevelManager.currentProceduralUniverse;
     }
-    IEnumerator AnimateStars(bool[] stars)
+    IEnumerator AnimateStars(bool[] stars, int prevScore)
     {
         playGalaxyBtn.interactable = false;
         infoBackBtn.interactable = false;
@@ -749,12 +749,7 @@ public class GalaxyMenu : MonoBehaviour
 
         //COIN FEEDBACK
         //Coins going up and down with pitch
-        int totalCollected = 0;
-        foreach (var s in galaxyList[focusedGalaxy].collectedStars)
-        {
-            totalCollected += s ? 1 : 0;
-        }
-        int totalCoins = Mathf.RoundToInt(GameManager.LevelManager._DifficultyStarMult[GameManager.LevelManager.currentUniverse.relativeDifficulty] * Mathf.Max(realIteration - totalCollected, 0));
+        int totalCoins = Mathf.RoundToInt(GameManager.LevelManager._DifficultyStarMult[GameManager.LevelManager.currentUniverse.relativeDifficulty] * Mathf.Max(realIteration - prevScore, 0));
 
         if(totalCoins > 0)
         {

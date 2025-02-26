@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using static LevelManager;
-using UnityEngine.Rendering.VirtualTexturing;
+using System.Linq;
 
 public class PointCardManager : MonoBehaviour
 {
@@ -17,10 +17,11 @@ public class PointCardManager : MonoBehaviour
     [Header("Sound")]
     [SerializeField] AudioObj holeInOneAudio;
     [SerializeField] AudioObj showPointCardAudio;
-    public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum, bool starCollected);
+    public delegate void GalaxyScoring(int scoreSum, int shotsSum, int parSum, bool starCollected, int prevGalaxyScore);
     public static GalaxyScoring onGalaxyScore;
     bool galaxyStarCollected;
     bool lastLevel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -160,7 +161,9 @@ public class PointCardManager : MonoBehaviour
                 parSum += int.Parse(parTexts[j].text);
             }
         }
-        onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected);
+
+
+        onGalaxyScore?.Invoke(scoreSum, shotSum, parSum, galaxyStarCollected, SaveLoadManager.currentUniverseSave.allGalaxies[GameManager.LevelManager.galaxyIndex].collectedStars.Count(a => a == true));
         lastLevel = false;
     }
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)

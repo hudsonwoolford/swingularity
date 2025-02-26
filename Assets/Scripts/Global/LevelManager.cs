@@ -494,7 +494,7 @@ public class LevelManager : MonoBehaviour
     }
     void LevelInitiation(GalaxyData theme) => currentTheme = theme;//Just sets theme, called by procedural level generation in start before generation
     void IsProcedural(bool p) => procedural = p;  //sets whether procedural
-    void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar)
+    void ScoreGalaxy(int scoreSum, int shotsSum, int parSum, bool collectedStar, int prevGalaxyScore)
     {
         levelIndex = 0;
         bool[] starScore = new bool[]
