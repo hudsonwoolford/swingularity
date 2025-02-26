@@ -444,6 +444,7 @@ public class GalaxyMenu : MonoBehaviour
         EnableAndSetInfoCard(false, galaxyList[focusedGalaxy]);
         yield return new WaitForSeconds(delay);
 
+        GameManager.SFXManager.PlaySFX(zoomGalaxyAudio);
         zoomedIn = false;
         galaxySummaries[focusedGalaxy].EnableSummary(true);
         menuAnim.Play("ShowMenu");
