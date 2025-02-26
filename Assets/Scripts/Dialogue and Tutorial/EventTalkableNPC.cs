@@ -11,7 +11,8 @@ public class EventTalkableNPC : NPC, ITalkable
     { 
         LevelGenerated,
         OnShoot,
-        OnHole
+        OnHole,
+        HoleAnim
     }
 
     [System.Serializable]
@@ -83,6 +84,12 @@ public class EventTalkableNPC : NPC, ITalkable
                 ShootBall.onHole -= (ShootBall.OnHole)act; //for safety
                 ShootBall.onHole += (ShootBall.OnHole)act;
                 break;
+            case DialogueEvents.HoleAnim:
+                act = (ShootBall.HoleAnim)(() => StartCoroutine(DelegateCalled(etd)));
+                eventDelegates[etd] = act;
+                ShootBall.holeAnim -= (ShootBall.HoleAnim)act; //for safety
+                ShootBall.holeAnim += (ShootBall.HoleAnim)act;
+                break;
             default:
                 break;
         }
@@ -100,6 +107,9 @@ public class EventTalkableNPC : NPC, ITalkable
                 break;
             case DialogueEvents.OnHole:
                 ShootBall.onHole -= (ShootBall.OnHole)act;
+                break;
+            case DialogueEvents.HoleAnim:
+                ShootBall.holeAnim -= (ShootBall.HoleAnim)act;
                 break;
             default:
                 break;
