@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class TIIGER : EventTalkableNPC
 {
@@ -12,6 +13,7 @@ public class TIIGER : EventTalkableNPC
     [SerializeField] private Animator tgrAnimator;
     [SerializeField] private Canvas dialogueCanvas;
     [SerializeField] private MeshRenderer ballRenderer;
+    [SerializeField] private Light pointLight;
     private Material hologramMaterial;
     private bool isTransitioning;
     public bool dialogueShown { get; private set; }
@@ -107,6 +109,7 @@ public class TIIGER : EventTalkableNPC
         while (Time.unscaledTime - startTime < length)
         {
             transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
+            pointLight.range = 10 * Camera.main.orthographicSize / 8;
             transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
             yield return null;
         }
@@ -136,6 +139,7 @@ public class TIIGER : EventTalkableNPC
         while (Time.time - startTime < length)
         {
             transform.localScale = Vector3.one * Camera.main.orthographicSize/8;
+            pointLight.range = 10 * Camera.main.orthographicSize / 8;
             transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
             yield return null;
         }
