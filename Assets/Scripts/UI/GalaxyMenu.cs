@@ -99,6 +99,7 @@ public class GalaxyMenu : MonoBehaviour
     bool started;
     bool scrollStopper;
     Vector2 mouseStartPos;
+    Coroutine delayZoomout;
 
     Vector3 dotVel;
     Vector3[] galaxyVel;
@@ -183,7 +184,7 @@ public class GalaxyMenu : MonoBehaviour
             if(infoCardEnabled == zoomedIn) { return; }
 
             float progress = (mainCam.transform.position - cameraOrigin).magnitude / (zoomCameraPos - cameraOrigin).magnitude;
-            if(infoCardEnabled == false && zoomedIn && progress > 0.5f)
+            if(infoCardEnabled == false && zoomedIn && progress > 0.9f)
             {
                 EnableAndSetInfoCard(true, galaxyList[focusedGalaxy]);
             }
@@ -411,28 +412,41 @@ public class GalaxyMenu : MonoBehaviour
     void ZoomGalaxy(bool zoomIn, bool instant)
     {
         if (galaxyList[focusedGalaxy].requiredStars > GameManager.LevelManager.currentUniverse.numStars) { galaxySummaries[focusedGalaxy].Shake(); return; }
+        if(delayZoomout!=null)
+        {
+            StopCoroutine(delayZoomout);
+        }
 
-        zoomedIn = zoomIn;
         if(instant)
         {
+            zoomedIn = zoomIn;
             galaxyCons[focusedGalaxy].transform.position = zoomGalaxyPos;
             mainCam.transform.position = zoomCameraPos;
             EnableAndSetInfoCard(zoomIn, galaxyList[focusedGalaxy]);
             return;
         }
 
-        GameManager.SFXManager.PlaySFX(zoomGalaxyAudio);
         if (zoomIn)
         {
+            GameManager.SFXManager.PlaySFX(zoomGalaxyAudio);
+            zoomedIn = true;
             galaxySummaries[focusedGalaxy].EnableSummary(false);
             menuAnim.Play("HideMenu");
         }
-        else
+        else if(!instant)
         {
-            galaxySummaries[focusedGalaxy].EnableSummary(true);
-            menuAnim.Play("ShowMenu");
+            delayZoomout = StartCoroutine(DelayZoomout(0.3f));
         }
 
+    }
+    IEnumerator DelayZoomout(float delay)
+    {
+        EnableAndSetInfoCard(false, galaxyList[focusedGalaxy]);
+        yield return new WaitForSeconds(delay);
+
+        zoomedIn = false;
+        galaxySummaries[focusedGalaxy].EnableSummary(true);
+        menuAnim.Play("ShowMenu");
     }
     #endregion
     #region Galaxy Configuration
