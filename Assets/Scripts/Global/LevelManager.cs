@@ -171,6 +171,16 @@ public class LevelManager : MonoBehaviour
     [Serializable]
     public struct UniverseParams
     {
+        public enum UniverseType{
+            procedural,
+            home,
+            challenge,
+            parallel,
+            recursive,
+            shrodinger,
+            shattered,
+            nebula,
+        }
         public string name; //name of the universe save, set in new game
         public int seed; //master seed, determines everything else
         [Range(0, 10)]
@@ -179,8 +189,8 @@ public class LevelManager : MonoBehaviour
         public int completedGalaxies; //number of galaxies that have been completed
         public int numGalaxies; //number of galaxies in the universe
         public int numStars;
-        public bool proceduralUniverse;
-        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars, bool proceduralUniverse)
+        public UniverseType universeType;
+        public UniverseParams(string name, int seed, int relativeDifficulty, string size, int completedGalaxies, int numGalaxies,int numStars, UniverseType universeType)
         {
             this.name = name;
             this.seed = seed;
@@ -189,7 +199,7 @@ public class LevelManager : MonoBehaviour
             this.completedGalaxies = completedGalaxies;
             this.numGalaxies = numGalaxies;
             this.numStars = numStars;
-            this.proceduralUniverse = proceduralUniverse;
+            this.universeType = universeType;
         }
         public override bool Equals(object obj)
         {
@@ -211,7 +221,7 @@ public class LevelManager : MonoBehaviour
             hash = (hash * 397) ^ completedGalaxies.GetHashCode();
             hash = (hash * 397) ^ numGalaxies.GetHashCode();
             hash = (hash * 397) ^ numStars.GetHashCode();
-            hash = (hash * 397) ^ proceduralUniverse.GetHashCode();
+            hash = (hash * 397) ^ universeType.GetHashCode();
             return hash;
         }
 
@@ -224,7 +234,7 @@ public class LevelManager : MonoBehaviour
                 && a.completedGalaxies == b.completedGalaxies
                 && a.numGalaxies == b.numGalaxies
                 && a.numStars == b.numStars
-                && a.proceduralUniverse == b.proceduralUniverse;
+                && a.universeType == b.universeType;
         }
 
         public static bool operator !=(UniverseParams a, UniverseParams b)

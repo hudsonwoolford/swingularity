@@ -113,7 +113,7 @@ public class TitleScreenButtons : MonoBehaviour
         slLoadBtn.onClick.AddListener(() => LoadUniverse());
         slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
         //campaign creation ui
-        ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse());
+        ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse(LevelManager.UniverseParams.UniverseType.home)); // FIX SOON
         ccBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         //new game ui
         ngBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
@@ -275,7 +275,7 @@ public class TitleScreenButtons : MonoBehaviour
     {
         SaveElement se;
         if (lastSelectedGameObject == null || !lastSelectedGameObject.TryGetComponent<SaveElement>(out se)) { return; }
-        LevelManager.notifyProcedural?.Invoke(se.uniParams.proceduralUniverse);
+        LevelManager.notifyProcedural?.Invoke(se.uniParams.universeType == LevelManager.UniverseParams.UniverseType.procedural);
         GameManager.SaveLoadManager.Load(se.uniParams.name + ".txt");
         SceneManager.LoadScene(proceduralGalaxiesScene);
     }
@@ -318,7 +318,7 @@ public class TitleScreenButtons : MonoBehaviour
 
             //script setting
             SaveElement seScript = tr.GetComponent<SaveElement>();
-            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, uniSaves[i].lastSaveTime, uni.proceduralUniverse).onClick.AddListener(() => DeleteSave(seScript));
+            seScript.InitValues(uni, difficultyColorGrad.Evaluate((float)uni.relativeDifficulty / 10), sizeColor, uniSaves[i].lastSaveTime, uni.universeType == LevelManager.UniverseParams.UniverseType.procedural).onClick.AddListener(() => DeleteSave(seScript));
         }
     }
     #endregion
@@ -372,11 +372,11 @@ public class TitleScreenButtons : MonoBehaviour
         }
         currentUniverseSize = size;
     }
-    void CreateNewManualUniverse()
+    void CreateNewManualUniverse(LevelManager.UniverseParams.UniverseType type)
     {
         LevelManager.UniverseParams up = campaignUniverseParams;
         up.name = ccNameFld.text == string.Empty ? "MyUniverse" : ccNameFld.text; //failsafe
-        up.proceduralUniverse = false;
+        up.universeType = type;
         up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
         GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });
@@ -512,7 +512,7 @@ public class TitleScreenButtons : MonoBehaviour
         numGalaxies = (numGalaxies<=0) ? 1 : numGalaxies; //failsafe for zero galaxies
         string universeName = ngNameFld.text; //save name of universe from field
         universeName = universeName == string.Empty ? "MyUniverse" : universeName; //failsafe
-        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0, true);
+        return new LevelManager.UniverseParams(universeName, seed, (int)ngDifficultySldr.value, ngSizeBtns[currentUniverseSize].gameObject.name, 0, numGalaxies, 0, LevelManager.UniverseParams.UniverseType.procedural);
     }
 
     void OnEnable(){

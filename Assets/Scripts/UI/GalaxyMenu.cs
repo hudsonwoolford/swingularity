@@ -111,7 +111,7 @@ public class GalaxyMenu : MonoBehaviour
         menuAnim = GetComponent<Animator>();
         mainCam = Camera.main.transform;
         cameraOrigin = mainCam.position;
-        if(GameManager.LevelManager.procedural && GameManager.LevelManager.currentUniverse.proceduralUniverse)
+        if(GameManager.LevelManager.procedural && GameManager.LevelManager.currentUniverse.universeType == UniverseParams.UniverseType.procedural)
         {
             CreateProceduralGalaxies();
         }
@@ -291,6 +291,7 @@ public class GalaxyMenu : MonoBehaviour
 
     void SetManualGalaxy()
     {
+        UniverseParams.UniverseType manualUniverseType = SaveLoadManager.currentUniverseSave.universeParams.universeType;
         string[] galaxyLevels = new string[5];
         string sceneSuffix = galaxyList[focusedGalaxy].possibleTypes[0].ToString();
         sceneSuffix = char.ToUpper(sceneSuffix[0]) + sceneSuffix.Substring(1);
