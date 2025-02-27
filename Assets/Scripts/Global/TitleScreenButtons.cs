@@ -39,6 +39,7 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] TMP_InputField ccNameFld;
     [SerializeField] Button ccCreateBtn;
     [SerializeField] Button ccBackBtn;
+    [SerializeField] UniverseButton[] uniButtons;
     [Header("New Game UI")]
     [SerializeField] Button ngBackBtn;
     [SerializeField] Button ngCreateBtn;
@@ -67,6 +68,15 @@ public class TitleScreenButtons : MonoBehaviour
     int currentUniverseSize = 1; //0, 1, 2, for small, medium, large
     EventSystem eventSystem;
     GameObject lastSelectedGameObject, currentSelectedGameObject_Recent;
+    LevelManager.UniverseParams.UniverseType currentUniverseType = LevelManager.UniverseParams.UniverseType.home;
+
+    [Serializable]
+    struct UniverseButton
+    {
+        public LevelManager.UniverseParams.UniverseType type;
+        public Button button;
+        public Image hoverImage;
+    }
 
     private enum NGMenuState
     {
@@ -84,6 +94,7 @@ public class TitleScreenButtons : MonoBehaviour
         saveElementParentOrigin = saveElementParent.localPosition;
         eventSystem = EventSystem.current;
         SetGalaxySize(1);
+        SetUniverseType(uniButtons[0]);
         UpdateDifficulty();
 
 
@@ -119,8 +130,13 @@ public class TitleScreenButtons : MonoBehaviour
         slLoadBtn.onClick.AddListener(() => LoadUniverse());
         slScrollBar.onValueChanged.AddListener((v) => OnSaveLoadScrollbar(v));
         //campaign creation ui
-        ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse(LevelManager.UniverseParams.UniverseType.home)); // FIX SOON
+        ccCreateBtn.onClick.AddListener(() => CreateNewManualUniverse());
         ccBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
+        for (int i = 0; i < uniButtons.Length; i++)
+        {
+            UniverseButton captured = uniButtons[i];
+            uniButtons[i].button.onClick.AddListener(() => SetUniverseType(captured));
+        }
         //new game ui
         ngBackBtn.onClick.AddListener(() => SwitchCurrentNGMenu(NGMenuState.OptionsMenu));
         ngCreateBtn.onClick.AddListener(() => CreateNewProceduralUniverse());
@@ -378,12 +394,27 @@ public class TitleScreenButtons : MonoBehaviour
         }
         currentUniverseSize = size;
     }
-    void CreateNewManualUniverse(LevelManager.UniverseParams.UniverseType type)
+    void SetUniverseType(UniverseButton uniButton)
+    {
+        foreach (var ub in uniButtons)
+        {
+            if (ub.button == uniButton.button && currentUniverseType == uniButton.type)
+            {
+                ub.button.GetComponent<Animator>().Play("Reselect"); ub.hoverImage.gameObject.SetActive(false);
+            }
+            else if (ub.button == uniButton.button) { ub.button.GetComponent<Animator>().Play("Select"); ub.hoverImage.gameObject.SetActive(false); }
+            else { ub.button.GetComponent<Animator>().Play("Unselect"); ub.hoverImage.gameObject.SetActive(true); }
+        }
+
+        currentUniverseType = uniButton.type;
+    }
+    void CreateNewManualUniverse()
     {
         LevelManager.UniverseParams up = manualUniverseParams;
+        up.universeType = currentUniverseType;
         up.name = ccNameFld.text == string.Empty ? "MyUniverse" : ccNameFld.text; //failsafe
-        up.universeType = type;
-        up.relativeDifficulty = manualDifficulties[type];
+        up.universeType = currentUniverseType;
+        up.relativeDifficulty = manualDifficulties[currentUniverseType];
         up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
         GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });

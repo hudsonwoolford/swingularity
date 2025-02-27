@@ -81,6 +81,13 @@ public class CameraFollow : MonoBehaviour
         {
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
+
+        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.parallel)
+        {
+            Vector3 cachePos = startPos;
+            startPos = endPos;
+            endPos = cachePos;
+        }
         cameraPath.points = PolygonPositions(startPos, endPos, sizeScalar, 0, 0); //scaled down version of inner shape
 
         Vector2 targetPos = ball.position; //camera focuses ball by default

@@ -80,12 +80,37 @@ public class ManualLevelGenerator : MonoBehaviour
     {
         //Parallel flipping - NEEDS FIXING
         if(SaveLoadManager.currentUniverseSave.universeParams.universeType == LevelManager.UniverseParams.UniverseType.parallel){
+
             GameObject flag = GameObject.FindGameObjectWithTag("Hole");
+            player.GetComponent<SphereCollider>().enabled = false;
             Vector3 flagPos = flag.transform.position;
             Vector3 playerPos = player.transform.position;
-            player.transform.position = flagPos;
             flag.transform.position = playerPos;
+            player.transform.position = flagPos;
+            player.GetComponent<SphereCollider>().enabled = true;
 
+            Vector2 closestBallPlanet = new Vector2(0, Mathf.Infinity), closestFlagPlanet  = new Vector2(0, Mathf.Infinity); //x value is integer, y value is distance
+            for (int i = 0; i < level.numPlanets; i++)
+            {
+                float ballDist = (player.transform.position - level.planetPoints[i]).magnitude - level.planetSizes[i] * 0.5f;
+                float flagDist = (flag.transform.position - level.planetPoints[i]).magnitude - level.planetSizes[i] * 0.5f;
+                if (ballDist < closestBallPlanet.y)
+                {
+                    closestBallPlanet = new Vector2(i, ballDist);
+                }
+                if(flagDist < closestFlagPlanet.y)
+                {
+                    closestFlagPlanet = new Vector2(i, flagDist);
+                }
+            }
+
+            Vector3 ballVector = (player.transform.position - level.planetPoints[(int)closestBallPlanet.x]).normalized;
+            Vector3 flagVector = (  flag.transform.position - level.planetPoints[(int)closestFlagPlanet.x]).normalized;
+            float ballRad = player.GetComponent<SphereCollider>().radius * player.transform.localScale.x;
+            float flagRad = flag.GetComponent<SphereCollider>().radius * flag.transform.localScale.x;
+
+            player.transform.position = level.planetPoints[(int)closestBallPlanet.x] + ballVector * (0.5f * level.planetSizes[(int)closestBallPlanet.x] + ballRad); ;
+            flag.transform.position = level.planetPoints[(int)closestFlagPlanet.x] + flagVector * (0.5f * level.planetSizes[(int)closestFlagPlanet.x]+ flagRad + 0.05f);
         }
         generationProgress = 0;
         Time.timeScale = 0;
