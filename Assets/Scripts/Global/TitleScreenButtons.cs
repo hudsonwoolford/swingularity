@@ -51,7 +51,8 @@ public class TitleScreenButtons : MonoBehaviour
     [SerializeField] Gradient difficultyColorGrad;
     [Header("Miscellaneous Params")]
     [SerializeField] ShopManager shopManager;
-    [SerializeField] LevelManager.UniverseParams campaignUniverseParams;
+    [SerializeField] LevelManager.UniverseParams manualUniverseParams;
+    [SerializeField] Dictionary <LevelManager.UniverseParams.UniverseType, int> manualDifficulties = new Dictionary<LevelManager.UniverseParams.UniverseType, int>();
     [SerializeField] LevelGenStaticReferences levelStatic;
     [SerializeField] Vector2Int[] minMaxGalaxies;
     [SerializeField] string proceduralGalaxiesScene;
@@ -76,7 +77,7 @@ public class TitleScreenButtons : MonoBehaviour
     }
     private void Awake()
     {
-        
+
     }
     void Start()
     {
@@ -97,6 +98,11 @@ public class TitleScreenButtons : MonoBehaviour
         }
         ngMenu = false;
 
+        //relative difficulties of manual universes
+        manualDifficulties.Add(LevelManager.UniverseParams.UniverseType.home, 5);
+        manualDifficulties.Add(LevelManager.UniverseParams.UniverseType.challenge, 9);
+        manualDifficulties.Add(LevelManager.UniverseParams.UniverseType.parallel, 7);
+        manualDifficulties.Add(LevelManager.UniverseParams.UniverseType.recursive, 6);
 
         GameManager.SkyboxManager._Rotation = rotation;
         //normal ui
@@ -374,9 +380,10 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void CreateNewManualUniverse(LevelManager.UniverseParams.UniverseType type)
     {
-        LevelManager.UniverseParams up = campaignUniverseParams;
+        LevelManager.UniverseParams up = manualUniverseParams;
         up.name = ccNameFld.text == string.Empty ? "MyUniverse" : ccNameFld.text; //failsafe
         up.universeType = type;
+        up.relativeDifficulty = manualDifficulties[type];
         up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0, up.name.LastIndexOf(".txt"));
         GameManager.SaveLoadManager.CreateSave(up.name + ".txt", new SaveLoadManager.UniverseSave { universeParams = up });

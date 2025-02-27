@@ -78,6 +78,15 @@ public class ManualLevelGenerator : MonoBehaviour
     /// </summary>
     IEnumerator Generatelevel(ProceduralLevelGeneration.Level level, int[] moonIndices, int[] darkMatterIndices)
     {
+        //Parallel flipping - NEEDS FIXING
+        if(SaveLoadManager.currentUniverseSave.universeParams.universeType == LevelManager.UniverseParams.UniverseType.parallel){
+            GameObject flag = GameObject.FindGameObjectWithTag("Hole");
+            Vector3 flagPos = flag.transform.position;
+            Vector3 playerPos = player.transform.position;
+            player.transform.position = flagPos;
+            flag.transform.position = playerPos;
+
+        }
         generationProgress = 0;
         Time.timeScale = 0;
         FullPlanetGeneration generator = Instantiate(planetGeneratorPrefab).GetComponent<FullPlanetGeneration>();

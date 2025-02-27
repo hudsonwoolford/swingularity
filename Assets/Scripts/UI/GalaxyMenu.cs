@@ -123,8 +123,8 @@ public class GalaxyMenu : MonoBehaviour
                 for (int i = 0; i < galaxyList.Length; i++)
                 {
                     if (i < GameManager.LevelManager.currentProceduralUniverse.Length)
-                    {
-                        notLMSet |= !galaxyList[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxyList[i]);
+                     {
+                       notLMSet |= !galaxyList[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxyList[i]);
                     }
                     else { notLMSet = true; }
 
@@ -295,9 +295,14 @@ public class GalaxyMenu : MonoBehaviour
         string[] galaxyLevels = new string[5];
         string sceneSuffix = galaxyList[focusedGalaxy].possibleTypes[0].ToString();
         sceneSuffix = char.ToUpper(sceneSuffix[0]) + sceneSuffix.Substring(1);
+        string scenePrefix = manualUniverseType.ToString();
+        if(manualUniverseType == UniverseParams.UniverseType.parallel){
+            scenePrefix = UniverseParams.UniverseType.home.ToString();
+        }
+        scenePrefix = char.ToUpper(scenePrefix[0]) + scenePrefix.Substring(1);
         for (int i = 0; i < 5; i++)
         {
-            galaxyLevels[i] = sceneSuffix + "_" + i.ToString();
+            galaxyLevels[i] = scenePrefix + "_" + sceneSuffix + "_" + i.ToString();
         }
         initSystem?.Invoke(galaxyLevels, galaxyList[focusedGalaxy], LevelManager.allGalaxyData[galaxyList[focusedGalaxy].galaxyDataIndex]);
         GameManager.SceneHandling.LoadScene(galaxyLevels[0], true);
