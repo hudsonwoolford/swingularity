@@ -23,19 +23,25 @@ public class UniverseGenerator : MonoBehaviour
     MeshRenderer meshRenderer;
     MaterialPropertyBlock pBlock;
 
+    [SerializeField] bool filming = false;
+
     Vector3 offset, warpOffset;
 
     void Awake(){
         meshRenderer = GetComponent<MeshRenderer>();
         NullCheck();
         UnityEngine.Random.InitState(indexSeed);
-        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
+        if(!filming){
+        universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);  
+        }   
         ChangeMaterialBlock();
     }
 
     void Update(){
         NullCheck();
-        universeIndex = Mathf.Clamp(universeIndex, 0, possibleUniverses.Length - 1);
+        if(!filming){
+            universeIndex = Mathf.Clamp(universeIndex, 0, possibleUniverses.Length - 1);
+        }
         ChangeMaterialBlock();
         if (rotate)
         {
