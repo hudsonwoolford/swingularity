@@ -16,7 +16,6 @@ public class UniverseGenerator : MonoBehaviour
     }
     [SerializeField] int universeIndex;
     [SerializeField] int indexSeed;
-    [SerializeField] Vector3 addOffset;
     [SerializeField] Universe[] possibleUniverses;
     [SerializeField] Vector3 rotSpeed;
     [SerializeField] bool rotate = false;
@@ -25,7 +24,7 @@ public class UniverseGenerator : MonoBehaviour
 
     [SerializeField] bool filming = false;
 
-    Vector3 offset, warpOffset;
+    [SerializeField] Vector3 offset, warpOffset;
 
     void Awake(){
         meshRenderer = GetComponent<MeshRenderer>();
@@ -45,7 +44,12 @@ public class UniverseGenerator : MonoBehaviour
         ChangeMaterialBlock();
         if (rotate)
         {
-            transform.Rotate(rotSpeed * Time.deltaTime);
+            if(!filming){
+                transform.Rotate(rotSpeed * Time.deltaTime);
+            }
+            else{
+                transform.localEulerAngles += rotSpeed * Time.deltaTime;
+            }
         }
     }
     void ChangeMaterialBlock(){
@@ -79,7 +83,6 @@ public class UniverseGenerator : MonoBehaviour
         offset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
         warpOffset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f)); 
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
-        addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
     }
     public void ChangeUniverse(int s)
     {
@@ -87,7 +90,6 @@ public class UniverseGenerator : MonoBehaviour
         offset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f));
         warpOffset = new Vector3(UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f), UnityEngine.Random.Range(0f, 2e+3f));
         universeIndex = UnityEngine.Random.Range(0, possibleUniverses.Length);
-        addOffset = new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-100, 100) / 2, UnityEngine.Random.Range(-100, 100) * 2);
         ChangeMaterialBlock();
     }
 }
