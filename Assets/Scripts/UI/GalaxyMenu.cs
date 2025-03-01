@@ -117,14 +117,16 @@ public class GalaxyMenu : MonoBehaviour
         }
         else
         {
+            GalaxyParams[] defaultList = GameManager.GalaxyInfoManager._UniverseTypeGalaxies(GameManager.LevelManager.currentUniverse.universeType);
+
             bool notLMSet = false;
-            if(GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
+            if (GameManager.LevelManager.currentProceduralUniverse != null && GameManager.LevelManager.currentProceduralUniverse.Length > 0)
             {
-                for (int i = 0; i < galaxyList.Length; i++)
+                for (int i = 0; i < defaultList.Length; i++)
                 {
                     if (i < GameManager.LevelManager.currentProceduralUniverse.Length)
-                     {
-                       notLMSet |= !galaxyList[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], galaxyList[i]);
+                    {
+                        notLMSet |= !defaultList[i].EqualNoStar(GameManager.LevelManager.currentProceduralUniverse[i], defaultList[i]);
                     }
                     else { notLMSet = true; }
 
@@ -133,7 +135,8 @@ public class GalaxyMenu : MonoBehaviour
             else { notLMSet = true; }
             if (notLMSet)
             {
-                LevelManager.setGalaxies?.Invoke(galaxyList);
+                galaxyList = defaultList;
+                LevelManager.setGalaxies?.Invoke(defaultList);
             }
             else
             {

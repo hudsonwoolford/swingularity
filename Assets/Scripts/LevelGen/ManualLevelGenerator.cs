@@ -161,6 +161,11 @@ public class ManualLevelGenerator : MonoBehaviour
             Vector2 closestBallPlanet = new Vector2(0, Mathf.Infinity), closestFlagPlanet = new Vector2(0, Mathf.Infinity); //x value is integer, y value is distance
             for (int i = 0; i < planets.Length; i++)
             {
+                if (planets[i].forceField == null)
+                {
+                    continue;
+                }
+
                 float ballDist = (playerRB.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
                 float flagDist = (flag.transform.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
                 if (ballDist < closestBallPlanet.y)
@@ -181,6 +186,9 @@ public class ManualLevelGenerator : MonoBehaviour
             playerRB.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
             player.transform.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
             flag.transform.position = planets[(int)closestFlagPlanet.x].forceField.transform.position + flagVector * (planets[(int)closestFlagPlanet.x].forceField.transform.localScale.x + flagRad + 0.05f);
+
+            planets[(int)closestBallPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestBallPlanet.x].planet.transform);
+            planets[(int)closestFlagPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestFlagPlanet.x].planet.transform);
 
             player.GetComponent<Rigidbody>().velocity = Vector3.zero;
             player.GetComponent<SphereCollider>().enabled = true;

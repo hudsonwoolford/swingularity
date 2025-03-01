@@ -25138,6 +25138,246 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -40, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &5716058633213408529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4465346295699090176}
+  - component: {fileID: 2770499454514294433}
+  m_Layer: 0
+  m_Name: GalaxyInfoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4465346295699090176
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716058633213408529}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 948.4754, y: 393.31976, z: 2275.1653}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3603051198868054648}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2770499454514294433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716058633213408529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e18b59104a38744e9d6220c52a1c4df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  universeTypeGalaxies:
+  - universeType: 1
+    galaxyParams:
+    - name: THE MILKY WAY GALAXY
+      seed: -4
+      relativeDifficulty: 1
+      galaxyDataIndex: 0
+      possibleTypes: 00000000
+      possibleSpecial: 
+      collectedStars: 0000000000
+      requiredStars: 0
+      bestScore: "\u2014\u2014"
+    - name: SOMBRERO NGC 4594
+      seed: 720
+      relativeDifficulty: 2
+      galaxyDataIndex: 1
+      possibleTypes: 01000000
+      possibleSpecial: 00000000
+      collectedStars: 0000000000
+      requiredStars: 2
+      bestScore: "\u2014\u2014"
+    - name: TRIANGULUM M33
+      seed: 13
+      relativeDifficulty: 3
+      galaxyDataIndex: 2
+      possibleTypes: 03000000
+      possibleSpecial: 0000000001000000
+      collectedStars: 0000000000
+      requiredStars: 6
+      bestScore: "\u2014\u2014"
+    - name: WHIRPOOL NGC 5194
+      seed: 108
+      relativeDifficulty: 4
+      galaxyDataIndex: 3
+      possibleTypes: 02000000
+      possibleSpecial: 000000000100000002000000
+      collectedStars: 0000000000
+      requiredStars: 9
+      bestScore: "\u2014\u2014"
+    - name: CARTWHEEL PGC 2248
+      seed: -546
+      relativeDifficulty: 5
+      galaxyDataIndex: 4
+      possibleTypes: 04000000
+      possibleSpecial: 00000000010000000200000003000000
+      collectedStars: 0000000000
+      requiredStars: 13
+      bestScore: "\u2014\u2014"
+    - name: BLACK EYE NGC 4826
+      seed: 5
+      relativeDifficulty: 6
+      galaxyDataIndex: 5
+      possibleTypes: 05000000
+      possibleSpecial: 0000000001000000020000000300000004000000
+      collectedStars: 0000000000
+      requiredStars: 17
+      bestScore: "\u2014\u2014"
+    - name: ANDROMEDA UGC 454
+      seed: -6
+      relativeDifficulty: 7
+      galaxyDataIndex: 6
+      possibleTypes: 06000000
+      possibleSpecial: 000000000100000002000000030000000400000005000000
+      collectedStars: 0000000000
+      requiredStars: 20
+      bestScore: "\u2014\u2014"
+  - universeType: 2
+    galaxyParams:
+    - name: WHIRPOOL NGC 5194
+      seed: 108
+      relativeDifficulty: 4
+      galaxyDataIndex: 3
+      possibleTypes: 02000000
+      possibleSpecial: 000000000100000002000000
+      collectedStars: 0000000000
+      requiredStars: 0
+      bestScore: "\u2014\u2014"
+    - name: BLACK EYE NGC 4826
+      seed: 5
+      relativeDifficulty: 6
+      galaxyDataIndex: 5
+      possibleTypes: 05000000
+      possibleSpecial: 0000000001000000020000000300000004000000
+      collectedStars: 0000000000
+      requiredStars: 3
+      bestScore: "\u2014\u2014"
+    - name: ANDROMEDA UGC 454
+      seed: -6
+      relativeDifficulty: 7
+      galaxyDataIndex: 6
+      possibleTypes: 06000000
+      possibleSpecial: 000000000100000002000000030000000400000005000000
+      collectedStars: 0000000000
+      requiredStars: 6
+      bestScore: "\u2014\u2014"
+    - name: THE MILKY WAY GALAXY
+      seed: -4
+      relativeDifficulty: 1
+      galaxyDataIndex: 0
+      possibleTypes: 00000000
+      possibleSpecial: 
+      collectedStars: 0000000000
+      requiredStars: 9
+      bestScore: "\u2014\u2014"
+    - name: CARTWHEEL PGC 2248
+      seed: -546
+      relativeDifficulty: 5
+      galaxyDataIndex: 4
+      possibleTypes: 04000000
+      possibleSpecial: 00000000010000000200000003000000
+      collectedStars: 0000000000
+      requiredStars: 12
+      bestScore: "\u2014\u2014"
+    - name: SOMBRERO NGC 4594
+      seed: 720
+      relativeDifficulty: 2
+      galaxyDataIndex: 1
+      possibleTypes: 01000000
+      possibleSpecial: 00000000
+      collectedStars: 0000000000
+      requiredStars: 15
+      bestScore: "\u2014\u2014"
+    - name: TRIANGULUM M33
+      seed: 13
+      relativeDifficulty: 3
+      galaxyDataIndex: 2
+      possibleTypes: 03000000
+      possibleSpecial: 0000000001000000
+      collectedStars: 0000000000
+      requiredStars: 18
+      bestScore: "\u2014\u2014"
+  - universeType: 4
+    galaxyParams:
+    - name: THE MILKY WAY GALAXY
+      seed: -4
+      relativeDifficulty: 1
+      galaxyDataIndex: 0
+      possibleTypes: 00000000
+      possibleSpecial: 
+      collectedStars: 0000000000
+      requiredStars: 0
+      bestScore: "\u2014\u2014"
+    - name: SOMBRERO NGC 4594
+      seed: 720
+      relativeDifficulty: 2
+      galaxyDataIndex: 1
+      possibleTypes: 01000000
+      possibleSpecial: 00000000
+      collectedStars: 0000000000
+      requiredStars: 2
+      bestScore: "\u2014\u2014"
+    - name: TRIANGULUM M33
+      seed: 13
+      relativeDifficulty: 3
+      galaxyDataIndex: 2
+      possibleTypes: 03000000
+      possibleSpecial: 0000000001000000
+      collectedStars: 0000000000
+      requiredStars: 6
+      bestScore: "\u2014\u2014"
+    - name: WHIRPOOL NGC 5194
+      seed: 108
+      relativeDifficulty: 4
+      galaxyDataIndex: 3
+      possibleTypes: 02000000
+      possibleSpecial: 000000000100000002000000
+      collectedStars: 0000000000
+      requiredStars: 9
+      bestScore: "\u2014\u2014"
+    - name: CARTWHEEL PGC 2248
+      seed: -546
+      relativeDifficulty: 5
+      galaxyDataIndex: 4
+      possibleTypes: 04000000
+      possibleSpecial: 00000000010000000200000003000000
+      collectedStars: 0000000000
+      requiredStars: 13
+      bestScore: "\u2014\u2014"
+    - name: BLACK EYE NGC 4826
+      seed: 5
+      relativeDifficulty: 6
+      galaxyDataIndex: 5
+      possibleTypes: 05000000
+      possibleSpecial: 0000000001000000020000000300000004000000
+      collectedStars: 0000000000
+      requiredStars: 17
+      bestScore: "\u2014\u2014"
+    - name: ANDROMEDA UGC 454
+      seed: -6
+      relativeDifficulty: 7
+      galaxyDataIndex: 6
+      possibleTypes: 06000000
+      possibleSpecial: 000000000100000002000000030000000400000005000000
+      collectedStars: 0000000000
+      requiredStars: 20
+      bestScore: "\u2014\u2014"
 --- !u!1 &5737547179693194326
 GameObject:
   m_ObjectHideFlags: 0
@@ -31033,6 +31273,7 @@ Transform:
   - {fileID: 6419980820932037006}
   - {fileID: 7962080099644864160}
   - {fileID: 7381547588662243318}
+  - {fileID: 4465346295699090176}
   - {fileID: 6750354794945834323}
   - {fileID: 5675281500667289574}
   m_Father: {fileID: 0}
