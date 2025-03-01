@@ -376,7 +376,15 @@ public class CameraFollow : MonoBehaviour
     {
         panning = false;
     }
-
+    //used to update camera to new ball position after level is generated on a parralel universe
+    void OnLevelGenerated()
+    {
+        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.parallel)
+        {
+            transform.position = new Vector3(ball.position.x, ball.position.y, -10);
+            vel = Vector2.zero;
+        }
+    }
     Vector2 CalculateCamsize(float orthoSize)
     {
         float height = orthoSize * 2; //camera height in units
@@ -385,6 +393,7 @@ public class CameraFollow : MonoBehaviour
     }
     private void OnEnable()
     {
+        LevelGenerator.levelGenerated += OnLevelGenerated;
         ShootBall.onShoot += FocusBall;
         ShootBall.triggerReset += OnReset;
         ShootBall.onHole += OnReset;
@@ -392,6 +401,7 @@ public class CameraFollow : MonoBehaviour
     }
     private void OnDisable()
     {
+        LevelGenerator.levelGenerated -= OnLevelGenerated;
         ShootBall.onShoot -= FocusBall;
         ShootBall.triggerReset -= OnReset;
         ShootBall.onHole -= OnReset;

@@ -46,6 +46,8 @@ public class ShootBall : MonoBehaviour
     [SerializeField] AudioObj enterPortal;
     [SerializeField] AudioObj hitBall;
     [SerializeField] AudioObj quasarDeath;
+    [SerializeField] AudioObj astronautMaterialise;
+    [SerializeField] AudioObj astronautDematerialise;
     [SerializeField] AudioSource ballAudioSrc;
     [HideInInspector] public float shootPower { get; private set; }
     [HideInInspector] public float shootAngle { get; private set; }
@@ -112,7 +114,7 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(RecreatePhysicsScene());
         }
-        tr.Clear();
+        tr?.Clear();
 
     }
     IEnumerator RecreatePhysicsScene()
@@ -270,8 +272,10 @@ public class ShootBall : MonoBehaviour
         foreach(Material mat in astronautFadeMats){
             mat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor * 4.5f/6f);    
         }
-            astronautMatController.StartFade();
 
+        astronautMatController.StartFade();
+
+        //GameManager.SFXManager.PlaySFX(astronautDematerialise);
         while(timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
             foreach(Material mat in astronautFadeMats){
@@ -301,7 +305,8 @@ public class ShootBall : MonoBehaviour
             movedAstronaut = true;
         }
 
-        while(timeCounter <= astronautAnimLength){
+        //GameManager.SFXManager.PlaySFX(astronautMaterialise);
+        while (timeCounter <= astronautAnimLength){
             float progress = timeCounter/astronautAnimLength;
             foreach(Material mat in astronautFadeMats){
                 mat.SetFloat("_Cutoff", progress);    

@@ -30,6 +30,7 @@ public class SaveElement : MonoBehaviour
     [SerializeField] Button copyBtn;
     [Header("Campaign")]
     [SerializeField] GameObject mainCampaignInfo;
+    [SerializeField] TextMeshProUGUI campaignLabelTxt;
     //[SerializeField] TextMeshProUGUI progressText;
     //[SerializeField] TextMeshProUGUI progressPercentText;
     [Header("Miscellaneous")]
@@ -91,6 +92,7 @@ public class SaveElement : MonoBehaviour
         {
             proceduralInfo.SetActive(false);
             mainCampaignInfo.SetActive(true);
+            campaignLabelTxt.text = uniParams.universeType.ToString().ToUpper() + " UNIVERSE";
             progressText.transform.parent.localPosition -= new Vector3(0, 15, 0);
         }
 
