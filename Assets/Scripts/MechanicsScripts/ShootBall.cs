@@ -213,6 +213,7 @@ public class ShootBall : MonoBehaviour
 
         if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }

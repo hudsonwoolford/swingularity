@@ -10,6 +10,11 @@ public class ManualQuasar : QuasarGenerator
     [SerializeField] Transform t1;
     [SerializeField] Transform t2;
     [SerializeField] float additionalLength;
+    protected override void Start()
+    {
+        MatchToPlanets();
+        base.Start();
+    }
     protected override void Update()
     {
         base.Update();
