@@ -310,7 +310,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   universeIndex: 11
   indexSeed: 0
-  addOffset: {x: -54, y: 26, z: -156}
   possibleUniverses:
   - nebulaColorA: {r: 0.2627451, g: 0.0048007374, b: 0, a: 1}
     nebulaColorB: {r: 5.6126432, g: 2.101047, b: 0.6618682, a: 1}
@@ -409,6 +408,9 @@ MonoBehaviour:
     volumetricStarColor: {r: 6.2034006, g: 5.0429606, b: 7.080183, a: 0}
   rotSpeed: {x: 0, y: 0, z: 0}
   rotate: 1
+  filming: 0
+  offset: {x: 0, y: 0, z: 0}
+  warpOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1951499962329634529
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,7 +1460,7 @@ Animator:
   m_GameObject: {fileID: 5011506825657822225}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 00e575ac0f56665488ae0b3cc897522a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6cc7c766ba8041442a6d914de74e4fee, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
