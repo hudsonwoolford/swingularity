@@ -559,23 +559,23 @@ public class LevelManager : MonoBehaviour
         ballInput = true;
         levelComplete = false;
 
-        //check if scene name matches galaxy type
-        if(scene.name.IndexOf('_') > 0)
-        {
-            string prefix = scene.name.Substring(0, scene.name.IndexOf('_')).ToLower();
-            if (currentUniverse != null && prefix.Length != 0 && prefix != currentUniverse.universeType.ToString())
-            {
-                foreach (var val in Enum.GetValues(typeof(UniverseParams.UniverseType)))
-                {
-                    if (prefix == val.ToString())
-                    {
-                        UniverseParams currentUni = currentUniverse;
-                        currentUni.universeType = (UniverseParams.UniverseType)val;
-                        currentUniverse = currentUni;
-                    }
-                }
-            }
-        }
+        //check if scene name matches galaxy type DEBUG TOOL, USEFUL FOR CREATING LEVELS
+        //if(scene.name.IndexOf('_') > 0)
+        //{
+        //    string prefix = scene.name.Substring(0, scene.name.IndexOf('_')).ToLower();
+        //    if (currentUniverse != null && prefix.Length != 0 && prefix != currentUniverse.universeType.ToString())
+        //    {
+        //        foreach (var val in Enum.GetValues(typeof(UniverseParams.UniverseType)))
+        //        {
+        //            if (prefix == val.ToString())
+        //            {
+        //                UniverseParams currentUni = currentUniverse;
+        //                currentUni.universeType = (UniverseParams.UniverseType)val;
+        //                currentUniverse = currentUni;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     #endregion
