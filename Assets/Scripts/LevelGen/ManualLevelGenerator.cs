@@ -146,7 +146,7 @@ public class ManualLevelGenerator : MonoBehaviour
     void PositionBallAndFlag(Planet[] planets)
     {
         //Parallel flipping - NEEDS FIXING
-        if (SaveLoadManager.currentUniverseSave.universeParams.universeType == LevelManager.UniverseParams.UniverseType.parallel)
+        if (SaveLoadManager.currentUniverseSave != null && SaveLoadManager.currentUniverseSave.universeParams.universeType == LevelManager.UniverseParams.UniverseType.parallel)
         {
             Rigidbody playerRB = player.GetComponent<Rigidbody>();
             player.GetComponent<SphereCollider>().enabled = false;
