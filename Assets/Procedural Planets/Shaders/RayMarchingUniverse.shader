@@ -233,6 +233,8 @@ Shader "Custom/RayMarchingUniverse"
                 o.Smoothness = _Smoothness;
                 o.Metallic = _Metallic;
 
+
+
             }
             ENDCG
     }
