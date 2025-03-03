@@ -31,7 +31,7 @@ public class TutorialManager : MonoBehaviour
     }
     private IEnumerator Start()
     {
-        if(!SettingsManager.userSettings.hints) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); yield break; }
+        if(!SettingsManager.userSettings.hints || GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.parallel) { GameManager.LevelManager.EnableBallInput(true); Destroy(gameObject); Destroy(this); yield break; }
         DontDestroyOnLoad(gameObject);
         DisableAll();
         currentState = teachNothing;
@@ -104,9 +104,9 @@ public class TutorialManager : MonoBehaviour
     #region Event Functions
     void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if (scene.name == "Earth_0" || scene.name == "Earth_1")
+        if (scene.name == "Home_Earth_0" || scene.name == "Home_Earth_1")
         {
-            if(scene.name == "Earth_1")
+            if(scene.name == "Home_Earth_1")
             {
                 DisableAll();
                 StartCoroutine(WaitUntilDialogueChangeState(teachHackMode));

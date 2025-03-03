@@ -12,11 +12,17 @@ public class ShopItem : ScriptableObject
     public Sprite itemVisual;
 
     //different customization elements 
+#if UNITY_EDITOR
     [ConditionalProp("itemType", (int)ItemType.AstronautMaterial)]
+#endif
     public MaterialCustomizationElement materialCustomizationElement;
+#if UNITY_EDITOR
     [ConditionalProp("itemType", (int)ItemType.GolfBallTrail)]
+#endif
     public GolfBallTrailElement golfBallTrailElement;
+#if UNITY_EDITOR
     [ConditionalProp("itemType", (int)ItemType.AstronautHat)]
+#endif
     public AstronautHatElement astronautHatElement;
 
 
