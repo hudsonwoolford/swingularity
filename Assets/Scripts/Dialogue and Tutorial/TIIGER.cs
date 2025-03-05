@@ -42,7 +42,13 @@ public class TIIGER : EventTalkableNPC
     }
     protected override void Update()
     {
-        base.Update();
+        //input
+        if (Input.anyKey && !Input.GetKeyDown(KeyCode.Escape))
+        {
+            Interact();
+        }
+
+        //logic
         if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Home_Mythical_4") || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
         {
             return;
