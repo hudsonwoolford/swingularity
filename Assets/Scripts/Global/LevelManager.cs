@@ -21,6 +21,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public bool procedural { get; private set; } = false; //Whether you are currently in a procedural universe or not
     [SerializeField] public bool isReset { get; private set; } = false; //Whether you are currently playing a resetted galaxy or not
     [SerializeField] public bool isPointCard { get; private set; } = false; //Whether point card is enabled
+    [SerializeField] public bool isCampaignFinalLevel { get; private set; } = false; //Whether it is the final level of the campaign
     [SerializeField] public UniverseParams currentUniverse { get; private set; }
     public float[] _DifficultyStarMult => difficultyStarMult;
     [Header("Parameters")]
@@ -336,7 +337,7 @@ public class LevelManager : MonoBehaviour
         DetermineCurrentLevelIndex(false);
         string currentName = SceneManager.GetActiveScene().name;
         string nextName = levelIndex < currentGalaxy.Length-1 ? currentGalaxy[levelIndex+1] : "Galaxies";
-        if (SceneManager.GetActiveScene().name == "Mythical_4")
+        if (isCampaignFinalLevel)
         {
             nextName = "Credits";
         }
@@ -554,7 +555,8 @@ public class LevelManager : MonoBehaviour
         {
             galaxyIndex = 0;
         }
-        
+
+        isCampaignFinalLevel = scene.name == "Home_Mythical_4" && currentUniverse.universeType == UniverseParams.UniverseType.home;
         chosenOption = true;
         ballInput = true;
         levelComplete = false;

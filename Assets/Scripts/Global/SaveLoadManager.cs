@@ -259,7 +259,7 @@ public class SaveLoadManager : MonoBehaviour
     }
     void OnHole()
     {
-        if (SceneManager.GetActiveScene().name == "Mythical_4") //last level
+        if (GameManager.LevelManager.isCampaignFinalLevel) //last level
         {
             currentGlobalSave.unlockedInfinite = true;
             SaveGlobalSave();

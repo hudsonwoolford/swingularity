@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using static UnityEditor.PlayerSettings;
 
 public class MappingHandling : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] RectTransform[] boundsPoints;
     [SerializeField] AudioObj outOfBoundsAudio;
     Camera mainCam;
+    Rigidbody ballRB;
 
     int deathMessageIndex;
 
@@ -29,6 +31,7 @@ public class MappingHandling : MonoBehaviour
     private void Awake()
     {
         if(ball == null) { ball = GameObject.FindGameObjectWithTag("Player").transform; }
+        if(ball != null) { ballRB =  ball.GetComponent<Rigidbody>(); }
         if (flag == null) { flag = GameObject.FindGameObjectWithTag("Hole").transform; }
     }
     // Start is called before the first frame update
@@ -50,9 +53,29 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            ShootBall.death?.Invoke(0);
-            ShootBall.triggerReset?.Invoke();
-            GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
+            //ShootBall.death?.Invoke(0);
+            //ShootBall.triggerReset?.Invoke();
+            //GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
+
+
+            Vector2 pos = ballRB.position;
+            Vector2 minBounds = boundaries.bounds.min;
+            Vector2 maxBounds = boundaries.bounds.max;
+
+            // Check horizontal wrap
+            if (pos.x > maxBounds.x)
+                pos.x = minBounds.x;
+            else if (pos.x < minBounds.x)
+                pos.x = maxBounds.x;
+
+            // Check vertical wrap
+            if (pos.y > maxBounds.y)
+                pos.y = minBounds.y;
+            else if (pos.y < minBounds.y)
+                pos.y = maxBounds.y;
+
+            ballRB.position = pos;
+            ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
         }
         
         ArrowToObject(flag, flagArrow, flagDistText);

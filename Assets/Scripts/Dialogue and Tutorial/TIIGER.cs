@@ -17,6 +17,7 @@ public class TIIGER : EventTalkableNPC
     public bool dialogueShown { get; private set; }
     public delegate void OnEnableDialogue(bool enable);
     public static OnEnableDialogue onEnableDialogue;
+    Coroutine displayRoutine, hideRoutine;
 
 
     private void Awake()
@@ -43,19 +44,15 @@ public class TIIGER : EventTalkableNPC
     protected override void Update()
     {
         //input
-        if (Input.anyKey && !Input.GetKeyDown(KeyCode.Escape))
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
         {
             Interact();
         }
 
         //logic
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Home_Mythical_4") || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
         {
             return;
-        }
-        if (dialogueShown && !dialogueController.isConversation && !dialogueQueued)
-        {
-            StartCoroutine(HideDialogue());
         }
         if(dialogueController.isConversation && LevelManager.ballInput)
         {
@@ -63,15 +60,19 @@ public class TIIGER : EventTalkableNPC
         }
         hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
         if(dialogueQueued) { dialogueShown |= dialogueQueued; }
+        if (dialogueShown && !dialogueController.isConversation && !dialogueQueued)
+        {
+            displayRoutine = StartCoroutine(HideDialogue());
+        }
         if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown && !dialogueQueued)
         {
             dialogueController.EndConversation();
-            StartCoroutine(HideDialogue());
+            hideRoutine = StartCoroutine(HideDialogue());
         }
     }
     public override void Interact()
     {
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Home_Mythical_4") || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
         {
             return;
         }
@@ -82,14 +83,20 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Talk(DialogueText dialogueText)
     {
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && SceneManager.GetActiveScene().name != "Home_Mythical_4") || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
         {
             return;
         }
-        StartCoroutine(DisplayDialogue(dialogueText));
+        displayRoutine = StartCoroutine(DisplayDialogue(dialogueText));
     }
     IEnumerator DisplayDialogue(DialogueText dialogueText)
     {
+        //stop other routine if happening
+        if(hideRoutine != null)
+        {
+            StopCoroutine(hideRoutine);
+        }
+
         isTransitioning = true;
         GameManager.LevelManager.EnableBallInput(false);
         dialogueController.EndConversation();
@@ -113,6 +120,12 @@ public class TIIGER : EventTalkableNPC
     }
     IEnumerator HideDialogue()
     {
+        //stop other routine if happening
+        if (displayRoutine != null)
+        {
+            StopCoroutine(displayRoutine);
+        }
+
         isTransitioning = true;
         GameManager.LevelManager.EnableBallInput(true);
         Time.timeScale = 1;

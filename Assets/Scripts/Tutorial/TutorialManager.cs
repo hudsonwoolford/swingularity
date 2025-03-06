@@ -13,6 +13,7 @@ public class TutorialManager : MonoBehaviour
     public TeachHoleTutorial teachHoleTutorial = new TeachHoleTutorial();
     public TeachHackMode teachHackMode = new TeachHackMode();
     public TeachResetTutorial resetTutorial = new TeachResetTutorial();
+    public TeachArtefact teachArtefact = new TeachArtefact();
     public TeachNothing teachNothing = new TeachNothing();
     public bool isPullingBack { get; private set; }
     TutorialState currentState;
@@ -363,7 +364,7 @@ public class TeachHackMode : TutorialState
     {
         GameManager.LevelManager.EnableBallInput(true);
         tutorialAnimator.Play("HideHackMode");
-        tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
+        tutorialManager.ChangeTutorialState(tutorialManager.teachArtefact);
         HackMode.onHackMode -= OnHackMode;
     }
     public override void EnableState()
@@ -375,6 +376,42 @@ public class TeachHackMode : TutorialState
     {
         base.DisableState();
         HackMode.onHackMode -= OnHackMode;//safety
+    }
+}
+[System.Serializable]
+public class TeachArtefact : TutorialState
+{
+    public override void OnEnter(Animator ta, TutorialManager tm)
+    {
+        base.OnEnter(ta, tm);
+        tutorialParent.SetActive(true);
+        tutorialAnimator.Play("TeachArtefact");
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+    public override void OnExit()
+    {
+        tutorialAnimator.Play("HideArtefact");
+        tutorialParent.SetActive(false);
+        ShootBall.onShoot -= OnBallShoot;//safety
+        base.OnExit();
+    }
+    void OnBallShoot()
+    {
+        tutorialManager.ChangeTutorialState(tutorialManager.resetTutorial);
+        ShootBall.onShoot -= OnBallShoot;
+    }
+    public override void EnableState()
+    {
+        base.EnableState();
+        ShootBall.onShoot += OnBallShoot;
+    }
+    public override void DisableState()
+    {
+        base.DisableState();
+        ShootBall.onShoot -= OnBallShoot;//safety
     }
 }
 [System.Serializable]
