@@ -53,29 +53,29 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            //ShootBall.death?.Invoke(0);
-            //ShootBall.triggerReset?.Invoke();
-            //GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
+            ShootBall.death?.Invoke(0);
+            ShootBall.triggerReset?.Invoke();
+            GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
 
 
-            Vector2 pos = ballRB.position;
-            Vector2 minBounds = boundaries.bounds.min;
-            Vector2 maxBounds = boundaries.bounds.max;
+            //Vector2 pos = ballRB.position;
+            //Vector2 minBounds = boundaries.bounds.min;
+            //Vector2 maxBounds = boundaries.bounds.max;
 
-            // Check horizontal wrap
-            if (pos.x > maxBounds.x)
-                pos.x = minBounds.x;
-            else if (pos.x < minBounds.x)
-                pos.x = maxBounds.x;
+            //// Check horizontal wrap
+            //if (pos.x > maxBounds.x)
+            //    pos.x = minBounds.x;
+            //else if (pos.x < minBounds.x)
+            //    pos.x = maxBounds.x;
 
-            // Check vertical wrap
-            if (pos.y > maxBounds.y)
-                pos.y = minBounds.y;
-            else if (pos.y < minBounds.y)
-                pos.y = maxBounds.y;
+            //// Check vertical wrap
+            //if (pos.y > maxBounds.y)
+            //    pos.y = minBounds.y;
+            //else if (pos.y < minBounds.y)
+            //    pos.y = maxBounds.y;
 
-            ballRB.position = pos;
-            ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
+            //ballRB.position = pos;
+            //ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
         }
         
         ArrowToObject(flag, flagArrow, flagDistText);
