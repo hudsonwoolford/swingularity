@@ -164,15 +164,31 @@ public class BlackHoleGenerator : MonoBehaviour
             {
                 ballTR = GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer>();
             }
+            ballTR.emitting = false;
+            ballTR.enabled = false;
+            float temptime = ballTR.time;
+            ballTR.time = 0;
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
-            ballTR.Clear();
+             ballTR.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
+            StartCoroutine(ReenableTrail(temptime));
+
             GameManager.SFXManager.PlaySFX(teleportationAudio);
             blackHoleTravel?.Invoke();
         }
         if(collision.gameObject.layer == 7){
             collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
+    }
+
+    IEnumerator ReenableTrail(float temp){
+        yield return null;
+        yield return null;
+        yield return null;
+        ballTR.emitting = true;
+        ballTR.enabled = true;
+        ballTR.Clear();
+        ballTR.time = temp;
     }
     private void BlackHoleTravelTimer(){
         canTravel = false; 

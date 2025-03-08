@@ -242,7 +242,7 @@ public class ShootBall : MonoBehaviour
         }
 
         if(liningUpShot) { AnimateLine(); }
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; tr.enabled = false; tr.Clear(); triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
     }
     void FixedUpdate(){
@@ -633,10 +633,12 @@ public class ShootBall : MonoBehaviour
     IEnumerator ReenableTrail(float temp){
         yield return null;
         yield return null;
+        yield return null;
         tr.enabled = true;
-        tr.Clear();
         tr.emitting = true;
         tr.time = temp;
+        tr.Clear();
+
     }
 
     void DeleteSimulation()
@@ -937,7 +939,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
-
+            tr.Clear();
         tr.emitting = false;
         GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
@@ -970,11 +972,9 @@ public class ShootBall : MonoBehaviour
             yield break;
         }
         else if(objCol.GetComponent<SunGenerator>() != null){
-            tr.Clear();
             death?.Invoke(1);
         }
         else{
-            tr.Clear();
             death?.Invoke(0);
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
