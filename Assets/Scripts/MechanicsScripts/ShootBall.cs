@@ -81,7 +81,7 @@ public class ShootBall : MonoBehaviour
     float lineOffset = 0f;
     bool inPortal;
 
-    bool swingHit;
+    bool swinging;
     bool collidedWithNoZone = false;
 
     bool movedAstronaut = false;
@@ -118,8 +118,9 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(RecreatePhysicsScene());
         }
-        trrb.position = transform.position;
-        tr?.Clear();
+        trrb.position = originPos;
+        tr.transform.position = originPos;
+        tr.Clear();
         tr.emitting = true;
 
     }
@@ -184,6 +185,7 @@ public class ShootBall : MonoBehaviour
         trrb.useGravity = false;
         trrb.drag = rb.drag;
         trrb.angularDrag = rb.angularDrag;
+        trrb.constraints = RigidbodyConstraints.FreezeRotation;
 
         TrailCollisionInfo trailCollisionInfo = trailRendPrefab.GetComponent<TrailCollisionInfo>();
 
@@ -240,16 +242,17 @@ public class ShootBall : MonoBehaviour
         }
 
         if(liningUpShot) { AnimateLine(); }
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
-        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.8f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
+        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.75f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
 
-        if(hit.Length == 0) {
+        if(hit.Length == 0 || ballStill) {
             trrb.MovePosition(rb.position);
         }
+
     }
     void AnimateLine()
     {
@@ -449,6 +452,7 @@ public class ShootBall : MonoBehaviour
         }
         cols.Clear();
         onSwing?.Invoke(); //invoke shoot event
+        swinging = true;
 
         yield return new WaitUntil(() => pullBack);
         yield return new WaitForSeconds(swingDelay);
@@ -460,6 +464,7 @@ public class ShootBall : MonoBehaviour
         ballAudioSrc.pitch = Mathf.Lerp(0.75f, 1.25f, 1-force.magnitude / maxPower) + UnityEngine.Random.Range(-0.15f, 0.15f);
         GameManager.SFXManager.PlaySFX(hitBall, ballAudioSrc, Mathf.Clamp01(force.magnitude / maxPower * 2));
         onShoot?.Invoke(); //invoke shoot event
+        swinging = false;
 
         rb.AddForce(force, ForceMode.Impulse); //adding force
 
@@ -585,6 +590,10 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
+        tr.transform.position = transform.position;
+
+        tr.emitting = false;
+        tr.enabled = false;
         if(inPortal) { return; }
         GetComponent<Collider>().enabled = true;
         childObj.GetComponent<MeshRenderer>().enabled = true;
@@ -592,9 +601,10 @@ public class ShootBall : MonoBehaviour
         Vector3 originalPos = transform.position;
         rb.position = origin;
         transform.position = origin;
-        trrb.position = origin;
-        tr?.Clear();
-        tr.emitting = true;
+        tr.transform.position = origin;
+        tr.Clear();
+        float temptime = tr.time;
+        tr.time = 0;
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
@@ -607,6 +617,9 @@ public class ShootBall : MonoBehaviour
         }
         //Stopping all coroutines + stopping coroutine booleans
         StopAllCoroutines();
+        tr.transform.position += Vector3.zero;
+        StartCoroutine(ReenableTrail(temptime));
+
         astronautFading = false;
         if(!movedAstronaut) { StartCoroutine(AstronautFade()); }
         astronautMatController.EndFade();
@@ -615,6 +628,15 @@ public class ShootBall : MonoBehaviour
         collidedWithNoZone = false;
         liningUpShot = false;
         DrawCollisionIcons();
+    }
+
+    IEnumerator ReenableTrail(float temp){
+        yield return null;
+        yield return null;
+        tr.enabled = true;
+        tr.Clear();
+        tr.emitting = true;
+        tr.time = temp;
     }
 
     void DeleteSimulation()
@@ -915,7 +937,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
-        tr.Clear();
+
         tr.emitting = false;
         GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
@@ -928,7 +950,6 @@ public class ShootBall : MonoBehaviour
             {
                 defaultBallMat.SetColor("_EdgeColor", GameManager.LevelManager.currentTheme.ballColor);
             }
-            tr.emitting = false;
             Vector3 vel = rb.velocity.normalized;
             rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
 
@@ -949,9 +970,11 @@ public class ShootBall : MonoBehaviour
             yield break;
         }
         else if(objCol.GetComponent<SunGenerator>() != null){
+            tr.Clear();
             death?.Invoke(1);
         }
         else{
+            tr.Clear();
             death?.Invoke(0);
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;//will stay still, no gravity
