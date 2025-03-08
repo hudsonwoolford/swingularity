@@ -63,6 +63,12 @@ public class EdgeDistortion : MonoBehaviour
 
         if(pos != (Vector2)ball.position)
         {
+            if (ballTR == null)
+            {
+                ballTR = ball.gameObject.GetComponentInChildren<TrailRenderer>();
+            }
+            ballTR.emitting = false;
+
             StartCoroutine(WrapBall());
         }
     }
@@ -88,11 +94,7 @@ public class EdgeDistortion : MonoBehaviour
             pos.y = maxWrap.y;
 
 
-        if (ballTR == null)
-        {
-            ballTR = ball.gameObject.GetComponentInChildren<TrailRenderer>();
-        }
-        ballTR.emitting = false;
+
         cameraFollow.SetTargetZoom(true);
         yield return null;
         ball.position = pos;

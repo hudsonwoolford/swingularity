@@ -864,6 +864,9 @@ public class ShootBall : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+    // Vector3 contactPoint = collision.contacts[0].point;
+    // tr.AddPosition(contactPoint);
+    //         tr.emitting = false;
         if (collision.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetDelay(0.3f, collision.gameObject));
@@ -871,6 +874,8 @@ public class ShootBall : MonoBehaviour
         }
     }
     private void OnCollisionExit(Collision collision){
+        // tr.Clear();
+        // tr.emitting = true;
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
