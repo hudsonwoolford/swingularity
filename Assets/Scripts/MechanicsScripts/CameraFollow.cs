@@ -39,21 +39,25 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / mainCam.aspect, 35); //to scale version
+        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, 35/mainCam.aspect, 35); //scaled down version of inner shape
 
 
         MasterStart();
     }
-    public void SetTargetZoom(float targetZoom) //this should be only called from tutorial
+    public void SetTargetZoom(float targetZoom) //this should be only called from tutorial and recursive mapping handling
     {
         targetCameraSize = targetZoom;
+    }
+    public void SetTargetZoom(bool max) //this should be only called from tutorial and recursive mapping handling
+    {
+        targetCameraSize = max ? cameraMinMax.y : cameraMinMax.x;
     }
     private void Awake()
     {
         mainCam = GetComponent<Camera>();
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = PolygonPositions(startPos, endPos, sizeScalar, 35 / mainCam.aspect, 35); //to scale version
+        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, 35/mainCam.aspect, 35); //scaled down version of inner shape
     }
     // Start is called before the first frame update
     void Start()
@@ -82,13 +86,21 @@ public class CameraFollow : MonoBehaviour
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
         }
 
+        //parallel universe - swapping start positions
         if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.parallel)
         {
             Vector3 cachePos = startPos;
             startPos = endPos;
             endPos = cachePos;
         }
-        cameraPath.points = PolygonPositions(startPos, endPos, sizeScalar, 0, 0); //scaled down version of inner shape
+        ////recursive universe - shrinking boundaries
+        //if (GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        //{
+        //    sizeScalar = 0.65f;
+        //    cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * mainCam.aspect), innerShape.bounds.extents.y / 2) * 1.5f;
+        //}
+
+        cameraPath.points = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, sizeScalar, 0, 0); //scaled down version of inner shape
 
         Vector2 targetPos = ball.position; //camera focuses ball by default
         float showLevelThreshold = cameraMinMax.x;
@@ -263,53 +275,6 @@ public class CameraFollow : MonoBehaviour
         }
     }
     #region Polygon Stuff
-    //Returns array of positions that makes up a polygon for the boundaries
-    Vector2[] PolygonPositions(Vector2 start, Vector2 end, float scale, float featherX, float featherY)
-    {
-        if (start.x == end.x || start.y == end.y)
-        {
-            end += Vector2.one * 0.001f;
-        }
-        float height = mainCam.orthographicSize * 2; //camera height in units
-        float width = height * mainCam.aspect;       //camera width in units
-        height += featherY;
-        width += featherX;
-        Vector3 camSize = new Vector3(width, height);
-        camSize *= scale; //scaling
-        Vector2 dir = (end - start).normalized; //direction from start to end
-
-        Vector2[] startCorners = { start + new Vector2(camSize.x / 2, camSize.y / 2), start + new Vector2(camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, camSize.y / 2) }; //start pos camera square vertices
-        Vector2[] endCorners = { end + new Vector2(camSize.x / 2, camSize.y / 2), end + new Vector2(camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, camSize.y / 2) }; //end pos camera square vertices
-
-        Vector2[] finalPoints = new Vector2[6]; //returning 6 pointed polygon
-
-        int i = 0; //i is chosen depending on the direction of the end square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.
-        if (dir.x > 0 && dir.y > 0) { i = 1; }
-        if (dir.x > 0 && dir.y < 0) { i = 2; }
-        if (dir.x < 0 && dir.y < 0) { i = 3; }
-        if (dir.x < 0 && dir.y > 0) { i = 0; }
-        for (int u = 0; u < 3; u++)
-        {
-            finalPoints[u] = startCorners[i];
-            i++;
-            if (i > 3) { i = 0; }
-        }
-
-        i = 0;//i is chosen depending on the direction of the start square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.                                   
-        dir = (start - end).normalized;
-        if (dir.x > 0 && dir.y > 0) { i = 1; }
-        if (dir.x > 0 && dir.y < 0) { i = 2; }
-        if (dir.x < 0 && dir.y < 0) { i = 3; }
-        if (dir.x < 0 && dir.y > 0) { i = 0; }
-        for (int u = 3; u < 6; u++)
-        {
-            finalPoints[u] = endCorners[i];
-            i++;
-            if (i > 3) { i = 0; }
-        }
-
-        return finalPoints; //final points
-    }
     Vector2[] InnerPolygonPositions(Vector2 start, Vector2 end, float camSizeVar, float scale, float featherX, float featherY)
     {
         if (start.x == end.x || start.y == end.y)
@@ -412,7 +377,7 @@ public class CameraFollow : MonoBehaviour
         if (mainCam == null) { mainCam = Camera.main; }
         //scene view visuals
         Vector2[] polygon = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, 1 * sizeScalar, 0, 0);
-        Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, cameraMinMax.y, 1 * sizeScalar, 0, 0);
+        Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, cameraMinMax.y, 1 * sizeScalar, 35/mainCam.aspect, 35);
         for (int i = 0; i < polygon.Length - 1; i++)
         {
             Gizmos.color = Color.green;

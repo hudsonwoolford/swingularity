@@ -9,8 +9,6 @@ using static UnityEditor.PlayerSettings;
 public class MappingHandling : MonoBehaviour
 {
     [SerializeField] BoxCollider2D camArea;
-    [Range(0, 2)]
-    [SerializeField] float smallerBounds = 0.9f;
     [SerializeField] TextMeshProUGUI ballDistText, flagDistText;
     [SerializeField] Transform ball, flag;
     [SerializeField] Transform ballArrow, flagArrow;
@@ -20,6 +18,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] PolygonCollider2D exteriorCollider;
     [SerializeField] RectTransform[] boundsPoints;
     [SerializeField] AudioObj outOfBoundsAudio;
+    [SerializeField] AudioObj wrapAudio;
     Camera mainCam;
     Rigidbody ballRB;
 
@@ -53,33 +52,47 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            ShootBall.death?.Invoke(0);
-            ShootBall.triggerReset?.Invoke();
-            GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
-
-
-            //Vector2 pos = ballRB.position;
-            //Vector2 minBounds = boundaries.bounds.min;
-            //Vector2 maxBounds = boundaries.bounds.max;
-
-            //// Check horizontal wrap
-            //if (pos.x > maxBounds.x)
-            //    pos.x = minBounds.x;
-            //else if (pos.x < minBounds.x)
-            //    pos.x = maxBounds.x;
-
-            //// Check vertical wrap
-            //if (pos.y > maxBounds.y)
-            //    pos.y = minBounds.y;
-            //else if (pos.y < minBounds.y)
-            //    pos.y = maxBounds.y;
-
-            //ballRB.position = pos;
-            //ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
+            if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+            {
+                StartCoroutine(WrapBall());
+            }
+            else
+            {
+                ShootBall.death?.Invoke(0);
+                ShootBall.triggerReset?.Invoke();
+                GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
+            }
         }
         
         ArrowToObject(flag, flagArrow, flagDistText);
         ArrowToObject(ball, ballArrow, ballDistText);
+
+    }
+    IEnumerator WrapBall()
+    {
+        GameManager.SFXManager.PlaySFX(wrapAudio);
+        Vector2 pos = ballRB.position;
+        Vector2 minBounds = boundaries.bounds.min;
+        Vector2 maxBounds = boundaries.bounds.max;
+
+        // Check horizontal wrap
+        if (pos.x > maxBounds.x)
+            pos.x = minBounds.x;
+        else if (pos.x < minBounds.x)
+            pos.x = maxBounds.x;
+
+        // Check vertical wrap
+        if (pos.y > maxBounds.y)
+            pos.y = minBounds.y;
+        else if (pos.y < minBounds.y)
+            pos.y = maxBounds.y;
+
+        //ballRB.transform.GetComponentInChildren<TrailRenderer>().emitting = false;
+        ballRB.position = pos;
+        mainCam.GetComponent<CameraFollow>().SetTargetZoom(true);
+        //ballRB.transform.GetComponentInChildren<TrailRenderer>().emitting = true;
+        yield return null;
+        ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
 
     }
     // void ArrowPos(Transform obj, Transform arrow, TextMeshProUGUI distText){
@@ -212,7 +225,7 @@ public class MappingHandling : MonoBehaviour
         float height = Camera.main.orthographicSize * 2; //camera height in units
         float width = height * Camera.main.aspect;       //camera width in units
         Vector3 camSize = new Vector3(width, height);
-        Gizmos.DrawWireCube(Vector3.zero, camSize - Vector3.one * smallerBounds);
+        Gizmos.DrawWireCube(Vector3.zero, camSize - Vector3.one);
 
         
     }
