@@ -241,10 +241,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3688481069132238004, guid: b06a82183d0023b43a917d2884a2be87,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 597236697}
-    - targetCorrespondingSourceObject: {fileID: 3688481069132238004, guid: b06a82183d0023b43a917d2884a2be87,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 598976441}
     - targetCorrespondingSourceObject: {fileID: 3688481069132238004, guid: b06a82183d0023b43a917d2884a2be87,
         type: 3}
@@ -459,27 +455,37 @@ PrefabInstance:
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.x
-      value: -2.6239738
+      value: -28.813894
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.y
-      value: -1.9569106
+      value: -1.786722
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.x
-      value: -0.33160126
+      value: -26.966105
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.y
-      value: 0.41691065
+      value: 0.12672198
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: poleAngle
       value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: particleSpeed
+      value: 0.133
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: -133.67
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
@@ -571,6 +577,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2136511873}
     m_Modifications:
+    - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: -3522
+      objectReference: {fileID: 0}
     - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
         type: 3}
       propertyPath: starSchemeIndex
@@ -783,106 +794,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 478e5fb52039c6947bf0a098d4413d68, type: 3}
---- !u!1 &597236696
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 597236697}
-  - component: {fileID: 597236700}
-  - component: {fileID: 597236699}
-  - component: {fileID: 597236698}
-  m_Layer: 14
-  m_Name: Sphere (9)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &597236697
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597236696}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 29.9, z: 0}
-  m_LocalScale: {x: 0.37, y: 0.37, z: 0.37}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 70507396}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &597236698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597236696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af0984b54e4ab6d469f7b3e0e991edd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planetType: 0
-  specificSeed: 1
-  darkMatter: 0
-  seed: {x: 43.44096, y: -133.56757, z: -203.07555}
---- !u!23 &597236699
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597236696}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &597236700
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597236696}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &598976440
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,7 +843,7 @@ MonoBehaviour:
   planetType: 0
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 72.9671, y: -85.3566, z: -53.079163}
+  seed: {x: -63.985657, y: 187.79626, z: 116.77}
 --- !u!23 &598976443
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1032,7 +943,7 @@ MonoBehaviour:
   planetType: 0
   specificSeed: 1
   darkMatter: 0
-  seed: {x: -67.306274, y: 165.06157, z: -151.8576}
+  seed: {x: 75.576256, y: -170.53513, z: 80.176285}
 --- !u!23 &763184738
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1304,7 +1215,7 @@ MonoBehaviour:
   planetType: 0
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 1.6714706, y: 83.239456, z: 87.236145}
+  seed: {x: -79.11014, y: -105.11594, z: -201.48642}
 --- !u!23 &1102340990
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1477,7 +1388,7 @@ MonoBehaviour:
   planetType: 0
   specificSeed: 1
   darkMatter: 1
-  seed: {x: -16.346443, y: 162.26935, z: 76.7327}
+  seed: {x: 41.014217, y: -7.3475647, z: 65.9163}
 --- !u!23 &1781344876
 MeshRenderer:
   m_ObjectHideFlags: 0

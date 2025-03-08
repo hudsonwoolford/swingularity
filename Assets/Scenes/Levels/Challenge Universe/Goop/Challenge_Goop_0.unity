@@ -315,7 +315,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 96.50075, y: -85.74603, z: -277.35358}
+  seed: {x: -7.7228394, y: -75.71423, z: 22.409935}
   orbitPlanet: {fileID: 954328722}
   eccentricity: 0
   speed: 0.65
@@ -770,7 +770,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 1
-  seed: {x: 91.95549, y: -162.29657, z: 123.05688}
+  seed: {x: -86.852615, y: -26.691467, z: 74.50021}
 --- !u!23 &599133616
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -870,7 +870,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 1
-  seed: {x: 21.815407, y: -125.502014, z: 135.19926}
+  seed: {x: -20.814835, y: -182.20502, z: -67.61316}
 --- !u!23 &763184738
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 0
-  seed: {x: -80.952835, y: -174.59473, z: -57.889984}
+  seed: {x: 45.20845, y: 193.68158, z: -139.41153}
 --- !u!23 &954328724
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1154,7 +1154,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 1
-  seed: {x: 44.522064, y: -196.21347, z: -207.4655}
+  seed: {x: 65.13214, y: 131.64105, z: -183.97687}
 --- !u!23 &969143742
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1342,7 +1342,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 9.65847, y: 159.97101, z: 235.03082}
+  seed: {x: 99.24101, y: -187.41983, z: 88.21562}
 --- !u!23 &1102340990
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1442,7 +1442,7 @@ MonoBehaviour:
   planetType: 4
   specificSeed: 1
   darkMatter: 0
-  seed: {x: -34.16113, y: 16.594666, z: -24.172096}
+  seed: {x: -62.099697, y: -70.56106, z: -81.78932}
   orbitPlanet: {fileID: 954328722}
   eccentricity: 0
   speed: 0.65
@@ -1758,27 +1758,32 @@ PrefabInstance:
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.x
-      value: -20.560846
+      value: 12.119152
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.y
-      value: 5.2035766
+      value: -3.0064235
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.x
-      value: -22.199152
+      value: 10.480848
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.y
-      value: 4.0564237
+      value: -4.1535764
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: poleAngle
       value: 215
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: 8.8
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
@@ -1864,6 +1869,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2136511873}
     m_Modifications:
+    - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: -1643
+      objectReference: {fileID: 0}
     - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
         type: 3}
       propertyPath: starSchemeIndex

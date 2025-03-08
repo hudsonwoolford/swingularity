@@ -311,7 +311,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 96.50075, y: -85.74603, z: -277.35358}
+  seed: {x: -3.9785538, y: -157.06973, z: 69.39672}
   orbitPlanet: {fileID: 954328722}
   eccentricity: 0
   speed: -0.5
@@ -376,6 +376,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2136511873}
     m_Modifications:
+    - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: -1857
+      objectReference: {fileID: 0}
     - target: {fileID: 1820140664519515562, guid: 3742d9f3e0baa7941871dd063e9973cb,
         type: 3}
       propertyPath: starSchemeIndex
@@ -716,27 +721,37 @@ PrefabInstance:
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.x
-      value: 12.119394
+      value: -12.3396
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole1.y
-      value: -6.36696
+      value: -3.3151875
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.x
-      value: 13.300606
+      value: -10.780401
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: pole2.y
-      value: -4.75304
+      value: -1.1848124
       objectReference: {fileID: 0}
     - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
       propertyPath: poleAngle
       value: 53.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: particleSpeed
+      value: 0.132
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522547398765046334, guid: be6f5abb4877204499f85cfaac519628,
+        type: 3}
+      propertyPath: bigNoiseOffset
+      value: 34.05
       objectReference: {fileID: 0}
     - target: {fileID: 6847892963779377245, guid: be6f5abb4877204499f85cfaac519628,
         type: 3}
@@ -886,7 +901,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 91.95549, y: -162.29657, z: 123.05688}
+  seed: {x: 88.286514, y: 71.6866, z: 142.3273}
 --- !u!23 &599133616
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1245,7 +1260,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 21.815407, y: -125.502014, z: 135.19926}
+  seed: {x: 70.82193, y: -14.863892, z: 56.83026}
 --- !u!23 &763184738
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1429,7 +1444,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 0
-  seed: {x: -80.952835, y: -174.59473, z: -57.889984}
+  seed: {x: -30.993687, y: -143.47672, z: 145.63472}
 --- !u!23 &954328724
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1529,7 +1544,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 1
-  seed: {x: -34.46091, y: -153.02634, z: -257.92593}
+  seed: {x: -13.07975, y: 149.2797, z: -297.50693}
 --- !u!23 &969143742
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1717,7 +1732,7 @@ MonoBehaviour:
   planetType: 1
   specificSeed: 1
   darkMatter: 0
-  seed: {x: 9.65847, y: 159.97101, z: 235.03082}
+  seed: {x: -78.137024, y: 48.96042, z: -57.830612}
 --- !u!23 &1102340990
 MeshRenderer:
   m_ObjectHideFlags: 0
