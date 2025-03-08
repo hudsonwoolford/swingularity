@@ -58,7 +58,7 @@ public class CameraFollow : MonoBehaviour
         mainCam = GetComponent<Camera>();
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        if(GameManager.LevelManager != null && GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
         {
             feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
             innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
