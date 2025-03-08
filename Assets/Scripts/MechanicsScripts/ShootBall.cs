@@ -167,6 +167,7 @@ public class ShootBall : MonoBehaviour
         GameObject trailRendPrefab = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj;
         tr = Instantiate(trailRendPrefab).GetComponent<TrailRenderer>();
         tr.emitting = false;
+        tr.gameObject.tag = "Trail";
 
         trrb = tr.AddComponent<Rigidbody>();
         trsc = tr.AddComponent<SphereCollider>();
@@ -244,7 +245,7 @@ public class ShootBall : MonoBehaviour
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
-        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
+        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.8f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
 
         if(hit.Length == 0) {
             trrb.MovePosition(rb.position);
@@ -591,6 +592,7 @@ public class ShootBall : MonoBehaviour
         Vector3 originalPos = transform.position;
         rb.position = origin;
         transform.position = origin;
+        trrb.position = origin;
         tr?.Clear();
         tr.emitting = true;
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -911,6 +913,7 @@ public class ShootBall : MonoBehaviour
     }
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
+        tr.Clear();
         GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
         deathDelay = true;

@@ -65,7 +65,7 @@ public class EdgeDistortion : MonoBehaviour
         {
             if (ballTR == null)
             {
-                ballTR = ball.gameObject.GetComponentInChildren<TrailRenderer>();
+                ballTR = GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer>();
             }
             ballTR.emitting = false;
             ballTR.Clear();
