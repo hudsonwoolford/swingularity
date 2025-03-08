@@ -32,11 +32,13 @@ public class ShootBall : MonoBehaviour
     [SerializeField] float animSmoothing; //Smoothinh of animation when hit the hole
     [SerializeField] float astronautAnimLength; //Astronaut fade animationlength
     [SerializeField] float ballSpinSpeed;
+    [SerializeField] float trailSnapSpeed;
     [SerializeField] Material ballHackModeMat;
 
     [SerializeField] LayerMask obstacles;
     [SerializeField] LayerMask ignoreStill;
     [SerializeField] LayerMask noCollide;
+    [SerializeField] LayerMask noPlayer;
     [SerializeField] GameObject astronaut;
 
     [SerializeField] Material[] astronautFadeMats;
@@ -71,6 +73,7 @@ public class ShootBall : MonoBehaviour
     Camera main;
     TrailRenderer tr;
     Rigidbody trrb;
+    SphereCollider trsc;
     bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
@@ -166,7 +169,7 @@ public class ShootBall : MonoBehaviour
         tr.emitting = false;
 
         trrb = tr.AddComponent<Rigidbody>();
-        SphereCollider trsc = tr.AddComponent<SphereCollider>();
+        trsc = tr.AddComponent<SphereCollider>();
         trsc.radius = GetComponent<SphereCollider>().radius;
         trsc.center = GetComponent<SphereCollider>().center;
         trsc.gameObject.layer = (int)Mathf.Log(noCollide.value, 2);;
@@ -234,7 +237,6 @@ public class ShootBall : MonoBehaviour
             childObj.transform.right =
             Vector3.Slerp(childObj.transform.right, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
         }
-        trrb.MovePosition(transform.position);
 
         if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
@@ -242,6 +244,11 @@ public class ShootBall : MonoBehaviour
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
+        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
+
+        if(hit.Length == 0) {
+            trrb.MovePosition(rb.position);
+        }
     }
     void AnimateLine()
     {
