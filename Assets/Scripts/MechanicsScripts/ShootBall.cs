@@ -36,7 +36,7 @@ public class ShootBall : MonoBehaviour
 
     [SerializeField] LayerMask obstacles;
     [SerializeField] LayerMask ignoreStill;
-
+    [SerializeField] LayerMask noCollide;
     [SerializeField] GameObject astronaut;
 
     [SerializeField] Material[] astronautFadeMats;
@@ -70,6 +70,7 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
+    Rigidbody trrb;
     bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
@@ -114,7 +115,9 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(RecreatePhysicsScene());
         }
+        tr.gameObject.transform.position = transform.position;
         tr?.Clear();
+        tr.emitting = true;
 
     }
     IEnumerator RecreatePhysicsScene()
@@ -139,18 +142,7 @@ public class ShootBall : MonoBehaviour
         defaultBallMat = ballRenderer.material;
         slr.positionCount = 0; //no line
 
-        GameObject trailRendPrefab = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj;
-        tr = Instantiate(trailRendPrefab, transform).GetComponent<TrailRenderer>();
-
-        TrailCollisionInfo trailCollisionInfo = trailRendPrefab.GetComponent<TrailCollisionInfo>();
-
-        trailCollisionIcon.Item1 = trailCollisionInfo.colImage1;
-        trailCollisionIcon.Item2 = trailCollisionInfo.colImage2;
-        trailCollisionIcon.Item3 = trailCollisionInfo.colImageColour1;
-        trailCollisionIcon.Item4 = trailCollisionInfo.colImageColour2;
-
-
-        tr.transform.localPosition = new Vector3(0, 0, -0.3f);
+        SetupTrail();
         slr.widthCurve = tr.widthCurve;
         slr.material = tr.material; 
         slr.textureScale = tr.textureScale;
@@ -166,6 +158,38 @@ public class ShootBall : MonoBehaviour
             astronaut.AddComponent<MeshRenderer>().material = defaultBallMat;
         }
         StartCoroutine(BallStillTiming(0.5f));
+    }
+
+    void SetupTrail(){
+        GameObject trailRendPrefab = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj;
+        tr = Instantiate(trailRendPrefab).GetComponent<TrailRenderer>();
+        tr.emitting = false;
+
+        trrb = tr.AddComponent<Rigidbody>();
+        SphereCollider trsc = tr.AddComponent<SphereCollider>();
+        trsc.radius = GetComponent<SphereCollider>().radius;
+        trsc.center = GetComponent<SphereCollider>().center;
+        trsc.gameObject.layer = (int)Mathf.Log(noCollide.value, 2);;
+        trsc.material = GetComponent<SphereCollider>().material;
+
+
+
+        trrb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        trrb.mass = rb.mass;
+        trrb.interpolation = RigidbodyInterpolation.Interpolate;
+        trrb.useGravity = false;
+        trrb.drag = rb.drag;
+        trrb.angularDrag = rb.angularDrag;
+
+        TrailCollisionInfo trailCollisionInfo = trailRendPrefab.GetComponent<TrailCollisionInfo>();
+
+        trailCollisionIcon.Item1 = trailCollisionInfo.colImage1;
+        trailCollisionIcon.Item2 = trailCollisionInfo.colImage2;
+        trailCollisionIcon.Item3 = trailCollisionInfo.colImageColour1;
+        trailCollisionIcon.Item4 = trailCollisionInfo.colImageColour2;
+
+
+        tr.transform.localPosition = new Vector3(0, 0, -0.3f);
     }
 
 
@@ -210,6 +234,7 @@ public class ShootBall : MonoBehaviour
             childObj.transform.right =
             Vector3.Slerp(childObj.transform.right, rb.velocity.normalized, Time.deltaTime * 15f * ballSpinSpeed);
         }
+        trrb.MovePosition(transform.position);
 
         if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput) { triggerReset?.Invoke(); } //reset
