@@ -118,7 +118,7 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(RecreatePhysicsScene());
         }
-        tr.gameObject.transform.position = transform.position;
+        trrb.position = transform.position;
         tr?.Clear();
         tr.emitting = true;
 
@@ -595,6 +595,7 @@ public class ShootBall : MonoBehaviour
         trrb.position = origin;
         tr?.Clear();
         tr.emitting = true;
+
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector2.zero; //wont keep spinning
@@ -615,6 +616,7 @@ public class ShootBall : MonoBehaviour
         liningUpShot = false;
         DrawCollisionIcons();
     }
+
     void DeleteSimulation()
     {
         SceneManager.UnloadSceneAsync(simulationScene);
@@ -914,6 +916,7 @@ public class ShootBall : MonoBehaviour
     IEnumerator ResetDelay(float delay, GameObject objCol)
     {
         tr.Clear();
+        tr.emitting = false;
         GetComponent<Collider>().enabled = false;
         StopCoroutine(nameof(BallStillTiming));
         deathDelay = true;
