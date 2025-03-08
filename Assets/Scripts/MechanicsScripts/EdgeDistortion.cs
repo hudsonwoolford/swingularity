@@ -68,6 +68,8 @@ public class EdgeDistortion : MonoBehaviour
                 ballTR = ball.gameObject.GetComponentInChildren<TrailRenderer>();
             }
             ballTR.emitting = false;
+            ballTR.Clear();
+
 
             StartCoroutine(WrapBall());
         }
@@ -96,11 +98,15 @@ public class EdgeDistortion : MonoBehaviour
 
 
         cameraFollow.SetTargetZoom(true);
+        ballTR.Clear();
+
         yield return null;
         ball.position = pos;
         yield return null;
-        ballTR.emitting = true;
+        yield return null;
+        yield return null;
         ballTR.Clear();
+        ballTR.emitting = true;
     }
     #region Shader
     private void OnValidate()
