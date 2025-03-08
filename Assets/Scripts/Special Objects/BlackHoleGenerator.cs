@@ -34,6 +34,7 @@ public class BlackHoleGenerator : MonoBehaviour
     CelestialMass cMass;
     bool canTravel = true;
     LineRenderer correspondantLine;
+    TrailRenderer ballTR;
     
     public delegate void BlackHoleTravel();
     public static BlackHoleTravel blackHoleTravel;
@@ -159,10 +160,13 @@ public class BlackHoleGenerator : MonoBehaviour
         if(correspondent == null) { return; }
         if (collision.gameObject.tag == "Player" && canTravel) //Player or simulated player
         {
-            TrailRenderer trailRenderer = collision.gameObject.GetComponentInChildren<TrailRenderer>();
+            if(ballTR == null)
+            {
+                ballTR = GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer>();
+            }
 
             collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
-            trailRenderer.Clear();
+            ballTR.Clear();
             GameManager.SFXManager.PlaySFX(teleportationAudio);
             blackHoleTravel?.Invoke();
         }
