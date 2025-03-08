@@ -27,6 +27,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private CanvasGroup astronautHatCG;
     [SerializeField] private float tabTransitionDuration;
     [SerializeField] private AnimationCurve transitionCurve;
+    [SerializeField] private Scrollbar scrollbar;
 
     ShopItem[] shopItems;
     CustomizeElement currentSelectedElement;
@@ -36,6 +37,8 @@ public class ShopManager : MonoBehaviour
     AudioSource shopSrc;
     int displayCoins, consecutiveCoinMoves;
     bool shopShown;
+    Vector3 customizationParentDefaultPos;
+    Dictionary<CanvasGroup, int> groupItemAmounts = new Dictionary<CanvasGroup, int>();
 
     void Start()
     {
@@ -48,16 +51,24 @@ public class ShopManager : MonoBehaviour
         golfTrailBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.GolfBallTrail, golfTrailBtn, false)));
         astronautHatBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.AstronautHat, astronautHatBtn, false)));
         buyEquipButton.onClick.AddListener(() => BuyEquipButton());
+        scrollbar.onValueChanged.AddListener((v) => ScrollbarValueChanged(v));
 
         DisableAllTabs();
         astronautMaterialCG.alpha = 1.0f; astronautMaterialCG.interactable = true; astronautMaterialCG.blocksRaycasts = true;
         currentTab = astronautMaterialCG;
         currentButton = astronautMaterialBtn;
         currentButton.GetComponent<Animator>().Play("Select");
+        customizationParentDefaultPos = astronautMaterialCG.transform.localPosition;
     }
     private void Update()
     {
         //
+        if(shopShown)
+        {
+            scrollbar.value += -Input.mouseScrollDelta.y / 10;
+            scrollbar.value = Mathf.Clamp(scrollbar.value, 0f, 1f);
+        }
+
         if (shopShown)
         {
             buyEquipButton.gameObject.SetActive(currentSelectedElement != null);
@@ -88,6 +99,12 @@ public class ShopManager : MonoBehaviour
             }
             starCoinTxt.text = displayCoins.ToString();
         }
+    }
+    void ScrollbarValueChanged(float value)
+    {
+        Transform parent = currentTab.transform;
+
+        parent.transform.localPosition = Vector3.Lerp(customizationParentDefaultPos, customizationParentDefaultPos - new Vector3(0, Mathf.Max(0, Mathf.CeilToInt((float)groupItemAmounts[currentTab] / customizationColumns) - 2) * customizationHeightJump, 0), value);
     }
     void SelectButton(CustomizeElement element)
     {
@@ -124,20 +141,7 @@ public class ShopManager : MonoBehaviour
         currentSelectedElement?.buttonAnimator.Play("Unselect");
         currentSelectedElement = null;
 
-        switch (itemType)
-        {
-            case ShopItem.ItemType.AstronautMaterial:
-                nextGroup = astronautMaterialCG;
-                break;
-            case ShopItem.ItemType.GolfBallTrail:
-                nextGroup = golfTrailCG;
-                break;
-            case ShopItem.ItemType.AstronautHat:
-                nextGroup = astronautHatCG;
-                break;
-            default:
-                break;
-        }
+        nextGroup = GetTabGroup(itemType);
         if (nextGroup == currentTab) { yield break; }
 
         currentGroup.interactable = false;
@@ -207,21 +211,11 @@ public class ShopManager : MonoBehaviour
     }
     void PopulateTab(ShopItem.ItemType filter)
     {
-        Transform parent = null;
-        switch (filter)
+        CanvasGroup currentCG = GetTabGroup(filter);
+        Transform parent = currentCG.transform;
+        if (!groupItemAmounts.ContainsKey(currentCG))
         {
-            case ShopItem.ItemType.AstronautMaterial:
-                parent = astronautMaterialCG.transform;
-                break;
-            case ShopItem.ItemType.GolfBallTrail:
-                parent = golfTrailCG.transform;
-                break;
-            case ShopItem.ItemType.AstronautHat:
-                parent = astronautHatCG.transform;
-                break;
-            default:
-                Debug.LogWarning("No parent set for tab, add to this switch case");
-                break;
+            groupItemAmounts.Add(currentCG, 0);
         }
 
         int columnTracker = 0;
@@ -229,6 +223,7 @@ public class ShopManager : MonoBehaviour
         for (int i = 0; i < shopItems.Length; i++)
         {
             if (shopItems[i].itemType != filter) { continue; }
+            groupItemAmounts[currentCG]++;
 
             CustomizeElement cE = Instantiate(customizationElement, parent).GetComponent<CustomizeElement>();
             customizeElements[i] = cE;
@@ -245,5 +240,25 @@ public class ShopManager : MonoBehaviour
                 rowTracker++;
             }
         }
+    }
+    CanvasGroup GetTabGroup(ShopItem.ItemType tabType)
+    {
+        CanvasGroup group = null;
+        switch (tabType)
+        {
+            case ShopItem.ItemType.AstronautMaterial:
+                group = astronautMaterialCG;
+                break;
+            case ShopItem.ItemType.GolfBallTrail:
+                group = golfTrailCG;
+                break;
+            case ShopItem.ItemType.AstronautHat:
+                group = astronautHatCG;
+                break;
+            default:
+                Debug.LogWarning("No parent set for tab, add to this switch case");
+                break;
+        }
+        return group;
     }
 }

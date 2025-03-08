@@ -374,7 +374,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (mainCam == null) { mainCam = Camera.main; }
         //scene view visuals
-        feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
+        //feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
         Vector2[] polygon = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, 1 * sizeScalar, 0, 0);
         Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, defaultCameraSize, 1 * sizeScalar, feather.x, feather.y);
         for (int i = 0; i < polygon.Length - 1; i++)
