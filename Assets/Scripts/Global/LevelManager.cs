@@ -555,6 +555,10 @@ public class LevelManager : MonoBehaviour
         {
             galaxyIndex = 0;
         }
+        else if(currentUniverse != null && currentUniverse.universeType == UniverseParams.UniverseType.procedural)
+        {
+            procedural = true;
+        }
 
         isCampaignFinalLevel = scene.name == "Home_Mythical_4" && currentUniverse.universeType == UniverseParams.UniverseType.home;
         chosenOption = true;

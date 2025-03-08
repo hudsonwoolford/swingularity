@@ -28,7 +28,6 @@ public class EdgeDistortion : MonoBehaviour
 
         //retrieve ball variables
         ball = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
-        ballTR = ball.gameObject.GetComponentInChildren<TrailRenderer>();
 
         //define min and max wrap positions dependent on shader variables
         minWrap = CameraFollow.innerShape.bounds.min;
