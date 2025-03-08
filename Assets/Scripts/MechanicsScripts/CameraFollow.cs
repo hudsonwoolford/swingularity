@@ -10,6 +10,7 @@ public class CameraFollow : MonoBehaviour
     [Header("Boundaries")]
     [SerializeField] Vector2 startPos; //startpos of path
     [SerializeField] Vector2 endPos; //endpos of path
+    [SerializeField] Vector2 feather;
     [Header("Camera Following")]
     [SerializeField] bool lockCamera;
     [SerializeField] bool zoomOnHoleEnd;
@@ -39,7 +40,7 @@ public class CameraFollow : MonoBehaviour
         cameraMinMax.y = maxSizeSent;
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
-        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, 35/mainCam.aspect, 35); //scaled down version of inner shape
+        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
 
 
         MasterStart();
@@ -57,12 +58,27 @@ public class CameraFollow : MonoBehaviour
         mainCam = GetComponent<Camera>();
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, 35/mainCam.aspect, 35); //scaled down version of inner shape
+        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        {
+            feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
+            innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
+        }
+        else{
+            feather.x /= mainCam.aspect;
+        }
+        innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
     }
     // Start is called before the first frame update
     void Start()
     {
-        cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * mainCam.aspect), innerShape.bounds.extents.y / 2) * 1.3f;
+        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        {
+            cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / mainCam.aspect, innerShape.bounds.extents.y) - 0.25f;
+        }
+        else
+        {
+            cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * mainCam.aspect), innerShape.bounds.extents.y / 2) * 1.3f;
+        }
         cameraSize = defaultCameraSize;
         targetCameraSize = cameraSize;
         MasterStart();
@@ -150,7 +166,7 @@ public class CameraFollow : MonoBehaviour
     void CamBehaviour()
     {
         Vector2 camSize = CalculateCamsize(mainCam.orthographicSize);
-        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, 35 / mainCam.aspect - camSize.x, 35 - camSize.y);
+        panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, feather.x - camSize.x, feather.y - camSize.y);
 
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space)) //right click to pan
         {
@@ -279,48 +295,30 @@ public class CameraFollow : MonoBehaviour
     {
         if (start.x == end.x || start.y == end.y)
         {
-            end += Vector2.one * 0.001f;
+            end += Vector2.one * 0.001f; // Avoid zero-length line issues
         }
-        float height = camSizeVar * 2; //camera height in units
-        float width = height * mainCam.aspect;       //camera width in units
+
+        float height = camSizeVar * 2; // Camera height in world units
+        float width = height * mainCam.aspect; // Camera width in world units
         height += featherY;
         width += featherX;
-        Vector3 camSize = new Vector3(width, height);
-        camSize *= scale; //scaling
-        Vector2 dir = (end - start).normalized; //direction from start to end
+        Vector2 camSize = new Vector2(width, height) * scale; // Apply scaling
 
-        Vector2[] startCorners = { start + new Vector2(camSize.x / 2, camSize.y / 2), start + new Vector2(camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, -camSize.y / 2), start + new Vector2(-camSize.x / 2, camSize.y / 2) }; //start pos camera square vertices
-        Vector2[] endCorners = { end + new Vector2(camSize.x / 2, camSize.y / 2), end + new Vector2(camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, -camSize.y / 2), end + new Vector2(-camSize.x / 2, camSize.y / 2) }; //end pos camera square vertices
+        Vector2 dir = (end - start).normalized; // Direction from start to end
+        Vector2 perp = new Vector2(-dir.y, dir.x); // Perpendicular vector for width expansion
 
-        Vector2[] finalPoints = new Vector2[6]; //returning 6 pointed polygon
-
-        int i = 0; //i is chosen depending on the direction of the end square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.
-        if (dir.x > 0 && dir.y > 0) { i = 1; }
-        if (dir.x > 0 && dir.y < 0) { i = 2; }
-        if (dir.x < 0 && dir.y < 0) { i = 3; }
-        if (dir.x < 0 && dir.y > 0) { i = 0; }
-        for (int u = 0; u < 3; u++)
+        // Define the rectangle points (expanding outward from the path)
+        Vector2[] polygonPoints = new Vector2[]
         {
-            finalPoints[u] = startCorners[i];
-            i++;
-            if (i > 3) { i = 0; }
-        }
+        start - perp * (camSize.y / 2) - dir * (camSize.x / 2), // Bottom-left
+        start + perp * (camSize.y / 2) - dir * (camSize.x / 2), // Top-left
+        end   + perp * (camSize.y / 2) + dir * (camSize.x / 2), // Top-right
+        end   - perp * (camSize.y / 2) + dir * (camSize.x / 2)  // Bottom-right
+        };
 
-        i = 0;//i is chosen depending on the direction of the start square, as 1 vertice needs to be skipped in the polygon. There is 6 vertices not 8.                                   
-        dir = (start - end).normalized;
-        if (dir.x > 0 && dir.y > 0) { i = 1; }
-        if (dir.x > 0 && dir.y < 0) { i = 2; }
-        if (dir.x < 0 && dir.y < 0) { i = 3; }
-        if (dir.x < 0 && dir.y > 0) { i = 0; }
-        for (int u = 3; u < 6; u++)
-        {
-            finalPoints[u] = endCorners[i];
-            i++;
-            if (i > 3) { i = 0; }
-        }
-
-        return finalPoints; //final points
+        return polygonPoints;
     }
+
 
     #endregion
     void OnReset()
@@ -376,8 +374,9 @@ public class CameraFollow : MonoBehaviour
     {
         if (mainCam == null) { mainCam = Camera.main; }
         //scene view visuals
+        feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
         Vector2[] polygon = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, 1 * sizeScalar, 0, 0);
-        Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, cameraMinMax.y, 1 * sizeScalar, 35/mainCam.aspect, 35);
+        Vector2[] outerPol = InnerPolygonPositions(startPos, endPos, defaultCameraSize, 1 * sizeScalar, feather.x, feather.y);
         for (int i = 0; i < polygon.Length - 1; i++)
         {
             Gizmos.color = Color.green;

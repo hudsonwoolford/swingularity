@@ -104,7 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPos: {x: 0, y: 0}
-  endPos: {x: 0, y: 0}
+  endPos: {x: -0.06, y: 0}
+  feather: {x: 30, y: 30}
   lockCamera: 0
   zoomOnHoleEnd: 1
   debugCam: 0
@@ -387,5 +388,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caeffdf7802268448a1c758e6d83aa5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fogMat: {fileID: 2100000, guid: a64f53f0f732bc2439c64c423a6dc09e, type: 2}
+  wrapAudio:
+  - {fileID: 11400000, guid: aef682d971381eb4fb231fd02eab72a7, type: 2}
+  - {fileID: 11400000, guid: de15fa0d92efcad41a619eece1ab1873, type: 2}
+  distortMat: {fileID: 2100000, guid: ab582285d387eeb4ca58ce86d6240471, type: 2}
   blit: 1
+  updateInPlayMode: 0
+  distortionRes: 0.05
+  distortionStrength: -0.3
+  distortionDistance: 5

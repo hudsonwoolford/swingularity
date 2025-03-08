@@ -25,30 +25,15 @@ public class NebulaGenerator : MonoBehaviour
     {
         points = CameraFollow.innerShape.points;
         if(points.Length <= 0) { Debug.LogWarning("CameraFollow inner shape contains no points. This is likely due to it not being initialised before this function was called."); return; } //safeguard
-        Vector3[] vertices = new Vector3[12]; //6 * 2 points
+        Vector3[] vertices = new Vector3[8]; //6 * 2 points
         for (int i = 0; i < points.Length; i++)
         {
             vertices[i] = new Vector3(points[i].x, points[i].y, 0.5f);
             vertices[i + points.Length] = new Vector3(points[i].x, points[i].y, -0.5f);
         }
-        int[] tris = new int[12 * 3]{
-            0, 6, 1,
-            6, 7, 1,
-            1, 7, 2,
-            7, 8, 2,
-            2, 8, 3,
-            8, 9, 3,
-            3, 9, 4,
-            9, 10, 4,
-            4, 10, 5,
-            10, 11, 5,
-            5, 11, 0,
-            11, 6, 0
-        };
 
         Mesh nebulaMesh = new Mesh();
         nebulaMesh.vertices = vertices;
-        nebulaMesh.triangles = tris;
         var shape1 = nebula1.shape;
         var shape2 = nebula2.shape;
         shape1.mesh = nebulaMesh;

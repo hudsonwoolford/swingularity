@@ -56,7 +56,7 @@ public class LevelScoring : MonoBehaviour
 
         angleText.color = Color.white;
         powerText.color = Color.white;
-        angleText.text = "——";
+        angleText.text = "———";
         powerText.text = "——";
         gameObject.SetActive(!GameManager.PauseManager.hideHUD);
     }
@@ -86,11 +86,11 @@ public class LevelScoring : MonoBehaviour
             }
             if (shootBall.shootAngle + 90 > 180)
             {
-                angleText.text = Mathf.CeilToInt(shootBall.shootAngle - 270).ToString();
+                angleText.text = (shootBall.shootAngle - 270).ToString("F1");
             }
             else
             {
-                angleText.text = Mathf.CeilToInt(shootBall.shootAngle + 90).ToString();
+                angleText.text = (shootBall.shootAngle + 90).ToString("F1");
             }
         }
         else if (ballStill && Time.time - timeOfBallRelease > 0.1f)
@@ -99,7 +99,7 @@ public class LevelScoring : MonoBehaviour
             powerText.color = Color.white;
             angleTextDegree.color = Color.white;
             powerTextPercent.color = Color.white;
-            angleText.text = "——";
+            angleText.text = "———";
             powerText.text = "——";
         }
     }

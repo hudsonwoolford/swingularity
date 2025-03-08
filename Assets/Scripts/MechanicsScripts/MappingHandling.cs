@@ -52,11 +52,7 @@ public class MappingHandling : MonoBehaviour
 
         if(!boundaries.OverlapPoint(ball.position))
         {
-            if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
-            {
-                StartCoroutine(WrapBall());
-            }
-            else
+            if(GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.recursive)
             {
                 ShootBall.death?.Invoke(0);
                 ShootBall.triggerReset?.Invoke();
@@ -66,33 +62,6 @@ public class MappingHandling : MonoBehaviour
         
         ArrowToObject(flag, flagArrow, flagDistText);
         ArrowToObject(ball, ballArrow, ballDistText);
-
-    }
-    IEnumerator WrapBall()
-    {
-        GameManager.SFXManager.PlaySFX(wrapAudio);
-        Vector2 pos = ballRB.position;
-        Vector2 minBounds = boundaries.bounds.min;
-        Vector2 maxBounds = boundaries.bounds.max;
-
-        // Check horizontal wrap
-        if (pos.x > maxBounds.x)
-            pos.x = minBounds.x;
-        else if (pos.x < minBounds.x)
-            pos.x = maxBounds.x;
-
-        // Check vertical wrap
-        if (pos.y > maxBounds.y)
-            pos.y = minBounds.y;
-        else if (pos.y < minBounds.y)
-            pos.y = maxBounds.y;
-
-        //ballRB.transform.GetComponentInChildren<TrailRenderer>().emitting = false;
-        ballRB.position = pos;
-        mainCam.GetComponent<CameraFollow>().SetTargetZoom(true);
-        //ballRB.transform.GetComponentInChildren<TrailRenderer>().emitting = true;
-        yield return null;
-        ballRB.transform.GetComponentInChildren<TrailRenderer>().Clear();
 
     }
     // void ArrowPos(Transform obj, Transform arrow, TextMeshProUGUI distText){
