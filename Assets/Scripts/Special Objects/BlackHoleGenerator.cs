@@ -26,6 +26,7 @@ public class BlackHoleGenerator : MonoBehaviour
     [SerializeField] float systemRotSpeed = 8;
     [SerializeField] float blackHoleTimer;
     [SerializeField] AudioObj teleportationAudio;
+    [SerializeField] bool titleScreenBlackHole = false;
 
     MeshRenderer sphereRenderer, distortRenderer;
     ParticleSystem swirlSystem;
@@ -46,6 +47,12 @@ public class BlackHoleGenerator : MonoBehaviour
         NullChecks();
         CreateLine();
         EnableLine(false, null);
+        if(!titleScreenBlackHole){
+
+            Vector3 pos = new Vector3(transform.position.x, transform.position.y, 0);
+            transform.position = new Vector3(pos.x, pos.y, 10f);
+            GetComponent<SphereCollider>().center = new Vector3(0, 0, -10f / transform.localScale.x);
+        }
     }
 
     // Update is called once per frame
@@ -72,6 +79,13 @@ public class BlackHoleGenerator : MonoBehaviour
         }
         if(typeSchemeIndices.Count == 0) { return; }
         schemeIndex = typeSchemeIndices[UnityEngine.Random.Range(0, typeSchemeIndices.Count)];
+        if(!titleScreenBlackHole){
+
+            Vector3 pos = new Vector3(transform.position.x, transform.position.y, 0);
+            transform.position = new Vector3(pos.x, pos.y, 10f);
+            GetComponent<SphereCollider>().center = new Vector3(0, 0, -10f / transform.localScale.x);
+        }
+
 
         //Applying
         RandomRotation();
@@ -135,8 +149,10 @@ public class BlackHoleGenerator : MonoBehaviour
         if(whiteHole)
         {
             correspondantLine.positionCount = 2;
-            correspondantLine.SetPosition(0, correspondent.transform.position);
-            correspondantLine.SetPosition(1, transform.position);
+            Vector3 pos1 = new Vector3(correspondent.transform.position.x, correspondent.transform.position.y, 0f);
+            Vector3 pos2 = new Vector3(transform.position.x, transform.position.y, 0f);
+            correspondantLine.SetPosition(0, pos1);
+            correspondantLine.SetPosition(1, pos2);
         }
     }
     void EnableLine(bool enable, Material whiteMat)
@@ -159,6 +175,8 @@ public class BlackHoleGenerator : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if(correspondent == null) { return; }
+        Vector3 travelPos = new Vector3(correspondent.position.x, correspondent.position.y, 0f);
+
         if (collision.gameObject.tag == "Player" && canTravel) //Player or simulated player
         {
             if(ballTR == null)
@@ -170,15 +188,15 @@ public class BlackHoleGenerator : MonoBehaviour
             float temptime = ballTR.time;
             ballTR.time = 0;
 
-            collision.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
-             ballTR.transform.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
+            collision.transform.position = travelPos + collision.attachedRigidbody.velocity.normalized * 1.5f;
+             ballTR.transform.position = travelPos + collision.attachedRigidbody.velocity.normalized * 1.5f;
             StartCoroutine(ReenableTrail(temptime));
 
             GameManager.SFXManager.PlaySFX(teleportationAudio);
             blackHoleTravel?.Invoke();
         }
         if(collision.gameObject.layer == 7){
-            collision.attachedRigidbody.position = correspondent.position + collision.attachedRigidbody.velocity.normalized * 1.5f;
+            collision.attachedRigidbody.position = travelPos + collision.attachedRigidbody.velocity.normalized * 1.5f;
         }
     }
 
