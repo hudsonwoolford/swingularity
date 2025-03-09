@@ -10,7 +10,7 @@ public class NebulaGenerator : MonoBehaviour
 
     void Start()
     {
-        if(CameraFollow.innerShape != null) { CalculateNebulaSize(); }
+        if(CameraFollow.nebulaShape != null) { CalculateNebulaSize(); }
         if(GameManager.LevelManager.currentTheme != null) { ApplyParticleColors(); }
     }
 
@@ -23,8 +23,8 @@ public class NebulaGenerator : MonoBehaviour
     }
     protected virtual void CalculateNebulaSize()
     {
-        points = CameraFollow.innerShape.points;
-        if(points.Length <= 0) { Debug.LogWarning("CameraFollow inner shape contains no points. This is likely due to it not being initialised before this function was called."); return; } //safeguard
+        points = CameraFollow.nebulaShape;
+        if(points.Length <= 0) { Debug.LogWarning("CameraFollow nebula shape contains no points. This is likely due to it not being initialised before this function was called."); return; } //safeguard
         Vector3[] vertices = new Vector3[8]; //6 * 2 points
         for (int i = 0; i < points.Length; i++)
         {

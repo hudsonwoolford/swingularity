@@ -72,6 +72,7 @@ public class SunGenerator : MonoBehaviour
     protected virtual void OnCollisionEnter(Collision c)
     {
         if(c.gameObject.layer == 7) { return; } //Simulation layer
+
         GameManager.SFXManager.PlaySFX(collisionAudio);
 
         //Instantiates collision particles

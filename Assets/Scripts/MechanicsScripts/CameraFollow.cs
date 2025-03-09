@@ -17,6 +17,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] bool debugCam;
     [SerializeField] float moveSmoothness = 0.25f, zoomSmoothness = 0.5f;  //smoothness of camera movement
     [SerializeField] float sizeScalar = 1, zoomSensitivity = 0.75f;  //smoothness of camera movement
+    [SerializeField] float recursiveSizeScalar = 1;
     //[SerializeField] bool focusBall = true;
     Camera mainCam;
     PolygonCollider2D cameraPath, panningPath;              //inner boundaries
@@ -28,6 +29,7 @@ public class CameraFollow : MonoBehaviour
     public float defaultCameraSize;
     public Vector2 cameraMinMax = new Vector2(3, 10);
     public static PolygonCollider2D innerShape { get; private set; }
+    public static Vector2[] nebulaShape { get; private set; }
     public static bool panning { get; private set; } = false;
     bool finalZoom = false;
 
@@ -58,13 +60,16 @@ public class CameraFollow : MonoBehaviour
         mainCam = GetComponent<Camera>();
         ball = GameObject.FindGameObjectWithTag("Player").transform;
         innerShape = new GameObject("Inner Bounds").AddComponent<PolygonCollider2D>();
-        if(GameManager.LevelManager != null && GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        nebulaShape = new Vector2[4];
+        if (GameManager.LevelManager != null && GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
         {
             feather.y = (Mathf.Abs(startPos.x - endPos.x) + CalculateCamsize(defaultCameraSize).x) / mainCam.aspect;
-            innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
+            sizeScalar = 0.8f;
+            nebulaShape = InnerPolygonPositions(startPos, endPos, defaultCameraSize * recursiveSizeScalar, sizeScalar, feather.x, feather.y); //nebula shape
         }
         else{
             feather.x /= mainCam.aspect;
+            nebulaShape = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //nebula shap
         }
         innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
     }
