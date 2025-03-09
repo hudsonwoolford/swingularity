@@ -150,6 +150,7 @@ public class ShootBall : MonoBehaviour
         slr.widthCurve = tr.widthCurve;
         slr.material = tr.material; 
         slr.textureScale = tr.textureScale;
+        slr.textureMode = tr.textureMode;
 
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
