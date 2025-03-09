@@ -72,8 +72,6 @@ public class ShootBall : MonoBehaviour
     Rigidbody rb;
     Camera main;
     TrailRenderer tr;
-    Rigidbody trrb;
-    SphereCollider trsc;
     bool ballStill = false;
     bool deathDelay;
     float ballStillTimer = 0f;
@@ -119,7 +117,7 @@ public class ShootBall : MonoBehaviour
         {
             StartCoroutine(RecreatePhysicsScene());
         }
-        trrb.position = originPos;
+        // trrb.position = originPos;
         tr.transform.position = originPos;
         tr.Clear();
         tr.emitting = true;
@@ -167,28 +165,28 @@ public class ShootBall : MonoBehaviour
 
     void SetupTrail(){
         GameObject trailRendPrefab = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.golfBallTrailElement).golfBallTrailElement.trailRendObj;
-        tr = Instantiate(trailRendPrefab).GetComponent<TrailRenderer>();
+        tr = Instantiate(trailRendPrefab, transform).GetComponent<TrailRenderer>();
         tr.emitting = false;
         tr.gameObject.tag = "Trail";
         trailTempTime = tr.time;
 
 
-        trrb = tr.AddComponent<Rigidbody>();
-        trsc = tr.AddComponent<SphereCollider>();
-        trsc.radius = GetComponent<SphereCollider>().radius;
-        trsc.center = GetComponent<SphereCollider>().center;
-        trsc.gameObject.layer = (int)Mathf.Log(noCollide.value, 2);;
-        trsc.material = GetComponent<SphereCollider>().material;
+        // trrb = tr.AddComponent<Rigidbody>();
+        // trsc = tr.AddComponent<SphereCollider>();
+        // trsc.radius = GetComponent<SphereCollider>().radius;
+        // trsc.center = GetComponent<SphereCollider>().center;
+        // trsc.gameObject.layer = (int)Mathf.Log(noCollide.value, 2);;
+        // trsc.material = GetComponent<SphereCollider>().material;
 
 
 
-        trrb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        trrb.mass = rb.mass;
-        trrb.interpolation = RigidbodyInterpolation.Interpolate;
-        trrb.useGravity = false;
-        trrb.drag = rb.drag;
-        trrb.angularDrag = rb.angularDrag;
-        trrb.constraints = RigidbodyConstraints.FreezeRotation;
+        // trrb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        // trrb.mass = rb.mass;
+        // trrb.interpolation = RigidbodyInterpolation.Interpolate;
+        // trrb.useGravity = false;
+        // trrb.drag = rb.drag;
+        // trrb.angularDrag = rb.angularDrag;
+        // trrb.constraints = RigidbodyConstraints.FreezeRotation;
 
         TrailCollisionInfo trailCollisionInfo = trailRendPrefab.GetComponent<TrailCollisionInfo>();
 
@@ -247,14 +245,22 @@ public class ShootBall : MonoBehaviour
         if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; tr.gameObject.SetActive(false); tr.Clear(); ResetTrailPos(); triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
+
+        //         RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.75f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
+
+        // if(hit.Length == 0 || ballStill) {
+        //     trrb.MovePosition(transform.position);
+        // }
     }
     void FixedUpdate(){
         if(!deathDelay) { rb.AddForce(ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass)); }
-        RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.75f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
 
-        if(hit.Length == 0 || ballStill) {
-            trrb.MovePosition(rb.position);
-        }
+
+
+    }
+
+    void LateUpdate(){
+
 
     }
     void AnimateLine()
