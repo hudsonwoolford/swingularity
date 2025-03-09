@@ -246,8 +246,6 @@ public class ShootBall : MonoBehaviour
 
         if(liningUpShot) { AnimateLine(); }
         if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; tr.gameObject.SetActive(false); tr.Clear(); ResetTrailPos(); triggerReset?.Invoke(); } //reset
-        if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
-
         //         RaycastHit[] hit = Physics.SphereCastAll(rb.position, trsc.radius*0.75f, rb.position - trrb.position, (rb.position - trrb.position).magnitude, noPlayer);
 
         // if(hit.Length == 0 || ballStill) {
