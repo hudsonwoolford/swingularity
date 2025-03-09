@@ -44,6 +44,7 @@ public class CameraFollow : MonoBehaviour
         targetCameraSize = cameraSize;
         innerShape.points = InnerPolygonPositions(startPos, endPos, defaultCameraSize, sizeScalar, feather.x, feather.y); //scaled down version of inner shape
 
+        nebulaShape = InnerPolygonPositions(startPos, endPos, defaultCameraSize * recursiveSizeScalar, sizeScalar, feather.x, feather.y); //nebula shape
 
         MasterStart();
     }
