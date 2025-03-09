@@ -389,7 +389,6 @@ public class ShootBall : MonoBehaviour
             tr.gameObject.SetActive(true);
             tr.emitting = true;
             tr.time = trailTempTime;
-            print(tr.positionCount);
             stopGravity?.Invoke();
             dir = lastClickPos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
@@ -598,7 +597,6 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
-        print("reset");
         tr.Clear();
         tr.time = 0;
         tr.emitting = false;
@@ -662,19 +660,16 @@ public class ShootBall : MonoBehaviour
         tr.gameObject.SetActive(true);
         tr.emitting = true;
         tr.time = trailTempTime;
-        print(tr.positionCount);
 
 
     }
     void ResetTrailPos(){
         for (int i = 0; i < tr.positionCount; i++)
         {
-            print(tr.GetPosition(i));
             tr.SetPosition(i, origin); // Move all trail points to new location
         }
     }
     void PrintTrailPos(){
-        print(tr.positionCount);
     }
 
     void DeleteSimulation()
