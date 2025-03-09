@@ -20,6 +20,7 @@ public class MappingHandling : MonoBehaviour
     [SerializeField] AudioObj wrapAudio;
     Camera mainCam;
     Rigidbody ballRB;
+    GameObject trail;
 
     int deathMessageIndex;
 
@@ -42,7 +43,7 @@ public class MappingHandling : MonoBehaviour
         boundaries = CameraFollow.innerShape;
 
         ballDistText.text = "";
-        flagDistText.text = "";
+        flagDistText.text = "";;
     }
     void LateUpdate()
     {
@@ -54,9 +55,10 @@ public class MappingHandling : MonoBehaviour
             if(GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.recursive)
             {
                 ShootBall.death?.Invoke(0);
-                GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer> ().enabled = false;
-                GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer> ().emitting = false;
-                GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer> ().Clear();
+                trail = ball.GetComponentInChildren<TrailRenderer>().gameObject;
+                trail.SetActive(false);
+                trail.GetComponent<TrailRenderer>().emitting = false;
+                trail.GetComponent<TrailRenderer>().Clear();
                 ShootBall.triggerReset?.Invoke();
                 GameManager.SFXManager.PlaySFX(outOfBoundsAudio);
             }

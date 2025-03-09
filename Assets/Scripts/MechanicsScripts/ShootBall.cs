@@ -79,6 +79,7 @@ public class ShootBall : MonoBehaviour
     float lineOffset = 0f;
     bool inPortal;
     float trailTempTime;
+    float trailMinVertex;
 
     bool swinging;
     bool collidedWithNoZone = false;
@@ -169,6 +170,7 @@ public class ShootBall : MonoBehaviour
         tr.emitting = false;
         tr.gameObject.tag = "Trail";
         trailTempTime = tr.time;
+        trailMinVertex = tr.minVertexDistance;
 
 
         // trrb = tr.AddComponent<Rigidbody>();
@@ -963,14 +965,40 @@ public class ShootBall : MonoBehaviour
     {
     // Vector3 contactPoint = collision.contacts[0].point;
     // tr.AddPosition(contactPoint);
-    //         tr.emitting = false;
+            // tr.emitting = false;
+        tr.minVertexDistance = 0.25f;
+        StartCoroutine(SmoothTrail());
         if (collision.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetDelay(0.3f, collision.gameObject));
 
         }
     }
+
+IEnumerator SmoothTrail() {
+    // Set how many steps you want to smooth
+    int smoothingSteps = 5; // You can adjust this value
+    float smoothingFactor = 0.9f; // For exponential moving average (EMA)
+
+    // Start smoothing over several frames
+    for (int i = 0; i < smoothingSteps; i++) {
+        if (tr.positionCount > 1) {
+            int index = tr.positionCount - 2; // Get the second-to-last position in the trail
+            Vector3 lastPos = tr.GetPosition(index); // Previous trail position
+            Vector3 currentPos = transform.position; // Current position of the object
+
+            // Apply exponential moving average for smoothing
+            Vector3 smoothedPos = Vector3.Lerp(lastPos, currentPos, smoothingFactor);
+
+            tr.SetPosition(index, smoothedPos);
+        }
+
+        yield return null; // Wait a frame before applying the next smoothing step
+    }
+}
     private void OnCollisionExit(Collision collision){
+        tr.minVertexDistance = trailMinVertex;
+
         // tr.Clear();
         // tr.emitting = true;
     }
