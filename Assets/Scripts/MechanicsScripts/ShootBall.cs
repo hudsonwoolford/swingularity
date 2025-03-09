@@ -151,6 +151,7 @@ public class ShootBall : MonoBehaviour
         slr.material = tr.material; 
         slr.textureScale = tr.textureScale;
         slr.textureMode = tr.textureMode;
+        slr.colorGradient = tr.colorGradient;
 
         childObj = transform.GetChild(2).gameObject;
         onStill?.Invoke();
@@ -196,7 +197,7 @@ public class ShootBall : MonoBehaviour
         trailCollisionIcon.Item1 = trailCollisionInfo.colImage1;
         trailCollisionIcon.Item2 = trailCollisionInfo.colImage2;
         trailCollisionIcon.Item3 = trailCollisionInfo.colImageColour1;
-        trailCollisionIcon.Item4 = trailCollisionInfo.colImageColour2;
+        trailCollisionIcon.Item4 = tr.material.GetColor("_Color");
 
 
         tr.transform.localPosition = new Vector3(0, 0, -0.3f);

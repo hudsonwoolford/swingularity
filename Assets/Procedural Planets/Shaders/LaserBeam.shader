@@ -17,6 +17,7 @@ Shader "Unlit/LaserBeam"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" "IgnoreProjector"="true" }
         LOD 100
         ZWrite Off
+        ZTest Off
 	    Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
@@ -30,6 +31,7 @@ Shader "Unlit/LaserBeam"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float4 color : COLOR;
             };
 
             struct v2f
@@ -37,6 +39,7 @@ Shader "Unlit/LaserBeam"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float2 stillUV : TEXCOORD1;
+                float4 color : COLOR;
             };
 
             sampler2D _MainTex;
@@ -53,6 +56,7 @@ Shader "Unlit/LaserBeam"
             v2f vert (appdata v)
             {
                 v2f o;
+                o.color = v.color;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.stillUV = v.uv;
 
@@ -80,7 +84,8 @@ Shader "Unlit/LaserBeam"
 
                 col*=filter;
                 clip(col.a - _AlphaClip);
-                return col * _Color;
+
+                return col * _Color * i.color;
             }
             ENDCG
         }

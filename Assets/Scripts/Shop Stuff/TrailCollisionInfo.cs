@@ -8,5 +8,5 @@ public class TrailCollisionInfo : MonoBehaviour
     [SerializeField] public Sprite colImage1;
     [SerializeField] public Sprite colImage2;
     [SerializeField][ColorUsageAttribute(true,true)] public Color colImageColour1;
-    [SerializeField][ColorUsageAttribute(true,true)] public Color colImageColour2;
+    //[SerializeField][ColorUsageAttribute(true,true)] public Color colImageColour2;
 }
