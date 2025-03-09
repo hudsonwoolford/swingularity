@@ -869,8 +869,8 @@ public class ShootBall : MonoBehaviour
 
             image1.sprite = trailCollisionIcon.Item1;
             image2.sprite = trailCollisionIcon.Item2;
-            image1.color = trailCollisionIcon.Item3 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
-            image2.color = trailCollisionIcon.Item4 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount);
+            image1.material.SetColor("_Color", trailCollisionIcon.Item3 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount));
+            image2.material.SetColor("_Color", trailCollisionIcon.Item4 *  slr.colorGradient.Evaluate((float)index/(float)slr.positionCount));
         }
         colPos.Clear(); //clears all collision positions
     }
