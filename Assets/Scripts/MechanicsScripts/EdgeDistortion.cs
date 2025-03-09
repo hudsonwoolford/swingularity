@@ -67,6 +67,7 @@ public class EdgeDistortion : MonoBehaviour
                 ballTR = GameObject.FindGameObjectWithTag("Trail").GetComponent<TrailRenderer>();
             }
             ballTR.emitting = false;
+            ballTR.enabled = false;
             ballTR.Clear();
 
 
@@ -106,6 +107,7 @@ public class EdgeDistortion : MonoBehaviour
         yield return null;
         ballTR.Clear();
         ballTR.emitting = true;
+        ballTR.enabled = true;
     }
     #region Shader
     private void OnValidate()

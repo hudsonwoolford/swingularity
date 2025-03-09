@@ -80,6 +80,7 @@ public class ShootBall : MonoBehaviour
     float ballStillTimeVal = 0.2f;
     float lineOffset = 0f;
     bool inPortal;
+    float trailTempTime;
 
     bool swinging;
     bool collidedWithNoZone = false;
@@ -169,6 +170,8 @@ public class ShootBall : MonoBehaviour
         tr = Instantiate(trailRendPrefab).GetComponent<TrailRenderer>();
         tr.emitting = false;
         tr.gameObject.tag = "Trail";
+                trailTempTime = tr.time;
+
 
         trrb = tr.AddComponent<Rigidbody>();
         trsc = tr.AddComponent<SphereCollider>();
@@ -242,7 +245,7 @@ public class ShootBall : MonoBehaviour
         }
 
         if(liningUpShot) { AnimateLine(); }
-        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; tr.enabled = false; tr.Clear(); triggerReset?.Invoke(); } //reset
+        if (Input.GetKeyDown(KeyCode.R) && !deathDelay && LevelManager.ballInput && !swinging && !ballStill) { tr.emitting= false; tr.gameObject.SetActive(false); tr.Clear(); ResetTrailPos(); triggerReset?.Invoke(); } //reset
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && !deathDelay && LevelManager.ballInput) { origin = trueOrigin; triggerReset?.Invoke(); } //debug reset
     }
     void FixedUpdate(){
@@ -382,6 +385,11 @@ public class ShootBall : MonoBehaviour
                 if (colIcons) { DrawCollisionIcons(); }
                 yield break; 
             }
+
+            tr.gameObject.SetActive(true);
+            tr.emitting = true;
+            tr.time = trailTempTime;
+            print(tr.positionCount);
             stopGravity?.Invoke();
             dir = lastClickPos - new Vector2(mousePos.x, mousePos.y);
             dist = dir.magnitude;
@@ -590,10 +598,14 @@ public class ShootBall : MonoBehaviour
     }
     void BallReset()
     {
-        tr.transform.position = transform.position;
-
+        print("reset");
+        tr.Clear();
+        trailTempTime = tr.time;
+        tr.time = 0;
         tr.emitting = false;
-        tr.enabled = false;
+        tr.gameObject.SetActive(false);
+        ResetTrailPos();
+        
         if(inPortal) { return; }
         GetComponent<Collider>().enabled = true;
         childObj.GetComponent<MeshRenderer>().enabled = true;
@@ -601,10 +613,6 @@ public class ShootBall : MonoBehaviour
         Vector3 originalPos = transform.position;
         rb.position = origin;
         transform.position = origin;
-        tr.transform.position = origin;
-        tr.Clear();
-        float temptime = tr.time;
-        tr.time = 0;
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
@@ -617,8 +625,8 @@ public class ShootBall : MonoBehaviour
         }
         //Stopping all coroutines + stopping coroutine booleans
         StopAllCoroutines();
-        tr.transform.position += Vector3.zero;
-        StartCoroutine(ReenableTrail(temptime));
+
+        StartCoroutine(MoveTrail());
 
         astronautFading = false;
         if(!movedAstronaut) { StartCoroutine(AstronautFade()); }
@@ -629,16 +637,45 @@ public class ShootBall : MonoBehaviour
         liningUpShot = false;
         DrawCollisionIcons();
     }
+    IEnumerator MoveTrail(){
 
-    IEnumerator ReenableTrail(float temp){
         yield return null;
-        yield return null;
-        yield return null;
-        tr.enabled = true;
-        tr.emitting = true;
-        tr.time = temp;
+        tr.transform.position = origin;
+        ResetTrailPos();
+        tr.time=-1;
         tr.Clear();
 
+    }
+    IEnumerator ReenableTrail(){
+        yield return new WaitForEndOfFrame();;
+        
+        tr.transform.position += Vector3.zero;
+        tr.Clear();
+
+        yield return null;
+        tr.Clear();
+
+        yield return new WaitForEndOfFrame();
+        ResetTrailPos();
+        tr.Clear();
+
+
+        tr.gameObject.SetActive(true);
+        tr.emitting = true;
+        tr.time = trailTempTime;
+        print(tr.positionCount);
+
+
+    }
+    void ResetTrailPos(){
+        for (int i = 0; i < tr.positionCount; i++)
+        {
+            print(tr.GetPosition(i));
+            tr.SetPosition(i, origin); // Move all trail points to new location
+        }
+    }
+    void PrintTrailPos(){
+        print(tr.positionCount);
     }
 
     void DeleteSimulation()
