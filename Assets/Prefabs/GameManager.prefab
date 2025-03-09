@@ -6678,6 +6678,7 @@ MonoBehaviour:
   eventTriggeredDialogues:
   - name: Earth_0 - Human Discovery
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6687,6 +6688,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Earth_1 - Reaction to hole 1
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6696,6 +6698,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Earth_2 - Reaction to hole 2
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6705,6 +6708,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Desert_0-Meeting at desert galaxy
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6714,6 +6718,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Fire_0-Introduction to Fire Galaxy
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6723,6 +6728,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Ice_0-Introduction to Ice Galaxy
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6732,6 +6738,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Goop_0-Discovers human in Goop Galaxy
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6741,6 +6748,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Waste_0-Explanation of Caddi lore
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6750,6 +6758,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Mythical_0-Reconsideration of humanity
     dialogueEvent: 0
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -6759,12 +6768,43 @@ MonoBehaviour:
     numCalls: 0
   - name: Mythical_4-Congratulations
     dialogueEvent: 3
+    universeType: 1
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.5
     allowedScenes:
     - Home_Mythical_4
     dialogueText: {fileID: 11400000, guid: 693c50ff18920784fb5d373e1d928c9e, type: 2}
+    numCalls: 0
+  - name: Challenge Intro
+    dialogueEvent: 0
+    universeType: 2
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 0.25
+    allowedScenes:
+    - Challenge_Ice_0
+    dialogueText: {fileID: 11400000, guid: ba56c79dd1891d0418081378720e08c8, type: 2}
+    numCalls: 0
+  - name: Parallel Intro
+    dialogueEvent: 0
+    universeType: 3
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 0.25
+    allowedScenes:
+    - Home_Earth_0
+    dialogueText: {fileID: 11400000, guid: fd97fd76b2e3dab43a73d19c3b8b74de, type: 2}
+    numCalls: 0
+  - name: Recursive Intro
+    dialogueEvent: 0
+    universeType: 4
+    numCallsRequired: 1
+    resubscribeAfterCall: 0
+    timeDelay: 0.25
+    allowedScenes:
+    - Recursive_Mythical_0
+    dialogueText: {fileID: 11400000, guid: c0f491a2f0ba820459e43cce7fab2db8, type: 2}
     numCalls: 0
   dialogueController: {fileID: 377844702962078479}
   tgrAnimator: {fileID: 1339470235395063992}
@@ -25250,69 +25290,69 @@ MonoBehaviour:
       bestScore: "\u2014\u2014"
   - universeType: 2
     galaxyParams:
-    - name: WHIRPOOL NGC 5194
+    - name: GODZILLA UGC 2885
       seed: 769729336
       relativeDifficulty: 9
       galaxyDataIndex: 3
       possibleTypes: 02000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 0
-      bestScore: "\u2014\u2014"
-    - name: BLACK EYE NGC 4826
+      bestScore: 0
+    - name: DUSTY HAND NGC 2146
       seed: 1892392509
       relativeDifficulty: 9
       galaxyDataIndex: 5
       possibleTypes: 05000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 3
-      bestScore: "\u2014\u2014"
-    - name: ANDROMEDA UGC 454
+      bestScore: 0
+    - name: ALCYONEUS NGC 343
       seed: -2712
       relativeDifficulty: 9
       galaxyDataIndex: 6
       possibleTypes: 06000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 6
-      bestScore: "\u2014\u2014"
-    - name: THE MILKY WAY GALAXY
+      bestScore: 0
+    - name: PORPHYRION UGC J152
       seed: 517116294
       relativeDifficulty: 10
       galaxyDataIndex: 0
       possibleTypes: 00000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 9
-      bestScore: "\u2014\u2014"
-    - name: CARTWHEEL PGC 2248
+      bestScore: 0
+    - name: PARAMECIUM NGC 7448
       seed: -1414
       relativeDifficulty: 10
       galaxyDataIndex: 4
       possibleTypes: 04000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 12
-      bestScore: "\u2014\u2014"
-    - name: SOMBRERO NGC 4594
+      bestScore: 0
+    - name: EYE OF SAURON NGC 4151
       seed: 855318010
       relativeDifficulty: 10
       galaxyDataIndex: 1
       possibleTypes: 01000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 15
-      bestScore: "\u2014\u2014"
-    - name: TRIANGULUM M33
+      bestScore: 0
+    - name: WILL OF ARES NGC 435
       seed: 118464425
       relativeDifficulty: 10
       galaxyDataIndex: 2
       possibleTypes: 03000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
-      collectedStars: 0000000000
+      collectedStars: 0101010101
       requiredStars: 18
-      bestScore: "\u2014\u2014"
+      bestScore: 0
   - universeType: 3
     galaxyParams:
     - name: THE MILKY WAY GALAXY
@@ -25380,8 +25420,8 @@ MonoBehaviour:
       bestScore: "\u2014\u2014"
   - universeType: 4
     galaxyParams:
-    - name: ANDROMEDA UGC 454
-      seed: -2712
+    - name: COCOON NGC 4490
+      seed: 91270064
       relativeDifficulty: 9
       galaxyDataIndex: 6
       possibleTypes: 06000000
@@ -25389,35 +25429,35 @@ MonoBehaviour:
       collectedStars: 0000000000
       requiredStars: 0
       bestScore: "\u2014\u2014"
-    - name: THE MILKY WAY GALAXY
-      seed: 517116294
+    - name: COMA PINWHEEL M99
+      seed: -529347155
       relativeDifficulty: 10
       galaxyDataIndex: 0
       possibleTypes: 00000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
       collectedStars: 0000000000
-      requiredStars: 0
+      requiredStars: 2
       bestScore: "\u2014\u2014"
-    - name: WHIRPOOL NGC 5194
-      seed: 769729336
+    - name: CIRCINUS LEDA 50779
+      seed: 39063637
       relativeDifficulty: 9
       galaxyDataIndex: 3
       possibleTypes: 02000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
       collectedStars: 0000000000
-      requiredStars: 0
+      requiredStars: 5
       bestScore: "\u2014\u2014"
-    - name: BLACK EYE NGC 4826
-      seed: 1892392509
+    - name: KNIFE EDGE NGC 5907
+      seed: -839457558
       relativeDifficulty: 9
       galaxyDataIndex: 2
       possibleTypes: 03000000
       possibleSpecial: 000000000100000002000000030000000400000005000000
       collectedStars: 0000000000
-      requiredStars: 3
+      requiredStars: 8
       bestScore: "\u2014\u2014"
-    - name: CARTWHEEL PGC 2248
-      seed: -1414
+    - name: MAYALL'S OBJECT APG 148
+      seed: -494671227
       relativeDifficulty: 10
       galaxyDataIndex: 4
       possibleTypes: 04000000
@@ -33731,6 +33771,7 @@ MonoBehaviour:
   eventTriggeredDialogues:
   - name: Earth_0 - Human Discovery
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33740,6 +33781,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Earth_1 - Reaction to hole 1
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33749,6 +33791,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Earth_2 - Reaction to hole 2
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33758,6 +33801,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Desert_0-Meeting at desert galaxy
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33767,6 +33811,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Fire_0-Introduction to Fire Galaxy
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33776,6 +33821,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Ice_0-Introduction to Ice Galaxy
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33785,6 +33831,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Goop_0-Discovers human in Goop Galaxy
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33794,6 +33841,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Waste_0-Explanation of Caddi lore
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33803,6 +33851,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Mythical_0-Reconsideration of humanity
     dialogueEvent: 0
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25
@@ -33812,6 +33861,7 @@ MonoBehaviour:
     numCalls: 0
   - name: Mythical_4-Congratulations
     dialogueEvent: 2
+    universeType: 0
     numCallsRequired: 1
     resubscribeAfterCall: 0
     timeDelay: 0.25

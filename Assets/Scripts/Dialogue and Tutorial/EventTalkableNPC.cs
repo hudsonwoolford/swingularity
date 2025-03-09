@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 
 public class EventTalkableNPC : NPC, ITalkable
 {
@@ -20,6 +21,7 @@ public class EventTalkableNPC : NPC, ITalkable
     {
         public string name;
         public DialogueEvents dialogueEvent;
+        public LevelManager.UniverseParams.UniverseType universeType;
         [Min(1)]
         public int numCallsRequired = 1;
         public bool resubscribeAfterCall = false;
@@ -35,6 +37,7 @@ public class EventTalkableNPC : NPC, ITalkable
     }
     [SerializeField]protected EventTriggeredDialogue[] eventTriggeredDialogues;
     private Dictionary<EventTriggeredDialogue, Delegate> eventDelegates = new Dictionary<EventTriggeredDialogue, Delegate>();
+    private List<EventTriggeredDialogue> triggeredDialogues = new List<EventTriggeredDialogue>();
     protected int currentDialogue;
     protected bool dialogueQueued;
 
@@ -49,14 +52,32 @@ public class EventTalkableNPC : NPC, ITalkable
     #region Delegate Logic
     IEnumerator DelegateCalled(EventTriggeredDialogue etd)
     {
+        //check for universe type
+        if(etd.universeType != GameManager.LevelManager.currentUniverse.universeType) { yield break; }
+
+        //check if already triggered
+        if(triggeredDialogues.Contains(etd)) { yield break; }
+
+        //increment and check required calls
         etd.numCalls++;
         if (etd.numCalls<etd.numCallsRequired) { yield break; }
+
+        //queue dialogue and wait
         dialogueQueued = true;
         yield return new WaitForSeconds(etd.timeDelay);
+
+        //check that dialogue text is valid and set current dialogue
         if(etd.dialogueText == null) { Debug.LogWarning("Dialogue text is invalid. Check inspector?"); yield break; }
         currentDialogue = Array.IndexOf(eventTriggeredDialogues, etd);
+
+        //handle resubscribing
         if(!etd.resubscribeAfterCall) { UnsubscribeDelegate(etd); }
         else { etd.numCalls = 0; }
+
+        //add to triggered dialogues
+        triggeredDialogues.Add(etd);
+
+        //talk and unqueue
         Talk(etd.dialogueText);
         dialogueQueued = false;
     }

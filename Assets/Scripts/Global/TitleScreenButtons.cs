@@ -244,6 +244,7 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void EnableDisableContinueBtn()
     {
+        //continue button
         if (GameManager.LevelManager.currentUniverse.name != null && GameManager.SaveLoadManager.RetrieveSave(GameManager.LevelManager.currentUniverse.name + ".txt") != null)
         {
             continueBtn.gameObject.SetActive(true);
@@ -255,6 +256,16 @@ public class TitleScreenButtons : MonoBehaviour
             continueBtn.gameObject.SetActive(false);
             newUniverseBtn.gameObject.SetActive(true);
             newUniverseBtn.onClick.AddListener(() => NewGame());
+        }
+
+        //load universebutton
+        if (SaveLoadManager.saves == null || SaveLoadManager.saves.Length == 0)
+        {
+            myUniverseBtn.interactable = false;
+        }
+        else
+        {
+            myUniverseBtn.interactable = true;
         }
     }
     IEnumerator SettingsAnimDelay(bool enable) {

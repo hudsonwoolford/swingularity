@@ -101,7 +101,6 @@ public class ManualLevelGenerator : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(0.1f);
         }
-        PositionBallAndFlag(planetList); //positioning ball and flag to be correct on the planet
         //Moons
         for (int i = 0; i < moonIndices.Length; i++)
         {
@@ -125,6 +124,8 @@ public class ManualLevelGenerator : MonoBehaviour
         {
             planetList[darkMatterIndices[i]] = GenerateDarkMatter(ref planetList[darkMatterIndices[i]],  level.planetSizes[darkMatterIndices[i]], level.planetPoints[darkMatterIndices[i]],  level.planetSeeds[darkMatterIndices[i]],level.planetTypes[darkMatterIndices[i]], generator);
         }
+
+        PositionBallAndFlag(planetList); //positioning ball and flag to be correct on the planet
         Destroy(generator.gameObject);
 
         ////Camera start and end positions
@@ -145,54 +146,55 @@ public class ManualLevelGenerator : MonoBehaviour
     }
     void PositionBallAndFlag(Planet[] planets)
     {
-        //Parallel flipping - NEEDS FIXING
+        Rigidbody playerRB = player.GetComponent<Rigidbody>();
+        player.GetComponent<SphereCollider>().enabled = false;
+            
+        GameObject flag = GameObject.FindGameObjectWithTag("Hole");
+        Vector3 flagPos = flag.transform.position;
+        Vector3 playerPos = player.transform.position;
+
+        //Parallel flipping
         if (SaveLoadManager.currentUniverseSave != null && SaveLoadManager.currentUniverseSave.universeParams.universeType == LevelManager.UniverseParams.UniverseType.parallel)
         {
-            Rigidbody playerRB = player.GetComponent<Rigidbody>();
-            player.GetComponent<SphereCollider>().enabled = false;
-
-            GameObject flag = GameObject.FindGameObjectWithTag("Hole");
-            Vector3 flagPos = flag.transform.position;
-            Vector3 playerPos = player.transform.position;
             playerRB.position = Vector2.one * 100;
             flag.transform.position = playerPos;
             playerRB.position = flagPos;
+        }
 
-            Vector2 closestBallPlanet = new Vector2(0, Mathf.Infinity), closestFlagPlanet = new Vector2(0, Mathf.Infinity); //x value is integer, y value is distance
-            for (int i = 0; i < planets.Length; i++)
+        Vector2 closestBallPlanet = new Vector2(0, Mathf.Infinity), closestFlagPlanet = new Vector2(0, Mathf.Infinity); //x value is integer, y value is distance
+        for (int i = 0; i < planets.Length; i++)
+        {
+            if (planets[i].forceField == null)
             {
-                if (planets[i].forceField == null)
-                {
-                    continue;
-                }
-
-                float ballDist = (playerRB.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
-                float flagDist = (flag.transform.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
-                if (ballDist < closestBallPlanet.y)
-                {
-                    closestBallPlanet = new Vector2(i, ballDist);
-                }
-                if (flagDist < closestFlagPlanet.y)
-                {
-                    closestFlagPlanet = new Vector2(i, flagDist);
-                }
+                continue;
             }
 
-            Vector3 ballVector = (playerRB.position - planets[(int)closestBallPlanet.x].forceField.transform.position).normalized;
-            Vector3 flagVector = (flag.transform.position - planets[(int)closestFlagPlanet.x].forceField.transform.position).normalized;
-            float ballRad = player.GetComponent<SphereCollider>().radius * player.transform.localScale.x;
-            float flagRad = flag.GetComponent<SphereCollider>().radius * flag.transform.localScale.x;
-
-            playerRB.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
-            player.transform.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
-            flag.transform.position = planets[(int)closestFlagPlanet.x].forceField.transform.position + flagVector * (planets[(int)closestFlagPlanet.x].forceField.transform.localScale.x + flagRad + 0.05f);
-
-            planets[(int)closestBallPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestBallPlanet.x].planet.transform);
-            planets[(int)closestFlagPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestFlagPlanet.x].planet.transform);
-
-            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            player.GetComponent<SphereCollider>().enabled = true;
+            float ballDist = (playerRB.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
+            float flagDist = (flag.transform.position - planets[i].forceField.transform.position).magnitude - planets[i].forceField.transform.localScale.x;
+            if (ballDist < closestBallPlanet.y)
+            {
+                closestBallPlanet = new Vector2(i, ballDist);
+            }
+            if (flagDist < closestFlagPlanet.y)
+            {
+                closestFlagPlanet = new Vector2(i, flagDist);
+            }
         }
+
+        Vector3 ballVector = (playerRB.position - planets[(int)closestBallPlanet.x].forceField.transform.position).normalized;
+        Vector3 flagVector = (flag.transform.position - planets[(int)closestFlagPlanet.x].forceField.transform.position).normalized;
+        float ballRad = player.GetComponent<SphereCollider>().radius * player.transform.localScale.x;
+        float flagRad = flag.GetComponent<SphereCollider>().radius * flag.transform.localScale.x;
+
+        playerRB.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
+        player.transform.position = planets[(int)closestBallPlanet.x].forceField.transform.position + ballVector * (planets[(int)closestBallPlanet.x].forceField.transform.localScale.x + ballRad); ;
+        flag.transform.position = planets[(int)closestFlagPlanet.x].forceField.transform.position + flagVector * (planets[(int)closestFlagPlanet.x].forceField.transform.localScale.x + flagRad + 0.05f);
+
+        planets[(int)closestBallPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestBallPlanet.x].planet.transform);
+        planets[(int)closestFlagPlanet.x].forceField.GetComponent<ForceField>().Init(planets[(int)closestFlagPlanet.x].planet.transform);
+
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        player.GetComponent<SphereCollider>().enabled = true;
     }
     #region Generation Functions
     Planet GenerateManualPlanet(FullPlanetGeneration generator, float size, Vector3 position, Vector3 seed, ColorSchemeStaticReference.PlanetType planetType)

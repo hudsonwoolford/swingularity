@@ -765,10 +765,15 @@ public class GalaxyMenu : MonoBehaviour
             }
             realIteration++;
         }
-        if(realIteration == 5)
+        if(realIteration >= 4)
         {
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
             yield return new WaitForSecondsRealtime(0.5f);
+            if(realIteration == 5)
+            {
+                yield return new WaitForSecondsRealtime(0.5f);
+                GameManager.SFXManager.PlaySFX(starAudios[0]);
+            }
         }
 
         //COIN FEEDBACK
@@ -803,8 +808,8 @@ public class GalaxyMenu : MonoBehaviour
 
             infoCardAnim.Play("CollectCoins");
             GameManager.SFXManager.PlaySFX(cashoutAudio, galaxySrc, cashoutAudio.inherentVol);
+            yield return new WaitForSecondsRealtime(infoCardAnim.GetCurrentAnimatorStateInfo(1).length);
         }
-        yield return new WaitForSecondsRealtime(infoCardAnim.GetCurrentAnimatorStateInfo(1).length);
         coinsCollectionText.transform.parent.gameObject.SetActive(false);
 
 

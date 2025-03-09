@@ -43,39 +43,52 @@ public class TIIGER : EventTalkableNPC
     }
     protected override void Update()
     {
+        //ensure dialogue is enabled
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && GameManager.LevelManager.isCampaignFinalLevel))
+        {
+            return;
+        }
+
         //input
         if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
         {
             Interact();
         }
 
-        //logic
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
-        {
-            return;
-        }
-        if(dialogueController.isConversation && LevelManager.ballInput)
-        {
-            GameManager.LevelManager.EnableBallInput(false);
-        }
+        //animate the hologram
         hologramMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
+
+        //dialogueShown should be true if dialogue is queued
         if(dialogueQueued) { dialogueShown |= dialogueQueued; }
-        if (dialogueShown && !dialogueController.isConversation && !dialogueQueued)
+
+        if(!dialogueQueued && dialogueShown)
         {
-            displayRoutine = StartCoroutine(HideDialogue());
-        }
-        if(Input.GetKeyDown(KeyCode.Escape) && dialogueShown && !dialogueQueued)
-        {
-            dialogueController.EndConversation();
-            hideRoutine = StartCoroutine(HideDialogue());
+            //check if talking and ball input is still true
+            if(dialogueController.isConversation && LevelManager.ballInput)
+            {
+                GameManager.LevelManager.EnableBallInput(false);
+            }
+            //check if convo is complete and dialogue is still showing
+            else if (!dialogueController.isConversation)
+            {
+                displayRoutine = StartCoroutine(HideDialogue());
+            }
+            //check if user escapes
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                dialogueController.EndConversation();
+                hideRoutine = StartCoroutine(HideDialogue());
+            }
         }
     }
     public override void Interact()
     {
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel))
         {
             return;
         }
+
+        //if interacting while dialogue shown, skip dialogue paragraph
         if (!isTransitioning && dialogueShown && !dialogueQueued)
         {
             dialogueController.DisplayNextParagraph();
@@ -83,7 +96,7 @@ public class TIIGER : EventTalkableNPC
     }
     public override void Talk(DialogueText dialogueText)
     {
-        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel) || GameManager.LevelManager.currentUniverse.universeType != LevelManager.UniverseParams.UniverseType.home)
+        if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && !GameManager.LevelManager.isCampaignFinalLevel))
         {
             return;
         }
@@ -112,9 +125,9 @@ public class TIIGER : EventTalkableNPC
         dialogueController.StartConversation(dialogueText); //sets text
 
         //stop dialogue
-        dialogueController.TogglePauseDialogue();
+        dialogueController.TogglePauseDialogue(true);
         yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
-        dialogueController.TogglePauseDialogue();
+        dialogueController.TogglePauseDialogue(false);
 
         isTransitioning = false;
     }
@@ -137,9 +150,9 @@ public class TIIGER : EventTalkableNPC
 
         //stop dialogue
         dialogueController.DialogueCloseSounds();
-        dialogueController.TogglePauseDialogue();
+        dialogueController.TogglePauseDialogue(true);
         yield return new WaitForSecondsRealtime(tgrAnimator.GetCurrentAnimatorClipInfo(0).Length);
-        dialogueController.TogglePauseDialogue();
+        dialogueController.TogglePauseDialogue(false);
 
         isTransitioning = false;
     }

@@ -83,7 +83,6 @@ public class DialogueController : MonoBehaviour
         //nothing in queue
         if(paragraphs.Count == 0 && !isTyping)
         {
-            DialogueCloseSounds();
             EndConversation();
             return;
         }
@@ -102,10 +101,10 @@ public class DialogueController : MonoBehaviour
             FinishParagraph();
         }
     }
-    public void TogglePauseDialogue()
+    public void TogglePauseDialogue(bool pause)
     {
         //toggle pause boolean
-        isPaused = !isPaused;
+        isPaused = pause;
     }
     public void DialogueCloseSounds()
     {
