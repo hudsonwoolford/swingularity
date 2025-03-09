@@ -170,7 +170,7 @@ public class ShootBall : MonoBehaviour
         tr = Instantiate(trailRendPrefab).GetComponent<TrailRenderer>();
         tr.emitting = false;
         tr.gameObject.tag = "Trail";
-                trailTempTime = tr.time;
+        trailTempTime = tr.time;
 
 
         trrb = tr.AddComponent<Rigidbody>();
@@ -600,7 +600,6 @@ public class ShootBall : MonoBehaviour
     {
         print("reset");
         tr.Clear();
-        trailTempTime = tr.time;
         tr.time = 0;
         tr.emitting = false;
         tr.gameObject.SetActive(false);

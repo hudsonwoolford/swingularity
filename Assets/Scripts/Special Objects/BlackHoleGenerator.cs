@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 [ExecuteInEditMode]
 public class BlackHoleGenerator : MonoBehaviour
@@ -182,9 +183,12 @@ public class BlackHoleGenerator : MonoBehaviour
     }
 
     IEnumerator ReenableTrail(float temp){
+        yield return new WaitForPresentSyncPoint();
         yield return null;
+        yield return new WaitForPresentSyncPoint();
         yield return null;
-        yield return null;
+
+        yield return new WaitForPresentSyncPoint();
         ballTR.emitting = true;
         ballTR.enabled = true;
         ballTR.Clear();

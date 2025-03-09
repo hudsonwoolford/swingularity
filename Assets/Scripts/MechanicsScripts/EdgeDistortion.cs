@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+
 
 public class EdgeDistortion : MonoBehaviour
 {
@@ -102,9 +104,12 @@ public class EdgeDistortion : MonoBehaviour
 
         yield return null;
         ball.position = pos;
+        yield return new WaitForPresentSyncPoint();
         yield return null;
+        yield return new WaitForPresentSyncPoint();
         yield return null;
-        yield return null;
+
+        yield return new WaitForPresentSyncPoint();
         ballTR.Clear();
         ballTR.emitting = true;
         ballTR.enabled = true;
