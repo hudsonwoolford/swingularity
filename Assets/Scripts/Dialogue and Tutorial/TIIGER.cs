@@ -12,6 +12,7 @@ public class TIIGER : EventTalkableNPC
     [SerializeField] private Animator tgrAnimator;
     [SerializeField] private Canvas dialogueCanvas;
     [SerializeField] private MeshRenderer ballRenderer;
+    [SerializeField] private Light pointLight;
     private Material hologramMaterial;
     private bool isTransitioning;
     public bool dialogueShown { get; private set; }
@@ -47,6 +48,14 @@ public class TIIGER : EventTalkableNPC
         if (!SettingsManager.userSettings.dialogue || (GameManager.LevelManager.isReset && GameManager.LevelManager.isCampaignFinalLevel))
         {
             return;
+        }
+
+        //scale tablet to camera
+        if(dialogueShown)
+        { 
+            transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
+            pointLight.range = 10 * Camera.main.orthographicSize / 8;
+            transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
         }
 
         //input
