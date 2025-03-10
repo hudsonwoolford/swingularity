@@ -16,6 +16,7 @@ public class GalaxySummary : MonoBehaviour
     [SerializeField] GameObject universeSummary;
     [SerializeField] TextMeshProUGUI universeNameTxt;
     [SerializeField] TextMeshProUGUI universeSeedTxt;
+    [SerializeField] TextMeshProUGUI universeSeedTitleTxt;
     [SerializeField] TextMeshProUGUI universeShotsTxt;
     [SerializeField] TextMeshProUGUI universeTimeTxt;
     [SerializeField] TextMeshProUGUI universeProgressNumTxt;
@@ -87,15 +88,16 @@ public class GalaxySummary : MonoBehaviour
         //shots and time
         if(SaveLoadManager.currentUniverseSave != null)
         {
-            universeShotsTxt.text = "Shots: " + SaveLoadManager.currentUniverseSave.totalShots;
+            universeShotsTxt.text = SaveLoadManager.currentUniverseSave.totalShots.ToString();
             System.TimeSpan universeTS = System.TimeSpan.FromSeconds(SaveLoadManager.currentUniverseSave.totalTime);
             string formattedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)universeTS.TotalHours, universeTS.Minutes, universeTS.Seconds);
-            universeTimeTxt.text = "Time: " + formattedTime;
+            universeTimeTxt.text = formattedTime;
             universeSupernovaeTxt.text = (SaveLoadManager.currentUniverseSave.supernovae).ToString();
         }
         //seed, stars, supernovae, and difficulty
-        string universeType = SetColor(GameManager.LevelManager.currentUniverse.universeType.ToString().Substring(0, 1).ToUpper() + GameManager.LevelManager.currentUniverse.universeType.ToString().Substring(1), colorGrad.Evaluate(0));
-        universeSeedTxt.text = !(uni.universeType == LevelManager.UniverseParams.UniverseType.procedural) ? "Type: " + universeType :  "Seed: " + uni.seed.ToString();
+        string universeType = GameManager.LevelManager.currentUniverse.universeType.ToString().ToUpper();
+        universeSeedTxt.text = !(uni.universeType == LevelManager.UniverseParams.UniverseType.procedural) ? universeType : uni.seed.ToString();
+        universeSeedTitleTxt.text = !(uni.universeType == LevelManager.UniverseParams.UniverseType.procedural) ? "Type: " :  "Seed: " ;
         universeStarsTxt.text = uni.numStars.ToString();
         universeDifficultyMult.text = !(uni.universeType == LevelManager.UniverseParams.UniverseType.procedural) ? "x" + SetColor("5", colorGrad.Evaluate(0.5f)) : "x" + SetColor(GameManager.LevelManager._DifficultyStarMult[GameManager.LevelManager.currentUniverse.relativeDifficulty].ToString(), colorGrad.Evaluate(uni.relativeDifficulty/10));
     }
