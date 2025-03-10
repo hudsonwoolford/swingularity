@@ -8,6 +8,12 @@ using System.IO;
 [ExecuteInEditMode()]
 public class SaveElement : MonoBehaviour
 {
+    [System.Serializable]
+    struct UniverseTypeBalls
+    {
+        public LevelManager.UniverseParams.UniverseType universeType;
+        public int schemeIndex;
+    }
     public LevelManager.UniverseParams uniParams { get; private set; }
     [Header("Values")]
     [SerializeField] Color difficultyCol;
@@ -31,6 +37,7 @@ public class SaveElement : MonoBehaviour
     [Header("Campaign")]
     [SerializeField] GameObject mainCampaignInfo;
     [SerializeField] TextMeshProUGUI campaignLabelTxt;
+    [SerializeField] UniverseTypeBalls[] universeTypeBalls;
     //[SerializeField] TextMeshProUGUI progressText;
     //[SerializeField] TextMeshProUGUI progressPercentText;
     [Header("Miscellaneous")]
@@ -109,7 +116,20 @@ public class SaveElement : MonoBehaviour
     {
         if (!Application.isPlaying) { return; }
 
-        universeGenerator.ChangeUniverse(uniParams.seed);
+        if(uniParams.universeType == LevelManager.UniverseParams.UniverseType.procedural)
+        {
+            universeGenerator.ChangeUniverse(uniParams.seed);
+        }
+        else
+        {
+            foreach (var s in universeTypeBalls)
+            {
+                if(s.universeType == uniParams.universeType)
+                {
+                    universeGenerator.SetIndex(s.schemeIndex);
+                }
+            }
+        }
 
         if (ballTexture == null)
         {
