@@ -769,12 +769,17 @@ public class GalaxyMenu : MonoBehaviour
         {
             GameManager.SFXManager.PlaySFX(fiveStarAudio);
             yield return new WaitForSecondsRealtime(0.5f);
+            //five stars
             if(realIteration == 5)
             {
+                //unlocks achievement
+                GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_PERFECT);
+
                 yield return new WaitForSecondsRealtime(0.5f);
                 GameManager.SFXManager.PlaySFX(starAudios[0]);
             }
         }
+        CheckUniverseAchievements();
 
         //COIN FEEDBACK
         //Coins going up and down with pitch
@@ -818,6 +823,33 @@ public class GalaxyMenu : MonoBehaviour
 
         playGalaxyBtn.interactable = true;
         infoBackBtn.interactable = true;
+    }
+    void CheckUniverseAchievements()
+    {
+        //perfection
+        bool allGalaxiesComplete = true;
+        int starCount = 0;
+        for (int i = 0; i < GameManager.LevelManager.currentProceduralUniverse.Length; i++)
+        {
+            int galaxyStars = 0;
+            for (int x = 0; x < GameManager.LevelManager.currentProceduralUniverse[i].collectedStars.Length; x++)
+            {
+                galaxyStars += GameManager.LevelManager.currentProceduralUniverse[i].collectedStars[x] ? 1 : 0;
+            }
+            starCount += galaxyStars;
+            allGalaxiesComplete = galaxyStars == 0 ? false : allGalaxiesComplete &= true;
+        }
+
+        if(starCount == GameManager.LevelManager.currentUniverse.numGalaxies * 5)
+        {
+            GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_PERFECTION);
+        }
+
+        //challenger
+        if(GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.challenge && allGalaxiesComplete)
+        {
+            GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_CHALLENGER);
+        }
     }
     private void OnEnable()
     {

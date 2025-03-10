@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.FilePathAttribute;
 
 public class UniButton : MonoBehaviour
 {

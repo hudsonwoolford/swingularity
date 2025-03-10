@@ -129,10 +129,18 @@ public class ShopManager : MonoBehaviour
             {
                 return;
             }
+            GameManager.AchievementsManager.IncrementIntStatP("STT_TOTAL_COSMETICS", 1);
         }
         currentSelectedElement.itemEquip?.Invoke();
         currentSelectedElement?.buttonAnimator.Play("Unselect");
         currentSelectedElement = null;
+
+        //unlock achievements
+        if(GameManager.CustomizationManager._AllShopItems.Length == SaveLoadManager.currentGlobalSave.unlockedShopItems.Length)
+        {
+            GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_COLLECTOR);
+        }
+        GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_STYLISH);
     }
     IEnumerator SwitchTab(ShopItem.ItemType itemType, Button thisButton, bool instant)
     {

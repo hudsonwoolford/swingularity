@@ -436,6 +436,9 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void CreateNewProceduralUniverse() //create button in new game menu
     {
+        //unlock achievement
+        GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_HAND_OF_GOD);
+
         LevelManager.UniverseParams up = SynthesizeUniverseParams();
         up.name = EnsureUniqueFileName(SaveLoadManager.saves, up.name + ".txt");
         up.name = up.name.Substring(0,up.name.LastIndexOf(".txt"));

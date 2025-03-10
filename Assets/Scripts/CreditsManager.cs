@@ -11,6 +11,9 @@ public class CreditsManager : MonoBehaviour
     void Start(){
         LevelGenerator.levelInit?.Invoke(LevelManager.allGalaxyData[0]);
         creditsAnim.Play("RollCredits");
+
+        //unlock achievement
+        GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_MULTIVERSE);
     }
 
     void Update(){
