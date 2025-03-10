@@ -407,6 +407,8 @@ public class TitleScreenButtons : MonoBehaviour
     }
     void SetUniverseType(UniverseButton uniButton)
     {
+        if(uniButton.button.transform.GetComponent<UniButton>()._IsLocked) { return; }
+
         foreach (var ub in uniButtons)
         {
             if (ub.button == uniButton.button && currentUniverseType == uniButton.type)

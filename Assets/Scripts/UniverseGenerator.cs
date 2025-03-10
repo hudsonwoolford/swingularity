@@ -69,6 +69,11 @@ public class UniverseGenerator : MonoBehaviour
     {
         if (pBlock == null) { pBlock = new MaterialPropertyBlock(); }
     }
+    public void SetIndex(int index)
+    {
+        this.universeIndex = index;
+        Update();
+    }
     public void Init(int indexSeed)
     {
         this.indexSeed = indexSeed;
