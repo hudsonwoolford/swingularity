@@ -11,7 +11,6 @@ public class CreditsManager : MonoBehaviour
     void Start(){
         LevelGenerator.levelInit?.Invoke(LevelManager.allGalaxyData[0]);
         creditsAnim.Play("RollCredits");
-        StartCoroutine(EndCredits());
     }
 
     void Update(){
@@ -24,9 +23,9 @@ public class CreditsManager : MonoBehaviour
         }
         skybox.SetFloat("_Rotation", rotation);
     }
-
-    IEnumerator EndCredits(){
-        yield return new WaitForSeconds(30f);
+    public void EndCredits()
+    {
         GameManager.SceneHandling.LoadScene("Main Menu", false);
+
     }
 }

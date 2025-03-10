@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public static SkyboxManager SkyboxManager { get; private set; }
     public static CustomizationManager CustomizationManager { get; private set; }
     public static GalaxyInfoManager GalaxyInfoManager { get; private set; }
+    public static AchievementsManager AchievementsManager { get; private set; }
     private void Awake()
     {
         if (Instance != null)
@@ -39,7 +40,8 @@ public class GameManager : MonoBehaviour
         MusicManager = GetComponentInChildren<MusicManager>(true);
         SkyboxManager = GetComponentInChildren<SkyboxManager>(true);
         CustomizationManager = GetComponentInChildren<CustomizationManager>(true);
-        GalaxyInfoManager = GetComponentInChildren <GalaxyInfoManager>(true);
+        GalaxyInfoManager = GetComponentInChildren<GalaxyInfoManager>(true);
+        AchievementsManager = GetComponentInChildren<AchievementsManager>(true);
     }
     private void Start()
     {
