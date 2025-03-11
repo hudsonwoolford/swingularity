@@ -48,7 +48,10 @@ public class AchievementsManager : MonoBehaviour
             return;
         }
 
-        if (!SteamUserStats.GetAchievement(achievement.ToString(), out _))
+        bool achieved;
+        SteamUserStats.GetAchievement(achievement.ToString(), out achieved);
+        Debug.Log(achieved);
+        if (!achieved)
         {
             SteamUserStats.SetAchievement(achievement.ToString());
             SteamUserStats.StoreStats();

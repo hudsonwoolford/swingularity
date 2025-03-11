@@ -522,12 +522,21 @@ public class LevelManager : MonoBehaviour
             if (starScore[i] && !currentProceduralUniverse[galaxyIndex].collectedStars[i]){starTotal++;}
             currentProceduralUniverse[galaxyIndex].collectedStars[i] |= starScore[i]; 
         }
-        if(scoreSum > 0){
-            currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();
+
+        string bestScore = currentProceduralUniverse[galaxyIndex].bestScore;
+        bestScore = bestScore.Contains('+') ? bestScore.Replace("+", "") : bestScore;
+        if (int.Parse(currentProceduralUniverse[galaxyIndex].bestScore) > scoreSum)
+        {
+            if (scoreSum > 0)
+            {
+                currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();
+            }
+            else
+            {
+                currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();
+            }
         }
-        else{
-            currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();  
-        }
+        
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;
         GameManager.SaveLoadManager.IncrementSupernovae(Mathf.RoundToInt(starTotal * difficultyStarMult[currentUniverse.relativeDifficulty]));
