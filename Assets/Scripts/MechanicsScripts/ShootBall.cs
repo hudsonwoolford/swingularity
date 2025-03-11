@@ -438,9 +438,21 @@ public class ShootBall : MonoBehaviour
 
             }
 
-            if(resetTimer){
-                planetStickTimer = 0;
+            if(resetTimer && planetStickTimer > 0){
+                if(planetStickTimer > 0.25f){planetStickTimer = 0.25f;}
+                float right = -Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)) / Mathf.Abs(Vector3.Dot(mouseNormal, new Vector3(-normal.y, normal.x)));
+                Vector3[] tangentVectors = CalculateTangentVector(hit.transform.GetComponent<SphereCollider>(), rb.position);
+                if(tangentVectors.Length == 0){
+                    tangentVectors = new Vector3[2]{new Vector3(-normal.y, normal.x, 0), new Vector3(normal.y, -normal.x, 0)};
+                }
+                Vector3 chosenVector = right > 0 ? tangentVectors[0] : tangentVectors[1];
+                dir = Vector3.Slerp(dir, chosenVector, Mathf.Clamp01(planetStickTimer/0.25f));
+                float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
+                dist *= dotPower;
+                planetStickTimer -= Time.deltaTime;
+                if(planetStickTimer < 0){planetStickTimer = 0;}
             }
+
             force = dist * dir.normalized;
 
             if (simulated && Vector3.Distance(force, forceLastFrame)>0.01f && simulationScene != null)
