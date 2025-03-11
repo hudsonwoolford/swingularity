@@ -276,7 +276,7 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheatCodeInput();
+        //CheatCodeInput();
     }
     void CheatCodeInput() //CHEATS
     {
@@ -524,18 +524,26 @@ public class LevelManager : MonoBehaviour
         }
 
         string bestScore = currentProceduralUniverse[galaxyIndex].bestScore;
-        bestScore = bestScore.Contains('+') ? bestScore.Replace("+", "") : bestScore;
-        if (int.Parse(currentProceduralUniverse[galaxyIndex].bestScore) > scoreSum)
+        bestScore = bestScore.Contains("+") ? bestScore.Replace("+", "") : bestScore;
+        try
         {
-            if (scoreSum > 0)
+            if (int.Parse(currentProceduralUniverse[galaxyIndex].bestScore) > scoreSum)
             {
-                currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();
-            }
-            else
-            {
-                currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();
+                if (scoreSum > 0)
+                {
+                    currentProceduralUniverse[galaxyIndex].bestScore = "+" + scoreSum.ToString();
+                }
+                else
+                {
+                    currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();
+                }
             }
         }
+        catch (Exception)
+        {
+            currentProceduralUniverse[galaxyIndex].bestScore = scoreSum.ToString();
+        }
+        
         
         UniverseParams universeParams = currentUniverse;
         universeParams.numStars += starTotal;

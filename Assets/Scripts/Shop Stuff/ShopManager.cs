@@ -131,7 +131,6 @@ public class ShopManager : MonoBehaviour
             {
                 return;
             }
-            GameManager.AchievementsManager.IncrementIntStatP("STT_TOTAL_COSMETICS", 1);
         }
         currentSelectedElement.itemEquip?.Invoke();
         currentSelectedElement?.buttonAnimator.Play("Unselect");

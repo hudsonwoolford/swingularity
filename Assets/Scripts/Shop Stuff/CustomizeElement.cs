@@ -129,6 +129,8 @@ public class CustomizeElement : MonoBehaviour
         GameManager.SaveLoadManager.UnlockShopItem(_ShopItem.name);
         isUnlocked = true;
         UpdateUIElements();
+
+        GameManager.AchievementsManager.IncrementIntStatP("STT_TOTAL_COSMETICS", 1);
         return true;
     }
     #endregion

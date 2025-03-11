@@ -6,6 +6,7 @@ Shader "Unlit/LaserBeam"
         _Mask("Mask", 2D) = "white" {}
         [HDR]_Color("Color", Color) = (1,1,1,1)
         _Speed("Speed", vector) = (1,1,0,0)
+        [Toggle()]_ReverseLine("Reverse Line", float) = 0
         _AlphaClip("Alpha Clip", Range(0,1)) = 0
         [Header(Distortion)]
         _DistortionAmount("Distortion Amount", Range(0,1)) = 0.5
@@ -52,6 +53,7 @@ Shader "Unlit/LaserBeam"
             float2 _DistortionSpeed;
             float _DistortionAmount;
             float _DistortionScale;
+            float _ReverseLine;
 
             v2f vert (appdata v)
             {
@@ -65,13 +67,12 @@ Shader "Unlit/LaserBeam"
                 length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)), // scale y axis
                 length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z))  // scale z axis
                 );
-                _MainTex_ST.z = worldScale.y / 2;
 
                 float2 noiseScroll = float2(_Time.y * _DistortionSpeed.x, _Time.y * _DistortionSpeed.y);
                 float noiseOffset = UnitySimpleNoise(noiseScroll, _DistortionScale);
                 float2 distortion = lerp(v.uv, noiseOffset, _DistortionAmount);
 
-                float2 uvOffset = float2(_Time.y * _Speed.x, _Time.y * _Speed.y);
+                float2 uvOffset = float2(_Time.y * _Speed.x, _Time.y * _Speed.y) + float2(_MainTex_ST.z * -(_ReverseLine - 0.5)*2, 0);
                 o.uv = TRANSFORM_TEX(distortion, _MainTex) + uvOffset;
                 return o;
             }
