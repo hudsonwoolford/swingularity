@@ -380,6 +380,7 @@ public class ShootBall : MonoBehaviour
         float dist = 0; //distance from initial mouse pos
         Vector3 forceLastFrame = Vector3.zero;
         Vector3 force = Vector3.zero;
+        float planetStickTimer = 0;
         while(Input.GetMouseButton(0)) 
         {
             if(PauseManager.paused) //cant shoot while paused
@@ -411,6 +412,7 @@ public class ShootBall : MonoBehaviour
             Vector2 mouseNormal = (mousePos - (transform.position - new Vector3(normal.x, normal.y) * 0.22f)).normalized;
 
             shootAngle = -Vector2.SignedAngle(normal, dir);
+            bool resetTimer = true;
             if (rayHit) //this happens if the player is about to shoot directly onto a planet
             {
                 if(Vector3.Dot(mouseNormal, normal) > 0)
@@ -425,14 +427,20 @@ public class ShootBall : MonoBehaviour
                     float minDot = Vector3.Dot(-chosenVector, normal);
                     if (Vector3.Dot(mouseNormal.normalized, normal) > minDot)
                     {
-                        dir = chosenVector;
-
+                        dir = Vector3.Slerp(dir, chosenVector, Mathf.Clamp01(planetStickTimer/0.25f));
+                        print(planetStickTimer);
                         float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
                         dist *= dotPower;
+                        planetStickTimer += Time.deltaTime;
+                        resetTimer = false;
 
                     }
                 }
 
+            }
+
+            if(resetTimer){
+                planetStickTimer = 0;
             }
             force = dist * dir.normalized;
 
