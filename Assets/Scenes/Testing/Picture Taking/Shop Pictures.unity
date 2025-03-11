@@ -177,7 +177,7 @@ SkinnedMeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
-  - {fileID: 2100000, guid: 0aeb27e46f071864bafe1ee01c3ce6d4, type: 2}
+  - {fileID: 2100000, guid: 0ebe1058816f93b42b85bc417e45ba46, type: 2}
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
   - {fileID: 2100000, guid: 07270130b398a844d973129406c3deca, type: 2}
   m_StaticBatchInfo:
@@ -239,13 +239,14 @@ GameObject:
   - component: {fileID: 92287119}
   - component: {fileID: 92287122}
   - component: {fileID: 92287121}
+  - component: {fileID: 92287123}
   m_Layer: 8
   m_Name: Astronaut Cam
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!20 &92287119
 Camera:
   m_ObjectHideFlags: 0
@@ -390,6 +391,18 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 3.6
+--- !u!114 &92287123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92287117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1336373066c274b9b9718196806994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &136286881
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d88d30a8ef87c40884f72518ffdccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopItem: {fileID: 11400000, guid: 46d963dda51cd6940afc38e65946534c, type: 2}
+  shopItem: {fileID: 11400000, guid: c78adfc0e014b184999dede3a39d78f3, type: 2}
   update: 0
 --- !u!1 &524336724
 GameObject:
@@ -999,7 +1012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1292989463
 MonoBehaviour:
   m_ObjectHideFlags: 0

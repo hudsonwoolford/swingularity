@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 134308616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 35}
-  m_LocalScale: {x: 1500, y: 1500, z: 1500}
+  m_LocalScale: {x: 1344, y: 1344, z: 1344}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1099967453}
@@ -1106,6 +1106,7 @@ GameObject:
   - component: {fileID: 1099967456}
   - component: {fileID: 1099967455}
   - component: {fileID: 1099967454}
+  - component: {fileID: 1099967457}
   m_Layer: 17
   m_Name: HoloBallCam
   m_TagString: Untagged
@@ -1247,8 +1248,8 @@ Camera:
     serializedVersion: 2
     m_Bits: 131072
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8600000, guid: bddefbf2c8d1e8841ab23b990fde1a02, type: 2}
-  m_TargetDisplay: 0
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -1257,6 +1258,18 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1099967457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099967452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1336373066c274b9b9718196806994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1122464658
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1600,6 +1613,9 @@ MonoBehaviour:
     hideCharacter: 1
   crackleCharacter: 37
   startConvoObj: {fileID: 11400000, guid: df71c93d355447549a6ef9ef72df169c, type: 2}
+  startConvoObj2: {fileID: 0}
+  endConvoObj: {fileID: 0}
+  endConvoObj2: {fileID: 0}
   talkObj: {fileID: 11400000, guid: e72322b5c3c6bb94e9f2111c055dc7a5, type: 2}
   staticObject: {fileID: 11400000, guid: 7c3940f63f1939744a73ae18ad86a4b8, type: 2}
   tgrAudioSrc: {fileID: 1218937302}
