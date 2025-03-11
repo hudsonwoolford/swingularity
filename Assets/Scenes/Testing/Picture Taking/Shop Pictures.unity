@@ -177,7 +177,7 @@ SkinnedMeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
-  - {fileID: 2100000, guid: 0ebe1058816f93b42b85bc417e45ba46, type: 2}
+  - {fileID: 2100000, guid: 94112405456d9304fa6f224efcb7577b, type: 2}
   - {fileID: 2100000, guid: daddd9b92f2db8e4e85935203a981b10, type: 2}
   - {fileID: 2100000, guid: 07270130b398a844d973129406c3deca, type: 2}
   m_StaticBatchInfo:
@@ -257,7 +257,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.005473479, g: 0.015360738, b: 0.028301895, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -717,7 +717,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451483281}
   m_LocalRotation: {x: -0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.037, y: -1.4, z: 4.3}
+  m_LocalPosition: {x: 0.027, y: -1.4, z: 4.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d88d30a8ef87c40884f72518ffdccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopItem: {fileID: 11400000, guid: c78adfc0e014b184999dede3a39d78f3, type: 2}
+  shopItem: {fileID: 11400000, guid: 763a58e488a79d04cb7ba0042810eb86, type: 2}
   update: 0
 --- !u!1 &524336724
 GameObject:
@@ -2081,6 +2081,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Better Level Lighting
+      objectReference: {fileID: 0}
+    - target: {fileID: 7852493131418439560, guid: c3cbb03f953f6d34ba4b2e7908bf2c9e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
