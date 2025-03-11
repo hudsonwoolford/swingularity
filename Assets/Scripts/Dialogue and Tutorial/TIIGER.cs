@@ -51,7 +51,7 @@ public class TIIGER : EventTalkableNPC
         }
 
         //scale tablet to camera
-        if(dialogueShown)
+        if(dialogueShown || isTransitioning)
         { 
             transform.localScale = Vector3.one * Camera.main.orthographicSize / 8;
             pointLight.range = 10 * Camera.main.orthographicSize / 8;

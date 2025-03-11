@@ -142,6 +142,7 @@ public class CustomizeElement : MonoBehaviour
     {
         foreach (Material wm in whiteMaterials)
         {
+            wm.SetTexture("_MainTex", shopItem.materialCustomizationElement.texture);
             wm.SetColor("_Color", shopItem.materialCustomizationElement.matColor);
             wm.SetFloat("_Metallic", shopItem.materialCustomizationElement.metallic);
             wm.SetFloat("_Glossiness", shopItem.materialCustomizationElement.smoothness);

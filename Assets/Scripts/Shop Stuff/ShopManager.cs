@@ -44,7 +44,7 @@ public class ShopManager : MonoBehaviour
     {
         shopSrc = GetComponent<AudioSource>();
         shopItems = GameManager.CustomizationManager._AllShopItems;
-        
+
         PopulateCustomizationElements();
 
         astronautMaterialBtn.onClick.AddListener(() => StartCoroutine(SwitchTab(ShopItem.ItemType.AstronautMaterial, astronautMaterialBtn, false)));
@@ -59,6 +59,8 @@ public class ShopManager : MonoBehaviour
         currentButton = astronautMaterialBtn;
         currentButton.GetComponent<Animator>().Play("Select");
         customizationParentDefaultPos = astronautMaterialCG.transform.localPosition;
+
+        StartCoroutine(SwitchTab(ShopItem.ItemType.GolfBallTrail, golfTrailBtn, true));
     }
     private void Update()
     {

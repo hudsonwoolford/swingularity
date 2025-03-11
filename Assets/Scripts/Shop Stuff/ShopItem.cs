@@ -41,6 +41,7 @@ public class ShopItem : ScriptableObject
         public float metallic;
         [Range(0f, 1f)]
         public float smoothness;
+        public Texture2D texture;
     }
     [System.Serializable]
     public struct GolfBallTrailElement

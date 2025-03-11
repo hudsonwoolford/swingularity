@@ -45,6 +45,7 @@ public class AstronautMatController : MonoBehaviour
             wm.SetColor("_Color", mce.matColor);
             wm.SetFloat("_Metallic", mce.metallic);
             wm.SetFloat("_Glossiness", mce.metallic);
+            wm.SetTexture("_MainTex", mce.texture);
         }
 
         EndFade();
