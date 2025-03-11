@@ -50,7 +50,6 @@ public class AchievementsManager : MonoBehaviour
 
         bool achieved;
         SteamUserStats.GetAchievement(achievement.ToString(), out achieved);
-        Debug.Log(achieved);
         if (!achieved)
         {
             SteamUserStats.SetAchievement(achievement.ToString());

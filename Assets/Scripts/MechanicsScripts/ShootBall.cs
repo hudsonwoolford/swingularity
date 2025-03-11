@@ -428,7 +428,6 @@ public class ShootBall : MonoBehaviour
                     if (Vector3.Dot(mouseNormal.normalized, normal) > minDot)
                     {
                         dir = Vector3.Slerp(dir, chosenVector, Mathf.Clamp01(planetStickTimer/0.25f));
-                        print(planetStickTimer);
                         float dotPower = Mathf.Clamp01(1 - Vector3.Dot(mouseNormal.normalized, normal));
                         dist *= dotPower;
                         planetStickTimer += Time.deltaTime;

@@ -14,7 +14,6 @@ public class EdgeDistortion : MonoBehaviour
     [Header("Shader variables")]
     [SerializeField] Material distortMat;
     [SerializeField] bool blit;
-    [SerializeField] bool updateInPlayMode = false;
     [SerializeField] float distortionRes;
     [SerializeField] float distortionStrength;
     [SerializeField] float distortionDistance;

@@ -20,7 +20,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] float recursiveSizeScalar = 1;
     //[SerializeField] bool focusBall = true;
     Camera mainCam;
-    PolygonCollider2D cameraPath, panningPath;              //inner boundaries
+    PolygonCollider2D panningPath;              //inner boundaries
     Transform ball, flag;                            //ball transform
     Vector3 vel;
     float sizeVelocity;                              //camera velocity
@@ -95,14 +95,6 @@ public class CameraFollow : MonoBehaviour
         flag = GameObject.FindGameObjectWithTag("Hole").transform;
         transform.position = new Vector3(ball.position.x, ball.position.y, -10);
 
-        if (cameraPath == null)
-        {
-            cameraPath = new GameObject("Camera Bounds")
-            {
-                tag = "CameraBounds"
-            }.AddComponent<PolygonCollider2D>();
-
-        }
         if (panningPath == null)
         {
             panningPath = new GameObject("Panning Path").AddComponent<PolygonCollider2D>();
@@ -121,8 +113,6 @@ public class CameraFollow : MonoBehaviour
         //    sizeScalar = 0.65f;
         //    cameraMinMax.y = Mathf.Max((innerShape.bounds.extents.x) / (2 * mainCam.aspect), innerShape.bounds.extents.y / 2) * 1.5f;
         //}
-
-        cameraPath.points = InnerPolygonPositions(startPos, endPos, cameraMinMax.x, sizeScalar, 0, 0); //scaled down version of inner shape
 
         Vector2 targetPos = ball.position; //camera focuses ball by default
         float showLevelThreshold = cameraMinMax.x;
@@ -173,6 +163,11 @@ public class CameraFollow : MonoBehaviour
     {
         Vector2 camSize = CalculateCamsize(mainCam.orthographicSize);
         panningPath.points = InnerPolygonPositions(startPos, endPos, 8, sizeScalar, feather.x - camSize.x, feather.y - camSize.y);
+        if (GameManager.LevelManager.currentUniverse.universeType == LevelManager.UniverseParams.UniverseType.recursive)
+        {
+            camSize = CalculateCamsize(mainCam.orthographicSize * recursiveSizeScalar);
+            panningPath.points = InnerPolygonPositions(startPos, endPos, 8 * recursiveSizeScalar, sizeScalar, feather.x - camSize.x, feather.y - camSize.y);
+        }
 
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space)) //right click to pan
         {
