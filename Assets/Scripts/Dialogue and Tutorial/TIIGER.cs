@@ -50,6 +50,12 @@ public class TIIGER : EventTalkableNPC
             return;
         }
 
+        //check for paused bug
+        if (dialogueController.isPaused && !isTransitioning)
+        {
+            dialogueController.TogglePauseDialogue(false);
+        }
+
         //scale tablet to camera
         if(dialogueShown || isTransitioning)
         { 
@@ -117,6 +123,7 @@ public class TIIGER : EventTalkableNPC
         if(hideRoutine != null)
         {
             StopCoroutine(hideRoutine);
+            dialogueController.TogglePauseDialogue(false);
         }
 
         isTransitioning = true;
@@ -146,6 +153,7 @@ public class TIIGER : EventTalkableNPC
         if (displayRoutine != null)
         {
             StopCoroutine(displayRoutine);
+            dialogueController.TogglePauseDialogue(false);
         }
 
         isTransitioning = true;

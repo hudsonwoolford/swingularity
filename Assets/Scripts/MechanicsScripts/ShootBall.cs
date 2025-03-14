@@ -339,15 +339,15 @@ public class ShootBall : MonoBehaviour
 
         if(!movedAstronaut){
             astronaut.transform.position = new Vector3(rb.position.x, rb.position.y, 10);
-            Collider[] currentPlanets = Physics.OverlapSphere(rb.position, 0.25f, ignoreStill);
-            Vector3 planetPos = Vector3.zero;
+            Collider[] currentPlanets = Physics.OverlapSphere(rb.position, 0.3f, ignoreStill);
+            Vector3 planetPos = (Vector2)rb.position + ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass); //defaults to gravity force
             foreach(Collider collider in currentPlanets){
                     ForceField forcefieldScript;
                     collider.gameObject.TryGetComponent<ForceField>(out forcefieldScript);
                     if(forcefieldScript != null){
                         planetPos = forcefieldScript.gameObject.transform.position;
                     }
-                }
+            }
             Vector2 dir = planetPos - rb.position;
             astronaut.transform.rotation = Quaternion.Euler(astronaut.transform.rotation.x, astronaut.transform.rotation.y, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
             movedAstronaut = true;
@@ -381,6 +381,8 @@ public class ShootBall : MonoBehaviour
         Vector3 forceLastFrame = Vector3.zero;
         Vector3 force = Vector3.zero;
         float planetStickTimer = 0;
+        Vector3 trackMousePos = lastClickPos;
+
         while(Input.GetMouseButton(0)) 
         {
             if(PauseManager.paused) //cant shoot while paused
@@ -399,7 +401,9 @@ public class ShootBall : MonoBehaviour
             tr.emitting = true;
             tr.time = trailTempTime;
             stopGravity?.Invoke();
-            dir = lastClickPos - new Vector2(mousePos.x, mousePos.y);
+
+            trackMousePos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            dir = lastClickPos - (Vector2)trackMousePos;
             dist = dir.magnitude;
             
             dist = Mathf.Clamp(dist * moveScale, -maxPower, maxPower); //stops the player from doing insanely powerful shots, is also where it is scaled
@@ -409,7 +413,7 @@ public class ShootBall : MonoBehaviour
             RaycastHit hit;
             bool rayHit = Physics.Raycast(transform.position, ArtificialGravity.GravityForceAtPoint(rb.position, planets.ToArray(), rb.mass).normalized, out hit, 1f, obstacles);
             Vector2 normal = (transform.position - hit.transform.position).normalized;
-            Vector2 mouseNormal = (mousePos - (transform.position - new Vector3(normal.x, normal.y) * 0.22f)).normalized;
+            Vector2 mouseNormal = (trackMousePos - (transform.position - new Vector3(normal.x, normal.y) * 0.22f)).normalized;
 
             shootAngle = -Vector2.SignedAngle(normal, dir);
             bool resetTimer = true;
@@ -695,8 +699,6 @@ public class ShootBall : MonoBehaviour
         {
             tr.SetPosition(i, origin); // Move all trail points to new location
         }
-    }
-    void PrintTrailPos(){
     }
 
     void DeleteSimulation()
@@ -1070,7 +1072,6 @@ IEnumerator SmoothTrail() {
 
     }
     private void OnDrawGizmosSelected() {
-        Gizmos.DrawCube(mousePos, Vector3.one); //mousepos cube
     }
     private void OnApplicationQuit()
     {

@@ -840,7 +840,7 @@ public class GalaxyMenu : MonoBehaviour
             allGalaxiesComplete = galaxyStars == 0 ? false : allGalaxiesComplete &= true;
         }
 
-        if(starCount == GameManager.LevelManager.currentUniverse.numGalaxies * 5)
+        if(starCount == GameManager.LevelManager.currentUniverse.numGalaxies * 5 && GameManager.LevelManager.currentUniverse.universeType == UniverseParams.UniverseType.home)
         {
             GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_PERFECTION);
         }

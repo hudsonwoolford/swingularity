@@ -36,7 +36,7 @@ public class DialogueController : MonoBehaviour
     private Queue<string> paragraphs = new Queue<string>();
     public bool isConversation { get; private set; }
     private bool isTyping;
-    private bool isPaused;
+    public bool isPaused {get; private set; }
     private string p;
 
     private Coroutine typeDialogueCoroutine;
