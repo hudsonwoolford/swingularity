@@ -222,7 +222,7 @@ public class ShootBall : MonoBehaviour
 
         if (ballStill){
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            if((Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)) && !liningUpShot && LevelManager.ballInput && !astronautFading && astronautMatController.isIdle)
+            if((Input.GetMouseButtonDown(0)) && !liningUpShot && LevelManager.ballInput && !astronautFading && astronautMatController.isIdle)
             {
                 if(Vector2.Distance(lastClickPos, transform.position) < 0.5f * 4 && rb.velocity.magnitude <0.1f) //if raycast hits the ball, eg player clicks the ball
                 {
@@ -385,7 +385,7 @@ public class ShootBall : MonoBehaviour
 
         while(Input.GetMouseButton(0)) 
         {
-            if(PauseManager.paused) //cant shoot while paused
+            if(PauseManager.paused || Input.GetKeyDown(KeyCode.R)) //cant shoot while paused or reset
             {
                 if (simulatedObj != null)
                 {

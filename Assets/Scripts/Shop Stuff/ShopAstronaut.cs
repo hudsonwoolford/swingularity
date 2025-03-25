@@ -16,7 +16,7 @@ public class ShopAstronaut : MonoBehaviour
         
     }
 
-
+    [ContextMenu("Update Hat")]
     void UpdateHat()
     {
         GameObject hatObj = GameManager.CustomizationManager.RetrieveShopItem(SaveLoadManager.currentGlobalSave.astronautHatElement).astronautHatElement.hatObj;

@@ -9,6 +9,10 @@ public class TestAstronautMaterial : MonoBehaviour
     [SerializeField] private bool update;
     SkinnedMeshRenderer skinnedMeshRenderer;
     MaterialPropertyBlock mpb;
+    private void Start()
+    {
+        update = true;
+    }
     void Update()
     {
         NullChecks();

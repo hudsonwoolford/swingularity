@@ -306,7 +306,11 @@ public class LevelManager : MonoBehaviour
     }
     public void ResetGalaxy()
     {
-
+        StopAllCoroutines();
+        isPointCard = false;
+        levelMenuAnimator.Play("DisableMenu");
+        chosenOption = true;
+        RestartGalaxy();
     }
     public bool LevelCompleted(string level) //Check if a level has been completed, intended to be used external scripts
     {

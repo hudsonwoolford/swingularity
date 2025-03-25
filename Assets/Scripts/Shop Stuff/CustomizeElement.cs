@@ -130,6 +130,7 @@ public class CustomizeElement : MonoBehaviour
         isUnlocked = true;
         UpdateUIElements();
 
+        GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_STYLISH);
         GameManager.AchievementsManager.IncrementIntStatP("STT_TOTAL_COSMETICS", 1);
         return true;
     }

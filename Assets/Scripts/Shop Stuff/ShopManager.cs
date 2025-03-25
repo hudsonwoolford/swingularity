@@ -141,7 +141,6 @@ public class ShopManager : MonoBehaviour
         {
             GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_COLLECTOR);
         }
-        GameManager.AchievementsManager.UnlockAchievementP(AchievementsManager.Achievement.ACH_STYLISH);
     }
     IEnumerator SwitchTab(ShopItem.ItemType itemType, Button thisButton, bool instant)
     {
